@@ -31,11 +31,12 @@ agent-hub/
 
 > 本区块由 `scripts/sync_agents.py` 自动维护，请勿手动编辑。
 
-共 1 个 Agent：
+共 2 个 Agent：
 
 | Agent | 描述 |
 | --- | --- |
 | [file-butler](agents/file-butler/) | 本地文件管家：授权一个文件夹后，用自然语言命令让它列出/读取/搜索/写入其中的文件，自动完成整理、汇总、生成报告等任务。基于 Claude function-call，不使用向量库。 |
+| [📈 股票分析 Agent](agents/stock-analyst/) | 基于 Anthropic Claude 的智能股票分析助手，输入股票代码即可获得专业的技术分析报告。 |
 
 <!-- AGENTS:END -->
 

@@ -31,6 +31,7 @@
 
 ## 现有 Agent
 - `agents/file-butler` — 本地文件管家（function-call 文件操作，沙盒安全，已通过端到端测试）
+- `agents/stock-analyst` — 股票分析助手（A股/美股，技术分析+资金流向+舆情+综合评分+预测）
 
 ## 常见问题
 - 删除 Agent 文件夹后列表未即时更新 → SessionStart hook 会在下次会话开始时同步，或手动运行同步脚本。
