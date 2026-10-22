@@ -24,7 +24,9 @@
 - 缺少 README.md 的 Agent 会在列表中标注「（缺少 README.md 介绍文件）」
 
 ## 运行环境（本机）
-- Python 3.9.6（系统自带），anthropic SDK 已装（0.120.2+）
+- 代码按 Python 3.9 语法写（兼容老系统），但本机必须用 `py -3` 运行（实测 3.13.x）；`python` / `python3` 是失效的 Microsoft Store 桩，直接调会 exit 1
+- 写打印中文/emoji 的脚本要防 Windows GBK 编码：`sys.stdout.reconfigure(encoding="utf-8", errors="replace")`（管道输出时否则会 UnicodeEncodeError 崩溃），参考各 agent 的 `ensure_utf8_console()` / `configure_output()`
+- anthropic SDK 已装（实测 0.112.0）
 - 本机 Claude Code 通过**阿里云 Anthropic 兼容网关**连接（`ANTHROPIC_BASE_URL` 指向 token-plan.cn-beijing.maas.aliyuncs.com），模型名 `qwen3.8-max`；`ANTHROPIC_AUTH_TOKEN` 只在 Claude Code 进程环境里有，用户终端需要自行 export
 - 官方 Anthropic API key（ANTHROPIC_API_KEY）未在本机配置；agent 代码默认用 `claude-opus-5`（官方 API），走网关时用 `--model qwen3.8-max`
 - agents 的模型调用代码要做**参数降级兼容**（第三方网关可能不支持 thinking/fallbacks 等新参数），参考 `agents/file-butler/agent.py` 的 `call_model()`
@@ -32,6 +34,11 @@
 ## 现有 Agent
 - `agents/file-butler` — 本地文件管家（function-call 文件操作，沙盒安全，已通过端到端测试）
 - `agents/stock-analyst` — 股票分析助手（A股/美股，技术分析+资金流向+舆情+综合评分+预测）
+- `agents/code-reviewer` — 代码审查（14 条静态规则 + 模型语义审查，输出中文 Markdown 报告，`--self-test` 自检）
+- `agents/commit-crafter` — 提交信息生成（读 git diff 生成 conventional/gitmoji/plain 提交信息，默认只预览，`--apply` 才提交）
+- `agents/log-detective` — 日志排查（流式扫描多格式日志，确定性聚合错误签名/时间分布/访问指标，再让模型给根因假设）
+- `agents/sql-chat` — SQL 问答（中文提问→只读 SQL→结果表+中文结论，支持 SQLite/CSV/TSV/JSON）
+- `agents/doc-writer` — 项目文档生成（静态扫描项目结构后生成 README/API/架构/新人指南四类文档）
 
 ## 常见问题
 - 删除 Agent 文件夹后列表未即时更新 → SessionStart hook 会在下次会话开始时同步，或手动运行同步脚本。

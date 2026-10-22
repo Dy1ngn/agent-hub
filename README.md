@@ -31,11 +31,16 @@ agent-hub/
 
 > 本区块由 `scripts/sync_agents.py` 自动维护，请勿手动编辑。
 
-共 2 个 Agent：
+共 7 个 Agent：
 
 | Agent | 描述 |
 | --- | --- |
+| [code-reviewer](agents/code-reviewer/) | 静态规则加模型语义审查，检查安全、性能、可读性与潜在 bug，输出中文 Markdown 审查报告。 |
+| [commit-crafter](agents/commit-crafter/) | 读取 Git 改动并生成规范的 commit message，默认只预览，确认后才提交。 |
+| [doc-writer](agents/doc-writer/) | 先静态扫描项目结构，再让模型生成 README、接口文档、架构说明和新人上手指南四类文档。 |
 | [file-butler](agents/file-butler/) | 本地文件管家：授权一个文件夹后，用自然语言命令让它列出/读取/搜索/写入其中的文件，自动完成整理、汇总、生成报告等任务。基于 Claude function-call，不使用向量库。 |
+| [log-detective](agents/log-detective/) | 流式扫描多种格式日志并聚合错误签名、时间分布与访问日志指标，再由 Claude 给出根因假设和排查命令的日志排查助手。 |
+| [sql-chat](agents/sql-chat/) | 用中文提问，自动生成只读 SQL 查询本地 SQLite/CSV/JSON，输出结果表与中文结论。 |
 | [📈 股票分析 Agent](agents/stock-analyst/) | 基于 Anthropic Claude 的智能股票分析助手，输入股票代码即可获得专业的技术分析报告。 |
 
 <!-- AGENTS:END -->
