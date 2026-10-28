@@ -31,16 +31,36 @@ agent-hub/
 
 > 本区块由 `scripts/sync_agents.py` 自动维护，请勿手动编辑。
 
-共 7 个 Agent：
+共 27 个 Agent：
 
 | Agent | 描述 |
 | --- | --- |
+| [code-explainer](agents/code-explainer/) | 代码讲解学习助手：提取结构与复杂度，生成中文分层讲解、术语词典与自测题。 |
 | [code-reviewer](agents/code-reviewer/) | 静态规则加模型语义审查，检查安全、性能、可读性与潜在 bug，输出中文 Markdown 审查报告。 |
+| [code-translator](agents/code-translator/) | 跨语言代码翻译：语言检测、80+ 术语映射、结构对照与语法自检，输出译文与中文翻译报告。 |
 | [commit-crafter](agents/commit-crafter/) | 读取 Git 改动并生成规范的 commit message，默认只预览，确认后才提交。 |
+| [data-cleaner](agents/data-cleaner/) | CSV/TSV/JSON 表格质量体检与清洗，出中文质量报告，支持异常值、重复、格式问题检测。 |
+| [dependency-auditor](agents/dependency-auditor/) | 解析多种依赖清单并按内置规则做风险审计，输出评分、风险清单与升级建议的中文报告。 |
+| [doc-summarizer](agents/doc-summarizer/) | 长文摘要助手：清洗解析 + 抽取式打分 + 模型生成，输出带关键词与结构树的中文摘要报告。 |
 | [doc-writer](agents/doc-writer/) | 先静态扫描项目结构，再让模型生成 README、接口文档、架构说明和新人上手指南四类文档。 |
+| [email-assistant](agents/email-assistant/) | 解析 .eml/.mbox/.txt 邮件，做摘要、优先级判断、待办提取与回复起草，输出中文报告。 |
+| [expense-tracker](agents/expense-tracker/) | 自然语言一句话记账，本地 JSON 账本加分类统计与预算告警，输出带 ASCII 图表的中文月报。 |
 | [file-butler](agents/file-butler/) | 本地文件管家：授权一个文件夹后，用自然语言命令让它列出/读取/搜索/写入其中的文件，自动完成整理、汇总、生成报告等任务。基于 Claude function-call，不使用向量库。 |
+| [grammar-checker](agents/grammar-checker/) | 规则表加模型语义校对，检查中英文错别字、标点、空格、语法与表达，输出中文 Markdown 校对报告。 |
+| [interview-prep](agents/interview-prep/) | 面试准备助手：内置分类题库、JD 岗位画像、可复现抽题、复习计划与模拟面试。 |
+| [knowledge-qa](agents/knowledge-qa/) | 本地知识库问答：倒排索引加 BM25 检索命中片段，再让模型生成带来源引用的中文回答。 |
 | [log-detective](agents/log-detective/) | 流式扫描多种格式日志并聚合错误签名、时间分布与访问日志指标，再由 Claude 给出根因假设和排查命令的日志排查助手。 |
+| [meeting-minutes](agents/meeting-minutes/) | 解析会议逐字稿，做发言人统计、议题切分、决议与待办抽取，生成中文会议纪要。 |
+| [prompt-optimizer](agents/prompt-optimizer/) | 提示词体检与优化：五要素、模糊词、结构与占位符确定性体检，生成评分卡与优化版提示词。 |
+| [release-notes](agents/release-notes/) | 发布说明生成：解析 conventional commits，自动分组、推断 semver、统计贡献者，可选模型润色。 |
+| [resume-reviewer](agents/resume-reviewer/) | 简历诊断与 JD 匹配：结构、动词、量化、日期体检，技能关键词匹配打分，输出改写示例报告。 |
+| [slide-maker](agents/slide-maker/) | 幻灯片生成：从主题或文档提炼大纲，自动排版成可导出 PDF/PPTX 的 Marp 幻灯片。 |
 | [sql-chat](agents/sql-chat/) | 用中文提问，自动生成只读 SQL 查询本地 SQLite/CSV/JSON，输出结果表与中文结论。 |
+| [test-generator](agents/test-generator/) | 用 ast 分析被测函数签名与异常，生成 pytest/unittest 测试骨架与用例清单，可选模型补全断言。 |
+| [todo-planner](agents/todo-planner/) | 把目标描述拆成里程碑与任务，生成 WBS、依赖表、工作日甘特图和风险清单的中文计划。 |
+| [translator](agents/translator/) | 多语言批量翻译助手，保护代码与占位符、按术语表统一术语，支持 Markdown、JSON、CSV。 |
+| [weekly-report](agents/weekly-report/) | 采集 git 提交与工作记录，做分类统计与合并去重，生成中文周报/日报。 |
+| [writing-assistant](agents/writing-assistant/) | 写作润色助手，先做文本体检评分，再按润色/重写/扩写/缩写/正式/口语改写并给出逐句对照报告。 |
 | [📈 股票分析 Agent](agents/stock-analyst/) | 基于 Anthropic Claude 的智能股票分析助手，输入股票代码即可获得专业的技术分析报告。 |
 
 <!-- AGENTS:END -->

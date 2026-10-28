@@ -32,13 +32,44 @@
 - agents 的模型调用代码要做**参数降级兼容**（第三方网关可能不支持 thinking/fallbacks 等新参数），参考 `agents/file-butler/agent.py` 的 `call_model()`
 
 ## 现有 Agent
+共 27 个。除 `stock-analyst` 外，其余 agent 统一约定：`agent.py` + `README.md`（frontmatter）+ `requirements.txt`，支持 `--model` / `--offline` / `--self-test`（离线自检打印 `SELF-TEST OK`），模型调用统一用三级降级 `call_model()`。
+
+**开发效率**
 - `agents/file-butler` — 本地文件管家（function-call 文件操作，沙盒安全，已通过端到端测试）
-- `agents/stock-analyst` — 股票分析助手（A股/美股，技术分析+资金流向+舆情+综合评分+预测）
 - `agents/code-reviewer` — 代码审查（14 条静态规则 + 模型语义审查，输出中文 Markdown 报告，`--self-test` 自检）
 - `agents/commit-crafter` — 提交信息生成（读 git diff 生成 conventional/gitmoji/plain 提交信息，默认只预览，`--apply` 才提交）
 - `agents/log-detective` — 日志排查（流式扫描多格式日志，确定性聚合错误签名/时间分布/访问指标，再让模型给根因假设）
-- `agents/sql-chat` — SQL 问答（中文提问→只读 SQL→结果表+中文结论，支持 SQLite/CSV/TSV/JSON）
 - `agents/doc-writer` — 项目文档生成（静态扫描项目结构后生成 README/API/架构/新人指南四类文档）
+- `agents/test-generator` — 单元测试生成（ast 提取签名/异常→pytest/unittest 骨架+用例清单，可选模型补全断言）
+- `agents/code-translator` — 跨语言代码翻译（语言检测、术语映射、结构对照、目标语言语法自检）
+- `agents/dependency-auditor` — 依赖风险审计（requirements/pyproject/package.json 解析，9 条规则+评分+升级建议）
+- `agents/release-notes` — 发布说明（conventional commits 解析、分组、semver 推断、贡献者统计）
+- `agents/code-explainer` — 代码讲解（结构/复杂度提取、术语词典、分层讲解与自测题）
+
+**数据与查询**
+- `agents/sql-chat` — SQL 问答（中文提问→只读 SQL→结果表+中文结论，支持 SQLite/CSV/TSV/JSON）
+- `agents/data-cleaner` — 表格清洗（CSV/TSV/JSON 体检：缺失/重复/异常值/格式，dry-run + `--apply`）
+- `agents/stock-analyst` — 股票分析助手（A股/美股，技术分析+资金流向+舆情+综合评分+预测）
+- `agents/expense-tracker` — 记账分析（自然语言记账→分类统计/预算告警/ASCII 图表月报）
+
+**写作与沟通**
+- `agents/translator` — 多语言翻译（代码块/占位符保护、术语表、Markdown/JSON/CSV 批量翻译）
+- `agents/writing-assistant` — 写作润色（文本体检评分 + 六模式改写 + 逐句对照报告）
+- `agents/grammar-checker` — 中英校对（17 条规则 + 模型语义校对，分级报告）
+- `agents/email-assistant` — 邮件助手（eml/mbox 解析、摘要、优先级、待办提取、回复起草）
+- `agents/meeting-minutes` — 会议纪要（逐字稿解析、发言人统计、议题切分、决议/待办抽取）
+- `agents/weekly-report` — 周报日报（git log + 工作记录采集、分类统计、骨架/模型双模式）
+
+**知识与学习**
+- `agents/knowledge-qa` — 知识库问答（倒排索引 + BM25 检索，模型回答带来源引用）
+- `agents/doc-summarizer` — 长文摘要（清洗解析 + 抽取式打分 + 模型生成，关键词与结构树）
+- `agents/slide-maker` — 幻灯片生成（主题/文档→大纲→Marp 幻灯片，可导出 PDF/PPTX）
+- `agents/interview-prep` — 面试准备（分类题库、JD 画像、可复现抽题、复习计划、模拟面试）
+- `agents/resume-reviewer` — 简历诊断（结构/量化/日期体检 + JD 技能匹配打分 + 改写示例）
+
+**效率工具**
+- `agents/todo-planner` — 任务拆解（目标→WBS/依赖/工作日甘特图/风险清单）
+- `agents/prompt-optimizer` — 提示词优化（五要素/模糊词/结构体检 + 评分卡 + 优化版提示词）
 
 ## 常见问题
 - 删除 Agent 文件夹后列表未即时更新 → SessionStart hook 会在下次会话开始时同步，或手动运行同步脚本。
