@@ -1,0 +1,797 @@
+id: ts-b-code-reviewer-g1-basic
+agentId: code-reviewer
+group: g1-basic
+name: 代码审查 · 基础功能：典型缺陷代码审查
+description: 常见真实缺陷（安全/并发/性能/资源泄漏/吞异常等）的典型输入，走完整「静态规则 + 模型语义审查」链路（20 条用例 / 100 次调用）
+judge:
+  enabled: true
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-sqli
+    title: SQL 拼接注入（python）
+    tags:
+      - security
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 审查这段代码里的高置信问题，尤其是安全问题
+      content: 请审查 input/ 目录下的代码，找出安全与可靠性问题。
+      files:
+        - path: input/app.py
+          content: "import sqlite3
+
+
+            def find_user(name):
+
+            \    conn = sqlite3.connect('app.db')
+
+            \    cur = conn.cursor()
+
+            \    cur.execute(\"SELECT * FROM users WHERE name = '\" + name + \"'\")
+
+            \    return cur.fetchall()\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+          note: 产出标准报告
+        - type: regex
+          pattern: (?i)(sql|注入|injection|拼接)
+          weight: 2
+          note: 识别出 SQL 注入风险
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-sqli-2
+    title: SQL 拼接注入（javascript）
+    tags:
+      - security
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 审查这段代码里的高置信问题，尤其是安全问题
+      content: 请审查 input/ 目录下的代码，找出安全与可靠性问题。
+      files:
+        - path: input/app.js
+          content: "const { Client } = require('pg');
+
+
+            async function findUser(name) {
+
+            \  const client = new Client();
+
+            \  await client.connect();
+
+            \  const res = await client.query(\"SELECT * FROM users WHERE name = '\" + name + \"'\");
+
+            \  return res.rows;
+
+            }\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+          note: 产出标准报告
+        - type: regex
+          pattern: (?i)(sql|注入|injection|拼接)
+          weight: 2
+          note: 识别出 SQL 注入风险
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-resource
+    title: 资源未释放 / 未关闭（python）
+    tags:
+      - reliability
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出资源泄漏与异常处理问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/export.py
+          content: "import csv
+
+
+            def export_rows(rows, path):
+
+            \    f = open(path, 'w')
+
+            \    writer = csv.writer(f)
+
+            \    for row in rows:
+
+            \        writer.writerow(row)
+
+            \    return path\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (关闭|释放|close|泄漏|上下文|finally|with)
+          weight: 2
+          note: 识别资源未释放
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-resource-4
+    title: 资源未释放 / 未关闭（java）
+    tags:
+      - reliability
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出资源泄漏与异常处理问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/Export.java
+          content: "import java.io.*;
+
+            public class Export {
+
+            \  void export(String[] rows, String path) throws Exception {
+
+            \    FileWriter fw = new FileWriter(path);
+
+            \    for (String row : rows) {
+
+            \      fw.write(row);
+
+            \      fw.write(\"\\n\");
+
+            \    }
+
+            \  }
+
+            }\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (关闭|释放|close|泄漏|上下文|finally|with)
+          weight: 2
+          note: 识别资源未释放
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-swallow
+    title: 吞掉异常继续成功返回
+    tags:
+      - reliability
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出错误处理方面的缺陷
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/pay_callback.py
+          content: "def handle_payment_callback(payload):
+
+            \    try:
+
+            \        amount = payload['amount']
+
+            \        charge(amount)
+
+            \    except Exception:
+
+            \        pass
+
+            \    return {'status': 'ok'}\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (异常|吞|except|错误处理|静默|捕获)
+          weight: 2
+          note: 识别吞异常
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-swallow-6
+    title: 吞掉异常继续成功返回
+    tags:
+      - reliability
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出错误处理方面的缺陷
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/order.py
+          content: "def save_order(order):
+
+            \    try:
+
+            \        db.insert(order)
+
+            \    except Exception as exc:
+
+            \        print('error:', exc)
+
+            \    return True\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (异常|吞|except|错误处理|静默|捕获)
+          weight: 2
+          note: 识别吞异常
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-concurrency
+    title: 先读后写缺少原子性 / 竞态
+    tags:
+      - concurrency
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出并发与一致性问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/inventory.py
+          content: "def deduct_stock(item_id, qty):
+
+            \    stock = db.query(item_id)
+
+            \    if stock.quantity >= qty:
+
+            \        stock.quantity -= qty
+
+            \        db.save(stock)
+
+            \    return stock.quantity\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (并发|竞态|原子|锁|事务|race|lock|transaction)
+          weight: 2
+          note: 识别并发缺陷
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-concurrency-8
+    title: 先读后写缺少原子性 / 竞态
+    tags:
+      - concurrency
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出并发与一致性问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/inventory.js
+          content: "async function deductStock(itemId, qty) {
+
+            \  const stock = await db.get(itemId);
+
+            \  if (stock.quantity >= qty) {
+
+            \    stock.quantity -= qty;
+
+            \    await db.save(stock);
+
+            \  }
+
+            \  return stock.quantity;
+
+            }\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (并发|竞态|原子|锁|事务|race|lock|transaction)
+          weight: 2
+          note: 识别并发缺陷
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-nplus1
+    title: 循环内逐条查询（N+1）
+    tags:
+      - performance
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出性能问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/report.py
+          content: "def build_report(order_ids):
+
+            \    rows = []
+
+            \    for oid in order_ids:
+
+            \        order = db.get_order(oid)
+
+            \        user = db.get_user(order.user_id)
+
+            \        rows.append((order, user))
+
+            \    return rows\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (N\+1|循环.*(查询|调用)|批量|性能|batch|查询次数)
+          weight: 2
+          note: 识别 N+1 查询
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-nplus1-10
+    title: 循环内逐条查询（N+1）
+    tags:
+      - performance
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出性能问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/report.js
+          content: "function buildReport(orderIds) {
+
+            \  const rows = [];
+
+            \  for (const oid of orderIds) {
+
+            \    const order = db.getOrder(oid);
+
+            \    rows.push([order, db.getUser(order.userId)]);
+
+            \  }
+
+            \  return rows;
+
+            }\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (N\+1|循环.*(查询|调用)|批量|性能|batch|查询次数)
+          weight: 2
+          note: 识别 N+1 查询
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-secret
+    title: 硬编码密钥
+    tags:
+      - security
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出安全隐患
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/config.py
+          content: "AWS_SECRET_ACCESS_KEY = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
+
+            DEBUG = True
+
+
+            def connect():
+
+            \    return boto3.client('s3', aws_secret_access_key=AWS_SECRET_ACCESS_KEY)\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (密钥|硬编码|secret|credential|凭据|泄露)
+          weight: 2
+          note: 识别硬编码密钥
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-secret-12
+    title: 硬编码密钥
+    tags:
+      - security
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出安全隐患
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/config.js
+          content: "const config = {
+
+            \  apiKey: 'sk-live-51H8xQ2Zb9vL0mN4pR7sT6uW3xY5zA1bC2d',
+
+            \  debug: true
+
+            };
+
+            module.exports = config;\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (密钥|硬编码|secret|credential|凭据|泄露)
+          weight: 2
+          note: 识别硬编码密钥
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-null
+    title: 空值 / None 未校验
+    tags:
+      - correctness
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出潜在崩溃点
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/profile.py
+          content: "def display_name(user):
+
+            \    return user['profile']['name'].strip().title()
+
+
+            def render(users):
+
+            \    return [display_name(u) for u in users]\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (空值|None|null|未校验|可选|崩溃|KeyError|TypeError|防御)
+          weight: 2
+          note: 识别空值风险
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-null-14
+    title: 空值 / None 未校验
+    tags:
+      - correctness
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出潜在崩溃点
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/profile.js
+          content: "function displayName(user) {
+
+            \  return user.profile.name.trim().replace(/\\b\\w/g, c => c.toUpperCase());
+
+            }
+
+            module.exports = { displayName };\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (空值|None|null|未校验|可选|崩溃|KeyError|TypeError|防御)
+          weight: 2
+          note: 识别空值风险
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-xss
+    title: 未转义输出（XSS）
+    tags:
+      - security
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出 Web 安全问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/view.js
+          content: "function renderComment(comment) {
+
+            \  document.getElementById('list').innerHTML += '<div>' + comment.text + '</div>';
+
+            }
+
+            module.exports = { renderComment };\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (?i)(xss|转义|escape|注入|innerHTML|sanitize|过滤)
+          weight: 2
+          note: 识别 XSS 风险
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-xss-16
+    title: 未转义输出（XSS）
+    tags:
+      - security
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出 Web 安全问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/server.js
+          content: "const express = require('express');
+
+            const app = express();
+
+            app.get('/hi', (req, res) => {
+
+            \  res.send('<h1>Hello ' + req.query.name + '</h1>');
+
+            });
+
+            module.exports = app;\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (?i)(xss|转义|escape|注入|innerHTML|sanitize|过滤)
+          weight: 2
+          note: 识别 XSS 风险
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-weakhash
+    title: 弱哈希存密码
+    tags:
+      - security
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出密码存储相关问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/auth.py
+          content: "import hashlib
+
+
+            def hash_password(password):
+
+            \    return hashlib.md5(password.encode()).hexdigest()
+
+
+            def register(user, password):
+
+            \    user.password_hash = hash_password(password)
+
+            \    db.save(user)\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (md5|sha1|弱哈希|bcrypt|加盐|慢哈希|密码)
+          weight: 2
+          note: 识别弱哈希
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-weakhash-18
+    title: 弱哈希存密码
+    tags:
+      - security
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出密码存储相关问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/auth.js
+          content: "const crypto = require('crypto');
+
+            function hashPassword(password) {
+
+            \  return crypto.createHash('sha1').update(password).digest('hex');
+
+            }
+
+            module.exports = { hashPassword };\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (md5|sha1|弱哈希|bcrypt|加盐|慢哈希|密码)
+          weight: 2
+          note: 识别弱哈希
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-offbyone
+    title: 边界越界 / off-by-one
+    tags:
+      - correctness
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出边界处理问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/window.py
+          content: "def moving_sum(values, k):
+
+            \    out = []
+
+            \    for i in range(len(values)):
+
+            \        total = 0
+
+            \        for j in range(i, i + k + 1):
+
+            \            total += values[j]
+
+            \        out.append(total)
+
+            \    return out\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (越界|边界|IndexError|off-by-one|范围|len\(\))
+          weight: 2
+          note: 识别越界风险
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-offbyone-20
+    title: 边界越界 / off-by-one
+    tags:
+      - correctness
+      - basic
+    repeat: 5
+    input:
+      kind: code
+      goal: 找出边界处理问题
+      content: 请审查 input/ 目录下的代码。
+      files:
+        - path: input/topn.py
+          content: "def top_n(items, n):
+
+            \    result = []
+
+            \    for i in range(n + 1):
+
+            \        result.append(items[i])
+
+            \    return result\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: regex
+          pattern: (越界|边界|IndexError|off-by-one|范围|len\(\))
+          weight: 2
+          note: 识别越界风险
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []

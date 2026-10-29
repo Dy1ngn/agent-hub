@@ -1,0 +1,1044 @@
+id: ts-b-email-assistant-g4-robust
+agentId: email-assistant
+group: g4-robust
+name: 邮件助手 · 鲁棒性：损坏 / 乱码 / 缺字段
+description: 损坏邮件头、乱码、空字节、坏编码、缺字段等畸形输入，优雅处理不崩溃（离线）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-broken-1
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/garbage.eml
+          content: "!!! not an email at all !!!
+
+            \x01\x02\x03\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-2
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/noheaders.eml
+          content: "随便一段没有头的文本\n���\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-3
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/brokenhead.eml
+          content: "From\nTo:\nSubject\n\n正文\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-4
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/inject.eml
+          content: "From: a@example.com
+
+            Subject: 折行
+
+            \ 拼接主题
+
+            To: b@example.com
+
+
+            正文。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-5
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/nul.txt
+          content: "Subject: \0空字节\0
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            \0\0\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-6
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/mojibake.txt
+          content: "Subject: ��锟斤拷
+
+            From: ��@example.com
+
+            To: b@example.com
+
+
+            ÿþý 锟斤拷�\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-7
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/badcharset.eml
+          content: "From: a@example.com
+
+            To: b@example.com
+
+            Subject: =?gbk?B?1tDOxw==?=
+
+            Content-Type: text/plain; charset=not-a-charset
+
+
+            正文乱码测试。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-8
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/badbase64.eml
+          content: "From: a@example.com
+
+            To: b@example.com
+
+            Subject: Bad Base64
+
+            Content-Transfer-Encoding: base64
+
+
+            @@@@ not base64 @@@@\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-9
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/emptymbox.mbox
+          content: ""
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-10
+    title: 格式损坏邮件 + 正常邮件（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏邮件不崩溃，正常邮件照常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/baddate.txt
+          content: "Subject: 坏日期
+
+            From: a@example.com
+
+            To: b@example.com
+
+            Date: 昨天大概中午
+
+
+            日期解析不出来也没关系。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+          note: 正常邮件主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-1
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/nosubject.txt
+          content: "From: a@example.com
+
+            To: b@example.com
+
+
+            没有主题的邮件。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-2
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/nofromto.txt
+          content: "Subject: 没有收发件人\n\n正文在这里。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-3
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/onlybody.txt
+          content: "只有正文，没有任何头。\n第二行。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-4
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/badmultipart.eml
+          content: 'From: a@example.com
+
+            To: b@example.com
+
+            Subject: Bad Multipart
+
+            MIME-Version: 1.0
+
+            Content-Type: multipart/mixed; boundary="NOPE"
+
+
+            没有分隔线的内容。
+
+            '
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-5
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/bom.txt
+          content: "﻿Subject: 带 BOM 的邮件
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            BOM 开头。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-6
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/crlf.txt
+          content: "Subject: 混合换行\r
+
+            From: a@example.com\r
+
+            To: b@example.com\r
+
+            \r
+
+            行尾混用。\r
+
+            \r\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-7
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/emptyfields.txt
+          content: "Subject: 空字段
+
+            From:
+
+            To:
+
+            Cc:
+
+
+            空字段邮件。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-8
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/quoteonly.txt
+          content: "Subject: 只有引用
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            > 被引用的旧内容
+
+            > 又一行引用\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-9
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/longhead.txt
+          content: "Subject: 很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            正文。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-10
+    title: 缺字段/畸形输入（兜底邮件）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/mboxmix.mbox
+          content: "垃圾行没有 From 分隔
+
+
+            From - Mon Oct 26 09:00:00 2026
+
+            From: a@example.com
+
+            To: b@example.com
+
+            Subject: Mixed Box
+
+
+            正文。\n"
+        - path: input/keep.txt
+          content: "Subject: 兜底邮件
+
+            From: keeper@example.com
+
+            To: bob@example.com
+
+
+            这是一封格式正常的邮件，用于保证有可解析的输入。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

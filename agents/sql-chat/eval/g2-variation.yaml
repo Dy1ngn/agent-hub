@@ -1,0 +1,1044 @@
+id: ts-b-sql-chat-g2-variation
+agentId: sql-chat
+group: g2-variation
+name: SQL 问答 · 输入变体：参数 / 结构 / 多表
+description: 结果截断、中文列名、空值、宽表、日期、目录多表、多聚合、别名等变体（模型链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-limit-1
+    title: 结果截断（limit=2）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: table
+      goal: 验证结果行数上限
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60
+
+            6,深圳,200\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 列出全部记录
+        sql: SELECT * FROM data
+        limit: "2"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (已截断|查询结果)
+          weight: 2
+          note: 截断行为正确
+      requiredSuggestions: []
+  - id: g2-limit-2
+    title: 结果截断（limit=100）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: table
+      goal: 验证结果行数上限
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60
+
+            6,深圳,200\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 列出全部记录
+        sql: SELECT * FROM data
+        limit: "100"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (已截断|查询结果)
+          weight: 2
+          note: 截断行为正确
+      requiredSuggestions: []
+  - id: g2-cn-1
+    title: 中文列名（中文列）
+    tags:
+      - variation
+      - i18n
+    repeat: 5
+    input:
+      kind: table
+      goal: 查询中文列名的数据
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "姓名,城市,金额\n张三,北京,100\n李四,上海,250\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 每个人的金额是多少？
+        sql: SELECT 姓名, 金额 FROM data
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (姓名|金额|订单号|客户)
+          weight: 2
+          note: 中文列名查询正确
+      requiredSuggestions: []
+  - id: g2-cn-2
+    title: 中文列名（中文业务列）
+    tags:
+      - variation
+      - i18n
+    repeat: 5
+    input:
+      kind: table
+      goal: 查询中文列名的数据
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "订单号,客户,金额
+
+            D001,甲公司,100
+
+            D002,乙公司,250\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 有哪些订单？
+        sql: SELECT 订单号, 客户 FROM data
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (姓名|金额|订单号|客户)
+          weight: 2
+          note: 中文列名查询正确
+      requiredSuggestions: []
+  - id: g2-null-1
+    title: 空值处理（空值）
+    tags:
+      - variation
+      - "null"
+    repeat: 5
+    input:
+      kind: table
+      goal: 处理 NULL 与空字符串
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,
+
+            3,广州,80
+
+            4,,\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 金额为空的记录有几条？
+        sql: SELECT COUNT(*) AS cnt FROM data WHERE amount IS NULL OR amount = ''
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (NULL|null|查询结果|2|4)
+          weight: 2
+          note: 空值统计正确
+      requiredSuggestions: []
+  - id: g2-null-2
+    title: 空值处理（非空计数）
+    tags:
+      - variation
+      - "null"
+    repeat: 5
+    input:
+      kind: table
+      goal: 处理 NULL 与空字符串
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,
+
+            3,广州,80
+
+            4,,\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 每列各有多少非空值？
+        sql: SELECT COUNT(city) AS c, COUNT(amount) AS a FROM data
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (NULL|null|查询结果|2|4)
+          weight: 2
+          note: 空值统计正确
+      requiredSuggestions: []
+  - id: g2-wide-1
+    title: 宽表多列（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: table
+      goal: 查询 10 列宽表
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10
+
+            1,2,3,4,5,6,7,8,9,10
+
+            11,12,13,14,15,16,17,18,19,20\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 第一行数据是什么？
+        sql: SELECT * FROM data LIMIT 1
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (c10|查询结果|20)
+          weight: 2
+          note: 宽表查询正确
+      requiredSuggestions: []
+  - id: g2-wide-2
+    title: 宽表多列（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: table
+      goal: 查询 10 列宽表
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10
+
+            1,2,3,4,5,6,7,8,9,10
+
+            11,12,13,14,15,16,17,18,19,20\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: c10 列的最大值是多少？
+        sql: SELECT MAX(c10) AS m FROM data
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (c10|查询结果|20)
+          weight: 2
+          note: 宽表查询正确
+      requiredSuggestions: []
+  - id: g2-group-1
+    title: 多维分组（1）
+    tags:
+      - variation
+      - aggregate
+    repeat: 5
+    input:
+      kind: table
+      goal: 按城市与日期分组
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,day,amount
+
+            1,2024-01-15,100
+
+            2,2024-02-20,250
+
+            3,2024-03-25,80\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 每个月的金额合计是多少？
+        sql: SELECT substr(day, 1, 7) AS month, SUM(amount) AS total FROM data GROUP BY month
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (2024|北京|上海|city)
+          weight: 2
+          note: 分组结果正确
+      requiredSuggestions: []
+  - id: g2-group-2
+    title: 多维分组（2）
+    tags:
+      - variation
+      - aggregate
+    repeat: 5
+    input:
+      kind: table
+      goal: 按城市与日期分组
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60
+
+            6,深圳,200\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 每个城市有几条记录？
+        sql: SELECT city, COUNT(*) AS cnt FROM data GROUP BY city
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (2024|北京|上海|city)
+          weight: 2
+          note: 分组结果正确
+      requiredSuggestions: []
+  - id: g2-date-1
+    title: 日期字符串比较（1）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: table
+      goal: 按日期过滤
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,day,amount
+
+            1,2024-01-15,100
+
+            2,2024-02-20,250
+
+            3,2024-03-25,80\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 2 月以后的记录有哪些？
+        sql: SELECT * FROM data WHERE day >= '2024-02-01'
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (2024)
+          weight: 2
+          note: 日期过滤结果正确
+      requiredSuggestions: []
+  - id: g2-date-2
+    title: 日期字符串比较（2）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: table
+      goal: 按日期过滤
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,day,amount
+
+            1,2024-01-15,100
+
+            2,2024-02-20,250
+
+            3,2024-03-25,80\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 1 月的记录有哪些？
+        sql: SELECT * FROM data WHERE day < '2024-02-01'
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (2024)
+          weight: 2
+          note: 日期过滤结果正确
+      requiredSuggestions: []
+  - id: g2-multi-1
+    title: 目录多表（1）
+    tags:
+      - variation
+      - multi-table
+    repeat: 5
+    input:
+      kind: table
+      goal: 查询目录下的多张表
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/tables/orders.csv
+          content: "id,customer_id,total
+
+            1,1,100
+
+            2,1,250
+
+            3,2,80
+
+            4,3,120
+
+            5,2,60\n"
+        - path: input/tables/customers.csv
+          content: "id,name\n1,张三\n2,李四\n3,王五\n"
+      params:
+        src: input/tables
+        q: 订单总金额是多少？
+        sql: SELECT SUM(total) AS amount FROM orders
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (orders|customers|610|3)
+          weight: 2
+          note: 多表查询正确
+      requiredSuggestions: []
+  - id: g2-multi-2
+    title: 目录多表（2）
+    tags:
+      - variation
+      - multi-table
+    repeat: 5
+    input:
+      kind: table
+      goal: 查询目录下的多张表
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/tables/customers.csv
+          content: "id,name\n1,张三\n2,李四\n3,王五\n"
+        - path: input/tables/orders.csv
+          content: "id,customer_id,total
+
+            1,1,100
+
+            2,1,250
+
+            3,2,80
+
+            4,3,120
+
+            5,2,60\n"
+      params:
+        src: input/tables
+        q: 有多少个客户？
+        sql: SELECT COUNT(*) AS cnt FROM customers
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (orders|customers|610|3)
+          weight: 2
+          note: 多表查询正确
+      requiredSuggestions: []
+  - id: g2-agg-1
+    title: 多聚合统计（1）
+    tags:
+      - variation
+      - aggregate
+    repeat: 5
+    input:
+      kind: table
+      goal: 一次算多个聚合
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 金额的总和、平均值和最大值分别是多少？
+        sql: SELECT SUM(amount) AS s, AVG(amount) AS a, MAX(amount) AS m FROM data
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)(sum|avg|max|min|count)
+          weight: 2
+          note: 聚合结果正确
+      requiredSuggestions: []
+  - id: g2-agg-2
+    title: 多聚合统计（2）
+    tags:
+      - variation
+      - aggregate
+    repeat: 5
+    input:
+      kind: table
+      goal: 一次算多个聚合
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60
+
+            6,深圳,200\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 记录数与最小金额是多少？
+        sql: SELECT COUNT(*) AS c, MIN(amount) AS m FROM data
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)(sum|avg|max|min|count)
+          weight: 2
+          note: 聚合结果正确
+      requiredSuggestions: []
+  - id: g2-alias-1
+    title: 表名与别名（1）
+    tags:
+      - variation
+      - sql
+    repeat: 5
+    input:
+      kind: table
+      goal: 带别名的查询
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 各城市金额合计，按金额排序
+        sql: SELECT city AS 城市, SUM(amount) AS 合计 FROM data GROUP BY city ORDER BY 合计 DESC
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (城市|合计|double_amount|40)
+          weight: 2
+          note: 别名查询正确
+      requiredSuggestions: []
+  - id: g2-alias-2
+    title: 表名与别名（2）
+    tags:
+      - variation
+      - sql
+    repeat: 5
+    input:
+      kind: table
+      goal: 带别名的查询
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,amount\n1,10\n2,20\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 金额翻倍后是多少？
+        sql: SELECT id, amount * 2 AS double_amount FROM data
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (城市|合计|double_amount|40)
+          weight: 2
+          note: 别名查询正确
+      requiredSuggestions: []
+  - id: g2-empty-1
+    title: 空结果变体（1）
+    tags:
+      - variation
+      - empty
+    repeat: 5
+    input:
+      kind: table
+      goal: 不同无匹配条件
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 有没有金额为负的记录？
+        sql: SELECT * FROM data WHERE amount < 0
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (查询结果|（无）)
+          weight: 2
+          note: 空结果优雅呈现
+      requiredSuggestions: []
+  - id: g2-empty-2
+    title: 空结果变体（2）
+    tags:
+      - variation
+      - empty
+    repeat: 5
+    input:
+      kind: table
+      goal: 不同无匹配条件
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 有没有深圳的记录？
+        sql: SELECT * FROM data WHERE city = '深圳'
+        limit: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 1
+          note: 产出标准查询报告
+        - type: contains
+          text: "## 结论"
+          weight: 1
+          note: 报告固定结构（结论小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (查询结果|（无）)
+          weight: 2
+          note: 空结果优雅呈现
+      requiredSuggestions: []

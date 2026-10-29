@@ -1,0 +1,1136 @@
+id: ts-b-code-translator-g1-basic
+agentId: code-translator
+group: g1-basic
+name: 代码翻译 · 基础功能：典型跨语言翻译
+description: python/javascript/typescript/go/java 五个方向的典型源码翻译，走「语言检测 + 术语映射 + 模型翻译 + 语法自检」完整链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-translate-1
+    title: users.py → javascript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/users.py
+          content: "import json
+
+
+            def load_users(path):
+
+            \    with open(path) as f:
+
+            \        data = json.loads(f.read())
+
+            \    users = data.get('users', [])
+
+            \    print('loaded', len(users))
+
+            \    return users
+
+
+            def summarize(users):
+
+            \    names = [u['name'].strip() for u in users]
+
+            \    return ', '.join(names)\n"
+      params:
+        src: input/users.py
+        target: javascript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: console.log
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-2
+    title: stats.py → javascript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/stats.py
+          content: "def moving_sum(values, k):
+
+            \    out = []
+
+            \    for i in range(len(values)):
+
+            \        total = sum(values[i:i + k])
+
+            \        out.append(total)
+
+            \    return out
+
+
+            def top_n(items, n):
+
+            \    items = sorted(items, reverse=True)
+
+            \    print('top', n)
+
+            \    return items[:n]\n"
+      params:
+        src: input/stats.py
+        target: javascript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: console.log
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-3
+    title: cart.py → typescript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/cart.py
+          content: "class Cart:
+
+            \    def __init__(self, owner):
+
+            \        self.owner = owner
+
+            \        self.items = []
+
+
+            \    def add(self, item):
+
+            \        self.items.append(item)
+
+
+            \    def total(self):
+
+            \        return sum(i.price for i in self.items)\n"
+      params:
+        src: input/cart.py
+        target: typescript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: constructor
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-4
+    title: conf.py → typescript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/conf.py
+          content: "def parse_config(raw):
+
+            \    try:
+
+            \        return json.loads(raw)
+
+            \    except ValueError as exc:
+
+            \        print('bad config', exc)
+
+            \        return {}\n"
+      params:
+        src: input/conf.py
+        target: typescript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: JSON.parse
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-5
+    title: api.js → python
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/api.js
+          content: "const fetch = require('node-fetch');
+
+
+            async function loadUser(id) {
+
+            \  const res = await fetch('/api/users/' + id);
+
+            \  const data = await res.json();
+
+            \  console.log('loaded', data.name);
+
+            \  return data;\n"
+      params:
+        src: input/api.js
+        target: python
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: print(
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-6
+    title: sum.js → python
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/sum.js
+          content: "function sum(items) {
+
+            \  let total = 0;
+
+            \  for (const it of items) {
+
+            \    total += it.price;
+
+            \  }
+
+            \  console.log('total', total);
+
+            \  return total;
+
+            }
+
+
+            module.exports = { sum };\n"
+      params:
+        src: input/sum.js
+        target: python
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: print(
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-7
+    title: Cart.java → python
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/Cart.java
+          content: "public class Cart {
+
+            \    private int total = 0;
+
+
+            \    public void add(int price) {
+
+            \        total += price;
+
+            \    }
+
+
+            \    public int getTotal() {
+
+            \        System.out.println(total);
+
+            \        return total;
+
+            \    }
+
+            }\n"
+      params:
+        src: input/Cart.java
+        target: python
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-8
+    title: sum.go → python
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/sum.go
+          content: "package main
+
+
+            import \"fmt\"
+
+
+            func Sum(items []int) int {
+
+            \ttotal := 0
+
+            \tfor _, v := range items {
+
+            \t\ttotal += v
+
+            \t}
+
+            \tfmt.Println(\"total\", total)
+
+            \treturn total
+
+            }\n"
+      params:
+        src: input/sum.go
+        target: python
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-9
+    title: cart2.py → go
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/cart2.py
+          content: "class Cart:
+
+            \    def __init__(self, owner):
+
+            \        self.owner = owner
+
+            \        self.items = []
+
+
+            \    def add(self, item):
+
+            \        self.items.append(item)
+
+
+            \    def total(self):
+
+            \        return sum(i.price for i in self.items)\n"
+      params:
+        src: input/cart2.py
+        target: go
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-10
+    title: sum2.py → java
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/sum2.py
+          content: "def moving_sum(values, k):
+
+            \    out = []
+
+            \    for i in range(len(values)):
+
+            \        total = sum(values[i:i + k])
+
+            \        out.append(total)
+
+            \    return out
+
+
+            def top_n(items, n):
+
+            \    items = sorted(items, reverse=True)
+
+            \    print('top', n)
+
+            \    return items[:n]\n"
+      params:
+        src: input/sum2.py
+        target: java
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-11
+    title: svc.ts → javascript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/svc.ts
+          content: "interface User {
+
+            \  name: string;
+
+            \  age: number;
+
+            }
+
+
+            class UserService {
+
+            \  private users: User[] = [];
+
+            \  add(user: User): void {
+
+            \    this.users.push(user);
+
+            \  }
+
+            \  count(): number {
+
+            \    return this.users.length;
+
+            \  }
+
+            }\n"
+      params:
+        src: input/svc.ts
+        target: javascript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-12
+    title: sum2.js → go
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/sum2.js
+          content: "function sum(items) {
+
+            \  let total = 0;
+
+            \  for (const it of items) {
+
+            \    total += it.price;
+
+            \  }
+
+            \  console.log('total', total);
+
+            \  return total;
+
+            }
+
+
+            module.exports = { sum };\n"
+      params:
+        src: input/sum2.js
+        target: go
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-13
+    title: dump.py → typescript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/dump.py
+          content: "import json
+
+
+            def dump_config(cfg):
+
+            \    text = json.dumps(cfg, indent=2)
+
+            \    print(text)
+
+            \    return text\n"
+      params:
+        src: input/dump.py
+        target: typescript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: JSON
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-14
+    title: dump2.py → javascript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/dump2.py
+          content: "import json
+
+
+            def dump_config(cfg):
+
+            \    text = json.dumps(cfg, indent=2)
+
+            \    print(text)
+
+            \    return text\n"
+      params:
+        src: input/dump2.py
+        target: javascript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: JSON
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-15
+    title: Cart2.java → javascript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/Cart2.java
+          content: "public class Cart {
+
+            \    private int total = 0;
+
+
+            \    public void add(int price) {
+
+            \        total += price;
+
+            \    }
+
+
+            \    public int getTotal() {
+
+            \        System.out.println(total);
+
+            \        return total;
+
+            \    }
+
+            }\n"
+      params:
+        src: input/Cart2.java
+        target: javascript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-16
+    title: sum3.go → javascript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/sum3.go
+          content: "package main
+
+
+            import \"fmt\"
+
+
+            func Sum(items []int) int {
+
+            \ttotal := 0
+
+            \tfor _, v := range items {
+
+            \t\ttotal += v
+
+            \t}
+
+            \tfmt.Println(\"total\", total)
+
+            \treturn total
+
+            }\n"
+      params:
+        src: input/sum3.go
+        target: javascript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-17
+    title: sum3.js → typescript
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/sum3.js
+          content: "function sum(items) {
+
+            \  let total = 0;
+
+            \  for (const it of items) {
+
+            \    total += it.price;
+
+            \  }
+
+            \  console.log('total', total);
+
+            \  return total;
+
+            }
+
+
+            module.exports = { sum };\n"
+      params:
+        src: input/sum3.js
+        target: typescript
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-18
+    title: svc2.ts → go
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/svc2.ts
+          content: "interface User {
+
+            \  name: string;
+
+            \  age: number;
+
+            }
+
+
+            class UserService {
+
+            \  private users: User[] = [];
+
+            \  add(user: User): void {
+
+            \    this.users.push(user);
+
+            \  }
+
+            \  count(): number {
+
+            \    return this.users.length;
+
+            \  }
+
+            }\n"
+      params:
+        src: input/svc2.ts
+        target: go
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-19
+    title: cart3.py → go
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/cart3.py
+          content: "class Cart:
+
+            \    def __init__(self, owner):
+
+            \        self.owner = owner
+
+            \        self.items = []
+
+
+            \    def add(self, item):
+
+            \        self.items.append(item)
+
+
+            \    def total(self):
+
+            \        return sum(i.price for i in self.items)\n"
+      params:
+        src: input/cart3.py
+        target: go
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-translate-20
+    title: sum4.go → java
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 把给定源码翻译成目标语言，产出译文与中文翻译报告
+      content: 请把 input/ 目录下的源码翻译成目标语言，报告里给出术语映射与结构对照。
+      files:
+        - path: input/sum4.go
+          content: "package main
+
+
+            import \"fmt\"
+
+
+            func Sum(items []int) int {
+
+            \ttotal := 0
+
+            \tfor _, v := range items {
+
+            \t\ttotal += v
+
+            \t}
+
+            \tfmt.Println(\"total\", total)
+
+            \treturn total
+
+            }\n"
+      params:
+        src: input/sum4.go
+        target: java
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性命中/结构输出
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

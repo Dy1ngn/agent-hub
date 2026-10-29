@@ -1,0 +1,47 @@
+{
+  "id": "slide-maker",
+  "name": "幻灯片生成",
+  "description": "幻灯片生成：从主题或文档提炼大纲，自动排版成可导出 PDF/PPTX 的 Marp 幻灯片。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "--topic",
+      "{{params.topic}}",
+      "--from",
+      "input/doc.md",
+      "--slides",
+      "{{params.slides}}",
+      "--audience",
+      "{{params.audience}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown"
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

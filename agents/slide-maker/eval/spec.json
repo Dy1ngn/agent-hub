@@ -1,0 +1,1174 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：主题 / 文档生成 Marp 幻灯片",
+      "description": "典型主题与文档输入下的完整链路：提炼大纲、排版成 Marp（封面/目录/内容/小结/Q&A），走模型生成内容链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-topic-{i}",
+          "title": "按主题生成（{topic}）",
+          "tags": [
+            "basic",
+            "topic"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "给主题直接生成 Marp 幻灯片",
+            "content": "请围绕主题「{topic}」生成幻灯片，听众：{audience}。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": ""
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "{audience}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "topic": "季度业务汇报",
+              "audience": "管理层"
+            },
+            {
+              "i": "2",
+              "topic": "Kubernetes 上手",
+              "audience": "后端工程师"
+            },
+            {
+              "i": "3",
+              "topic": "新员工入职培训",
+              "audience": "新人"
+            },
+            {
+              "i": "4",
+              "topic": "产品发布会策划",
+              "audience": "客户"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2,
+                "note": "合法 Marp 头部"
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2,
+                "note": "主题写进页脚"
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1,
+                "note": "页码页脚"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-doc-{i}",
+          "title": "文档提炼生成（{topic}）",
+          "tags": [
+            "basic",
+            "doc"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "从现有文档提炼大纲生成 Marp 幻灯片",
+            "content": "请把 input/doc.md 提炼成「{topic}」幻灯片，听众：{audience}。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "{audience}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "topic": "云平台迁移方案",
+              "audience": "技术委员会",
+              "doc": "# 云平台迁移方案\n\n## 背景\n\n- 机房租赁合同明年 3 月到期\n- 现有集群运维成本高\n\n## 迁移方案\n\n- 采用分批迁移策略，先无状态服务\n- 数据库使用 DTS 双写校验\n- 迁移窗口安排在凌晨低峰期\n\n## 风险与应对\n\n- 回滚预案：保留旧集群两周\n- 演练：正式迁移前全链路演练 2 次\n"
+            },
+            {
+              "i": "2",
+              "topic": "Kubernetes 教程",
+              "audience": "开发同学",
+              "doc": "# Kubernetes 上手教程\n\n## 安装准备\n\n- 准备 3 台 4C8G 虚拟机\n- 安装 containerd 与 kubeadm\n\n## 集群搭建\n\n- kubeadm init 初始化控制面\n- 加入 worker 节点\n- 安装 Calico 网络插件\n\n## 应用部署\n\n- 编写 Deployment 与 Service\n- 配置探针与资源限额\n- 用 Helm 管理发布\n"
+            },
+            {
+              "i": "3",
+              "topic": "秒杀活动复盘",
+              "audience": "项目组",
+              "doc": "# 项目复盘：秒杀活动\n\n## 目标达成\n\n- 目标 GMV 500 万，实际完成 620 万\n- 订单峰值 8000 TPS\n\n## 做得好的\n\n- 缓存预热提前 2 小时完成\n- 限流策略保护了核心链路\n\n## 待改进\n\n- 库存扣减出现 30 单超卖\n- 监控告警阈值设置不合理\n\n## 行动项\n\n- 下周完成库存扣减重构\n- 补充压测用例 20 个\n"
+            },
+            {
+              "i": "4",
+              "topic": "周报分享",
+              "audience": "部门同事",
+              "doc": "# 第 42 周周报\n\n## 本周完成\n\n- 完成支付网关联调\n- 修复线上缺陷 8 个\n\n## 下周计划\n\n- 启动对账模块开发\n- 输出接口文档\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-slides-{i}",
+          "title": "页数控制（目标 {slides} 页）",
+          "tags": [
+            "basic",
+            "layout"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "按目标页数排版幻灯片",
+            "content": "请生成「{topic}」幻灯片，目标 {slides} 页。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "{slides}",
+              "audience": "{audience}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "topic": "技术方案评审",
+              "slides": "6",
+              "audience": "架构师",
+              "doc": "# 云平台迁移方案\n\n## 背景\n\n- 机房租赁合同明年 3 月到期\n- 现有集群运维成本高\n\n## 迁移方案\n\n- 采用分批迁移策略，先无状态服务\n- 数据库使用 DTS 双写校验\n- 迁移窗口安排在凌晨低峰期\n\n## 风险与应对\n\n- 回滚预案：保留旧集群两周\n- 演练：正式迁移前全链路演练 2 次\n"
+            },
+            {
+              "i": "2",
+              "topic": "技术方案评审",
+              "slides": "8",
+              "audience": "架构师",
+              "doc": "# 云平台迁移方案\n\n## 背景\n\n- 机房租赁合同明年 3 月到期\n- 现有集群运维成本高\n\n## 迁移方案\n\n- 采用分批迁移策略，先无状态服务\n- 数据库使用 DTS 双写校验\n- 迁移窗口安排在凌晨低峰期\n\n## 风险与应对\n\n- 回滚预案：保留旧集群两周\n- 演练：正式迁移前全链路演练 2 次\n"
+            },
+            {
+              "i": "3",
+              "topic": "技术方案评审",
+              "slides": "12",
+              "audience": "架构师",
+              "doc": "# Kubernetes 上手教程\n\n## 安装准备\n\n- 准备 3 台 4C8G 虚拟机\n- 安装 containerd 与 kubeadm\n\n## 集群搭建\n\n- kubeadm init 初始化控制面\n- 加入 worker 节点\n- 安装 Calico 网络插件\n\n## 应用部署\n\n- 编写 Deployment 与 Service\n- 配置探针与资源限额\n- 用 Helm 管理发布\n"
+            },
+            {
+              "i": "4",
+              "topic": "技术方案评审",
+              "slides": "20",
+              "audience": "架构师",
+              "doc": "# 项目复盘：秒杀活动\n\n## 目标达成\n\n- 目标 GMV 500 万，实际完成 620 万\n- 订单峰值 8000 TPS\n\n## 做得好的\n\n- 缓存预热提前 2 小时完成\n- 限流策略保护了核心链路\n\n## 待改进\n\n- 库存扣减出现 30 单超卖\n- 监控告警阈值设置不合理\n\n## 行动项\n\n- 下周完成库存扣减重构\n- 补充压测用例 20 个\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-audience-{i}",
+          "title": "听众变体（{audience}）",
+          "tags": [
+            "basic",
+            "audience"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "面向不同听众生成幻灯片",
+            "content": "请生成「{topic}」幻灯片，听众：{audience}。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "{audience}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "topic": "数据平台介绍",
+              "audience": "管理层",
+              "doc": "# 数据平台建设方案\n\n## 指标体系\n\n| 指标 | 口径 | 负责人 |\n| --- | --- | --- |\n| DAU | 去重登录用户 | 张三 |\n| GMV | 支付成功金额 | 李四 |\n\n## 数据链路\n\n- 采集：埋点 SDK + 服务端日志\n- 清洗：Flink 实时任务\n- 应用：指标平台 + 报表\n"
+            },
+            {
+              "i": "2",
+              "topic": "数据平台介绍",
+              "audience": "开发者",
+              "doc": "# 数据平台建设方案\n\n## 指标体系\n\n| 指标 | 口径 | 负责人 |\n| --- | --- | --- |\n| DAU | 去重登录用户 | 张三 |\n| GMV | 支付成功金额 | 李四 |\n\n## 数据链路\n\n- 采集：埋点 SDK + 服务端日志\n- 清洗：Flink 实时任务\n- 应用：指标平台 + 报表\n"
+            },
+            {
+              "i": "3",
+              "topic": "数据平台介绍",
+              "audience": "高校学生",
+              "doc": "# 数据平台建设方案\n\n## 指标体系\n\n| 指标 | 口径 | 负责人 |\n| --- | --- | --- |\n| DAU | 去重登录用户 | 张三 |\n| GMV | 支付成功金额 | 李四 |\n\n## 数据链路\n\n- 采集：埋点 SDK + 服务端日志\n- 清洗：Flink 实时任务\n- 应用：指标平台 + 报表\n"
+            },
+            {
+              "i": "4",
+              "topic": "数据平台介绍",
+              "audience": "潜在客户",
+              "doc": "# 数据平台建设方案\n\n## 指标体系\n\n| 指标 | 口径 | 负责人 |\n| --- | --- | --- |\n| DAU | 去重登录用户 | 张三 |\n| GMV | 支付成功金额 | 李四 |\n\n## 数据链路\n\n- 采集：埋点 SDK + 服务端日志\n- 清洗：Flink 实时任务\n- 应用：指标平台 + 报表\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-mixed-{i}",
+          "title": "图表/金句内容排版（{topic}）",
+          "tags": [
+            "basic",
+            "layout"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "数字密集与短句内容按版式排版",
+            "content": "请把 input/doc.md 生成「{topic}」幻灯片。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "{audience}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "topic": "性能优化分享",
+              "audience": "前端工程师",
+              "doc": "# 前端性能优化\n\n## 测量\n\n- 用 Lighthouse 测量性能分\n- 关注 LCP 与 CLS\n\n## 优化手段\n\n- 代码分割：动态 import\n- 图片：WebP + 懒加载\n\n## 示例\n\n```js\nconst page = await import('./page.js');\n```\n"
+            },
+            {
+              "i": "2",
+              "topic": "英文技术分享",
+              "audience": "Meetup 听众",
+              "doc": "# Cloud Native Meetup\n\n## Agenda\n\n- Keynote: Scaling Kubernetes to 10k nodes\n- Lightning talks from community\n\n## Speakers\n\n- Alice Chen, Platform Lead\n- Bob Li, SRE\n\n## Takeaways\n\n- Observability first\n- Automate everything\n"
+            },
+            {
+              "i": "3",
+              "topic": "中英混合分享",
+              "audience": "平台团队",
+              "doc": "# 中英混合技术分享\n\n## Background\n\n- 服务网格 Service Mesh 落地背景\n- 采用 Istio 作为控制面\n\n## Practice\n\n- 灰度发布：基于 header 路由\n- 故障注入：注入 5xx 验证容错\n"
+            },
+            {
+              "i": "4",
+              "topic": "设计系统分享",
+              "audience": "设计师",
+              "doc": "# 🎨 设计系统分享\n\n## 组件库\n\n- 🔧 基础组件 30 个\n- 📦 业务组件 12 个\n\n## 落地\n\n- 🚀 三个业务线接入\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：文档形态 / 长度 / 语言 / 参数",
+      "description": "不同文档形态（段落/列表/表格/代码）、长度、语言与页数参数下的稳定排版（模型生成链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-doc-{i}",
+          "title": "文档形态变体（{label}）",
+          "tags": [
+            "variation",
+            "doc"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同形态文档都能提炼出大纲并排版",
+            "content": "请把 input/doc.md（{label}）生成「{topic}」幻灯片。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "{audience}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "label": "纯列表",
+              "topic": "列表型文档",
+              "audience": "通用听众",
+              "doc": "- 列表要点 0：说明一部分内容\n- 列表要点 1：说明一部分内容\n- 列表要点 2：说明一部分内容\n- 列表要点 3：说明一部分内容\n- 列表要点 4：说明一部分内容\n- 列表要点 5：说明一部分内容\n- 列表要点 6：说明一部分内容\n- 列表要点 7：说明一部分内容\n- 列表要点 8：说明一部分内容\n- 列表要点 9：说明一部分内容\n- 列表要点 10：说明一部分内容\n- 列表要点 11：说明一部分内容\n- 列表要点 12：说明一部分内容\n- 列表要点 13：说明一部分内容\n- 列表要点 14：说明一部分内容\n- 列表要点 15：说明一部分内容\n- 列表要点 16：说明一部分内容\n- 列表要点 17：说明一部分内容\n- 列表要点 18：说明一部分内容\n- 列表要点 19：说明一部分内容\n- 列表要点 20：说明一部分内容\n- 列表要点 21：说明一部分内容\n- 列表要点 22：说明一部分内容\n- 列表要点 23：说明一部分内容\n- 列表要点 24：说明一部分内容\n- 列表要点 25：说明一部分内容\n- 列表要点 26：说明一部分内容\n- 列表要点 27：说明一部分内容\n- 列表要点 28：说明一部分内容\n- 列表要点 29：说明一部分内容\n- 列表要点 30：说明一部分内容\n- 列表要点 31：说明一部分内容\n- 列表要点 32：说明一部分内容\n- 列表要点 33：说明一部分内容\n- 列表要点 34：说明一部分内容\n- 列表要点 35：说明一部分内容\n- 列表要点 36：说明一部分内容\n- 列表要点 37：说明一部分内容\n- 列表要点 38：说明一部分内容\n- 列表要点 39：说明一部分内容\n- 列表要点 40：说明一部分内容\n- 列表要点 41：说明一部分内容\n- 列表要点 42：说明一部分内容\n- 列表要点 43：说明一部分内容\n- 列表要点 44：说明一部分内容\n- 列表要点 45：说明一部分内容\n- 列表要点 46：说明一部分内容\n- 列表要点 47：说明一部分内容\n- 列表要点 48：说明一部分内容\n- 列表要点 49：说明一部分内容\n"
+            },
+            {
+              "i": "2",
+              "label": "长段落",
+              "topic": "段落型文档",
+              "audience": "通用听众",
+              "doc": "# 城市数字化转型报告\n\n## 趋势\n\n城市数字化转型正在从单点系统建设走向全域协同。数据要素的价值被重新定义，公共数据授权运营成为新的话题。治理能力成为决定成败的关键因素，需要在制度、技术和组织三个层面同步推进。\n\n## 挑战\n\n部门墙导致数据共享困难，标准不统一让系统集成成本居高不下。市民感知度低，很多项目建成即闲置。需要以用促建，围绕高频场景打磨亮点。\n"
+            },
+            {
+              "i": "3",
+              "label": "多级标题",
+              "topic": "标题型文档",
+              "audience": "通用听众",
+              "doc": "# Kubernetes 上手教程\n\n## 安装准备\n\n- 准备 3 台 4C8G 虚拟机\n- 安装 containerd 与 kubeadm\n\n## 集群搭建\n\n- kubeadm init 初始化控制面\n- 加入 worker 节点\n- 安装 Calico 网络插件\n\n## 应用部署\n\n- 编写 Deployment 与 Service\n- 配置探针与资源限额\n- 用 Helm 管理发布\n"
+            },
+            {
+              "i": "4",
+              "label": "表格文档",
+              "topic": "表格型文档",
+              "audience": "通用听众",
+              "doc": "# 数据平台建设方案\n\n## 指标体系\n\n| 指标 | 口径 | 负责人 |\n| --- | --- | --- |\n| DAU | 去重登录用户 | 张三 |\n| GMV | 支付成功金额 | 李四 |\n\n## 数据链路\n\n- 采集：埋点 SDK + 服务端日志\n- 清洗：Flink 实时任务\n- 应用：指标平台 + 报表\n"
+            },
+            {
+              "i": "5",
+              "label": "极短文档",
+              "topic": "短文档",
+              "audience": "通用听众",
+              "doc": "# 一句话\n\n- 只有一个要点\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-len-{i}",
+          "title": "文档长度变体（{label}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同长度文档都能稳定排版",
+            "content": "请把 input/doc.md（{label}）生成「{topic}」幻灯片。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "通用听众"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "label": "2 节",
+              "topic": "长度变体",
+              "doc": "# 主文档\n\n## 第 1 部分\n\n- 要点 1 一\n- 要点 1 二：完成 20 个模块\n\n## 第 2 部分\n\n- 要点 2 一\n- 要点 2 二：完成 20 个模块\n"
+            },
+            {
+              "i": "2",
+              "label": "4 节",
+              "topic": "长度变体",
+              "doc": "# 主文档\n\n## 第 1 部分\n\n- 要点 1 一\n- 要点 1 二：完成 20 个模块\n\n## 第 2 部分\n\n- 要点 2 一\n- 要点 2 二：完成 20 个模块\n\n## 第 3 部分\n\n- 要点 3 一\n- 要点 3 二：完成 20 个模块\n\n## 第 4 部分\n\n- 要点 4 一\n- 要点 4 二：完成 20 个模块\n"
+            },
+            {
+              "i": "3",
+              "label": "6 节",
+              "topic": "长度变体",
+              "doc": "# 主文档\n\n## 第 1 部分\n\n- 要点 1 一\n- 要点 1 二：完成 20 个模块\n\n## 第 2 部分\n\n- 要点 2 一\n- 要点 2 二：完成 20 个模块\n\n## 第 3 部分\n\n- 要点 3 一\n- 要点 3 二：完成 20 个模块\n\n## 第 4 部分\n\n- 要点 4 一\n- 要点 4 二：完成 20 个模块\n\n## 第 5 部分\n\n- 要点 5 一\n- 要点 5 二：完成 20 个模块\n\n## 第 6 部分\n\n- 要点 6 一\n- 要点 6 二：完成 20 个模块\n"
+            },
+            {
+              "i": "4",
+              "label": "8 节",
+              "topic": "长度变体",
+              "doc": "# 主文档\n\n## 第 1 部分\n\n- 要点 1 一\n- 要点 1 二：完成 20 个模块\n\n## 第 2 部分\n\n- 要点 2 一\n- 要点 2 二：完成 20 个模块\n\n## 第 3 部分\n\n- 要点 3 一\n- 要点 3 二：完成 20 个模块\n\n## 第 4 部分\n\n- 要点 4 一\n- 要点 4 二：完成 20 个模块\n\n## 第 5 部分\n\n- 要点 5 一\n- 要点 5 二：完成 20 个模块\n\n## 第 6 部分\n\n- 要点 6 一\n- 要点 6 二：完成 20 个模块\n\n## 第 7 部分\n\n- 要点 7 一\n- 要点 7 二：完成 20 个模块\n\n## 第 8 部分\n\n- 要点 8 一\n- 要点 8 二：完成 20 个模块\n"
+            },
+            {
+              "i": "5",
+              "label": "10 节",
+              "topic": "长度变体",
+              "doc": "# 主文档\n\n## 第 1 部分\n\n- 要点 1 一\n- 要点 1 二：完成 20 个模块\n\n## 第 2 部分\n\n- 要点 2 一\n- 要点 2 二：完成 20 个模块\n\n## 第 3 部分\n\n- 要点 3 一\n- 要点 3 二：完成 20 个模块\n\n## 第 4 部分\n\n- 要点 4 一\n- 要点 4 二：完成 20 个模块\n\n## 第 5 部分\n\n- 要点 5 一\n- 要点 5 二：完成 20 个模块\n\n## 第 6 部分\n\n- 要点 6 一\n- 要点 6 二：完成 20 个模块\n\n## 第 7 部分\n\n- 要点 7 一\n- 要点 7 二：完成 20 个模块\n\n## 第 8 部分\n\n- 要点 8 一\n- 要点 8 二：完成 20 个模块\n\n## 第 9 部分\n\n- 要点 9 一\n- 要点 9 二：完成 20 个模块\n\n## 第 10 部分\n\n- 要点 10 一\n- 要点 10 二：完成 20 个模块\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-lang-{i}",
+          "title": "语言变体（{label}）",
+          "tags": [
+            "variation",
+            "language"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同语言文档都能排版",
+            "content": "请把 input/doc.md（{label}）生成「{topic}」幻灯片。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "通用听众"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "label": "纯中文",
+              "topic": "语言变体",
+              "doc": "# 云平台迁移方案\n\n## 背景\n\n- 机房租赁合同明年 3 月到期\n- 现有集群运维成本高\n\n## 迁移方案\n\n- 采用分批迁移策略，先无状态服务\n- 数据库使用 DTS 双写校验\n- 迁移窗口安排在凌晨低峰期\n\n## 风险与应对\n\n- 回滚预案：保留旧集群两周\n- 演练：正式迁移前全链路演练 2 次\n"
+            },
+            {
+              "i": "2",
+              "label": "纯英文",
+              "topic": "语言变体",
+              "doc": "# Cloud Native Meetup\n\n## Agenda\n\n- Keynote: Scaling Kubernetes to 10k nodes\n- Lightning talks from community\n\n## Speakers\n\n- Alice Chen, Platform Lead\n- Bob Li, SRE\n\n## Takeaways\n\n- Observability first\n- Automate everything\n"
+            },
+            {
+              "i": "3",
+              "label": "中英混合",
+              "topic": "语言变体",
+              "doc": "# 中英混合技术分享\n\n## Background\n\n- 服务网格 Service Mesh 落地背景\n- 采用 Istio 作为控制面\n\n## Practice\n\n- 灰度发布：基于 header 路由\n- 故障注入：注入 5xx 验证容错\n"
+            },
+            {
+              "i": "4",
+              "label": "带代码",
+              "topic": "语言变体",
+              "doc": "# 前端性能优化\n\n## 测量\n\n- 用 Lighthouse 测量性能分\n- 关注 LCP 与 CLS\n\n## 优化手段\n\n- 代码分割：动态 import\n- 图片：WebP + 懒加载\n\n## 示例\n\n```js\nconst page = await import('./page.js');\n```\n"
+            },
+            {
+              "i": "5",
+              "label": "带 emoji",
+              "topic": "语言变体",
+              "doc": "# 🎨 设计系统分享\n\n## 组件库\n\n- 🔧 基础组件 30 个\n- 📦 业务组件 12 个\n\n## 落地\n\n- 🚀 三个业务线接入\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-param-{i}",
+          "title": "参数变体（{slides} 页 / {audience}）",
+          "tags": [
+            "variation",
+            "params"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "极端页数与听众参数下稳定排版",
+            "content": "请生成「{topic}」幻灯片，目标 {slides} 页，听众：{audience}。",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "topic": "{topic}",
+              "slides": "{slides}",
+              "audience": "{audience}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "topic": "参数变体",
+              "slides": "5",
+              "audience": "管理层",
+              "doc": "# 云平台迁移方案\n\n## 背景\n\n- 机房租赁合同明年 3 月到期\n- 现有集群运维成本高\n\n## 迁移方案\n\n- 采用分批迁移策略，先无状态服务\n- 数据库使用 DTS 双写校验\n- 迁移窗口安排在凌晨低峰期\n\n## 风险与应对\n\n- 回滚预案：保留旧集群两周\n- 演练：正式迁移前全链路演练 2 次\n"
+            },
+            {
+              "i": "2",
+              "topic": "参数变体",
+              "slides": "6",
+              "audience": "开发者",
+              "doc": "# Kubernetes 上手教程\n\n## 安装准备\n\n- 准备 3 台 4C8G 虚拟机\n- 安装 containerd 与 kubeadm\n\n## 集群搭建\n\n- kubeadm init 初始化控制面\n- 加入 worker 节点\n- 安装 Calico 网络插件\n\n## 应用部署\n\n- 编写 Deployment 与 Service\n- 配置探针与资源限额\n- 用 Helm 管理发布\n"
+            },
+            {
+              "i": "3",
+              "topic": "参数变体",
+              "slides": "15",
+              "audience": "学生",
+              "doc": "# 项目复盘：秒杀活动\n\n## 目标达成\n\n- 目标 GMV 500 万，实际完成 620 万\n- 订单峰值 8000 TPS\n\n## 做得好的\n\n- 缓存预热提前 2 小时完成\n- 限流策略保护了核心链路\n\n## 待改进\n\n- 库存扣减出现 30 单超卖\n- 监控告警阈值设置不合理\n\n## 行动项\n\n- 下周完成库存扣减重构\n- 补充压测用例 20 个\n"
+            },
+            {
+              "i": "4",
+              "topic": "参数变体",
+              "slides": "25",
+              "audience": "客户",
+              "doc": "# 数据平台建设方案\n\n## 指标体系\n\n| 指标 | 口径 | 负责人 |\n| --- | --- | --- |\n| DAU | 去重登录用户 | 张三 |\n| GMV | 支付成功金额 | 李四 |\n\n## 数据链路\n\n- 采集：埋点 SDK + 服务端日志\n- 清洗：Flink 实时任务\n- 应用：指标平台 + 报表\n"
+            },
+            {
+              "i": "5",
+              "topic": "参数变体",
+              "slides": "40",
+              "audience": "通用听众",
+              "doc": "# 城市数字化转型报告\n\n## 趋势\n\n城市数字化转型正在从单点系统建设走向全域协同。数据要素的价值被重新定义，公共数据授权运营成为新的话题。治理能力成为决定成败的关键因素，需要在制度、技术和组织三个层面同步推进。\n\n## 挑战\n\n部门墙导致数据共享困难，标准不统一让系统集成成本居高不下。市民感知度低，很多项目建成即闲置。需要以用促建，围绕高频场景打磨亮点。\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "第 1/",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 极短 / 极多 / 极端页数",
+      "description": "空文档、空主题、50 要点拆页、单行超长、页数上下限等边界输入下的稳定产出（离线排版模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{i}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出合法 Marp，不允许崩溃",
+            "content": "边界用例：{title}",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "topic": "{topic}",
+              "slides": "{slides}",
+              "audience": "通用听众"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "空文档 + 给定主题",
+              "topic": "空文档测试",
+              "slides": "8",
+              "doc": ""
+            },
+            {
+              "n": "2",
+              "title": "空文档 + 空主题（文件名兜底）",
+              "topic": "",
+              "slides": "8",
+              "doc": ""
+            },
+            {
+              "n": "3",
+              "title": "文档只有标题",
+              "topic": "标题文档",
+              "slides": "8",
+              "doc": "# 只有标题的文档\n\n## 第一章\n\n## 第二章\n\n## 第三章\n"
+            },
+            {
+              "n": "4",
+              "title": "50 个要点自动拆页",
+              "topic": "要点拆页",
+              "slides": "8",
+              "doc": "- 列表要点 0：说明一部分内容\n- 列表要点 1：说明一部分内容\n- 列表要点 2：说明一部分内容\n- 列表要点 3：说明一部分内容\n- 列表要点 4：说明一部分内容\n- 列表要点 5：说明一部分内容\n- 列表要点 6：说明一部分内容\n- 列表要点 7：说明一部分内容\n- 列表要点 8：说明一部分内容\n- 列表要点 9：说明一部分内容\n- 列表要点 10：说明一部分内容\n- 列表要点 11：说明一部分内容\n- 列表要点 12：说明一部分内容\n- 列表要点 13：说明一部分内容\n- 列表要点 14：说明一部分内容\n- 列表要点 15：说明一部分内容\n- 列表要点 16：说明一部分内容\n- 列表要点 17：说明一部分内容\n- 列表要点 18：说明一部分内容\n- 列表要点 19：说明一部分内容\n- 列表要点 20：说明一部分内容\n- 列表要点 21：说明一部分内容\n- 列表要点 22：说明一部分内容\n- 列表要点 23：说明一部分内容\n- 列表要点 24：说明一部分内容\n- 列表要点 25：说明一部分内容\n- 列表要点 26：说明一部分内容\n- 列表要点 27：说明一部分内容\n- 列表要点 28：说明一部分内容\n- 列表要点 29：说明一部分内容\n- 列表要点 30：说明一部分内容\n- 列表要点 31：说明一部分内容\n- 列表要点 32：说明一部分内容\n- 列表要点 33：说明一部分内容\n- 列表要点 34：说明一部分内容\n- 列表要点 35：说明一部分内容\n- 列表要点 36：说明一部分内容\n- 列表要点 37：说明一部分内容\n- 列表要点 38：说明一部分内容\n- 列表要点 39：说明一部分内容\n- 列表要点 40：说明一部分内容\n- 列表要点 41：说明一部分内容\n- 列表要点 42：说明一部分内容\n- 列表要点 43：说明一部分内容\n- 列表要点 44：说明一部分内容\n- 列表要点 45：说明一部分内容\n- 列表要点 46：说明一部分内容\n- 列表要点 47：说明一部分内容\n- 列表要点 48：说明一部分内容\n- 列表要点 49：说明一部分内容\n"
+            },
+            {
+              "n": "5",
+              "title": "单行超长 1000 字",
+              "topic": "超长要点",
+              "slides": "8",
+              "doc": "# 超长标题\n\n- 这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑\n"
+            },
+            {
+              "n": "6",
+              "title": "页数下限 5 页",
+              "topic": "页数下限",
+              "slides": "5",
+              "doc": "# 云平台迁移方案\n\n## 背景\n\n- 机房租赁合同明年 3 月到期\n- 现有集群运维成本高\n\n## 迁移方案\n\n- 采用分批迁移策略，先无状态服务\n- 数据库使用 DTS 双写校验\n- 迁移窗口安排在凌晨低峰期\n\n## 风险与应对\n\n- 回滚预案：保留旧集群两周\n- 演练：正式迁移前全链路演练 2 次\n"
+            },
+            {
+              "n": "7",
+              "title": "页数上限 40 页",
+              "topic": "页数上限",
+              "slides": "40",
+              "doc": "# Kubernetes 上手教程\n\n## 安装准备\n\n- 准备 3 台 4C8G 虚拟机\n- 安装 containerd 与 kubeadm\n\n## 集群搭建\n\n- kubeadm init 初始化控制面\n- 加入 worker 节点\n- 安装 Calico 网络插件\n\n## 应用部署\n\n- 编写 Deployment 与 Service\n- 配置探针与资源限额\n- 用 Helm 管理发布\n"
+            },
+            {
+              "n": "8",
+              "title": "纯空行文档",
+              "topic": "空行文档",
+              "slides": "8",
+              "doc": "\n\n\n\n\n\n\n\n\n\n"
+            },
+            {
+              "n": "9",
+              "title": "只有 frontmatter",
+              "topic": "frontmatter",
+              "slides": "8",
+              "doc": "---\ntitle: 测试\nauthor: 某人\n---\n\n# 正文标题\n"
+            },
+            {
+              "n": "10",
+              "title": "只有代码围栏",
+              "topic": "代码围栏",
+              "slides": "8",
+              "doc": "```python\nprint('hello')\n```\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2,
+                "note": "边界输入仍产出合法 Marp"
+              },
+              {
+                "type": "contains",
+                "text": "目录",
+                "weight": 1,
+                "note": "离线模式固定结构：目录页"
+              },
+              {
+                "type": "contains",
+                "text": "Q&A",
+                "weight": 1,
+                "note": "离线模式固定结构：Q&A 页"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：乱码 / 控制字符 / 畸形 Markdown",
+      "description": "乱码、控制字符、零宽字符、未闭合围栏、NUL 字符等异常输入下优雅处理不崩溃（离线排版模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{i}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃，仍要输出合法 Marp",
+            "content": "异常用例：{title}",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "通用听众"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "乱码文档",
+              "topic": "乱码测试",
+              "doc": "# ��文档�\n\n## 背景�\n\n- ��内容乱码�\n"
+            },
+            {
+              "n": "2",
+              "title": "控制字符",
+              "topic": "控制字符",
+              "doc": "# 控\u0007制字符\n\n## 背\u0002景\n\n- 混入\u0007控制符的要点\n"
+            },
+            {
+              "n": "3",
+              "title": "emoji 文档",
+              "topic": "emoji",
+              "doc": "# 🎨 设计系统分享\n\n## 组件库\n\n- 🔧 基础组件 30 个\n- 📦 业务组件 12 个\n\n## 落地\n\n- 🚀 三个业务线接入\n"
+            },
+            {
+              "n": "4",
+              "title": "未闭合代码围栏",
+              "topic": "未闭合围栏",
+              "doc": "# 未闭合围栏\n\n## 代码\n\n```js\nconst x = 1;\n\n## 下一章\n\n- 要点一\n"
+            },
+            {
+              "n": "5",
+              "title": "标题层级混乱",
+              "topic": "层级混乱",
+              "doc": "# 顶层\n\n##### 五级标题直接出现\n\n### 三级\n\n# 又回到一级\n\n- 要点\n"
+            },
+            {
+              "n": "6",
+              "title": "CRLF 换行",
+              "topic": "CRLF",
+              "doc": "# CRLF 文档\r\n\r\n## 背景\r\n\r\n- 要点一\r\n- 要点二\r\n"
+            },
+            {
+              "n": "7",
+              "title": "零宽字符",
+              "topic": "零宽字符",
+              "doc": "# 零​宽文档\n\n## 背‌景\n\n- 混入‍零宽字符\n"
+            },
+            {
+              "n": "8",
+              "title": "超长无标点单行 2000 字",
+              "topic": "无标点长行",
+              "doc": "# 长行\n\n- 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊\n"
+            },
+            {
+              "n": "9",
+              "title": "纯符号文档",
+              "topic": "纯符号",
+              "doc": "！！！@@@###---***~~~~\n"
+            },
+            {
+              "n": "10",
+              "title": "夹杂 NUL 字符",
+              "topic": "NUL 字符",
+              "doc": "# 夹杂 NUL\n\n## 背景\n\n- 混入\u0000空字符的要点\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2,
+                "note": "异常输入仍产出合法 Marp"
+              },
+              {
+                "type": "contains",
+                "text": "Q&A",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "not_contains",
+                "text": "SyntaxError",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复 10 次（离线排版模式），验证输出稳定、页数与页脚一致、不崩溃",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{i}",
+          "title": "稳定性重复：{topic}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "repeat": 10,
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证输出稳定",
+            "content": "稳定性样本 {n}：{topic}",
+            "files": [
+              {
+                "path": "input/doc.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "topic": "{topic}",
+              "slides": "8",
+              "audience": "通用听众"
+            }
+          },
+          "rows": [
+            {
+              "n": "1",
+              "topic": "迁移方案",
+              "doc": "# 云平台迁移方案\n\n## 背景\n\n- 机房租赁合同明年 3 月到期\n- 现有集群运维成本高\n\n## 迁移方案\n\n- 采用分批迁移策略，先无状态服务\n- 数据库使用 DTS 双写校验\n- 迁移窗口安排在凌晨低峰期\n\n## 风险与应对\n\n- 回滚预案：保留旧集群两周\n- 演练：正式迁移前全链路演练 2 次\n"
+            },
+            {
+              "n": "2",
+              "topic": "教程分享",
+              "doc": "# Kubernetes 上手教程\n\n## 安装准备\n\n- 准备 3 台 4C8G 虚拟机\n- 安装 containerd 与 kubeadm\n\n## 集群搭建\n\n- kubeadm init 初始化控制面\n- 加入 worker 节点\n- 安装 Calico 网络插件\n\n## 应用部署\n\n- 编写 Deployment 与 Service\n- 配置探针与资源限额\n- 用 Helm 管理发布\n"
+            },
+            {
+              "n": "3",
+              "topic": "项目复盘",
+              "doc": "# 项目复盘：秒杀活动\n\n## 目标达成\n\n- 目标 GMV 500 万，实际完成 620 万\n- 订单峰值 8000 TPS\n\n## 做得好的\n\n- 缓存预热提前 2 小时完成\n- 限流策略保护了核心链路\n\n## 待改进\n\n- 库存扣减出现 30 单超卖\n- 监控告警阈值设置不合理\n\n## 行动项\n\n- 下周完成库存扣减重构\n- 补充压测用例 20 个\n"
+            },
+            {
+              "n": "4",
+              "topic": "周报",
+              "doc": "# 第 42 周周报\n\n## 本周完成\n\n- 完成支付网关联调\n- 修复线上缺陷 8 个\n\n## 下周计划\n\n- 启动对账模块开发\n- 输出接口文档\n"
+            },
+            {
+              "n": "5",
+              "topic": "数据平台",
+              "doc": "# 数据平台建设方案\n\n## 指标体系\n\n| 指标 | 口径 | 负责人 |\n| --- | --- | --- |\n| DAU | 去重登录用户 | 张三 |\n| GMV | 支付成功金额 | 李四 |\n\n## 数据链路\n\n- 采集：埋点 SDK + 服务端日志\n- 清洗：Flink 实时任务\n- 应用：指标平台 + 报表\n"
+            },
+            {
+              "n": "6",
+              "topic": "Meetup",
+              "doc": "# Cloud Native Meetup\n\n## Agenda\n\n- Keynote: Scaling Kubernetes to 10k nodes\n- Lightning talks from community\n\n## Speakers\n\n- Alice Chen, Platform Lead\n- Bob Li, SRE\n\n## Takeaways\n\n- Observability first\n- Automate everything\n"
+            },
+            {
+              "n": "7",
+              "topic": "混合分享",
+              "doc": "# 中英混合技术分享\n\n## Background\n\n- 服务网格 Service Mesh 落地背景\n- 采用 Istio 作为控制面\n\n## Practice\n\n- 灰度发布：基于 header 路由\n- 故障注入：注入 5xx 验证容错\n"
+            },
+            {
+              "n": "8",
+              "topic": "性能优化",
+              "doc": "# 前端性能优化\n\n## 测量\n\n- 用 Lighthouse 测量性能分\n- 关注 LCP 与 CLS\n\n## 优化手段\n\n- 代码分割：动态 import\n- 图片：WebP + 懒加载\n\n## 示例\n\n```js\nconst page = await import('./page.js');\n```\n"
+            },
+            {
+              "n": "9",
+              "topic": "设计系统",
+              "doc": "# 🎨 设计系统分享\n\n## 组件库\n\n- 🔧 基础组件 30 个\n- 📦 业务组件 12 个\n\n## 落地\n\n- 🚀 三个业务线接入\n"
+            },
+            {
+              "n": "10",
+              "topic": "转型报告",
+              "doc": "# 城市数字化转型报告\n\n## 趋势\n\n城市数字化转型正在从单点系统建设走向全域协同。数据要素的价值被重新定义，公共数据授权运营成为新的话题。治理能力成为决定成败的关键因素，需要在制度、技术和组织三个层面同步推进。\n\n## 挑战\n\n部门墙导致数据共享困难，标准不统一让系统集成成本居高不下。市民感知度低，很多项目建成即闲置。需要以用促建，围绕高频场景打磨亮点。\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "marp: true",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{topic}",
+                "weight": 2,
+                "note": "主题页脚确定性一致"
+              },
+              {
+                "type": "contains",
+                "text": "Q&A",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

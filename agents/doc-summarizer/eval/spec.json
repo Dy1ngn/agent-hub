@@ -1,0 +1,639 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型长文摘要",
+      "description": "典型长文档（报告/技术文档/新闻/纪要等）的完整摘要链路（抽取式打分 + 模型生成），产出结构化摘要报告",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-annual",
+          "title": "年度业绩报告摘要（主题：{topic}）",
+          "tags": ["basic", "report"],
+          "input": {
+            "kind": "text",
+            "goal": "为这份年度报告生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "营收", "level": "standard", "kcount": "10", "extra": "", "doc": "# 2025 年度业绩报告\n\n本年度公司营收达到 48 亿元，同比增长 18%。营收增长主要来自云服务与数据平台两条主线。\n在成本侧，全年运营成本 31 亿元，成本率同比下降 2 个百分点，经营效率明显改善。\n分区域看，华东区域营收增长最快，海外营收占比提升到 22%。营收结构进一步均衡。\n展望 2026 年，公司将继续围绕营收增长目标投入研发，重点推进数据平台产品化。\n" },
+            { "topic": "营收", "level": "detailed", "kcount": "10", "extra": "", "doc": "# 年度总结\n\n营收方面：全年营收 48 亿元，其中订阅收入占营收比重达 61%，经常性收入占比持续提升。\n利润方面：净利润 7.2 亿元，利润率 15%，主要受益于营收规模效应与费用管控。\n现金流方面：经营性现金流 9.8 亿元，现金流状况健康，为营收再投入提供支撑。\n风险方面：市场波动可能影响营收增速，公司将通过多元化客户结构对冲风险。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1, "note": "产出标准摘要报告" },
+              { "type": "contains", "text": "要点", "weight": 1, "note": "要点章节存在" },
+              { "type": "contains", "text": "关键词", "weight": 1, "note": "关键词章节存在" },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-tech",
+          "title": "技术文档摘要（主题：{topic}）",
+          "tags": ["basic", "tech"],
+          "input": {
+            "kind": "text",
+            "goal": "为这篇技术文档生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "微服务", "level": "standard", "kcount": "10", "extra": "", "doc": "# 微服务部署指南\n\n本指南介绍微服务从构建到上线的完整流程，适用于微服务架构的后端系统。\n第一步是构建镜像：每个微服务独立打包，镜像内只保留运行必需的依赖。\n第二步是部署编排：使用容器编排平台部署微服务，配置健康检查与滚动更新策略。\n第三步是监控告警：为每个微服务配置延迟、错误率与流量指标告警，保障微服务稳定运行。\n常见问题：微服务之间调用超时，应优先检查网络策略与重试配置。\n" },
+            { "topic": "微服务", "level": "brief", "kcount": "5", "extra": "", "doc": "# 微服务网关说明\n\n微服务网关负责路由、鉴权与限流，是微服务入口的统一治理层。\n网关将请求路由到具体微服务，并把鉴权结果通过请求头传递给微服务。\n限流规则在网关统一配置，防止个别微服务被突发流量打垮。\n网关还负责访问日志采集，为微服务的可观测性提供数据来源。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-product",
+          "title": "产品说明摘要（主题：{topic}）",
+          "tags": ["basic", "product"],
+          "input": {
+            "kind": "text",
+            "goal": "为这篇产品说明生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "续航", "level": "standard", "kcount": "10", "extra": "", "doc": "# 无线耳机产品说明\n\n这款无线耳机主打长续航，单次充电可连续播放 12 小时，配合充电盒总续航达 36 小时。\n降噪方面，无线耳机支持主动降噪，通勤场景下降噪效果明显。\n佩戴舒适度方面，单只耳机重 5 克，入耳部分采用亲肤材质，长时间佩戴无负担。\n连接方面，无线耳机支持蓝牙多点连接，可在两台设备之间无缝切换。\n" },
+            { "topic": "续航", "level": "detailed", "kcount": "10", "extra": "", "doc": "# 新款手表评测要点\n\n续航是这款手表最大的卖点，典型使用下续航 14 天，开启全部传感器后仍能坚持 7 天。\n充电速度方面，手表支持快充，充电 10 分钟可以满足一整天的续航需求。\n屏幕方面，手表采用常亮显示屏，亮度自动调节，强光下依然清晰。\n运动功能方面，手表支持 100 多种运动模式，并提供专业的续航与心率曲线分析。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-news",
+          "title": "新闻稿摘要（主题：{topic}）",
+          "tags": ["basic", "news"],
+          "input": {
+            "kind": "text",
+            "goal": "为这篇新闻稿生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "发布会", "level": "standard", "kcount": "10", "extra": "", "doc": "# 新品发布会今日举行\n\n今日的新品发布会吸引了超过三百家媒体到场，发布会全程线上直播。\n发布会上，公司发布了三款新品，并宣布新品将于下月正式开售。\n公司负责人在发布会后表示，研发投入将持续加大，发布会只是年度计划的开始。\n行业分析人士认为，本次发布会显示出公司在高端市场的进取姿态。\n" },
+            { "topic": "发布会", "level": "brief", "kcount": "5", "extra": "", "doc": "发布会新闻速写。\n发布会地点设在滨海会展中心，发布会现场设置了产品体验区。\n发布会公布了售价与开售时间，发布会结束当晚预约量破十万。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-meeting",
+          "title": "会议纪要摘要（主题：{topic}）",
+          "tags": ["basic", "meeting"],
+          "input": {
+            "kind": "text",
+            "goal": "为这份会议纪要生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "进度", "level": "standard", "kcount": "10", "extra": "", "doc": "# 项目周会纪要\n\n本周项目进度总体符合预期，后端接口联调完成 80%。\n前端项目进度略慢，主要卡在设计走查，下周安排专项跟进以追赶进度。\n测试方面，本周新增用例 120 条，项目进度不因缺陷修复而阻塞。\n会议决定：每周同步项目进度，风险项当天升级。\n" },
+            { "topic": "进度", "level": "standard", "kcount": "10", "extra": "", "doc": "项目复盘会记录。\n一、项目进度回顾：一季度项目进度达成 92%，二季度项目进度目标已发布。\n二、问题：跨团队依赖影响项目进度，需要建立联席机制。\n三、决议：成立进度专项小组，每周输出项目进度报告。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-academic",
+          "title": "论文摘要（主题：{topic}）",
+          "tags": ["basic", "academic"],
+          "input": {
+            "kind": "text",
+            "goal": "为这篇论文节选生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "准确率", "level": "detailed", "kcount": "10", "extra": "", "doc": "# 一种改进的文本分类方法\n\n本文提出一种改进的文本分类方法，在公开数据集上把准确率提升到 94.6%。\n方法核心是引入注意力加权的特征融合，缓解了长文本分类准确率下降的问题。\n实验表明，该方法在五个数据集上的准确率均优于基线，平均准确率提升 3.2 个百分点。\n消融实验证明，注意力模块是准确率提升的主要来源。\n" },
+            { "topic": "准确率", "level": "standard", "kcount": "10", "extra": "", "doc": "实验补充说明。\n实验环境：八卡服务器，批大小 64，训练 20 轮后准确率趋于稳定。\n对比实验：与三种基线方法相比，本文方法准确率最高，且训练时间没有明显增加。\n误差分析：准确率损失主要来自标注噪声，后续将研究噪声鲁棒训练。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-travel",
+          "title": "游记摘要（主题：{topic}）",
+          "tags": ["basic", "travel"],
+          "input": {
+            "kind": "text",
+            "goal": "为这篇游记生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "海边", "level": "standard", "kcount": "10", "extra": "", "doc": "# 海边三日游记\n\n第一天抵达海边小镇，海边的清晨安静得出奇，我们在海边散步到日出。\n第二天出海观鲸，海上的风很大，但看到鲸鱼的那一刻所有人都欢呼起来。\n第三天在海边渔村吃海鲜，海边的物价比想象中友好，老板还送了一壶黄酒。\n这次海边旅行最大的收获是慢下来，听海浪、看日落、发呆。\n" },
+            { "topic": "海边", "level": "brief", "kcount": "5", "extra": "", "doc": "海边随笔。\n海边的日落是橘色的，海边的夜空能看到星星。\n下次还要去海边，带上相机和一本没读完的书。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-policy",
+          "title": "政策解读摘要（主题：{topic}）",
+          "tags": ["basic", "policy"],
+          "input": {
+            "kind": "text",
+            "goal": "为这篇政策解读生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "公积金", "level": "standard", "kcount": "10", "extra": "", "doc": "# 公积金新政解读\n\n新政放宽了公积金贷款额度上限，双缴存职工家庭公积金贷款额度提高到 120 万元。\n提取方面，公积金租房提取手续简化，线上即可办理公积金提取。\n异地贷款方面，公积金异地互认范围扩大，跨城购房使用公积金更方便。\n专家提醒：公积金政策因城施策，具体额度以当地公积金中心公布为准。\n" },
+            { "topic": "公积金", "level": "standard", "kcount": "10", "extra": "", "doc": "公积金常见问题解答。\n问：公积金断缴有什么影响？答：公积金断缴会影响贷款资格，建议及时补缴。\n问：公积金能提取几次？答：租房提取公积金按年度办理，购房提取一次性办理。\n问：公积金利率会变吗？答：公积金贷款利率随基准调整，已发放贷款次年生效。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-tutorial",
+          "title": "教程摘要（主题：{topic}）",
+          "tags": ["basic", "tutorial"],
+          "input": {
+            "kind": "text",
+            "goal": "为这篇教程生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "安装", "level": "standard", "kcount": "10", "extra": "", "doc": "# Python 环境安装教程\n\n本教程讲解 Python 环境安装与虚拟环境配置，适合刚接触 Python 的同学。\n第一步安装 Python：从官网下载安装包，安装时勾选加入环境变量。\n第二步配置虚拟环境：使用 venv 创建虚拟环境，避免污染系统 Python 环境。\n第三步安装依赖：激活虚拟环境后用 pip 安装依赖，并用 requirements.txt 固定版本。\n安装完成后运行 python --version 验证安装结果。\n" },
+            { "topic": "安装", "level": "brief", "kcount": "5", "extra": "", "doc": "数据库安装速览。\n安装前检查磁盘与内存，安装过程中设置管理员密码。\n安装完成后初始化数据目录，安装常见问题是端口被占用。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-qna",
+          "title": "问答/科普摘要（主题：{topic}）",
+          "tags": ["basic", "science"],
+          "input": {
+            "kind": "text",
+            "goal": "为这篇科普文档生成中文摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "topic": "光合作用", "level": "standard", "kcount": "10", "extra": "", "doc": "# 光合作用是什么\n\n光合作用是植物利用光能合成有机物的过程，光合作用的产物是葡萄糖和氧气。\n光合作用发生在叶绿体中，叶绿素吸收光能是光合作用的第一步。\n影响光合作用的因素包括光照强度、二氧化碳浓度和温度。\n光合作用对地球生态至关重要，绝大多数食物链的能量都来自光合作用。\n" },
+            { "topic": "光合作用", "level": "detailed", "kcount": "10", "extra": "", "doc": "光合作用小实验。\n实验目的：观察光合作用产生氧气。实验材料：水草、烧杯、漏斗、试管。\n实验步骤：把水草放在水中光照，收集光合作用释放的气体，用带火星木条检验。\n实验结论：光合作用释放的气体能使木条复燃，说明光合作用产生氧气。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "关键词", "weight": 1 },
+              { "type": "regex", "pattern": "(?i){topic}", "weight": 2, "note": "主题词进入抽取结果" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：结构 / 规模 / 语言 / 参数组合",
+      "description": "不同文档结构、规模、语言与 level/keywords 参数组合下的摘要表现（模型生成链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-struct-{n}",
+          "title": "文档结构变体（{title}）",
+          "tags": ["variation", "structure"],
+          "input": {
+            "kind": "text",
+            "goal": "不同结构的文档都要产出完整摘要",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "standard", "keywords": "10" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "多级标题 markdown", "extra": "", "doc": "# 总体介绍\n\n平台服务面向企业客户提供数据处理能力。\n\n## 子模块一\n\n数据接入模块支持多种数据源接入。\n\n### 细节\n\n接入延迟控制在秒级。\n\n## 子模块二\n\n数据清洗模块内置常见清洗规则。\n" },
+            { "n": "2", "title": "纯文本无标题", "extra": "", "doc": "这是一份没有标题的纯文本材料。第一段介绍背景，城市交通拥堵问题日益突出。\n第二段介绍方法，通过信号配时优化与潮汐车道缓解拥堵。\n第三段给出结论，试点区域通行时间平均缩短 12%。\n" },
+            { "n": "3", "title": "列表为主", "extra": "", "doc": "# 采购清单说明\n\n- 服务器：20 台，用于扩容\n- 网络设备：交换机 10 台\n- 存储：全闪阵列 2 套\n- 服务：三年维保\n\n备注：清单金额已含税，交付周期为 45 天。\n" },
+            { "n": "4", "title": "表格加段落", "extra": "", "doc": "# 季度销量统计\n\n| 区域 | 销量 | 同比 |\n| --- | --- | --- |\n| 华东 | 1200 | 12% |\n| 华南 | 900 | 8% |\n\n从表格可以看出华东领先。整体销量受节假日促销拉动明显。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "章节结构", "weight": 1, "note": "结构树章节存在" },
+              { "type": "regex", "pattern": "正文共 [0-9]+ 个段落", "weight": 1, "note": "统计行格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-size-{n}",
+          "title": "文档规模变体（{title}）",
+          "tags": ["variation", "scale"],
+          "input": {
+            "kind": "text",
+            "goal": "不同规模的文档都要产出摘要",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "standard", "keywords": "10" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "超短一句", "extra": "", "doc": "今天天气很好，适合出门散步。\n" },
+            { "n": "2", "title": "短文三段", "extra": "", "doc": "图书馆暑期开放时间调整。暑期图书馆每天开放十二小时。\n图书馆新增自习座位两百个，图书馆还延长了借阅期限。\n读者可通过图书馆小程序预约座位。\n" },
+            { "n": "3", "title": "中等文档", "extra": "备用材料：本段来自 extra 文档。", "doc": "# 城市绿化年报\n\n城市绿化覆盖率提升到 43%，城市绿化工作聚焦口袋公园与林荫道。\n新增口袋公园 80 个，城市绿化惠及更多社区居民。\n林荫道改造 120 公里，城市绿化与慢行系统结合，步行体验明显提升。\n养护方面，城市绿化养护引入智能灌溉，节水 20%。\n下一年计划继续推进城市绿化，重点补齐老城区绿地缺口。\n" },
+            { "n": "4", "title": "较长文档（约 2500 字）", "extra": "", "doc": "# 数字化转型白皮书节选\n\n数字化转型正在重塑各行各业的经营方式。本白皮书围绕数字化转型的路径、方法与案例展开。\n第一章，数字化转型的背景。人口红利减弱、流量成本上升，企业必须通过数字化转型寻找新的增长曲线。\n第二章，数字化转型的方法论。数字化转型要从战略、组织、技术三个层面协同推进：战略层面明确数字化转型目标，组织层面建立跨部门的数字化转型团队，技术层面搭建统一的数据底座。\n第三章，数字化转型的典型场景。营销数字化是转型最快的场景，通过用户画像与智能推荐提升转化率；供应链数字化通过需求预测降低库存；生产数字化通过设备联网提升良率；客服数字化通过智能问答降低人工成本。\n第四章，数字化转型的组织保障。数字化转型需要一把手工程，需要配套的考核与激励机制。很多企业的数字化转型受阻，根因是组织惯性而非技术。\n第五章，数字化转型的度量。建议用数据驱动程度、线上化率、决策自动化率三个指标度量数字化转型进展。\n第六章，案例一：某零售企业的数字化转型。该企业用三年完成数字化转型，线上营收占比从 15% 提升到 55%。\n第七章，案例二：某制造企业的数字化转型。该企业通过设备联网与质量预测，把不良率降低 30%。\n第八章，风险与对策。数字化转型常见风险包括数据孤岛、人才短缺与投入产出失衡，需要在转型之初就建立风险清单。\n第九章，路线图。建议企业以 90 天为一个迭代周期，小步快跑推进数字化转型。\n第十章，结语。数字化转型是长期工程，唯有坚持长期主义，才能把数字化转型的红利真正兑现。\n补充说明：本白皮书的调研覆盖 200 家企业，数字化转型成熟度模型分为五级。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "regex", "pattern": "正文共 [0-9]+ 个段落", "weight": 1, "note": "统计行格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-lang-{n}",
+          "title": "语言变体（{title}）",
+          "tags": ["variation", "language"],
+          "input": {
+            "kind": "text",
+            "goal": "不同语言的文档都要产出摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "standard", "keywords": "10" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "纯中文", "extra": "", "doc": "春季运动会纪实。春季运动会在操场举行，春季运动会共设十二个比赛项目。\n同学们在春季运动会上奋勇争先，春季运动会还设置了趣味项目。\n最终三年级二班获得春季运动会团体冠军。\n" },
+            { "n": "2", "title": "纯英文", "extra": "", "doc": "# Remote Work Survey\n\nThe survey shows remote work remains popular. Remote work improves focus for many engineers.\nCompanies refine remote work policies. Hybrid remote work is the most common model.\nManagers invest in remote work tooling and async documentation.\n" },
+            { "n": "3", "title": "中英混合", "extra": "", "doc": "# API 网关介绍\n\nAPI 网关是系统的统一入口，负责 routing 与 rate limit。\n我们的 API 网关基于 open source 组件构建，支持 plugin 扩展。\nAPI 网关的监控接入 Prometheus，告警走 on-call 流程。\n" },
+            { "n": "4", "title": "数字与表格密集", "extra": "", "doc": "# 月度运营数据\n\n月度营收 3200 万，环比增长 6%。月度新增用户 12 万，留存率 43%。\n月度订单量 85 万单，客单价 137 元。月度投诉率 0.12%，环比下降 0.03 个百分点。\n月度渠道投放 400 万，ROI 为 1.8。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "regex", "pattern": "正文共 [0-9]+ 个段落", "weight": 1, "note": "统计行格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-level-{n}",
+          "title": "摘要详细程度参数（{levelLabel}）",
+          "tags": ["variation", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "按指定详细程度输出摘要",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "10" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "level": "brief", "levelLabel": "简要", "extra": "", "doc": "物流年度总结。物流时效持续改善，物流成本稳步下降。\n物流网络覆盖扩大到 2800 个区县，物流破损率下降 15%。\n下一年物流工作重点是冷链能力建设。\n" },
+            { "n": "2", "level": "standard", "levelLabel": "标准", "extra": "", "doc": "物流年度总结。物流时效持续改善，物流成本稳步下降。\n物流网络覆盖扩大到 2800 个区县，物流破损率下降 15%。\n下一年物流工作重点是冷链能力建设。\n" },
+            { "n": "3", "level": "detailed", "levelLabel": "详细", "extra": "", "doc": "物流年度总结。物流时效持续改善，物流成本稳步下降。\n物流网络覆盖扩大到 2800 个区县，物流破损率下降 15%。\n下一年物流工作重点是冷链能力建设。\n" },
+            { "n": "4", "level": "detailed", "levelLabel": "详细", "extra": "", "doc": "客服年度报告。客服满意度提升到 92%，客服平均响应时长缩短到 18 秒。\n智能客服承担了 61% 的咨询量，客服人力转向复杂问题处理。\n客服培训体系升级，新人客服上岗周期缩短一半。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "详细程度：{levelLabel}", "weight": 2, "note": "报告元信息记录详细程度参数" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-keywords-{n}",
+          "title": "关键词数量参数（{kcount} 个）",
+          "tags": ["variation", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "按指定关键词数量提取关键词",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "standard", "keywords": "{kcount}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "kcount": "1", "extra": "", "doc": "食品安全科普。食品安全关系每个人的健康。选购食品要注意生产日期，储存食品要注意温度。\n烹饪食品要烧熟煮透，食品安全也离不开厨房卫生。\n" },
+            { "n": "2", "kcount": "3", "extra": "", "doc": "食品安全科普。食品安全关系每个人的健康。选购食品要注意生产日期，储存食品要注意温度。\n烹饪食品要烧熟煮透，食品安全也离不开厨房卫生。\n" },
+            { "n": "3", "kcount": "10", "extra": "", "doc": "食品安全科普。食品安全关系每个人的健康。选购食品要注意生产日期，储存食品要注意温度。\n烹饪食品要烧熟煮透，食品安全也离不开厨房卫生。\n" },
+            { "n": "4", "kcount": "50", "extra": "", "doc": "食品安全科普。食品安全关系每个人的健康。选购食品要注意生产日期，储存食品要注意温度。\n烹饪食品要烧熟煮透，食品安全也离不开厨房卫生。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 1 },
+              { "type": "contains", "text": "出现次数", "weight": 1, "note": "关键词表存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 超短 / 超长 / 极端参数",
+      "description": "空文档（优雅跳过）、超短、超长（分块 map-reduce）与极端参数下的稳定产出（离线抽取式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": ["edge", "offline"],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出摘要报告",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "standard", "keywords": "5", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "空主文档（备用文档兜底）", "extra": "备用文档只有一句话，用于验证空文档被优雅跳过。", "doc": "" },
+            { "n": "2", "title": "单字", "extra": "备用文档只有一句话。", "doc": "好" },
+            { "n": "3", "title": "纯标点", "extra": "备用文档只有一句话。", "doc": "。。。，？？！！" },
+            { "n": "4", "title": "只有空行", "extra": "备用文档只有一句话。", "doc": "\n\n\n\n\n" },
+            { "n": "5", "title": "只有标题", "extra": "备用文档只有一句话。", "doc": "# 标题" },
+            { "n": "6", "title": "纯数字", "extra": "备用文档只有一句话。", "doc": "1234567890" },
+            { "n": "7", "title": "单句", "extra": "", "doc": "这是一句非常短的文档内容。" },
+            { "n": "8", "title": "纯 emoji", "extra": "备用文档只有一句话。", "doc": "\ud83d\ude00\ud83d\ude80" },
+            { "n": "9", "title": "只有分隔线", "extra": "备用文档只有一句话。", "doc": "---\n---\n---\n" },
+            { "n": "10", "title": "超长单句", "extra": "", "doc": "这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 2, "note": "边界输入仍产出摘要报告" },
+              { "type": "contains", "text": "文档信息", "weight": 1, "note": "确定性章节仍存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g3-extreme-{n}",
+          "title": "极端参数/极端规模：{title}",
+          "tags": ["edge", "offline", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "极端参数组合下也要优雅产出",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "{level}", "keywords": "{kcount}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "keywords=1", "extra": "", "level": "standard", "kcount": "1", "doc": "天气预报。明天多云转晴，气温回升。后天有小雨，出门记得带伞。\n" },
+            { "n": "2", "title": "keywords=999", "extra": "", "level": "standard", "kcount": "999", "doc": "天气预报。明天多云转晴，气温回升。后天有小雨，出门记得带伞。\n" },
+            { "n": "3", "title": "超长文档（>8000 字，分块摘要）", "extra": "", "level": "detailed", "kcount": "10", "doc": "The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter." },
+            { "n": "4", "title": "level=brief + 超短", "extra": "", "level": "brief", "kcount": "3", "doc": "一句话文档。" },
+            { "n": "5", "title": "level=detailed + 纯表格", "extra": "", "level": "detailed", "kcount": "10", "doc": "| a | b |\n| --- | --- |\n| 1 | 2 |\n| 3 | 4 |\n" },
+            { "n": "6", "title": "keywords=2 + 重复词文本", "extra": "", "level": "standard", "kcount": "2", "doc": "数据数据数据数据数据。数据数据数据数据数据。\n" },
+            { "n": "7", "title": "level=brief + 空文档兜底", "extra": "备用文档用于兜底验证。", "level": "brief", "kcount": "5", "doc": "" },
+            { "n": "8", "title": "keywords=1000000", "extra": "", "level": "standard", "kcount": "1000000", "doc": "志愿者招募公告。社区志愿服务队招募志愿者，服务内容包括助老助残与环保宣传。\n" },
+            { "n": "9", "title": "level=detailed + 中英混合长句", "extra": "", "level": "detailed", "kcount": "10", "doc": "This is a mixed-language paragraph about platform reliability and 平台稳定性, covering monitoring, alerting, and on-call rotations for 服务可用性.\n" },
+            { "n": "10", "title": "level=standard + 单句", "extra": "", "level": "standard", "kcount": "5", "doc": "会议改到下周三下午两点举行。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 2, "note": "极端参数仍产出摘要报告" },
+              { "type": "contains", "text": "关键词", "weight": 1, "note": "关键词章节仍存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形 / 乱码 / 编码异常输入",
+      "description": "乱码、控制字符、零宽字符、结构损坏等异常输入下不崩溃、优雅降级（离线抽取式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": ["robust", "offline"],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "standard", "keywords": "5", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "mojibake 乱码", "extra": "", "doc": "鐑傛嵁鏂囨。閿欒緶銆傝繖鏄حاض涔辩爜銆傛嵁鏂囨。閿欒緶銆傛嵁鏂囨。\n" },
+            { "n": "2", "title": "控制字符", "extra": "", "doc": "a\u0007b = 2\u0007c = 3\u0007\n" },
+            { "n": "3", "title": "零宽字符", "extra": "", "doc": "a\u200bb\u200cc\u200dd\n" },
+            { "n": "4", "title": "emoji 与变体选择符", "extra": "", "doc": "❤️‍🔥😀👍🏽🚀✨\n" },
+            { "n": "5", "title": "未闭合代码块", "extra": "", "doc": "# 文档\n\n```python\nprint(1)\n" },
+            { "n": "6", "title": "HTML 垃圾嵌套", "extra": "", "doc": "<div><span><p>hello</p><script>var x = 1;</script></span><div>\n" },
+            { "n": "7", "title": "重复标点 50 次", "extra": "", "doc": "啊啊啊啊啊啊啊啊啊啊！！！！！！！！！！。。。。。。。。。。？？？？？？？？？？\n" },
+            { "n": "8", "title": "混合换行符", "extra": "", "doc": "第一段\r\n第二段\r第三段\n\n第四段\r\n" },
+            { "n": "9", "title": "超长单词", "extra": "", "doc": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" },
+            { "n": "10", "title": "RTL 文本", "extra": "", "doc": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u062b\u0627\u0644 \u0639\u0644\u0649 \u0627\u0644\u0643\u0648\u062f\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 2, "note": "异常输入仍产出摘要报告" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g4-format-{n}",
+          "title": "结构损坏输入：{title}",
+          "tags": ["robust", "offline", "structure"],
+          "input": {
+            "kind": "text",
+            "goal": "结构损坏的文档不能让工具崩溃",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "standard", "keywords": "5", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "行列不齐的表格", "extra": "", "doc": "| a | b | c |\n|---|---|\n| 1 | 2 | 3 | 4 |\n| 5 |\n" },
+            { "n": "2", "title": "内部标题标记行", "extra": "", "doc": "【H1】大标题\n【H2】小标题\n正文内容在这里。\n" },
+            { "n": "3", "title": "数学符号行", "extra": "", "doc": "∑∫√∞≠≤≥±×÷π\n" },
+            { "n": "4", "title": "全角空格与制表符", "extra": "", "doc": "全角\u3000空格\u3000测试\n列一\t列二\t\t列三\n" },
+            { "n": "5", "title": "纯 URL 行", "extra": "", "doc": "https://example.com/a?b=1&c=2\nhttps://example.com/d\n" },
+            { "n": "6", "title": "不成对引号括号", "extra": "", "doc": "他说：\"这是一段没有结束的引号。（(（[[[\n" },
+            { "n": "7", "title": "花括号嵌套", "extra": "", "doc": "配置内容：外层配置{\"key\": \"值\"}，还有模板占位符与其它符号混排。\n" },
+            { "n": "8", "title": "重复标题", "extra": "", "doc": "# 标题\n# 标题\n# 标题\n# 标题\n# 标题\n正文。\n" },
+            { "n": "9", "title": "HTML 实体", "extra": "", "doc": "价格 &amp; 说明 &lt;示例&gt; &quot;引用&quot;\n" },
+            { "n": "10", "title": "BOM 开头", "extra": "", "doc": "\ufeff带 BOM 的文档内容，用于验证编码鲁棒性。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 2, "note": "结构损坏仍产出摘要报告" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复调用 10 次（离线抽取式），验证输出稳定、不崩溃、结构一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：样本 {n}",
+          "tags": ["stability", "offline"],
+          "repeat": 10,
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证摘要输出稳定",
+            "content": "{doc}",
+            "files": [{ "path": "input/extra.md", "content": "{extra}" }],
+            "params": { "level": "standard", "keywords": "10", "offline": true }
+          },
+          "rows": [
+            { "n": "1", "extra": "", "doc": "# 年度报告\n\n公司营收稳步增长，利润率达到预期目标。研发投入持续加大，新产品收入占比提升。\n海外业务扩展顺利，客户结构进一步均衡。\n" },
+            { "n": "2", "extra": "", "doc": "技术文档。系统采用微服务架构，网关负责路由与鉴权。消息队列削峰填谷，缓存降低数据库压力。\n监控体系覆盖指标、日志与链路追踪。\n" },
+            { "n": "3", "extra": "", "doc": "Product brief. The product focuses on reliability and ease of use. Customers praise the onboarding flow.\nThe roadmap includes reporting features and mobile support.\n" },
+            { "n": "4", "extra": "", "doc": "# 会议纪要\n\n会议讨论了三个议题：上线计划、人员安排与预算。上线计划定在下月十五号。\n人员安排已确认，预算待财务复核。\n" },
+            { "n": "5", "extra": "", "doc": "调研摘要。本次调研覆盖五百名用户，调研显示价格与售后是用户最关心的两个因素。\n调研还发现短视频渠道的转化率最高。\n" },
+            { "n": "6", "extra": "", "doc": "# 说明书\n\n安装步骤：第一步接通电源，第二步连接网络，第三步完成初始化设置。\n使用中如遇故障，请参照说明书的故障排查表。\n" },
+            { "n": "7", "extra": "", "doc": "新闻速报。今日发布的行业报告显示，行业整体增速回升，头部企业市场份额扩大。\n报告预计明年行业增速将保持在两位数。\n" },
+            { "n": "8", "extra": "", "doc": "# 教程\n\n本文介绍数据备份的三种方式：全量备份、增量备份与差异备份。\n建议生产环境每天做增量备份，每周做全量备份。\n" },
+            { "n": "9", "extra": "", "doc": "评论合集。读者认为文章逻辑清晰，例子贴合实际。也有读者建议增加图表与参考文献。\n" },
+            { "n": "10", "extra": "", "doc": "产品评测。这款设备的优点是续航长、发热低，缺点是接口偏少。综合来看性价比不错。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "文档摘要报告", "weight": 2 },
+              { "type": "contains", "text": "要点", "weight": 1 },
+              { "type": "contains", "text": "抽取式原句", "weight": 1, "note": "离线抽取章节存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

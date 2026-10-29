@@ -1,0 +1,360 @@
+id: ts-b-grammar-checker-g5-stability
+agentId: grammar-checker
+group: g5-stability
+name: 中英校对 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线纯规则模式），验证输出稳定、不崩溃、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "他快速的跑向终点。\n她的认真地态度让人佩服。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "我们在见吧，我在也不会来了，我们在家再家等你。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "这项做用很明显，我要作饭了。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "这个的问题需要解决，我马上就就去处理。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "这是什么？？真的！！好。。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "我们用Python写脚本。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "价格是２０２６元，型号ＡＢＣ。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "This is is a test of the the system.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "I recieve teh package tomorrow.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证校对输出稳定
+      content: "这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，读起来非常累。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

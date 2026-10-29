@@ -1,0 +1,696 @@
+id: ts-b-writing-assistant-g1-basic
+agentId: writing-assistant
+group: g1-basic
+name: 写作润色 · 基础功能：典型写作润色
+description: 典型中文/英文稿件的完整润色链路（文本体检 + 模型改写 + 逐句对照），产出润色报告（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-product
+    title: 产品文案润色（音箱文案）
+    tags:
+      - basic
+      - copywriting
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段产品文案，让它更清晰有说服力
+      content: 其实我觉得我们的音箱基本上音质还是挺好的，然后它的续航也比较长吧，反正就是你用了就知道了，真的是非常不错的一个产品。
+      files: []
+      params:
+        mode: polish
+        tone: 热情
+        audience: 消费者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+          note: 产出标准润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检评分章节存在
+        - type: contains
+          text: 改写稿
+          weight: 1
+          note: 改写稿章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-product-2
+    title: 产品文案润色（耳机文案）
+    tags:
+      - basic
+      - copywriting
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段产品文案，让它更清晰有说服力
+      content: 这款耳机我觉得降噪效果真的还行，然后戴久了耳朵也不疼，反正我觉得挺值的，大家可以试试看。
+      files: []
+      params:
+        mode: polish
+        tone: 热情
+        audience: 消费者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+          note: 产出标准润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检评分章节存在
+        - type: contains
+          text: 改写稿
+          weight: 1
+          note: 改写稿章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-email
+    title: 商务邮件润色（催办邮件）
+    tags:
+      - basic
+      - email
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这封邮件，让它更正式得体
+      content: 你们那个合同的事情麻烦快点弄一下吧，我们这边其实已经等了很久了，最好这周就搞定，不然大家都很麻烦。
+      files: []
+      params:
+        mode: formal
+        tone: 坚定
+        audience: 合作伙伴
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-email-4
+    title: 商务邮件润色（致歉邮件）
+    tags:
+      - basic
+      - email
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这封邮件，让它更正式得体
+      content: 不好意思啊，我们的系统昨天出了点问题，然后可能影响到你们了，我们会尽快修好的，实在抱歉。
+      files: []
+      params:
+        mode: formal
+        tone: 诚恳
+        audience: 客户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-weekly
+    title: 周报润色（研发周报）
+    tags:
+      - basic
+      - report
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这篇周报，让表达更专业简洁
+      content: 这周其实主要就是把接口联调了一下，然后还处理了几个线上问题，感觉进度还行吧，下周继续把剩下的做完。
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 直属领导
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-weekly-6
+    title: 周报润色（运营周报）
+    tags:
+      - basic
+      - report
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这篇周报，让表达更专业简洁
+      content: 本周数据我觉得整体还可以，然后活动那边效果一般，基本上就是保持现状，下周打算试试新的渠道。
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 直属领导
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-notice
+    title: 公告润色（停机公告）
+    tags:
+      - basic
+      - notice
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这则公告，让信息清晰明确
+      content: 那个系统要升级，所以本周六晚上可能会有点不稳定，大家最好提前保存一下东西，反正就是注意一下就行。
+      files: []
+      params:
+        mode: formal
+        tone: 正式
+        audience: 全体用户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-notice-8
+    title: 公告润色（搬迁公告）
+    tags:
+      - basic
+      - notice
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这则公告，让信息清晰明确
+      content: 办公室要搬了，下个月开始我们就要去新的地方上班了，具体的工位安排后面会通知大家。
+      files: []
+      params:
+        mode: formal
+        tone: 正式
+        audience: 全体员工
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-techdoc
+    title: 技术文档润色（部署说明）
+    tags:
+      - basic
+      - tech
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段技术说明，让表述准确流畅
+      content: 部署的时候你先要把镜像弄好，然后推上去，反正就是按照那个流程走就行了，出问题再看日志吧。
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 开发者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-techdoc-10
+    title: 技术文档润色（接口说明）
+    tags:
+      - basic
+      - tech
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段技术说明，让表述准确流畅
+      content: 这个接口其实传的参数也不多，基本上就是把 id 传进来就行，然后返回的数据自己看着处理一下。
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 开发者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-social
+    title: 社交媒体润色（新品预告）
+    tags:
+      - basic
+      - social
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这条社交媒体文案，让它更有感染力
+      content: 新东西要来了！其实憋了好久终于可以说了，然后这次是真的下了功夫的，大家到时候看就知道了。
+      files: []
+      params:
+        mode: casual
+        tone: 活泼
+        audience: 年轻用户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-social-12
+    title: 社交媒体润色（活动预告）
+    tags:
+      - basic
+      - social
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这条社交媒体文案，让它更有感染力
+      content: 周六有活动，反正就是挺好玩的，然后还有小礼物，来不来你们自己看吧哈哈。
+      files: []
+      params:
+        mode: casual
+        tone: 活泼
+        audience: 粉丝
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-resume
+    title: 简历自述润色（五年经验）
+    tags:
+      - basic
+      - resume
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段简历自述，突出成果与能力
+      content: 我做过很多项目吧，基本上后端的东西都搞过，然后带过几个人，反正就是经验还蛮多的，学东西也快。
+      files: []
+      params:
+        mode: rewrite
+        tone: 自信
+        audience: 招聘经理
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-resume-14
+    title: 简历自述润色（应届生）
+    tags:
+      - basic
+      - resume
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段简历自述，突出成果与能力
+      content: 我在学校其实参加过一些比赛，然后实习的时候也做过一点开发，我觉得我还可以，愿意学习。
+      files: []
+      params:
+        mode: rewrite
+        tone: 自信
+        audience: 招聘经理
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-support
+    title: 客服回复润色（退款回复）
+    tags:
+      - basic
+      - support
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这条客服回复，让语气更耐心专业
+      content: 这个退款的事情我看了一下，应该是可以退的，然后大概要几个工作日吧，你等等就好了。
+      files: []
+      params:
+        mode: polish
+        tone: 耐心
+        audience: 投诉客户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-support-16
+    title: 客服回复润色（使用答疑）
+    tags:
+      - basic
+      - support
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这条客服回复，让语气更耐心专业
+      content: 你说的那个功能其实就在设置里面，然后点进去就能看到了，找不到的话再找我。
+      files: []
+      params:
+        mode: polish
+        tone: 耐心
+        audience: 新用户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-speech
+    title: 演讲稿润色（年会致辞）
+    tags:
+      - basic
+      - speech
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段演讲稿，让表达更有节奏和力量
+      content: 这一年大家都不容易，然后我们还是挺过来了，反正明年继续加油吧，就这样。
+      files: []
+      params:
+        mode: expand
+        tone: 鼓舞
+        audience: 全体员工
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-speech-18
+    title: 演讲稿润色（发布会开场）
+    tags:
+      - basic
+      - speech
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段演讲稿，让表达更有节奏和力量
+      content: 欢迎各位来参加今天的发布会，其实我们准备了很久，然后希望大家喜欢，接下来就开始吧。
+      files: []
+      params:
+        mode: expand
+        tone: 鼓舞
+        audience: 媒体与嘉宾
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-en
+    title: 英文短文润色（英文邮件）
+    tags:
+      - basic
+      - english
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段英文文字，让它更地道
+      content: Hi guys, I think maybe we should like move the meeting because something came up and yeah it is kind of important so let me know.
+      files: []
+      params:
+        mode: polish
+        tone: professional
+        audience: team
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-en-20
+    title: 英文短文润色（英文说明）
+    tags:
+      - basic
+      - english
+    repeat: 5
+    input:
+      kind: text
+      goal: 润色这段英文文字，让它更地道
+      content: So basically you just install it and then it kind of works, but if it doesnt you can just restart I guess.
+      files: []
+      params:
+        mode: formal
+        tone: neutral
+        audience: customers
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 改写稿
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

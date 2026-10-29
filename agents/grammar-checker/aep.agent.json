@@ -1,0 +1,48 @@
+{
+  "id": "grammar-checker",
+  "name": "中英校对",
+  "description": "规则表加模型语义校对，检查中英文错别字、标点、空格、语法与表达，输出中文 Markdown 校对报告。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/doc.md",
+    "args": [
+      "input/doc.md",
+      "--lang",
+      "{{params.lang}}",
+      "--min-level",
+      "{{params.min}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "auto",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "findings": {
+      "pattern": "^### \\d+\\. \\[(?P<severity>[^\\]]+)\\] (?P<title>[^\\n]+)$",
+      "flags": "gm"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

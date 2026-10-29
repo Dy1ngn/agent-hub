@@ -1,0 +1,1288 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型简历诊断",
+      "description": "典型中英文简历 + JD 的完整体检：结构、量化、JD 匹配、日期与联系方式，走「确定性体检 + 模型改写」链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-full-{i}",
+          "title": "完整简历体检（{role}）",
+          "tags": [
+            "basic"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "对简历做全量体检并结合 JD 打分，产出中文 Markdown 诊断报告",
+            "content": "请对 {file} 做简历体检（目标岗位：{role}），生成诊断报告。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "role": "数据分析师",
+              "file": "resume-da.md",
+              "skill": "SQL",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "职位：数据分析师\n职责：负责业务数据分析与指标体系建设，输出可视化分析报告。\n要求：\n- 熟练使用 SQL 完成复杂取数\n- 熟悉 Python 数据分析（pandas）\n- 掌握 Tableau 或同类 BI 工具\n- 有 A/B 实验经验优先\n"
+            },
+            {
+              "i": "2",
+              "role": "Java 后端开发工程师",
+              "file": "resume-java.md",
+              "skill": "Spring",
+              "resume": "# 李强\n邮箱：liqiang@example.com\n\n## 工作经历\n\n### 蓝鲸科技 · Java 开发工程师（2021 年 7 月 - 至今）\n- 负责订单中心接口开发\n- 用 Spring Boot 重构结算服务，接口 P99 延迟从 800ms 降到 120ms\n- 主导 Redis 缓存改造，数据库 QPS 下降 60%\n\n## 项目经历\n### 订单中台\n- 设计订单状态机\n- 完成 20 个接口联调\n\n## 教育背景\n- 南京大学 · 软件工程 · 本科（2017-2021）\n\n## 技能\n- Java、Spring Boot、MySQL、Redis\n",
+              "jd": "职位：Java 后端开发工程师\n职责：负责核心交易系统的服务端研发与性能优化。\n要求：\n- 精通 Java 与 Spring Boot 框架\n- 熟悉 MySQL 索引优化与 Redis 缓存设计\n- 了解分布式事务与消息队列\n"
+            },
+            {
+              "i": "3",
+              "role": "前端开发工程师",
+              "file": "resume-fe.md",
+              "skill": "React",
+              "resume": "# 王小美\n手机：13900005678\n\n## 工作经历\n\n### 橙子互娱 · 前端开发工程师（2022.03 - 至今）\n- 负责活动页开发\n- 基于 React 搭建组件库，活动页开发效率提升 40%\n- 我优化了首屏加载速度\n\n## 教育背景\n- 浙江大学 · 计算机科学与技术 · 本科（2018-2022）\n\n## 技能\n- React、TypeScript、Webpack\n",
+              "jd": "职位：前端开发工程师\n职责：负责 C 端活动页与组件库建设。\n要求：\n- 熟练使用 React 与 TypeScript\n- 熟悉 Webpack 构建与前端性能优化\n"
+            },
+            {
+              "i": "4",
+              "role": "产品经理",
+              "file": "resume-pm.md",
+              "skill": "Figma",
+              "resume": "# 陈晨\n邮箱：chenchen@example.com ｜ 电话：13611112222\n\n## 工作经历\n\n### 星河产品部 · 产品经理（2020 年 3 月 - 至今）\n- 负责支付产品需求梳理\n- 主导收银台改版，支付成功率提升 12%\n- 输出 30 份 PRD 并推动落地\n\n## 教育背景\n- 武汉大学 · 信息管理 · 本科（2016-2020）\n\n## 技能\n- Figma、Axure、SQL、数据分析\n",
+              "jd": "职位：产品经理\n职责：负责支付产品规划与体验优化。\n要求：\n- 熟练使用 Figma 输出原型\n- 具备数据分析能力，能用 SQL 取数\n- 有支付或交易类产品经验优先\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "简历诊断报告",
+                "weight": 1,
+                "note": "产出标准报告"
+              },
+              {
+                "type": "contains",
+                "text": "评分卡",
+                "weight": 1,
+                "note": "四维评分卡"
+              },
+              {
+                "type": "contains",
+                "text": "{role}",
+                "weight": 2,
+                "note": "目标岗位写进报告"
+              },
+              {
+                "type": "contains",
+                "text": "{skill}",
+                "weight": 2,
+                "note": "JD 技能出现在匹配分析"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 1500,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-quant-{i}",
+          "title": "量化成果体检（{role}）",
+          "tags": [
+            "basic",
+            "quantification"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出没有量化成果的要点并给出改写建议",
+            "content": "请体检 {file} 的量化成果问题（目标岗位：{role}）。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "role": "运营专员",
+              "file": "op-resume.md",
+              "resume": "# 赵琳\n\n## 工作经历\n\n### 鲜橙文化 · 运营专员（2023.05 - 至今）\n- 负责小红书账号运营\n- 策划直播活动\n- 我参与了品牌推广项目\n\n## 教育背景\n- 暨南大学 · 新闻学 · 本科（2019-2023）\n\n## 技能\n- 内容策划、数据分析\n",
+              "jd": "职位：运营专员\n要求：负责内容运营与活动策划，熟悉小红书生态。\n"
+            },
+            {
+              "i": "2",
+              "role": "行政助理",
+              "file": "admin-resume.md",
+              "resume": "# 韩雪\n\n## 工作经历\n\n### 某公司 · 行政助理（2022.09 - 至今）\n- 负责会议安排\n- 负责办公用品采购\n- 协助部门日常行政事务\n\n## 教育背景\n- 郑州大学 · 行政管理 · 本科（2018-2022）\n\n## 技能\n- Office、会务组织\n",
+              "jd": "职位：行政助理\n要求：负责日常行政事务，细致耐心。\n"
+            },
+            {
+              "i": "3",
+              "role": "测试工程师",
+              "file": "qa-resume.md",
+              "resume": "# 孙浩\n\n## 工作经历\n\n### 云测科技 · 测试工程师（2022.02 - 至今）\n- 负责接口测试工作\n- 负责测试用例评审\n- 参与质量保障流程建设\n\n## 教育背景\n- 电子科技大学 · 软件工程 · 本科（2018-2022）\n\n## 技能\n- Selenium、Pytest\n",
+              "jd": "职位：测试工程师\n要求：负责接口自动化测试与质量保障。\n"
+            },
+            {
+              "i": "4",
+              "role": "客户成功经理",
+              "file": "cs-resume.md",
+              "resume": "# 吴迪\n\n## 工作经历\n\n### 云端 SaaS · 客户成功经理（2021.11 - 至今）\n- 负责重点客户续约\n- 负责客户培训与答疑\n- 我协调产研解决客户问题\n\n## 教育背景\n- 南开大学 · 市场营销 · 本科（2017-2021）\n\n## 技能\n- 客户运营、Excel\n",
+              "jd": "职位：客户成功经理\n要求：负责客户续约与健康度管理。\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "RR002",
+                "weight": 2,
+                "note": "量化成果规则命中"
+              },
+              {
+                "type": "contains",
+                "text": "问题清单",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{file}",
+                "weight": 1,
+                "note": "报告标注被诊断的简历"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 1200,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-structure-{i}",
+          "title": "章节结构体检（缺{missing}）",
+          "tags": [
+            "basic",
+            "structure"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "识别缺失的关键章节并给出结构完整度评分",
+            "content": "请体检 {file} 的章节结构（缺 {missing}）。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "missing": "教育背景",
+              "file": "no-edu.md",
+              "resume": "# 何鑫\n\n## 工作经历\n\n### 某公司 · 实习生（2024.03 - 至今）\n- 负责数据整理\n- 协助报表制作\n- 参与需求沟通\n\n## 技能\n- Excel、SQL\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "i": "2",
+              "missing": "工作经历",
+              "file": "no-exp.md",
+              "resume": "# 林小雨\n\n## 教育背景\n- 华东师范大学 · 小学教育 · 本科（2017-2021）\n\n## 技能\n- 课堂教学、多媒体课件\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "i": "3",
+              "missing": "技能",
+              "file": "no-skill.md",
+              "resume": "# 郭涛\n\n## 工作经历\n\n### 恒通软件 · 销售经理（2019.03 - 至今）\n- 负责华东区域大客户开拓\n- 完成年度 800 万元销售目标\n- 维护 30 家重点客户\n\n## 教育背景\n- 上海大学 · 市场营销 · 本科（2015-2019）\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "i": "4",
+              "missing": "教育与技能",
+              "file": "only-exp.md",
+              "resume": "# 蒋雯\n\n## 工作经历\n\n### 星辰集团 · HRBP（2022.04 - 至今）\n- 负责研发团队 HRBP 工作\n- 搭建胜任力模型\n- 推动绩效改革落地\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "缺少关键章节",
+                "weight": 2,
+                "note": "缺关键章节给警告"
+              },
+              {
+                "type": "contains",
+                "text": "结构体检",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{file}",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 1200,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-jd-{i}",
+          "title": "JD 匹配打分（{industry}）",
+          "tags": [
+            "basic",
+            "jd-match"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "按 JD 做技能关键词匹配打分，输出命中与缺失技能表",
+            "content": "请把 {file} 与 JD（{industry}）做技能匹配分析。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "industry": "数据分析",
+              "file": "jd-da.md",
+              "skill": "Tableau",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "职位：数据分析师\n职责：负责业务数据分析与指标体系建设，输出可视化分析报告。\n要求：\n- 熟练使用 SQL 完成复杂取数\n- 熟悉 Python 数据分析（pandas）\n- 掌握 Tableau 或同类 BI 工具\n- 有 A/B 实验经验优先\n",
+              "role": "软件工程师"
+            },
+            {
+              "i": "2",
+              "industry": "Java 后端",
+              "file": "jd-java.md",
+              "skill": "Redis",
+              "resume": "# 李强\n邮箱：liqiang@example.com\n\n## 工作经历\n\n### 蓝鲸科技 · Java 开发工程师（2021 年 7 月 - 至今）\n- 负责订单中心接口开发\n- 用 Spring Boot 重构结算服务，接口 P99 延迟从 800ms 降到 120ms\n- 主导 Redis 缓存改造，数据库 QPS 下降 60%\n\n## 项目经历\n### 订单中台\n- 设计订单状态机\n- 完成 20 个接口联调\n\n## 教育背景\n- 南京大学 · 软件工程 · 本科（2017-2021）\n\n## 技能\n- Java、Spring Boot、MySQL、Redis\n",
+              "jd": "职位：Java 后端开发工程师\n职责：负责核心交易系统的服务端研发与性能优化。\n要求：\n- 精通 Java 与 Spring Boot 框架\n- 熟悉 MySQL 索引优化与 Redis 缓存设计\n- 了解分布式事务与消息队列\n",
+              "role": "软件工程师"
+            },
+            {
+              "i": "3",
+              "industry": "前端",
+              "file": "jd-fe.md",
+              "skill": "TypeScript",
+              "resume": "# 王小美\n手机：13900005678\n\n## 工作经历\n\n### 橙子互娱 · 前端开发工程师（2022.03 - 至今）\n- 负责活动页开发\n- 基于 React 搭建组件库，活动页开发效率提升 40%\n- 我优化了首屏加载速度\n\n## 教育背景\n- 浙江大学 · 计算机科学与技术 · 本科（2018-2022）\n\n## 技能\n- React、TypeScript、Webpack\n",
+              "jd": "职位：前端开发工程师\n职责：负责 C 端活动页与组件库建设。\n要求：\n- 熟练使用 React 与 TypeScript\n- 熟悉 Webpack 构建与前端性能优化\n",
+              "role": "软件工程师"
+            },
+            {
+              "i": "4",
+              "industry": "产品",
+              "file": "jd-pm.md",
+              "skill": "SQL",
+              "resume": "# 陈晨\n邮箱：chenchen@example.com ｜ 电话：13611112222\n\n## 工作经历\n\n### 星河产品部 · 产品经理（2020 年 3 月 - 至今）\n- 负责支付产品需求梳理\n- 主导收银台改版，支付成功率提升 12%\n- 输出 30 份 PRD 并推动落地\n\n## 教育背景\n- 武汉大学 · 信息管理 · 本科（2016-2020）\n\n## 技能\n- Figma、Axure、SQL、数据分析\n",
+              "jd": "职位：产品经理\n职责：负责支付产品规划与体验优化。\n要求：\n- 熟练使用 Figma 输出原型\n- 具备数据分析能力，能用 SQL 取数\n- 有支付或交易类产品经验优先\n",
+              "role": "软件工程师"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "命中技能",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "缺失技能",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "匹配度",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{skill}",
+                "weight": 1,
+                "note": "JD 技能词出现在匹配表"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-fix-{i}",
+          "title": "日期与联系方式体检（{role}）",
+          "tags": [
+            "basic",
+            "format"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出日期格式不一致、联系方式缺失等规范问题",
+            "content": "请体检 {file} 的日期与联系方式规范（目标岗位：{role}）。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "role": "数据分析师",
+              "file": "date1.md",
+              "resume": "# 张伟\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 参与用户增长分析\n\n### 星辰数据（2022 年 6 月 - 2022 年 12 月）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "i": "2",
+              "role": "后端开发工程师",
+              "file": "date2.md",
+              "resume": "# 李强\n手机：13800001234\n\n## 工作经历\n\n### 蓝鲸科技（2021/07 - 至今）\n- 负责订单中心接口开发\n- 重构结算服务，P99 从 800ms 降到 120ms\n- 主导缓存改造\n\n## 教育背景\n- 南京大学 · 软件工程 · 本科 2017.09-2021.06\n\n## 技能\n- Java、Spring Boot\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "i": "3",
+              "role": "产品经理",
+              "file": "date3.md",
+              "resume": "# 陈晨\n邮箱：chenchen@example.com\n\n## 工作经历\n\n### 星河产品部（2020年3月—至今）\n- 负责支付产品需求梳理\n- 主导收银台改版，支付成功率提升 12%\n- 输出 30 份 PRD\n\n## 教育背景\n- 武汉大学 · 信息管理 · 本科\n\n## 技能\n- Figma、SQL\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "i": "4",
+              "role": "测试开发工程师",
+              "file": "date4.md",
+              "resume": "# 孙浩\n\n## 工作经历\n\n### 云测科技（2022-02 至今）\n- 负责接口自动化测试\n- 搭建 Python 自动化框架，回归时间缩短 80%\n- 参与发布流程建设\n\n## 教育背景\n- 电子科技大学 · 软件工程 · 本科（2018.09 - 2022.06）\n\n## 技能\n- Python、Pytest\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "联系方式",
+                "weight": 2,
+                "note": "联系方式规范检查"
+              },
+              {
+                "type": "contains",
+                "text": "优化路线图",
+                "weight": 2,
+                "note": "输出优化路线图"
+              },
+              {
+                "type": "contains",
+                "text": "{role}",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 1200,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：语言 / 长度 / 岗位 / JD 形态",
+      "description": "中英混合、emoji、表格、极短极长简历与各类 JD 形态下的稳定诊断（模型改写链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-lang-{i}",
+          "title": "语言与排版变体（{file}）",
+          "tags": [
+            "variation",
+            "language"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同语言与排版形态的简历都要产出稳定报告",
+            "content": "请体检 {file}（目标岗位：{role}）。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "resume-cn.md",
+              "role": "后端开发工程师",
+              "resume": "# 刘洋\n\n## 工作经历\n### 云启科技 · 后端工程师（2021.04 - 至今）\n- 负责用户中心服务开发\n- 重构鉴权模块，接口错误率从 1% 降到 0.1%\n\n## 教育背景\n- 四川大学 · 计算机 · 本科（2017-2021）\n\n## 技能\n- Python、Django、PostgreSQL\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "file": "resume-mixed.md",
+              "role": "Data Engineer",
+              "resume": "# Alex Zhou\n\n## Work Experience\n### DataFlow Inc. · Data Engineer（2022.01 - 至今）\n- 负责 ETL pipeline 维护\n- Rebuilt nightly ETL jobs with Airflow，处理时长从 3 小时降到 40 分钟\n\n## Education\n- 同济大学 · 软件工程 · 本科（2018-2022）\n\n## Skills\n- Python、Spark、Airflow、SQL\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "file": "resume-en.md",
+              "role": "Backend Engineer",
+              "resume": "# Emily Carter\n\n## Experience\n### Bright Labs · Backend Engineer (2021.06 - present)\n- Responsible for payment service development\n- Optimized PostgreSQL queries, reducing API latency by 45%\n\n## Education\n- BS in Computer Science, 2017-2021\n\n## Skills\n- Python, PostgreSQL, Docker\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "file": "resume-emoji.md",
+              "role": "运营专员",
+              "resume": "# 🌟 赵琳 🌟\n\n## 工作经历\n### 🍊 鲜橙文化 · 运营专员（2023.05 - 至今）\n- 负责小红书账号运营\n- 策划 8 场直播活动，累计曝光 50 万次\n\n## 教育背景\n- 暨南大学 · 新闻学 · 本科（2019-2023）\n\n## 技能\n- 内容策划、数据分析、Excel\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "file": "resume-table.md",
+              "role": "测试开发工程师",
+              "resume": "# 孙浩\n\n## 工作经历\n\n| 公司 | 职位 | 时间 |\n| --- | --- | --- |\n| 云测科技 | 测试开发 | 2022.02 - 至今 |\n\n### 云测科技 · 测试开发工程师（2022.02 - 至今）\n- 负责接口自动化测试\n- 搭建 Python 自动化框架，回归时间从 2 天降到 3 小时\n\n## 教育背景\n- 电子科技大学 · 软件工程 · 本科（2018-2022）\n\n## 技能\n- Python、Selenium、Pytest\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "简历诊断报告",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{file}",
+                "weight": 2,
+                "note": "报告标注简历文件"
+              },
+              {
+                "type": "contains",
+                "text": "问题清单",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-size-{i}",
+          "title": "长度变体（{file}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同长度的简历都要产出稳定报告",
+            "content": "请体检 {file}（目标岗位：{role}）。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "resume-tiny.txt",
+              "role": "实习生",
+              "resume": "# 何鑫\n\n## 技能\n- Excel、PPT\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "file": "resume-10.txt",
+              "role": "后端开发工程师",
+              "resume": "# 周航\n\n## 工作经历\n\n### 云枢科技 · 后端工程师（2021.03 - 至今）\n- 负责服务模块 1 的日常开发与维护\n- 重构模块 2，接口耗时从 500ms 降到 80ms\n- 参与模块 3 的评审与联调\n- 推动模块 4 上线，覆盖 200 万用户\n- 负责服务模块 5 的日常开发与维护\n- 重构模块 6，接口耗时从 500ms 降到 80ms\n- 参与模块 7 的评审与联调\n- 推动模块 8 上线，覆盖 200 万用户\n- 负责服务模块 9 的日常开发与维护\n- 重构模块 10，接口耗时从 500ms 降到 80ms\n\n## 教育背景\n- 北京邮电大学 · 计算机 · 本科（2017-2021）\n\n## 技能\n- Go、Kubernetes\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "file": "resume-25.txt",
+              "role": "平台工程师",
+              "resume": "# 马腾\n\n## 工作经历\n\n### 云枢科技 · 后端工程师（2021.03 - 至今）\n- 负责服务模块 1 的日常开发与维护\n- 重构模块 2，接口耗时从 500ms 降到 80ms\n- 参与模块 3 的评审与联调\n- 推动模块 4 上线，覆盖 200 万用户\n- 负责服务模块 5 的日常开发与维护\n- 重构模块 6，接口耗时从 500ms 降到 80ms\n- 参与模块 7 的评审与联调\n- 推动模块 8 上线，覆盖 200 万用户\n- 负责服务模块 9 的日常开发与维护\n- 重构模块 10，接口耗时从 500ms 降到 80ms\n- 参与模块 11 的评审与联调\n- 推动模块 12 上线，覆盖 200 万用户\n- 负责服务模块 13 的日常开发与维护\n- 重构模块 14，接口耗时从 500ms 降到 80ms\n- 参与模块 15 的评审与联调\n- 推动模块 16 上线，覆盖 200 万用户\n- 负责服务模块 17 的日常开发与维护\n- 重构模块 18，接口耗时从 500ms 降到 80ms\n- 参与模块 19 的评审与联调\n- 推动模块 20 上线，覆盖 200 万用户\n- 负责服务模块 21 的日常开发与维护\n- 重构模块 22，接口耗时从 500ms 降到 80ms\n- 参与模块 23 的评审与联调\n- 推动模块 24 上线，覆盖 200 万用户\n- 负责服务模块 25 的日常开发与维护\n\n## 教育背景\n- 北京邮电大学 · 计算机 · 本科（2017-2021）\n\n## 技能\n- Go、Kubernetes\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "file": "resume-40.txt",
+              "role": "架构师",
+              "resume": "# 顾北\n\n## 工作经历\n\n### 云枢科技 · 后端工程师（2021.03 - 至今）\n- 负责服务模块 1 的日常开发与维护\n- 重构模块 2，接口耗时从 500ms 降到 80ms\n- 参与模块 3 的评审与联调\n- 推动模块 4 上线，覆盖 200 万用户\n- 负责服务模块 5 的日常开发与维护\n- 重构模块 6，接口耗时从 500ms 降到 80ms\n- 参与模块 7 的评审与联调\n- 推动模块 8 上线，覆盖 200 万用户\n- 负责服务模块 9 的日常开发与维护\n- 重构模块 10，接口耗时从 500ms 降到 80ms\n- 参与模块 11 的评审与联调\n- 推动模块 12 上线，覆盖 200 万用户\n- 负责服务模块 13 的日常开发与维护\n- 重构模块 14，接口耗时从 500ms 降到 80ms\n- 参与模块 15 的评审与联调\n- 推动模块 16 上线，覆盖 200 万用户\n- 负责服务模块 17 的日常开发与维护\n- 重构模块 18，接口耗时从 500ms 降到 80ms\n- 参与模块 19 的评审与联调\n- 推动模块 20 上线，覆盖 200 万用户\n- 负责服务模块 21 的日常开发与维护\n- 重构模块 22，接口耗时从 500ms 降到 80ms\n- 参与模块 23 的评审与联调\n- 推动模块 24 上线，覆盖 200 万用户\n- 负责服务模块 25 的日常开发与维护\n- 重构模块 26，接口耗时从 500ms 降到 80ms\n- 参与模块 27 的评审与联调\n- 推动模块 28 上线，覆盖 200 万用户\n- 负责服务模块 29 的日常开发与维护\n- 重构模块 30，接口耗时从 500ms 降到 80ms\n- 参与模块 31 的评审与联调\n- 推动模块 32 上线，覆盖 200 万用户\n- 负责服务模块 33 的日常开发与维护\n- 重构模块 34，接口耗时从 500ms 降到 80ms\n- 参与模块 35 的评审与联调\n- 推动模块 36 上线，覆盖 200 万用户\n- 负责服务模块 37 的日常开发与维护\n- 重构模块 38，接口耗时从 500ms 降到 80ms\n- 参与模块 39 的评审与联调\n- 推动模块 40 上线，覆盖 200 万用户\n\n## 教育背景\n- 北京邮电大学 · 计算机 · 本科（2017-2021）\n\n## 技能\n- Java、Kafka\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "file": "resume-longline.txt",
+              "role": "数据工程师",
+              "resume": "# 秦朗\n\n## 工作经历\n\n### 恒星数据\n- 负责一整条超长的数据链路建设工作包括采集清洗建模调度监控告警回溯补数权限治理成本优化等所有环节的日常推进与跨部门协作沟通以及最终的交付验收和文档沉淀工作\n\n## 技能\n- Spark、Flink\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "简历诊断报告",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{file}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "评分卡",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 600,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-role-{i}",
+          "title": "岗位变体（{role}）",
+          "tags": [
+            "variation",
+            "role"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同职业的简历与 JD 都能诊断",
+            "content": "请体检 {file} 并对照 JD（目标岗位：{role}）。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "resume-teacher.md",
+              "role": "小学数学教师",
+              "resume": "# 林小雨\n\n## 工作经历\n### 阳光小学 · 数学教师（2021.09 - 至今）\n- 负责三年级数学教学\n- 带班成绩平均分提升 15 分\n\n## 教育背景\n- 华东师范大学 · 小学教育 · 本科（2017-2021）\n\n## 技能\n- 课堂教学、家校沟通、多媒体课件\n",
+              "jd": "职位：小学数学教师\n职责：负责小学数学课堂教学与班级管理。\n要求：师范类专业，热爱教育，具备课堂管理与家校沟通能力。\n"
+            },
+            {
+              "file": "resume-nurse.md",
+              "role": "临床护士",
+              "resume": "# 周敏\n\n## 工作经历\n### 仁和医院 · 护士（2020.07 - 至今）\n- 负责内科病房护理\n- 参与 300 例患者的护理工作\n\n## 教育背景\n- 首都医科大学 · 护理学 · 本科（2016-2020）\n\n## 技能\n- 基础护理、急救配合、病历书写\n",
+              "jd": "职位：临床护士\n职责：负责病房护理与患者管理。\n要求：护理学专业，具备护士执业资格，有三甲医院经验优先。\n"
+            },
+            {
+              "file": "resume-sales.md",
+              "role": "大客户销售经理",
+              "resume": "# 郭涛\n\n## 工作经历\n### 恒通软件 · 销售经理（2019.03 - 至今）\n- 负责华东区域大客户开拓\n- 完成年度 800 万元销售目标，达成率 120%\n\n## 教育背景\n- 上海大学 · 市场营销 · 本科（2015-2019）\n\n## 技能\n- 客户关系管理、商务谈判、CRM\n",
+              "jd": "职位：大客户销售经理\n职责：负责企业级软件的大客户销售与关系维护。\n要求：3 年以上 B 端销售经验，具备大客户资源与商务谈判能力。\n"
+            },
+            {
+              "file": "resume-hr.md",
+              "role": "HRBP",
+              "resume": "# 蒋雯\n\n## 工作经历\n### 星辰集团 · HRBP（2022.04 - 至今）\n- 负责 200 人研发团队的 HRBP 工作\n- 搭建技术岗胜任力模型，招聘到岗周期缩短 30%\n\n## 教育背景\n- 中国人民大学 · 人力资源管理 · 本科（2018-2022）\n\n## 技能\n- 招聘、绩效、员工关系、Excel\n",
+              "jd": "职位：HRBP\n职责：支持研发组织的人才招聘、绩效与组织发展。\n要求：熟悉 HR 三支柱模式，有互联网研发团队支持经验优先。\n"
+            },
+            {
+              "file": "resume-lawyer.md",
+              "role": "执业律师",
+              "resume": "# 罗宇\n\n## 工作经历\n### 正衡律师事务所 · 律师（2021.10 - 至今）\n- 负责合同审查与争议解决\n- 承办 60 余起民商事案件\n\n## 教育背景\n- 中国政法大学 · 法学 · 硕士（2018-2021）\n\n## 技能\n- 合同法、争议解决、法律检索\n",
+              "jd": "职位：执业律师\n职责：负责民商事争议解决与公司法律顾问业务。\n要求：已取得律师执业证，具备扎实的法律文书写作能力。\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "简历诊断报告",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{role}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "(JD 匹配|匹配度)",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-jd-{i}",
+          "title": "JD 形态变体（{file}）",
+          "tags": [
+            "variation",
+            "jd"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同形态的 JD（英文/超长/过短/无技能词）都能做匹配分析",
+            "content": "请把 {file} 与给定 JD 做匹配分析。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "resume-jd1.txt",
+              "role": "算法工程师",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "Machine Learning Engineer: build ranking models with Python and PyTorch, deploy with Docker and Kubernetes, strong SQL skills required."
+            },
+            {
+              "file": "resume-jd2.txt",
+              "role": "后端开发工程师",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "职位：后端开发工程师\n要求：Java、Spring、Spring Boot、MyBatis、MySQL、Redis、Kafka、Elasticsearch、Docker、Kubernetes、Git、Linux、设计模式、微服务、分布式、高并发、性能优化、单元测试、CI/CD。\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n- 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n"
+            },
+            {
+              "file": "resume-jd3.txt",
+              "role": "内容编辑",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "招内容编辑，会写文章就行。"
+            },
+            {
+              "file": "resume-jd4.txt",
+              "role": "行政助理",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "职位：行政助理\n职责：会议安排、办公用品采购、访客接待。\n要求：细致耐心，沟通良好。\n"
+            },
+            {
+              "file": "resume-jd5.txt",
+              "role": "数据分析师",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "Data Analyst（数据分析师）\n- Use SQL & Python for business analysis\n- 熟悉 Tableau 可视化\n- 3 年以上数据分析经验\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "简历诊断报告",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{file}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "命中技能",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 极短 / 极多 / 极端参数",
+      "description": "空简历、极短简历、40 条要点、纯表格、超长参数等边界输入下的稳定产出（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{i}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出完整诊断报告，不允许崩溃",
+            "content": "边界用例：{title}",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "空简历 + 空 JD",
+              "file": "empty-resume.md",
+              "resume": "",
+              "jd": "",
+              "role": "软件工程师"
+            },
+            {
+              "n": "2",
+              "title": "极短简历（仅一行姓名）",
+              "file": "tiny-resume.txt",
+              "resume": "李雷\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "3",
+              "title": "空 JD（简历正常）",
+              "file": "nojd-resume.md",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "",
+              "role": "软件工程师"
+            },
+            {
+              "n": "4",
+              "title": "只有标题没有要点",
+              "file": "headings-only.md",
+              "resume": "# 王刚\n\n## 工作经历\n\n## 教育背景\n\n## 技能\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "5",
+              "title": "极多条目（40 条要点）",
+              "file": "many-bullets.md",
+              "resume": "# 周航\n\n## 工作经历\n\n### 云枢科技 · 后端工程师（2021.03 - 至今）\n- 负责服务模块 1 的日常开发与维护\n- 重构模块 2，接口耗时从 500ms 降到 80ms\n- 参与模块 3 的评审与联调\n- 推动模块 4 上线，覆盖 200 万用户\n- 负责服务模块 5 的日常开发与维护\n- 重构模块 6，接口耗时从 500ms 降到 80ms\n- 参与模块 7 的评审与联调\n- 推动模块 8 上线，覆盖 200 万用户\n- 负责服务模块 9 的日常开发与维护\n- 重构模块 10，接口耗时从 500ms 降到 80ms\n- 参与模块 11 的评审与联调\n- 推动模块 12 上线，覆盖 200 万用户\n- 负责服务模块 13 的日常开发与维护\n- 重构模块 14，接口耗时从 500ms 降到 80ms\n- 参与模块 15 的评审与联调\n- 推动模块 16 上线，覆盖 200 万用户\n- 负责服务模块 17 的日常开发与维护\n- 重构模块 18，接口耗时从 500ms 降到 80ms\n- 参与模块 19 的评审与联调\n- 推动模块 20 上线，覆盖 200 万用户\n- 负责服务模块 21 的日常开发与维护\n- 重构模块 22，接口耗时从 500ms 降到 80ms\n- 参与模块 23 的评审与联调\n- 推动模块 24 上线，覆盖 200 万用户\n- 负责服务模块 25 的日常开发与维护\n- 重构模块 26，接口耗时从 500ms 降到 80ms\n- 参与模块 27 的评审与联调\n- 推动模块 28 上线，覆盖 200 万用户\n- 负责服务模块 29 的日常开发与维护\n- 重构模块 30，接口耗时从 500ms 降到 80ms\n- 参与模块 31 的评审与联调\n- 推动模块 32 上线，覆盖 200 万用户\n- 负责服务模块 33 的日常开发与维护\n- 重构模块 34，接口耗时从 500ms 降到 80ms\n- 参与模块 35 的评审与联调\n- 推动模块 36 上线，覆盖 200 万用户\n- 负责服务模块 37 的日常开发与维护\n- 重构模块 38，接口耗时从 500ms 降到 80ms\n- 参与模块 39 的评审与联调\n- 推动模块 40 上线，覆盖 200 万用户\n\n## 教育背景\n- 北京邮电大学 · 计算机 · 本科（2017-2021）\n\n## 技能\n- Go、Kubernetes\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "6",
+              "title": "超长单行要点",
+              "file": "longline-resume.md",
+              "resume": "# 秦朗\n\n## 工作经历\n\n### 恒星数据\n- 负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设负责一整条超长的数据链路建设\n\n## 技能\n- Spark\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "7",
+              "title": "纯 Markdown 表格简历",
+              "file": "table-resume.md",
+              "resume": "| 姓名 | 职位 |\n| --- | --- |\n| 韩雪 | 数据工程师 |\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "8",
+              "title": "极端 role 参数（超长岗位名）",
+              "file": "weird-role.md",
+              "resume": "# 李强\n邮箱：liqiang@example.com\n\n## 工作经历\n\n### 蓝鲸科技 · Java 开发工程师（2021 年 7 月 - 至今）\n- 负责订单中心接口开发\n- 用 Spring Boot 重构结算服务，接口 P99 延迟从 800ms 降到 120ms\n- 主导 Redis 缓存改造，数据库 QPS 下降 60%\n\n## 项目经历\n### 订单中台\n- 设计订单状态机\n- 完成 20 个接口联调\n\n## 教育背景\n- 南京大学 · 软件工程 · 本科（2017-2021）\n\n## 技能\n- Java、Spring Boot、MySQL、Redis\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "资深高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级高级架构师"
+            },
+            {
+              "n": "9",
+              "title": "纯英文简历",
+              "file": "en-resume.md",
+              "resume": "# Chris\n邮箱：chenchen@example.com ｜ 电话：13611112222\n\n## 工作经历\n\n### 星河产品部 · PM（2020 年 3 月 - 至今）\n- 负责支付产品需求梳理\n- 主导收银台改版，支付成功率提升 12%\n- 输出 30 份 PRD 并推动落地\n\n## 教育背景\n- 武汉大学 · 信息管理 · 本科（2016-2020）\n\n## 技能\n- Figma、Axure、SQL、数据分析\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "10",
+              "title": "只有联系方式的简历",
+              "file": "contact-only.txt",
+              "resume": "王倩\n手机：13500001111\n邮箱：wangqian@example.com\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "简历诊断报告",
+                "weight": 2,
+                "note": "边界输入仍产出报告"
+              },
+              {
+                "type": "contains",
+                "text": "评分卡",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "not_contains",
+                "text": "SyntaxError",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 500,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：乱码 / 控制字符 / 缺字段",
+      "description": "乱码、控制字符、零宽字符、缺字段与畸形参数下优雅处理不崩溃（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{i}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃，仍要产出报告",
+            "content": "异常用例：{title}",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "乱码简历",
+              "file": "mojibake.md",
+              "resume": "# ��简历�\n\n## 工作�历\n- �����数据��\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "2",
+              "title": "控制字符混入",
+              "file": "control.md",
+              "resume": "# 王\u0007刚\n\n## 工作经历\n- 负责\u0007模块开发\n- 完成\u0002需求评审\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "3",
+              "title": "emoji 标题",
+              "file": "emoji.md",
+              "resume": "# 😀🚀😀\n\n## 💼 工作经历\n- 🚀 负责增长运营🚀\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "4",
+              "title": "零宽字符",
+              "file": "zerowidth.md",
+              "resume": "# 王​刚\n\n## 工‌作经历\n- 负责‍模块开发\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "5",
+              "title": "未闭合 Markdown 围栏",
+              "file": "fence.md",
+              "resume": "# 周越\n\n## 工作经历\n\n```python\ndef broken(:\n    pass\n\n## 技能\n- Python\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "6",
+              "title": "JD 只有标点",
+              "file": "punct.md",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "！！！……###@@@\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "7",
+              "title": "role 含换行与制表符",
+              "file": "weirdparam.md",
+              "resume": "# 王小美\n手机：13900005678\n\n## 工作经历\n\n### 橙子互娱 · 前端开发工程师（2022.03 - 至今）\n- 负责活动页开发\n- 基于 React 搭建组件库，活动页开发效率提升 40%\n- 我优化了首屏加载速度\n\n## 教育背景\n- 浙江大学 · 计算机科学与技术 · 本科（2018-2022）\n\n## 技能\n- React、TypeScript、Webpack\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "测试\t开发\n工程师"
+            },
+            {
+              "n": "8",
+              "title": "JD 大量重复行",
+              "file": "repeat-jd.md",
+              "resume": "# 李强\n邮箱：liqiang@example.com\n\n## 工作经历\n\n### 蓝鲸科技 · Java 开发工程师（2021 年 7 月 - 至今）\n- 负责订单中心接口开发\n- 用 Spring Boot 重构结算服务，接口 P99 延迟从 800ms 降到 120ms\n- 主导 Redis 缓存改造，数据库 QPS 下降 60%\n\n## 项目经历\n### 订单中台\n- 设计订单状态机\n- 完成 20 个接口联调\n\n## 教育背景\n- 南京大学 · 软件工程 · 本科（2017-2021）\n\n## 技能\n- Java、Spring Boot、MySQL、Redis\n",
+              "jd": "熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n熟悉 Python 与 SQL。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "9",
+              "title": "简历混入代码片段",
+              "file": "code-resume.md",
+              "resume": "# 郑好\n\n## 工作经历\n\n### 某公司\n- 开发脚本 <script>alert(1)</script>\n- SELECT * FROM users WHERE name = '' OR 1=1\n- 负责后端接口\n\n## 技能\n- Python、SQL\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            },
+            {
+              "n": "10",
+              "title": "简历大量重复行",
+              "file": "repeat-resume.md",
+              "resume": "# 何平\n\n## 工作经历\n\n### 某公司\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n- 负责日常运维工作\n\n## 技能\n- Linux\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n",
+              "role": "软件工程师"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "简历诊断报告",
+                "weight": 2,
+                "note": "异常输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "contains",
+                "text": "问题清单",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 500,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复 10 次（离线确定性模式），验证输出稳定、结构一致、不崩溃",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{i}",
+          "title": "稳定性重复：{file}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "repeat": 10,
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证输出稳定",
+            "content": "稳定性样本 {n}：{file}（目标岗位：{role}）",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{resume}"
+              },
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "role": "{role}",
+              "resume": "input/{file}"
+            }
+          },
+          "rows": [
+            {
+              "n": "1",
+              "file": "s1-da.md",
+              "role": "数据分析师",
+              "resume": "# 张伟（数据分析师）\n\n手机：13800001234 ｜ 邮箱：zhangwei@example.com\n\n## 工作经历\n\n### 云图科技 · 数据分析师（2023.03 - 至今）\n- 负责日常业务数据报表\n- 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟\n- 我参与了用户增长分析项目\n\n### 星辰数据 · 数据实习生（2022.06 - 2022.12）\n- 协助清洗用户行为数据\n- 用 Python 做留存分析，输出 3 份周报\n\n## 教育背景\n- 华东理工大学 · 统计学 · 本科（2019-2023）\n\n## 技能\n- Python、SQL、Excel、Tableau\n",
+              "jd": "职位：数据分析师\n职责：负责业务数据分析与指标体系建设，输出可视化分析报告。\n要求：\n- 熟练使用 SQL 完成复杂取数\n- 熟悉 Python 数据分析（pandas）\n- 掌握 Tableau 或同类 BI 工具\n- 有 A/B 实验经验优先\n"
+            },
+            {
+              "n": "2",
+              "file": "s2-java.md",
+              "role": "Java 后端开发工程师",
+              "resume": "# 李强\n邮箱：liqiang@example.com\n\n## 工作经历\n\n### 蓝鲸科技 · Java 开发工程师（2021 年 7 月 - 至今）\n- 负责订单中心接口开发\n- 用 Spring Boot 重构结算服务，接口 P99 延迟从 800ms 降到 120ms\n- 主导 Redis 缓存改造，数据库 QPS 下降 60%\n\n## 项目经历\n### 订单中台\n- 设计订单状态机\n- 完成 20 个接口联调\n\n## 教育背景\n- 南京大学 · 软件工程 · 本科（2017-2021）\n\n## 技能\n- Java、Spring Boot、MySQL、Redis\n",
+              "jd": "职位：Java 后端开发工程师\n职责：负责核心交易系统的服务端研发与性能优化。\n要求：\n- 精通 Java 与 Spring Boot 框架\n- 熟悉 MySQL 索引优化与 Redis 缓存设计\n- 了解分布式事务与消息队列\n"
+            },
+            {
+              "n": "3",
+              "file": "s3-fe.md",
+              "role": "前端开发工程师",
+              "resume": "# 王小美\n手机：13900005678\n\n## 工作经历\n\n### 橙子互娱 · 前端开发工程师（2022.03 - 至今）\n- 负责活动页开发\n- 基于 React 搭建组件库，活动页开发效率提升 40%\n- 我优化了首屏加载速度\n\n## 教育背景\n- 浙江大学 · 计算机科学与技术 · 本科（2018-2022）\n\n## 技能\n- React、TypeScript、Webpack\n",
+              "jd": "职位：前端开发工程师\n职责：负责 C 端活动页与组件库建设。\n要求：\n- 熟练使用 React 与 TypeScript\n- 熟悉 Webpack 构建与前端性能优化\n"
+            },
+            {
+              "n": "4",
+              "file": "s4-pm.md",
+              "role": "产品经理",
+              "resume": "# 陈晨\n邮箱：chenchen@example.com ｜ 电话：13611112222\n\n## 工作经历\n\n### 星河产品部 · 产品经理（2020 年 3 月 - 至今）\n- 负责支付产品需求梳理\n- 主导收银台改版，支付成功率提升 12%\n- 输出 30 份 PRD 并推动落地\n\n## 教育背景\n- 武汉大学 · 信息管理 · 本科（2016-2020）\n\n## 技能\n- Figma、Axure、SQL、数据分析\n",
+              "jd": "职位：产品经理\n职责：负责支付产品规划与体验优化。\n要求：\n- 熟练使用 Figma 输出原型\n- 具备数据分析能力，能用 SQL 取数\n- 有支付或交易类产品经验优先\n"
+            },
+            {
+              "n": "5",
+              "file": "s5-mixed.md",
+              "role": "数据工程师",
+              "resume": "# Alex Zhou\n\n## Work Experience\n### DataFlow Inc. · Data Engineer（2022.01 - 至今）\n- 负责 ETL pipeline 维护\n- Rebuilt nightly ETL jobs with Airflow，处理时长从 3 小时降到 40 分钟\n\n## Education\n- 同济大学 · 软件工程 · 本科（2018-2022）\n\n## Skills\n- Python、Spark、Airflow、SQL\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "n": "6",
+              "file": "s6-en.md",
+              "role": "Backend Engineer",
+              "resume": "# Emily Carter\n\n## Experience\n### Bright Labs · Backend Engineer (2021.06 - present)\n- Responsible for payment service development\n- Optimized PostgreSQL queries, reducing API latency by 45%\n\n## Education\n- BS in Computer Science, 2017-2021\n\n## Skills\n- Python, PostgreSQL, Docker\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "n": "7",
+              "file": "s7-big.md",
+              "role": "平台工程师",
+              "resume": "# 周航\n\n## 工作经历\n\n### 云枢科技 · 后端工程师（2021.03 - 至今）\n- 负责服务模块 1 的日常开发与维护\n- 重构模块 2，接口耗时从 500ms 降到 80ms\n- 参与模块 3 的评审与联调\n- 推动模块 4 上线，覆盖 200 万用户\n- 负责服务模块 5 的日常开发与维护\n- 重构模块 6，接口耗时从 500ms 降到 80ms\n- 参与模块 7 的评审与联调\n- 推动模块 8 上线，覆盖 200 万用户\n- 负责服务模块 9 的日常开发与维护\n- 重构模块 10，接口耗时从 500ms 降到 80ms\n- 参与模块 11 的评审与联调\n- 推动模块 12 上线，覆盖 200 万用户\n- 负责服务模块 13 的日常开发与维护\n- 重构模块 14，接口耗时从 500ms 降到 80ms\n- 参与模块 15 的评审与联调\n- 推动模块 16 上线，覆盖 200 万用户\n- 负责服务模块 17 的日常开发与维护\n- 重构模块 18，接口耗时从 500ms 降到 80ms\n- 参与模块 19 的评审与联调\n- 推动模块 20 上线，覆盖 200 万用户\n- 负责服务模块 21 的日常开发与维护\n- 重构模块 22，接口耗时从 500ms 降到 80ms\n- 参与模块 23 的评审与联调\n- 推动模块 24 上线，覆盖 200 万用户\n- 负责服务模块 25 的日常开发与维护\n\n## 教育背景\n- 北京邮电大学 · 计算机 · 本科（2017-2021）\n\n## 技能\n- Go、Kubernetes\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "n": "8",
+              "file": "s8-tiny.md",
+              "role": "实习生",
+              "resume": "# 何鑫\n\n## 技能\n- Excel、PPT\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            },
+            {
+              "n": "9",
+              "file": "s9-teacher.md",
+              "role": "小学数学教师",
+              "resume": "# 林小雨\n\n## 工作经历\n### 阳光小学 · 数学教师（2021.09 - 至今）\n- 负责三年级数学教学\n- 带班成绩平均分提升 15 分\n\n## 教育背景\n- 华东师范大学 · 小学教育 · 本科（2017-2021）\n\n## 技能\n- 课堂教学、家校沟通、多媒体课件\n",
+              "jd": "职位：小学数学教师\n职责：负责小学数学课堂教学与班级管理。\n要求：师范类专业，热爱教育，具备课堂管理与家校沟通能力。\n"
+            },
+            {
+              "n": "10",
+              "file": "s10-long.md",
+              "role": "内容运营",
+              "resume": "# 🌟 赵琳 🌟\n\n## 工作经历\n### 🍊 鲜橙文化 · 运营专员（2023.05 - 至今）\n- 负责小红书账号运营\n- 策划 8 场直播活动，累计曝光 50 万次\n\n## 教育背景\n- 暨南大学 · 新闻学 · 本科（2019-2023）\n\n## 技能\n- 内容策划、数据分析、Excel\n",
+              "jd": "职位：全栈工程师\n职责：负责业务系统研发与迭代。\n要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "简历诊断报告",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{file}",
+                "weight": 2,
+                "note": "确定性输出身份一致"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

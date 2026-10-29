@@ -1035,7 +1035,8 @@ def main():
             print("错误：读取目标文件失败：%s" % exc, file=sys.stderr)
             sys.exit(1)
     if not goal_text:
-        parser.error("请用 --goal 或 --from 提供目标描述（或用 --self-test 自检）")
+        print("[警告] 未提供目标描述（--goal / --from 均为空），按空目标生成计划框架。", file=sys.stderr)
+        goal_text = "（未提供目标描述）"
     if args.days < 1:
         parser.error("--days 必须大于 0")
 

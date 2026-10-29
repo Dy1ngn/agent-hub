@@ -1,0 +1,518 @@
+id: ts-b-email-assistant-g5-stability
+agentId: email-assistant
+group: g5-stability
+name: 邮件助手 · 稳定性：10 样本 × 重复 10 次
+description: 10 个确定性邮件样本各重复 10 次，离线输出必须完全一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性样本（紧急：合同确认（请今天内回复））
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s1.txt
+          content: "Subject: 紧急：合同确认（请今天内回复）
+
+            From: 张三 <zhangsan@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四，你好：
+
+            这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？
+
+            请尽快回复：是否需要法务复核？能否今天内给出结论？\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: 紧急：合同确认（请今天内回复）
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性样本（十月账单与报销明细）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s2.txt
+          content: "Subject: 十月账单与报销明细
+
+            From: 财务 <finance@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四你好，十月账单已出，合计 1234.56 元，明细见下。
+
+            如有疑问请在 2026-11-05 前反馈。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: 十月账单与报销明细
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性样本（产品月刊第 12 期）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s3.txt
+          content: "Subject: 产品月刊第 12 期
+
+            From: 运营 <ops@example.com>
+
+            To: 订阅者 <list@example.com>
+
+
+            本期产品月刊介绍新功能与团队动态，欢迎浏览。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: 产品月刊第 12 期
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性样本（Q4 Planning Meeting Agenda）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s4.eml
+          content: "From: carol@example.com
+
+            To: team@example.com
+
+            Subject: Q4 Planning Meeting Agenda
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+
+
+            Hi team,
+
+
+            The Q4 planning meeting is on 2026-11-02. Please review the agenda.\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: Q4 Planning Meeting Agenda
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性样本（Contract Draft）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s5.eml
+          content: 'From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Contract Draft
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            MIME-Version: 1.0
+
+            Content-Type: multipart/mixed; boundary="BBB"
+
+
+            --BBB
+
+            Content-Type: text/plain
+
+
+            Please review the attached report.
+
+
+            --BBB
+
+            Content-Type: application/pdf; name="report.pdf"
+
+            Content-Transfer-Encoding: base64
+
+            Content-Disposition: attachment; filename="report.pdf"
+
+
+            JVBERi0xLjQK
+
+            --BBB--
+
+            '
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: Contract Draft
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性样本（Weekly Report）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s6.mbox
+          content: "From - Mon Oct 26 09:00:00 2026
+
+            From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Weekly Report
+
+            Date: Mon, 26 Oct 2026 09:00:00 +0800
+
+
+            Please find the weekly report.
+
+
+            From - Tue Oct 27 10:00:00 2026
+
+            From: carol@example.com
+
+            To: bob@example.com
+
+            Subject: Server Maintenance
+
+            Date: Tue, 27 Oct 2026 10:00:00 +0800
+
+
+            Maintenance is tonight.
+
+
+            From - Wed Oct 28 11:00:00 2026
+
+            From: dave@example.com
+
+            To: bob@example.com
+
+            Subject: Budget Approval
+
+            Date: Wed, 28 Oct 2026 11:00:00 +0800
+
+
+            Budget approval is pending.\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: Weekly Report
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性样本（s7）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s7.txt
+          content: "记得明天下午三点提交周报，别忘了带上数据截图。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: s7
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性样本（跨团队协作方案 / Cross-team Plan）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s8.txt
+          content: "Subject: 跨团队协作方案 / Cross-team Plan
+
+            From: Emily <emily@example.com>
+
+            To: 王五 <wangwu@example.com>
+
+
+            王五你好，这是中英双语的协作方案 draft，请查收。
+
+            Please send feedback before 2026-11-03. 谢谢！\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: 跨团队协作方案 / Cross-team Plan
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: "稳定性样本（Re: Server Migration Plan）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s9.eml
+          content: "From: erin@example.com
+
+            To: bob@example.com
+
+            Subject: Re: Server Migration Plan
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            In-Reply-To: <parent@example.com>
+
+            References: <root@example.com> <parent@example.com>
+
+
+
+            Following up on the migration plan discussed last week.\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: "Re: Server Migration Plan"
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性样本（Contract Review Needed）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/s10.eml
+          content: "From: dave@example.com
+
+            To: legal@example.com
+
+            Subject: Contract Review Needed
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            Cc: boss@example.com, audit@example.com
+
+
+
+            Please review the contract draft before 2026-11-01. Thanks!\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 1
+        - type: contains
+          text: Contract Review Needed
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

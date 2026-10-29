@@ -1,0 +1,422 @@
+id: ts-b-release-notes-g5-stability
+agentId: release-notes
+group: g5-stability
+name: 发布说明生成 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线确定性模式），验证解析分组、semver 推断与统计稳定一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 1
+      files:
+        - path: input/commits.txt
+          content: "feat(auth): 增加登录失败重试限制
+
+            fix(auth): 修复空指针导致的登录崩溃
+
+            feat(ui): 新增深色模式开关
+
+            fix(pay): 修复重复扣款问题
+
+            docs: 更新部署文档\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 2
+      files:
+        - path: input/commits.txt
+          content: "docs: 更新 README 快速开始
+
+            docs(api): 补充接口文档示例
+
+            docs: 修正错别字\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 文档"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 3
+      files:
+        - path: input/commits.txt
+          content: "feat(api)!: 移除 v1 旧接口
+
+            feat(api): 新增 v2 接口
+
+            fix(api): 修复分页参数校验\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: 破坏性变更
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 4
+      files:
+        - path: input/commits.txt
+          content: "perf(db): 优化列表查询索引
+
+            perf(cache): 增加热点数据缓存
+
+            fix(db): 修复慢查询\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 性能"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 5
+      files:
+        - path: input/commits.txt
+          content: "refactor(core): 拆分订单状态机
+
+            refactor(utils): 统一错误处理
+
+            feat(core): 新增状态机事件总线\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 重构"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 6
+      files:
+        - path: input/commits.txt
+          content: "test: 补充登录用例\ntest(auth): 补充注册用例"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 测试"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 7
+      files:
+        - path: input/commits.txt
+          content: "build(deps): 升级 requests 到 2.31.0
+
+            chore(lock): 同步依赖锁文件
+
+            ci: 调整流水线超时时间\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 构建"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 8
+      files:
+        - path: input/commits.txt
+          content: "chore: 更新脚本\nchore(config): 调整配置"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 杂务"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 9
+      files:
+        - path: input/commits.txt
+          content: "改了点东西\n更新了一下配置\nfix something\n随便提交\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证分组与统计稳定
+      content: 稳定性样本 10
+      files:
+        - path: input/commits.txt
+          content: "feat(i18n): 新增多语言支持
+
+            fix(locale): 修复时区换算错误
+
+            feat(i18n): add English translation files\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 确定性分组稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []

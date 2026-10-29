@@ -1,0 +1,3890 @@
+id: ts-b-commit-crafter-g2-variation
+agentId: commit-crafter
+group: g2-variation
+name: 提交信息生成 · 输入变体：风格 / 语言 / 规模 / 参数
+description: conventional/gitmoji/plain 三种风格、zh/en 两种语言，叠加 diff 形态与 --max-diff-chars 参数变体（模型链路）（50 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-style-1
+    title: 单行修改 · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 1（单行修改 / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/config.py b/src/config.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/config.py
+
+            +++ b/src/config.py
+
+            @@ -1,1 +1,1 @@
+
+            -TIMEOUT = 30
+
+            +TIMEOUT = 60\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-1-2
+    title: 单行修改 · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 1（单行修改 / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/config.py b/src/config.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/config.py
+
+            +++ b/src/config.py
+
+            @@ -1,1 +1,1 @@
+
+            -TIMEOUT = 30
+
+            +TIMEOUT = 60\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-1-3
+    title: 单行修改 · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 1（单行修改 / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/config.py b/src/config.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/config.py
+
+            +++ b/src/config.py
+
+            @@ -1,1 +1,1 @@
+
+            -TIMEOUT = 30
+
+            +TIMEOUT = 60\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2
+    title: 函数重写 · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 2（函数重写 / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/parse.py b/src/parse.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/parse.py
+
+            +++ b/src/parse.py
+
+            @@ -1,2 +1,4 @@
+
+            -def parse(raw):
+
+            -    return raw.split('|')
+
+            +def parse(raw):
+
+            +    if not raw:
+
+            +        return []
+
+            +    return [p.strip() for p in raw.split('|') if p.strip()\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2-5
+    title: 函数重写 · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 2（函数重写 / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/parse.py b/src/parse.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/parse.py
+
+            +++ b/src/parse.py
+
+            @@ -1,2 +1,4 @@
+
+            -def parse(raw):
+
+            -    return raw.split('|')
+
+            +def parse(raw):
+
+            +    if not raw:
+
+            +        return []
+
+            +    return [p.strip() for p in raw.split('|') if p.strip()\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2-6
+    title: 函数重写 · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 2（函数重写 / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/parse.py b/src/parse.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/parse.py
+
+            +++ b/src/parse.py
+
+            @@ -1,2 +1,4 @@
+
+            -def parse(raw):
+
+            -    return raw.split('|')
+
+            +def parse(raw):
+
+            +    if not raw:
+
+            +        return []
+
+            +    return [p.strip() for p in raw.split('|') if p.strip()\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3
+    title: 多文件混合 · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 3（多文件混合 / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/a.py b/src/a.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/a.py
+
+            +++ b/src/a.py
+
+            @@ -1,1 +1,1 @@
+
+            -A = 1
+
+            +A = 2
+
+            diff --git a/src/b.py b/src/b.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/b.py
+
+            +++ b/src/b.py
+
+            @@ -1,1 +1,1 @@
+
+            -B = 1
+
+            +B = 2
+
+            diff --git a/docs/api.md b/docs/api.md
+
+            index 1111111..2222222 100644
+
+            --- a/docs/api.md
+
+            +++ b/docs/api.md
+
+            @@ -1,1 +1,1 @@
+
+            -接口 v1
+
+            +接口 v2
+
+            diff --git a/tests/test_a.py b/tests/test_a.py
+
+            index 1111111..2222222 100644
+
+            --- a/tests/test_a.py
+
+            +++ b/tests/test_a.py
+
+            @@ -1,1 +1,1 @@
+
+            -assert a() == 1
+
+            +assert a() == 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3-8
+    title: 多文件混合 · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 3（多文件混合 / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/a.py b/src/a.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/a.py
+
+            +++ b/src/a.py
+
+            @@ -1,1 +1,1 @@
+
+            -A = 1
+
+            +A = 2
+
+            diff --git a/src/b.py b/src/b.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/b.py
+
+            +++ b/src/b.py
+
+            @@ -1,1 +1,1 @@
+
+            -B = 1
+
+            +B = 2
+
+            diff --git a/docs/api.md b/docs/api.md
+
+            index 1111111..2222222 100644
+
+            --- a/docs/api.md
+
+            +++ b/docs/api.md
+
+            @@ -1,1 +1,1 @@
+
+            -接口 v1
+
+            +接口 v2
+
+            diff --git a/tests/test_a.py b/tests/test_a.py
+
+            index 1111111..2222222 100644
+
+            --- a/tests/test_a.py
+
+            +++ b/tests/test_a.py
+
+            @@ -1,1 +1,1 @@
+
+            -assert a() == 1
+
+            +assert a() == 2\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3-9
+    title: 多文件混合 · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 3（多文件混合 / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/a.py b/src/a.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/a.py
+
+            +++ b/src/a.py
+
+            @@ -1,1 +1,1 @@
+
+            -A = 1
+
+            +A = 2
+
+            diff --git a/src/b.py b/src/b.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/b.py
+
+            +++ b/src/b.py
+
+            @@ -1,1 +1,1 @@
+
+            -B = 1
+
+            +B = 2
+
+            diff --git a/docs/api.md b/docs/api.md
+
+            index 1111111..2222222 100644
+
+            --- a/docs/api.md
+
+            +++ b/docs/api.md
+
+            @@ -1,1 +1,1 @@
+
+            -接口 v1
+
+            +接口 v2
+
+            diff --git a/tests/test_a.py b/tests/test_a.py
+
+            index 1111111..2222222 100644
+
+            --- a/tests/test_a.py
+
+            +++ b/tests/test_a.py
+
+            @@ -1,1 +1,1 @@
+
+            -assert a() == 1
+
+            +assert a() == 2\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4
+    title: 大 diff · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 4（大 diff / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/big.py b/src/big.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big.py
+
+            +++ b/src/big.py
+
+            @@ -1,13 +1,13 @@
+
+            -def f0(x):
+
+            -def f1(x):
+
+            -def f2(x):
+
+            -def f3(x):
+
+            -def f4(x):
+
+            -def f5(x):
+
+            -def f6(x):
+
+            -def f7(x):
+
+            -def f8(x):
+
+            -def f9(x):
+
+            -def f10(x):
+
+            -def f11(x):
+
+            -    return x
+
+            +def f0(x):
+
+            +def f1(x):
+
+            +def f2(x):
+
+            +def f3(x):
+
+            +def f4(x):
+
+            +def f5(x):
+
+            +def f6(x):
+
+            +def f7(x):
+
+            +def f8(x):
+
+            +def f9(x):
+
+            +def f10(x):
+
+            +def f11(x):
+
+            +    return x * 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4-11
+    title: 大 diff · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 4（大 diff / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/big.py b/src/big.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big.py
+
+            +++ b/src/big.py
+
+            @@ -1,13 +1,13 @@
+
+            -def f0(x):
+
+            -def f1(x):
+
+            -def f2(x):
+
+            -def f3(x):
+
+            -def f4(x):
+
+            -def f5(x):
+
+            -def f6(x):
+
+            -def f7(x):
+
+            -def f8(x):
+
+            -def f9(x):
+
+            -def f10(x):
+
+            -def f11(x):
+
+            -    return x
+
+            +def f0(x):
+
+            +def f1(x):
+
+            +def f2(x):
+
+            +def f3(x):
+
+            +def f4(x):
+
+            +def f5(x):
+
+            +def f6(x):
+
+            +def f7(x):
+
+            +def f8(x):
+
+            +def f9(x):
+
+            +def f10(x):
+
+            +def f11(x):
+
+            +    return x * 2\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4-12
+    title: 大 diff · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 4（大 diff / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/big.py b/src/big.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big.py
+
+            +++ b/src/big.py
+
+            @@ -1,13 +1,13 @@
+
+            -def f0(x):
+
+            -def f1(x):
+
+            -def f2(x):
+
+            -def f3(x):
+
+            -def f4(x):
+
+            -def f5(x):
+
+            -def f6(x):
+
+            -def f7(x):
+
+            -def f8(x):
+
+            -def f9(x):
+
+            -def f10(x):
+
+            -def f11(x):
+
+            -    return x
+
+            +def f0(x):
+
+            +def f1(x):
+
+            +def f2(x):
+
+            +def f3(x):
+
+            +def f4(x):
+
+            +def f5(x):
+
+            +def f6(x):
+
+            +def f7(x):
+
+            +def f8(x):
+
+            +def f9(x):
+
+            +def f10(x):
+
+            +def f11(x):
+
+            +    return x * 2\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-5
+    title: 超多文件 · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 5（超多文件 / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/mod0.py b/src/mod0.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod0.py
+
+            +++ b/src/mod0.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 0
+
+            +V = 1
+
+            diff --git a/src/mod1.py b/src/mod1.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod1.py
+
+            +++ b/src/mod1.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/mod2.py b/src/mod2.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod2.py
+
+            +++ b/src/mod2.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 2
+
+            +V = 3
+
+            diff --git a/src/mod3.py b/src/mod3.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod3.py
+
+            +++ b/src/mod3.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 3
+
+            +V = 4
+
+            diff --git a/src/mod4.py b/src/mod4.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod4.py
+
+            +++ b/src/mod4.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 4
+
+            +V = 5
+
+            diff --git a/src/mod5.py b/src/mod5.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod5.py
+
+            +++ b/src/mod5.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 5
+
+            +V = 6
+
+            diff --git a/src/mod6.py b/src/mod6.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod6.py
+
+            +++ b/src/mod6.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 6
+
+            +V = 7
+
+            diff --git a/src/mod7.py b/src/mod7.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod7.py
+
+            +++ b/src/mod7.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 7
+
+            +V = 8
+
+            diff --git a/src/mod8.py b/src/mod8.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod8.py
+
+            +++ b/src/mod8.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 8
+
+            +V = 9
+
+            diff --git a/src/mod9.py b/src/mod9.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod9.py
+
+            +++ b/src/mod9.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 9
+
+            +V = 10
+
+            diff --git a/src/mod10.py b/src/mod10.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod10.py
+
+            +++ b/src/mod10.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 10
+
+            +V = 11
+
+            diff --git a/src/mod11.py b/src/mod11.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod11.py
+
+            +++ b/src/mod11.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 11
+
+            +V = 12
+
+            diff --git a/src/mod12.py b/src/mod12.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod12.py
+
+            +++ b/src/mod12.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 12
+
+            +V = 13
+
+            diff --git a/src/mod13.py b/src/mod13.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod13.py
+
+            +++ b/src/mod13.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 13
+
+            +V = 14
+
+            diff --git a/src/mod14.py b/src/mod14.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod14.py
+
+            +++ b/src/mod14.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 14
+
+            +V = 15
+
+            diff --git a/src/mod15.py b/src/mod15.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod15.py
+
+            +++ b/src/mod15.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 15
+
+            +V = 16
+
+            diff --git a/src/mod16.py b/src/mod16.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod16.py
+
+            +++ b/src/mod16.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 16
+
+            +V = 17
+
+            diff --git a/src/mod17.py b/src/mod17.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod17.py
+
+            +++ b/src/mod17.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 17
+
+            +V = 18
+
+            diff --git a/src/mod18.py b/src/mod18.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod18.py
+
+            +++ b/src/mod18.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 18
+
+            +V = 19
+
+            diff --git a/src/mod19.py b/src/mod19.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod19.py
+
+            +++ b/src/mod19.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 19
+
+            +V = 20\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-5-14
+    title: 超多文件 · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 5（超多文件 / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/mod0.py b/src/mod0.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod0.py
+
+            +++ b/src/mod0.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 0
+
+            +V = 1
+
+            diff --git a/src/mod1.py b/src/mod1.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod1.py
+
+            +++ b/src/mod1.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/mod2.py b/src/mod2.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod2.py
+
+            +++ b/src/mod2.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 2
+
+            +V = 3
+
+            diff --git a/src/mod3.py b/src/mod3.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod3.py
+
+            +++ b/src/mod3.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 3
+
+            +V = 4
+
+            diff --git a/src/mod4.py b/src/mod4.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod4.py
+
+            +++ b/src/mod4.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 4
+
+            +V = 5
+
+            diff --git a/src/mod5.py b/src/mod5.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod5.py
+
+            +++ b/src/mod5.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 5
+
+            +V = 6
+
+            diff --git a/src/mod6.py b/src/mod6.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod6.py
+
+            +++ b/src/mod6.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 6
+
+            +V = 7
+
+            diff --git a/src/mod7.py b/src/mod7.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod7.py
+
+            +++ b/src/mod7.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 7
+
+            +V = 8
+
+            diff --git a/src/mod8.py b/src/mod8.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod8.py
+
+            +++ b/src/mod8.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 8
+
+            +V = 9
+
+            diff --git a/src/mod9.py b/src/mod9.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod9.py
+
+            +++ b/src/mod9.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 9
+
+            +V = 10
+
+            diff --git a/src/mod10.py b/src/mod10.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod10.py
+
+            +++ b/src/mod10.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 10
+
+            +V = 11
+
+            diff --git a/src/mod11.py b/src/mod11.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod11.py
+
+            +++ b/src/mod11.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 11
+
+            +V = 12
+
+            diff --git a/src/mod12.py b/src/mod12.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod12.py
+
+            +++ b/src/mod12.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 12
+
+            +V = 13
+
+            diff --git a/src/mod13.py b/src/mod13.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod13.py
+
+            +++ b/src/mod13.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 13
+
+            +V = 14
+
+            diff --git a/src/mod14.py b/src/mod14.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod14.py
+
+            +++ b/src/mod14.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 14
+
+            +V = 15
+
+            diff --git a/src/mod15.py b/src/mod15.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod15.py
+
+            +++ b/src/mod15.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 15
+
+            +V = 16
+
+            diff --git a/src/mod16.py b/src/mod16.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod16.py
+
+            +++ b/src/mod16.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 16
+
+            +V = 17
+
+            diff --git a/src/mod17.py b/src/mod17.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod17.py
+
+            +++ b/src/mod17.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 17
+
+            +V = 18
+
+            diff --git a/src/mod18.py b/src/mod18.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod18.py
+
+            +++ b/src/mod18.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 18
+
+            +V = 19
+
+            diff --git a/src/mod19.py b/src/mod19.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod19.py
+
+            +++ b/src/mod19.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 19
+
+            +V = 20\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-5-15
+    title: 超多文件 · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 5（超多文件 / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/mod0.py b/src/mod0.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod0.py
+
+            +++ b/src/mod0.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 0
+
+            +V = 1
+
+            diff --git a/src/mod1.py b/src/mod1.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod1.py
+
+            +++ b/src/mod1.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/mod2.py b/src/mod2.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod2.py
+
+            +++ b/src/mod2.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 2
+
+            +V = 3
+
+            diff --git a/src/mod3.py b/src/mod3.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod3.py
+
+            +++ b/src/mod3.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 3
+
+            +V = 4
+
+            diff --git a/src/mod4.py b/src/mod4.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod4.py
+
+            +++ b/src/mod4.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 4
+
+            +V = 5
+
+            diff --git a/src/mod5.py b/src/mod5.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod5.py
+
+            +++ b/src/mod5.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 5
+
+            +V = 6
+
+            diff --git a/src/mod6.py b/src/mod6.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod6.py
+
+            +++ b/src/mod6.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 6
+
+            +V = 7
+
+            diff --git a/src/mod7.py b/src/mod7.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod7.py
+
+            +++ b/src/mod7.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 7
+
+            +V = 8
+
+            diff --git a/src/mod8.py b/src/mod8.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod8.py
+
+            +++ b/src/mod8.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 8
+
+            +V = 9
+
+            diff --git a/src/mod9.py b/src/mod9.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod9.py
+
+            +++ b/src/mod9.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 9
+
+            +V = 10
+
+            diff --git a/src/mod10.py b/src/mod10.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod10.py
+
+            +++ b/src/mod10.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 10
+
+            +V = 11
+
+            diff --git a/src/mod11.py b/src/mod11.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod11.py
+
+            +++ b/src/mod11.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 11
+
+            +V = 12
+
+            diff --git a/src/mod12.py b/src/mod12.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod12.py
+
+            +++ b/src/mod12.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 12
+
+            +V = 13
+
+            diff --git a/src/mod13.py b/src/mod13.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod13.py
+
+            +++ b/src/mod13.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 13
+
+            +V = 14
+
+            diff --git a/src/mod14.py b/src/mod14.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod14.py
+
+            +++ b/src/mod14.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 14
+
+            +V = 15
+
+            diff --git a/src/mod15.py b/src/mod15.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod15.py
+
+            +++ b/src/mod15.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 15
+
+            +V = 16
+
+            diff --git a/src/mod16.py b/src/mod16.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod16.py
+
+            +++ b/src/mod16.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 16
+
+            +V = 17
+
+            diff --git a/src/mod17.py b/src/mod17.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod17.py
+
+            +++ b/src/mod17.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 17
+
+            +V = 18
+
+            diff --git a/src/mod18.py b/src/mod18.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod18.py
+
+            +++ b/src/mod18.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 18
+
+            +V = 19
+
+            diff --git a/src/mod19.py b/src/mod19.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/mod19.py
+
+            +++ b/src/mod19.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 19
+
+            +V = 20\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-6
+    title: 新增+删除混合 · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 6（新增+删除混合 / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/new_mod.py b/src/new_mod.py
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/src/new_mod.py
+
+            @@ -0,0 +1,2 @@
+
+            +def new():
+
+            +    return 1
+
+            diff --git a/src/old_mod.py b/src/old_mod.py
+
+            deleted file mode 100644
+
+            index 1111111..0000000
+
+            --- a/src/old_mod.py
+
+            +++ /dev/null
+
+            @@ -1,2 +0,0 @@
+
+            -def old():
+
+            -    return 0\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-6-17
+    title: 新增+删除混合 · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 6（新增+删除混合 / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/new_mod.py b/src/new_mod.py
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/src/new_mod.py
+
+            @@ -0,0 +1,2 @@
+
+            +def new():
+
+            +    return 1
+
+            diff --git a/src/old_mod.py b/src/old_mod.py
+
+            deleted file mode 100644
+
+            index 1111111..0000000
+
+            --- a/src/old_mod.py
+
+            +++ /dev/null
+
+            @@ -1,2 +0,0 @@
+
+            -def old():
+
+            -    return 0\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-6-18
+    title: 新增+删除混合 · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 6（新增+删除混合 / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/new_mod.py b/src/new_mod.py
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/src/new_mod.py
+
+            @@ -0,0 +1,2 @@
+
+            +def new():
+
+            +    return 1
+
+            diff --git a/src/old_mod.py b/src/old_mod.py
+
+            deleted file mode 100644
+
+            index 1111111..0000000
+
+            --- a/src/old_mod.py
+
+            +++ /dev/null
+
+            @@ -1,2 +0,0 @@
+
+            -def old():
+
+            -    return 0\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-7
+    title: 重命名文件 · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 7（重命名文件 / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/util.py b/src/helpers.py
+
+            similarity index 90%
+
+            rename from src/util.py
+
+            rename to src/helpers.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/util.py
+
+            +++ b/src/helpers.py
+
+            @@ -1,3 +1,3 @@
+
+            -def helper(x):
+
+            -    return x
+
+            +def helper(x):
+
+            +    return x if x is not None else 0\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-7-20
+    title: 重命名文件 · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 7（重命名文件 / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/util.py b/src/helpers.py
+
+            similarity index 90%
+
+            rename from src/util.py
+
+            rename to src/helpers.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/util.py
+
+            +++ b/src/helpers.py
+
+            @@ -1,3 +1,3 @@
+
+            -def helper(x):
+
+            -    return x
+
+            +def helper(x):
+
+            +    return x if x is not None else 0\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-7-21
+    title: 重命名文件 · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 7（重命名文件 / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/util.py b/src/helpers.py
+
+            similarity index 90%
+
+            rename from src/util.py
+
+            rename to src/helpers.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/util.py
+
+            +++ b/src/helpers.py
+
+            @@ -1,3 +1,3 @@
+
+            -def helper(x):
+
+            -    return x
+
+            +def helper(x):
+
+            +    return x if x is not None else 0\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-8
+    title: 二进制文件 · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 8（二进制文件 / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/assets/logo.png b/assets/logo.png
+
+            index 1111111..2222222 100644
+
+            Binary files a/assets/logo.png and b/assets/logo.png differ
+
+            diff --git a/src/app.py b/src/app.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/app.py
+
+            +++ b/src/app.py
+
+            @@ -1,1 +1,1 @@
+
+            -LOGO = 'old.png'
+
+            +LOGO = 'logo.png'\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-8-23
+    title: 二进制文件 · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 8（二进制文件 / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/assets/logo.png b/assets/logo.png
+
+            index 1111111..2222222 100644
+
+            Binary files a/assets/logo.png and b/assets/logo.png differ
+
+            diff --git a/src/app.py b/src/app.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/app.py
+
+            +++ b/src/app.py
+
+            @@ -1,1 +1,1 @@
+
+            -LOGO = 'old.png'
+
+            +LOGO = 'logo.png'\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-8-24
+    title: 二进制文件 · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 8（二进制文件 / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/assets/logo.png b/assets/logo.png
+
+            index 1111111..2222222 100644
+
+            Binary files a/assets/logo.png and b/assets/logo.png differ
+
+            diff --git a/src/app.py b/src/app.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/app.py
+
+            +++ b/src/app.py
+
+            @@ -1,1 +1,1 @@
+
+            -LOGO = 'old.png'
+
+            +LOGO = 'logo.png'\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-9
+    title: 中文路径与注释 · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 9（中文路径与注释 / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/文档/说明.md b/文档/说明.md
+
+            index 1111111..2222222 100644
+
+            --- a/文档/说明.md
+
+            +++ b/文档/说明.md
+
+            @@ -1,2 +1,2 @@
+
+            -# 说明
+
+            -内容待补充。
+
+            +# 说明
+
+            +补充了结算流程说明：下单、支付、退款。\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-9-26
+    title: 中文路径与注释 · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 9（中文路径与注释 / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/文档/说明.md b/文档/说明.md
+
+            index 1111111..2222222 100644
+
+            --- a/文档/说明.md
+
+            +++ b/文档/说明.md
+
+            @@ -1,2 +1,2 @@
+
+            -# 说明
+
+            -内容待补充。
+
+            +# 说明
+
+            +补充了结算流程说明：下单、支付、退款。\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-9-27
+    title: 中文路径与注释 · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 9（中文路径与注释 / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/文档/说明.md b/文档/说明.md
+
+            index 1111111..2222222 100644
+
+            --- a/文档/说明.md
+
+            +++ b/文档/说明.md
+
+            @@ -1,2 +1,2 @@
+
+            -# 说明
+
+            -内容待补充。
+
+            +# 说明
+
+            +补充了结算流程说明：下单、支付、退款。\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-10
+    title: 多 hunk · 风格 conventional
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 10（多 hunk / conventional）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/svc.py b/src/svc.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/svc.py
+
+            +++ b/src/svc.py
+
+            @@ -1,2 +1,2 @@
+
+            -VERSION = '1.0'
+
+            +VERSION = '1.1'
+
+            @@ -10,3 +10,5 @@ def run():
+
+            \     start()
+
+            -    wait()
+
+            +    retry = 3
+
+            +    for _ in range(retry):
+
+            +        wait()
+
+            \     stop()\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-10-29
+    title: 多 hunk · 风格 gitmoji
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 10（多 hunk / gitmoji）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/svc.py b/src/svc.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/svc.py
+
+            +++ b/src/svc.py
+
+            @@ -1,2 +1,2 @@
+
+            -VERSION = '1.0'
+
+            +VERSION = '1.1'
+
+            @@ -10,3 +10,5 @@ def run():
+
+            \     start()
+
+            -    wait()
+
+            +    retry = 3
+
+            +    for _ in range(retry):
+
+            +        wait()
+
+            \     stop()\n"
+      params:
+        style: gitmoji
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-10-30
+    title: 多 hunk · 风格 plain
+    tags:
+      - variation
+      - style
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定提交信息风格为改动生成提交信息
+      content: 风格变体样本 10（多 hunk / plain）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/svc.py b/src/svc.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/svc.py
+
+            +++ b/src/svc.py
+
+            @@ -1,2 +1,2 @@
+
+            -VERSION = '1.0'
+
+            +VERSION = '1.1'
+
+            @@ -10,3 +10,5 @@ def run():
+
+            \     start()
+
+            -    wait()
+
+            +    retry = 3
+
+            +    for _ in range(retry):
+
+            +        wait()
+
+            \     stop()\n"
+      params:
+        style: plain
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 三种风格下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-1
+    title: 极小截断参数 · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 1（极小截断参数 / zh）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/a.py b/src/a.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/a.py
+
+            +++ b/src/a.py
+
+            @@ -1,1 +1,1 @@
+
+            -A = 1
+
+            +A = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "1"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-1-32
+    title: 极小截断参数 · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 1（极小截断参数 / en）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/a.py b/src/a.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/a.py
+
+            +++ b/src/a.py
+
+            @@ -1,1 +1,1 @@
+
+            -A = 1
+
+            +A = 2\n"
+      params:
+        style: conventional
+        lang: en
+        maxchars: "1"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2
+    title: 小截断参数 · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 2（小截断参数 / zh）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/b.py b/src/b.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/b.py
+
+            +++ b/src/b.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f():
+
+            -    return 1
+
+            +def f():
+
+            +    return 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "100"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2-34
+    title: 小截断参数 · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 2（小截断参数 / en）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/b.py b/src/b.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/b.py
+
+            +++ b/src/b.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f():
+
+            -    return 1
+
+            +def f():
+
+            +    return 2\n"
+      params:
+        style: conventional
+        lang: en
+        maxchars: "100"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3
+    title: 中截断参数 · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 3（中截断参数 / zh）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/c.py b/src/c.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/c.py
+
+            +++ b/src/c.py
+
+            @@ -1,6 +1,6 @@
+
+            -def f0():
+
+            \    return 0
+
+            -def f1():
+
+            \    return 1
+
+            -def f2():
+
+            \    return 2
+
+            -def f3():
+
+            \    return 3
+
+            -def f4():
+
+            \    return 4
+
+            -def f5():
+
+            \    return 5
+
+            +def f0():
+
+            \    return 0
+
+            +def f1():
+
+            \    return 2
+
+            +def f2():
+
+            \    return 4
+
+            +def f3():
+
+            \    return 6
+
+            +def f4():
+
+            \    return 8
+
+            +def f5():
+
+            \    return 10\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "500"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3-36
+    title: 中截断参数 · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 3（中截断参数 / en）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/c.py b/src/c.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/c.py
+
+            +++ b/src/c.py
+
+            @@ -1,6 +1,6 @@
+
+            -def f0():
+
+            \    return 0
+
+            -def f1():
+
+            \    return 1
+
+            -def f2():
+
+            \    return 2
+
+            -def f3():
+
+            \    return 3
+
+            -def f4():
+
+            \    return 4
+
+            -def f5():
+
+            \    return 5
+
+            +def f0():
+
+            \    return 0
+
+            +def f1():
+
+            \    return 2
+
+            +def f2():
+
+            \    return 4
+
+            +def f3():
+
+            \    return 6
+
+            +def f4():
+
+            \    return 8
+
+            +def f5():
+
+            \    return 10\n"
+      params:
+        style: conventional
+        lang: en
+        maxchars: "500"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4
+    title: 超长单行 · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 4（超长单行 / zh）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/d.py b/src/d.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/d.py
+
+            +++ b/src/d.py
+
+            @@ -1,1 +1,1 @@
+
+            -X = 1
+
+            +X = 2  # 改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4-38
+    title: 超长单行 · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 4（超长单行 / en）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/d.py b/src/d.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/d.py
+
+            +++ b/src/d.py
+
+            @@ -1,1 +1,1 @@
+
+            -X = 1
+
+            +X = 2  # 改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明\n"
+      params:
+        style: conventional
+        lang: en
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-5
+    title: 大 diff · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 5（大 diff / zh）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/e.py b/src/e.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/e.py
+
+            +++ b/src/e.py
+
+            @@ -1,11 +1,11 @@
+
+            -def g0(x):
+
+            -def g1(x):
+
+            -def g2(x):
+
+            -def g3(x):
+
+            -def g4(x):
+
+            -def g5(x):
+
+            -def g6(x):
+
+            -def g7(x):
+
+            -def g8(x):
+
+            -def g9(x):
+
+            -    return x
+
+            +def g0(x):
+
+            +def g1(x):
+
+            +def g2(x):
+
+            +def g3(x):
+
+            +def g4(x):
+
+            +def g5(x):
+
+            +def g6(x):
+
+            +def g7(x):
+
+            +def g8(x):
+
+            +def g9(x):
+
+            +    return x + 1\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "1000000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-5-40
+    title: 大 diff · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 5（大 diff / en）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/e.py b/src/e.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/e.py
+
+            +++ b/src/e.py
+
+            @@ -1,11 +1,11 @@
+
+            -def g0(x):
+
+            -def g1(x):
+
+            -def g2(x):
+
+            -def g3(x):
+
+            -def g4(x):
+
+            -def g5(x):
+
+            -def g6(x):
+
+            -def g7(x):
+
+            -def g8(x):
+
+            -def g9(x):
+
+            -    return x
+
+            +def g0(x):
+
+            +def g1(x):
+
+            +def g2(x):
+
+            +def g3(x):
+
+            +def g4(x):
+
+            +def g5(x):
+
+            +def g6(x):
+
+            +def g7(x):
+
+            +def g8(x):
+
+            +def g9(x):
+
+            +    return x + 1\n"
+      params:
+        style: conventional
+        lang: en
+        maxchars: "1000000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-6
+    title: 多文件 · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 6（多文件 / zh）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/m0.py b/src/m0.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m0.py
+
+            +++ b/src/m0.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 0
+
+            +M = 0
+
+            diff --git a/src/m1.py b/src/m1.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m1.py
+
+            +++ b/src/m1.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 1
+
+            +M = 10
+
+            diff --git a/src/m2.py b/src/m2.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m2.py
+
+            +++ b/src/m2.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 2
+
+            +M = 20
+
+            diff --git a/src/m3.py b/src/m3.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m3.py
+
+            +++ b/src/m3.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 3
+
+            +M = 30
+
+            diff --git a/src/m4.py b/src/m4.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m4.py
+
+            +++ b/src/m4.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 4
+
+            +M = 40
+
+            diff --git a/src/m5.py b/src/m5.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m5.py
+
+            +++ b/src/m5.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 5
+
+            +M = 50\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "5000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-6-42
+    title: 多文件 · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 6（多文件 / en）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/m0.py b/src/m0.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m0.py
+
+            +++ b/src/m0.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 0
+
+            +M = 0
+
+            diff --git a/src/m1.py b/src/m1.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m1.py
+
+            +++ b/src/m1.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 1
+
+            +M = 10
+
+            diff --git a/src/m2.py b/src/m2.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m2.py
+
+            +++ b/src/m2.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 2
+
+            +M = 20
+
+            diff --git a/src/m3.py b/src/m3.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m3.py
+
+            +++ b/src/m3.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 3
+
+            +M = 30
+
+            diff --git a/src/m4.py b/src/m4.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m4.py
+
+            +++ b/src/m4.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 4
+
+            +M = 40
+
+            diff --git a/src/m5.py b/src/m5.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m5.py
+
+            +++ b/src/m5.py
+
+            @@ -1,1 +1,1 @@
+
+            -M = 5
+
+            +M = 50\n"
+      params:
+        style: conventional
+        lang: en
+        maxchars: "5000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-7
+    title: 纯文档 · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 7（纯文档 / zh）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/docs/runbook.md b/docs/runbook.md
+
+            index 1111111..2222222 100644
+
+            --- a/docs/runbook.md
+
+            +++ b/docs/runbook.md
+
+            @@ -1,1 +1,4 @@
+
+            -# 手册
+
+            +# 手册
+
+            +
+
+            +## 应急流程
+
+            +1. 回滚 2. 通知 3. 复盘\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-7-44
+    title: 纯文档 · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 7（纯文档 / en）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/docs/runbook.md b/docs/runbook.md
+
+            index 1111111..2222222 100644
+
+            --- a/docs/runbook.md
+
+            +++ b/docs/runbook.md
+
+            @@ -1,1 +1,4 @@
+
+            -# 手册
+
+            +# 手册
+
+            +
+
+            +## 应急流程
+
+            +1. 回滚 2. 通知 3. 复盘\n"
+      params:
+        style: conventional
+        lang: en
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-8
+    title: 依赖升级 · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 8（依赖升级 / zh）
+      files:
+        - path: input/change.diff
+          content: 'diff --git a/package.json b/package.json
+
+            index 1111111..2222222 100644
+
+            --- a/package.json
+
+            +++ b/package.json
+
+            @@ -1,1 +1,1 @@
+
+            -  "axios": "1.3.0"
+
+            +  "axios": "1.6.0"
+
+            '
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-8-46
+    title: 依赖升级 · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 8（依赖升级 / en）
+      files:
+        - path: input/change.diff
+          content: 'diff --git a/package.json b/package.json
+
+            index 1111111..2222222 100644
+
+            --- a/package.json
+
+            +++ b/package.json
+
+            @@ -1,1 +1,1 @@
+
+            -  "axios": "1.3.0"
+
+            +  "axios": "1.6.0"
+
+            '
+      params:
+        style: conventional
+        lang: en
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-9
+    title: 删除接口 · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 9（删除接口 / zh）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/deprecated.py b/src/deprecated.py
+
+            deleted file mode 100644
+
+            index 1111111..0000000
+
+            --- a/src/deprecated.py
+
+            +++ /dev/null
+
+            @@ -1,2 +0,0 @@
+
+            -def old_api():
+
+            -    raise NotImplementedError\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-9-48
+    title: 删除接口 · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 9（删除接口 / en）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/deprecated.py b/src/deprecated.py
+
+            deleted file mode 100644
+
+            index 1111111..0000000
+
+            --- a/src/deprecated.py
+
+            +++ /dev/null
+
+            @@ -1,2 +0,0 @@
+
+            -def old_api():
+
+            -    raise NotImplementedError\n"
+      params:
+        style: conventional
+        lang: en
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-10
+    title: 单字符 diff · 语言 zh
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 10（单字符 diff / zh）
+      files:
+        - path: input/change.diff
+          content: x
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-10-50
+    title: 单字符 diff · 语言 en
+    tags:
+      - variation
+      - language
+      - scale
+    repeat: 2
+    input:
+      kind: code
+      goal: 用指定正文语言为改动生成提交信息
+      content: 语言变体样本 10（单字符 diff / en）
+      files:
+        - path: input/change.diff
+          content: x
+      params:
+        style: conventional
+        lang: en
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 中英文正文下 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []

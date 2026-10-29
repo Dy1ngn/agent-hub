@@ -1,0 +1,44 @@
+{
+  "id": "data-cleaner",
+  "name": "表格清洗",
+  "description": "CSV/TSV/JSON 表格质量体检与清洗，出中文质量报告，支持异常值、重复、格式问题检测。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 240000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}",
+      "--explain"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "{{params.file}}",
+      "--report",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "建议"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

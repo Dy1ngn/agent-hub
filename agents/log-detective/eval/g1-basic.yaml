@@ -1,0 +1,1066 @@
+id: ts-b-log-detective-g1-basic
+agentId: log-detective
+group: g1-basic
+name: 日志排查 · 基础功能：典型日志排查
+description: Python/Java/nginx/JSON/ISO8601 等典型日志的错误聚合、级别分布、爆发时段与跨文件时间线（模型分析链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-python-1
+    title: Python 日志错误聚合（标准 Python logging）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: log
+      goal: 聚合 Python 日志里的错误签名
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR db connection failed for user 42
+
+            2026-10-28 10:00:02 WARN slow query 120ms
+
+            2026-10-28 10:00:03 ERROR db connection failed for user 43
+
+            2026-10-28 10:00:04 INFO job done\n"
+        - path: input/worker.log
+          content: "2026-10-28 10:00:05 ERROR timeout after 30s\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (connection failed|payment gateway refused|Top 错误签名)
+          weight: 2
+          note: 识别错误签名
+        - type: regex
+          pattern: (级别分布|ERROR)
+          weight: 1
+          note: 给出级别分布
+      requiredSuggestions: []
+  - id: g1-python-2
+    title: Python 日志错误聚合（业务错误）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: log
+      goal: 聚合 Python 日志里的错误签名
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR payment gateway refused order 11
+
+            2026-10-28 10:00:02 ERROR payment gateway refused order 12
+
+            2026-10-28 10:00:03 WARN retry queue growing\n"
+        - path: input/worker.log
+          content: "2026-10-28 10:00:04 ERROR payment gateway refused order 13\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (connection failed|payment gateway refused|Top 错误签名)
+          weight: 2
+          note: 识别错误签名
+        - type: regex
+          pattern: (级别分布|ERROR)
+          weight: 1
+          note: 给出级别分布
+      requiredSuggestions: []
+  - id: g1-java-1
+    title: Java/log4j 日志（log4j 逗号毫秒）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: log
+      goal: 聚合 Java 日志里的异常
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01,234 ERROR [main] com.demo.App - NullPointerException in OrderService
+
+            2026-10-28 10:00:02,100 WARN [pool-1] com.demo.Pool - connection pool exhausted
+
+            2026-10-28 10:00:03,500 ERROR [main] com.demo.App - NullPointerException in OrderService\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)(nullpointer|disk full|pool exhausted)
+          weight: 2
+          note: 识别异常关键词
+      requiredSuggestions: []
+  - id: g1-java-2
+    title: Java/log4j 日志（ISO 带时区）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: log
+      goal: 聚合 Java 日志里的异常
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28T10:00:01.234+08:00 ERROR [http-nio-8080-exec-1] c.d.Api - disk full on /data
+
+            2026-10-28T10:00:02.234+08:00 ERROR [http-nio-8080-exec-2] c.d.Api - disk full on /data\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)(nullpointer|disk full|pool exhausted)
+          weight: 2
+          note: 识别异常关键词
+      requiredSuggestions: []
+  - id: g1-nginx-1
+    title: nginx 访问日志（标准 combined）
+    tags:
+      - basic
+      - access
+    repeat: 5
+    input:
+      kind: log
+      goal: 统计访问日志指标
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '10.0.0.5 - - [28/Oct/2026:10:00:01 +0800] "GET /api/users HTTP/1.1" 404 0.321 "-" "curl/8.0"
+
+            10.0.0.6 - - [28/Oct/2026:10:00:02 +0800] "GET /api/orders HTTP/1.1" 200 1.512 "-" "curl/8.0"
+
+            10.0.0.7 - - [28/Oct/2026:10:00:03 +0800] "POST /api/pay HTTP/1.1" 500 2.400 "-" "curl/8.0"
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (访问日志|请求总数|状态码)
+          weight: 2
+          note: 给出访问日志统计
+        - type: regex
+          pattern: (错误率|4xx|5xx)
+          weight: 1
+          note: 给出错误率
+      requiredSuggestions: []
+  - id: g1-nginx-2
+    title: nginx 访问日志（静态资源）
+    tags:
+      - basic
+      - access
+    repeat: 5
+    input:
+      kind: log
+      goal: 统计访问日志指标
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '192.168.1.9 - - [28/Oct/2026:11:00:01 +0800] "GET /static/a.css HTTP/1.1" 200 0.010 "-" "Mozilla/5.0"
+
+            192.168.1.9 - - [28/Oct/2026:11:00:02 +0800] "GET /static/b.js HTTP/1.1" 304 0.008 "-" "Mozilla/5.0"
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (访问日志|请求总数|状态码)
+          weight: 2
+          note: 给出访问日志统计
+        - type: regex
+          pattern: (错误率|4xx|5xx)
+          weight: 1
+          note: 给出错误率
+      requiredSuggestions: []
+  - id: g1-json-1
+    title: JSON lines 日志（结构化 JSON）
+    tags:
+      - basic
+      - json
+    repeat: 5
+    input:
+      kind: log
+      goal: 聚合 JSON 行日志
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '{"ts": "2026-10-28T10:00:01Z", "level": "ERROR", "msg": "oom killed worker"}
+
+            {"ts": "2026-10-28T10:00:02Z", "level": "INFO", "msg": "heartbeat ok"}
+
+            {"ts": "2026-10-28T10:00:03Z", "level": "ERROR", "msg": "oom killed worker"}
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (oom killed worker|queue lag|Top 错误签名)
+          weight: 2
+          note: 识别 JSON 日志错误
+      requiredSuggestions: []
+  - id: g1-json-2
+    title: JSON lines 日志（队列积压）
+    tags:
+      - basic
+      - json
+    repeat: 5
+    input:
+      kind: log
+      goal: 聚合 JSON 行日志
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '{"ts": "2026-10-28T11:00:01Z", "level": "WARN", "msg": "queue lag 5000"}
+
+            {"ts": "2026-10-28T11:00:02Z", "level": "ERROR", "msg": "queue lag 8000"}
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (oom killed worker|queue lag|Top 错误签名)
+          weight: 2
+          note: 识别 JSON 日志错误
+      requiredSuggestions: []
+  - id: g1-iso-1
+    title: ISO8601 时间戳（Z 结尾）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: log
+      goal: 识别 ISO8601 时间戳
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28T10:00:01Z ERROR upstream timeout
+
+            2026-10-28T10:00:02Z WARN upstream slow
+
+            2026-10-28T10:00:03Z ERROR upstream timeout\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (upstream timeout|cache miss storm|Top 错误签名)
+          weight: 2
+          note: 识别错误签名
+        - type: regex
+          pattern: (时间跨度|错误时间分布)
+          weight: 1
+          note: 给出时间分布
+      requiredSuggestions: []
+  - id: g1-iso-2
+    title: ISO8601 时间戳（带时区偏移）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: log
+      goal: 识别 ISO8601 时间戳
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28T10:00:01+08:00 ERROR cache miss storm
+
+            2026-10-28T10:00:02+08:00 ERROR cache miss storm\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (upstream timeout|cache miss storm|Top 错误签名)
+          weight: 2
+          note: 识别错误签名
+        - type: regex
+          pattern: (时间跨度|错误时间分布)
+          weight: 1
+          note: 给出时间分布
+      requiredSuggestions: []
+  - id: g1-mixed-1
+    title: 多格式混合日志（三种格式）
+    tags:
+      - basic
+      - mixed
+    repeat: 5
+    input:
+      kind: log
+      goal: 处理混合格式日志
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '2026-10-28 10:00:01 ERROR python style failure one
+
+            2026-10-28T10:00:02Z ERROR iso style failure two
+
+            10.0.0.5 - - [28/Oct/2026:10:00:03 +0800] "GET /x HTTP/1.1" 500 0.200 "-" "curl/8.0"
+
+            '
+        - path: input/worker.log
+          content: "2026-10-28 10:00:04 ERROR python style failure three\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (输入文件|格式)
+          weight: 1
+          note: 识别多格式
+        - type: regex
+          pattern: (Top 错误签名|失败)
+          weight: 2
+          note: 聚合错误签名
+      requiredSuggestions: []
+  - id: g1-mixed-2
+    title: 多格式混合日志（日志+访问）
+    tags:
+      - basic
+      - mixed
+    repeat: 5
+    input:
+      kind: log
+      goal: 处理混合格式日志
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR mixed failure alpha
+
+            2026-10-28T10:00:02.500+08:00 WARN mixed failure beta\n"
+        - path: input/worker.log
+          content: '10.0.0.9 - - [28/Oct/2026:10:00:03 +0800] "GET /y HTTP/1.1" 404 0.100 "-" "curl/8.0"
+
+            '
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (输入文件|格式)
+          weight: 1
+          note: 识别多格式
+        - type: regex
+          pattern: (Top 错误签名|失败)
+          weight: 2
+          note: 聚合错误签名
+      requiredSuggestions: []
+  - id: g1-burst-1
+    title: 错误爆发时段（连续爆发）
+    tags:
+      - basic
+      - burst
+    repeat: 5
+    input:
+      kind: log
+      goal: 定位错误爆发的时间桶
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR burst error 0
+
+            2026-10-28 10:01:01 ERROR burst error 1
+
+            2026-10-28 10:02:01 ERROR burst error 2
+
+            2026-10-28 10:03:01 ERROR burst error 3
+
+            2026-10-28 10:04:01 ERROR burst error 4
+
+            2026-10-28 10:05:01 ERROR burst error 5
+
+            2026-10-28 10:06:01 ERROR burst error 6
+
+            2026-10-28 10:07:01 ERROR burst error 7\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (错误时间分布|相对峰值|时间桶)
+          weight: 2
+          note: 给出爆发时间桶
+      requiredSuggestions: []
+  - id: g1-burst-2
+    title: 错误爆发时段（两段爆发）
+    tags:
+      - basic
+      - burst
+    repeat: 5
+    input:
+      kind: log
+      goal: 定位错误爆发的时间桶
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 11:00:01 ERROR spike error
+
+            2026-10-28 11:01:01 ERROR spike error
+
+            2026-10-28 11:02:01 ERROR spike error
+
+            2026-10-28 11:05:01 ERROR spike error
+
+            2026-10-28 11:06:01 ERROR spike error\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (错误时间分布|相对峰值|时间桶)
+          weight: 2
+          note: 给出爆发时间桶
+      requiredSuggestions: []
+  - id: g1-timeline-1
+    title: 跨文件错误时间线（双文件）
+    tags:
+      - basic
+      - multi-file
+    repeat: 5
+    input:
+      kind: log
+      goal: 合并多文件错误时间线
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR api failed in web\n"
+        - path: input/worker.log
+          content: "2026-10-28 10:00:02 ERROR db failed in worker\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: 跨文件时间线
+          weight: 2
+          note: 给出跨文件时间线
+      requiredSuggestions: []
+  - id: g1-timeline-2
+    title: 跨文件错误时间线（同题多发）
+    tags:
+      - basic
+      - multi-file
+    repeat: 5
+    input:
+      kind: log
+      goal: 合并多文件错误时间线
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:03 ERROR scheduler missed job\n"
+        - path: input/worker.log
+          content: "2026-10-28 10:00:03 ERROR scheduler missed job
+
+            2026-10-28 10:00:04 ERROR scheduler missed job\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: 跨文件时间线
+          weight: 2
+          note: 给出跨文件时间线
+      requiredSuggestions: []
+  - id: g1-levels-1
+    title: 级别分布统计（全级别）
+    tags:
+      - basic
+      - levels
+    repeat: 5
+    input:
+      kind: log
+      goal: 统计日志级别分布
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR one
+
+            2026-10-28 10:00:02 WARN two
+
+            2026-10-28 10:00:03 INFO three
+
+            2026-10-28 10:00:04 DEBUG four\n"
+        - path: input/worker.log
+          content: "2026-10-28 10:00:05 ERROR five\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: 级别分布
+          weight: 2
+          note: 给出级别分布
+        - type: regex
+          pattern: (ERROR)
+          weight: 1
+          note: 统计 ERROR 条数
+      requiredSuggestions: []
+  - id: g1-levels-2
+    title: 级别分布统计（FATAL+ERROR）
+    tags:
+      - basic
+      - levels
+    repeat: 5
+    input:
+      kind: log
+      goal: 统计日志级别分布
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 FATAL crash
+
+            2026-10-28 10:00:02 ERROR boom\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: 级别分布
+          weight: 2
+          note: 给出级别分布
+        - type: regex
+          pattern: (ERROR)
+          weight: 1
+          note: 统计 ERROR 条数
+      requiredSuggestions: []
+  - id: g1-stack-1
+    title: Java 堆栈聚合（SQLException 堆栈）
+    tags:
+      - basic
+      - stack
+    repeat: 5
+    input:
+      kind: log
+      goal: 聚合带堆栈的异常日志
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR com.x.OrderDao - SQLException: connection reset
+
+            \tat com.x.OrderDao.query(OrderDao.java:42)
+
+            \tat com.x.OrderService.run(OrderService.java:17)
+
+            2026-10-28 10:00:02 ERROR com.x.OrderDao - SQLException: connection reset
+
+            \tat com.x.OrderDao.query(OrderDao.java:42)\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)(sqlexception|ioexception|broken pipe|connection reset)
+          weight: 2
+          note: 识别堆栈异常
+      requiredSuggestions: []
+  - id: g1-stack-2
+    title: Java 堆栈聚合（IOException 堆栈）
+    tags:
+      - basic
+      - stack
+    repeat: 5
+    input:
+      kind: log
+      goal: 聚合带堆栈的异常日志
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:01:01 ERROR com.y.Job - IOException: broken pipe
+
+            \tat com.y.Job.write(Job.java:9)
+
+            2026-10-28 10:01:02 ERROR com.y.Job - IOException: broken pipe\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)(sqlexception|ioexception|broken pipe|connection reset)
+          weight: 2
+          note: 识别堆栈异常
+      requiredSuggestions: []

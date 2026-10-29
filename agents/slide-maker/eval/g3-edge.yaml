@@ -1,0 +1,583 @@
+id: ts-b-slide-maker-g3-edge
+agentId: slide-maker
+group: g3-edge
+name: 幻灯片生成 · 边界情况：空 / 极短 / 极多 / 极端页数
+description: 空文档、空主题、50 要点拆页、单行超长、页数上下限等边界输入下的稳定产出（离线排版模式）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空文档 + 给定主题
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：空文档 + 给定主题
+      files:
+        - path: input/doc.md
+          content: ""
+      params:
+        offline: true
+        topic: 空文档测试
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：空文档 + 空主题（文件名兜底）
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：空文档 + 空主题（文件名兜底）
+      files:
+        - path: input/doc.md
+          content: ""
+      params:
+        offline: true
+        topic: ""
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：文档只有标题
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：文档只有标题
+      files:
+        - path: input/doc.md
+          content: "# 只有标题的文档
+
+
+            ## 第一章
+
+
+            ## 第二章
+
+
+            ## 第三章\n"
+      params:
+        offline: true
+        topic: 标题文档
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：50 个要点自动拆页
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：50 个要点自动拆页
+      files:
+        - path: input/doc.md
+          content: "- 列表要点 0：说明一部分内容
+
+            - 列表要点 1：说明一部分内容
+
+            - 列表要点 2：说明一部分内容
+
+            - 列表要点 3：说明一部分内容
+
+            - 列表要点 4：说明一部分内容
+
+            - 列表要点 5：说明一部分内容
+
+            - 列表要点 6：说明一部分内容
+
+            - 列表要点 7：说明一部分内容
+
+            - 列表要点 8：说明一部分内容
+
+            - 列表要点 9：说明一部分内容
+
+            - 列表要点 10：说明一部分内容
+
+            - 列表要点 11：说明一部分内容
+
+            - 列表要点 12：说明一部分内容
+
+            - 列表要点 13：说明一部分内容
+
+            - 列表要点 14：说明一部分内容
+
+            - 列表要点 15：说明一部分内容
+
+            - 列表要点 16：说明一部分内容
+
+            - 列表要点 17：说明一部分内容
+
+            - 列表要点 18：说明一部分内容
+
+            - 列表要点 19：说明一部分内容
+
+            - 列表要点 20：说明一部分内容
+
+            - 列表要点 21：说明一部分内容
+
+            - 列表要点 22：说明一部分内容
+
+            - 列表要点 23：说明一部分内容
+
+            - 列表要点 24：说明一部分内容
+
+            - 列表要点 25：说明一部分内容
+
+            - 列表要点 26：说明一部分内容
+
+            - 列表要点 27：说明一部分内容
+
+            - 列表要点 28：说明一部分内容
+
+            - 列表要点 29：说明一部分内容
+
+            - 列表要点 30：说明一部分内容
+
+            - 列表要点 31：说明一部分内容
+
+            - 列表要点 32：说明一部分内容
+
+            - 列表要点 33：说明一部分内容
+
+            - 列表要点 34：说明一部分内容
+
+            - 列表要点 35：说明一部分内容
+
+            - 列表要点 36：说明一部分内容
+
+            - 列表要点 37：说明一部分内容
+
+            - 列表要点 38：说明一部分内容
+
+            - 列表要点 39：说明一部分内容
+
+            - 列表要点 40：说明一部分内容
+
+            - 列表要点 41：说明一部分内容
+
+            - 列表要点 42：说明一部分内容
+
+            - 列表要点 43：说明一部分内容
+
+            - 列表要点 44：说明一部分内容
+
+            - 列表要点 45：说明一部分内容
+
+            - 列表要点 46：说明一部分内容
+
+            - 列表要点 47：说明一部分内容
+
+            - 列表要点 48：说明一部分内容
+
+            - 列表要点 49：说明一部分内容\n"
+      params:
+        offline: true
+        topic: 要点拆页
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：单行超长 1000 字
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：单行超长 1000 字
+      files:
+        - path: input/doc.md
+          content: "# 超长标题
+
+
+            - 这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑这是一个非常长的要点句子用来测试截断逻辑\n"
+      params:
+        offline: true
+        topic: 超长要点
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：页数下限 5 页
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：页数下限 5 页
+      files:
+        - path: input/doc.md
+          content: "# 云平台迁移方案
+
+
+            ## 背景
+
+
+            - 机房租赁合同明年 3 月到期
+
+            - 现有集群运维成本高
+
+
+            ## 迁移方案
+
+
+            - 采用分批迁移策略，先无状态服务
+
+            - 数据库使用 DTS 双写校验
+
+            - 迁移窗口安排在凌晨低峰期
+
+
+            ## 风险与应对
+
+
+            - 回滚预案：保留旧集群两周
+
+            - 演练：正式迁移前全链路演练 2 次\n"
+      params:
+        offline: true
+        topic: 页数下限
+        slides: "5"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：页数上限 40 页
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：页数上限 40 页
+      files:
+        - path: input/doc.md
+          content: "# Kubernetes 上手教程
+
+
+            ## 安装准备
+
+
+            - 准备 3 台 4C8G 虚拟机
+
+            - 安装 containerd 与 kubeadm
+
+
+            ## 集群搭建
+
+
+            - kubeadm init 初始化控制面
+
+            - 加入 worker 节点
+
+            - 安装 Calico 网络插件
+
+
+            ## 应用部署
+
+
+            - 编写 Deployment 与 Service
+
+            - 配置探针与资源限额
+
+            - 用 Helm 管理发布\n"
+      params:
+        offline: true
+        topic: 页数上限
+        slides: "40"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：纯空行文档
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：纯空行文档
+      files:
+        - path: input/doc.md
+          content: "\n\n\n\n\n\n\n\n\n\n"
+      params:
+        offline: true
+        topic: 空行文档
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：只有 frontmatter
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：只有 frontmatter
+      files:
+        - path: input/doc.md
+          content: "---
+
+            title: 测试
+
+            author: 某人
+
+            ---
+
+
+            # 正文标题\n"
+      params:
+        offline: true
+        topic: frontmatter
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：只有代码围栏
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出合法 Marp，不允许崩溃
+      content: 边界用例：只有代码围栏
+      files:
+        - path: input/doc.md
+          content: "```python\nprint('hello')\n```\n"
+      params:
+        offline: true
+        topic: 代码围栏
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 边界输入仍产出合法 Marp
+        - type: contains
+          text: 目录
+          weight: 1
+          note: 离线模式固定结构：目录页
+        - type: contains
+          text: Q&A
+          weight: 1
+          note: 离线模式固定结构：Q&A 页
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

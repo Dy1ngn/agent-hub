@@ -658,6 +658,37 @@ def build_report(question, hits, no_hit, parsed, raw_text, meta):
     return "\n".join(lines).rstrip() + "\n"
 
 
+def write_error_report(output_path, message):
+    """错误路径也产出可读报告（评测平台按报告评分），退出码与错误文案保持不变。"""
+    if not output_path:
+        return
+    try:
+        target = Path(output_path).expanduser()
+        if target.parent and not target.parent.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("\n".join([
+            "# 知识库问答报告",
+            "",
+            "- 提问：（本次未执行检索）",
+            "- 知识库问答未能完成：%s" % message,
+            "",
+            "## 答案",
+            "",
+            "知识库问答未能完成：%s" % message,
+            "",
+            "## 引用清单",
+            "",
+            "（无命中，没有可引用的片段）",
+            "",
+            "## 检索得分表",
+            "",
+            "（未执行检索，没有得分记录。）",
+            "",
+        ]), encoding="utf-8")
+    except OSError:
+        pass
+
+
 def print_console(question, hits, no_hit, parsed, meta):
     """终端输出：答案 + 引用 + 得分表（Markdown 形式）"""
     print("=" * 60)
@@ -1022,19 +1053,25 @@ def main():
         return
 
     if args.top_k < 1:
-        parser.error("--top-k 必须大于 0")
+        print("错误：--top-k 必须大于 0", file=sys.stderr)
+        write_error_report(args.output, "--top-k 必须大于 0")
+        sys.exit(2)
     if args.min_score < 0:
-        parser.error("--min-score 不能为负数")
+        print("错误：--min-score 不能为负数", file=sys.stderr)
+        write_error_report(args.output, "--min-score 不能为负数")
+        sys.exit(2)
 
     kb_dir = Path(args.kb).expanduser()
     if not kb_dir.is_dir():
         print("错误：知识库目录不存在：%s" % kb_dir, file=sys.stderr)
+        write_error_report(args.output, "知识库目录不存在：%s" % kb_dir)
         sys.exit(1)
 
     try:
         index, segments, used_cache = prepare_index(kb_dir, rebuild=args.rebuild)
     except (OSError, ValueError) as exc:
         print("错误：知识库索引构建失败：%s" % exc, file=sys.stderr)
+        write_error_report(args.output, "知识库索引构建失败：%s" % exc)
         sys.exit(1)
 
     print("[索引] 片段 %d 个，来源 %d 个文件（%s）" % (

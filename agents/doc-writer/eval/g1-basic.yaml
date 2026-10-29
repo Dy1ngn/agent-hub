@@ -1,0 +1,1249 @@
+id: ts-b-doc-writer-g1-basic
+agentId: doc-writer
+group: g1-basic
+name: 项目文档生成 · 基础功能：典型项目文档生成
+description: 四类文档的典型小项目输入，走完整「静态扫描 + 模型生成」链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-readme-1
+    title: Python Web 项目生成 README（flask-blog）
+    tags:
+      - basic
+      - readme
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/flask-blog 项目并生成 readme 文档（zh）
+      content: 请为 input/flask-blog 项目生成 README 文档。
+      files:
+        - path: input/flask-blog/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/flask-blog/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/flask-blog
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (功能特性|Features|特性)
+          weight: 2
+          note: README 功能特性小节
+        - type: regex
+          pattern: (安装|Installation|安装步骤)
+          weight: 2
+          note: README 安装小节
+        - type: contains
+          text: flask-blog
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-readme-2
+    title: Python Web 项目生成 README（flask-shop）
+    tags:
+      - basic
+      - readme
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/flask-shop 项目并生成 readme 文档（zh）
+      content: 请为 input/flask-shop 项目生成 README 文档。
+      files:
+        - path: input/flask-shop/main.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/flask-shop/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/flask-shop
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (功能特性|Features|特性)
+          weight: 2
+          note: README 功能特性小节
+        - type: regex
+          pattern: (安装|Installation|安装步骤)
+          weight: 2
+          note: README 安装小节
+        - type: contains
+          text: flask-shop
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-api-fastapi-1
+    title: FastAPI 项目生成 API 文档（user-service）
+    tags:
+      - basic
+      - api
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/user-service 项目并生成 api 文档
+      content: 请为 input/user-service 项目生成 API 文档。
+      files:
+        - path: input/user-service/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/user-service/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/user-service
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (接口|端点|Endpoints|API)
+          weight: 2
+          note: API 文档接口小节
+        - type: contains
+          text: /users
+          weight: 1
+          note: 路由路径出现在文档里
+        - type: contains
+          text: user-service
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-api-fastapi-2
+    title: FastAPI 项目生成 API 文档（account-api）
+    tags:
+      - basic
+      - api
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/account-api 项目并生成 api 文档
+      content: 请为 input/account-api 项目生成 API 文档。
+      files:
+        - path: input/account-api/server.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/account-api/requirements.txt
+          content: "fastapi==0.110.0\nuvicorn==0.29.0\n"
+      params:
+        project_dir: input/account-api
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (接口|端点|Endpoints|API)
+          weight: 2
+          note: API 文档接口小节
+        - type: contains
+          text: /users
+          weight: 1
+          note: 路由路径出现在文档里
+        - type: contains
+          text: account-api
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-arch-1
+    title: Express 项目生成架构说明（order-gateway）
+    tags:
+      - basic
+      - arch
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/order-gateway 项目并生成 arch 文档
+      content: 请为 input/order-gateway 项目生成架构说明。
+      files:
+        - path: input/order-gateway/index.js
+          content: 'const express = require("express");
+
+            const app = express();
+
+
+            app.get("/api/orders", (req, res) => res.json({ ok: true }));
+
+            app.post("/api/orders", (req, res) => res.status(201).json({ ok: true }));
+
+
+            app.listen(3000);
+
+            '
+        - path: input/order-gateway/package.json
+          content: "{
+
+            \  \"name\": \"order-gateway\",
+
+            \  \"version\": \"1.0.0\",
+
+            \  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },
+
+            \  \"dependencies\": { \"express\": \"^4.18.0\" }
+
+            }\n"
+      params:
+        project_dir: input/order-gateway
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (架构|分层|Architecture)
+          weight: 2
+          note: 架构小节
+        - type: regex
+          pattern: (依赖|技术选型|模块)
+          weight: 1
+        - type: contains
+          text: order-gateway
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-arch-2
+    title: Express 项目生成架构说明（web-console）
+    tags:
+      - basic
+      - arch
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/web-console 项目并生成 arch 文档
+      content: 请为 input/web-console 项目生成架构说明。
+      files:
+        - path: input/web-console/server.js
+          content: 'const express = require("express");
+
+            const app = express();
+
+
+            app.get("/api/orders", (req, res) => res.json({ ok: true }));
+
+            app.post("/api/orders", (req, res) => res.status(201).json({ ok: true }));
+
+
+            app.listen(3000);
+
+            '
+        - path: input/web-console/package.json
+          content: "{
+
+            \  \"name\": \"web-console\",
+
+            \  \"version\": \"1.0.0\",
+
+            \  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },
+
+            \  \"dependencies\": { \"express\": \"^4.18.0\" }
+
+            }\n"
+      params:
+        project_dir: input/web-console
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (架构|分层|Architecture)
+          weight: 2
+          note: 架构小节
+        - type: regex
+          pattern: (依赖|技术选型|模块)
+          weight: 1
+        - type: contains
+          text: web-console
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-onboarding-1
+    title: CLI 项目生成新人上手指南（data-tool）
+    tags:
+      - basic
+      - onboarding
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/data-tool 项目并生成 onboarding 文档
+      content: 请为 input/data-tool 项目生成新人上手指南。
+      files:
+        - path: input/data-tool/cli.py
+          content: "import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/data-tool/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/data-tool/requirements.txt
+          content: "click==8.1.7\n"
+      params:
+        project_dir: input/data-tool
+        doc_type: onboarding
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (上手|入门|Onboarding|新手)
+          weight: 2
+          note: 上手指南小节
+        - type: regex
+          pattern: (常见坑|注意|Pitfalls|坑)
+          weight: 1
+        - type: contains
+          text: data-tool
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-onboarding-2
+    title: CLI 项目生成新人上手指南（log-parser）
+    tags:
+      - basic
+      - onboarding
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/log-parser 项目并生成 onboarding 文档
+      content: 请为 input/log-parser 项目生成新人上手指南。
+      files:
+        - path: input/log-parser/main.py
+          content: "import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/log-parser/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/log-parser/requirements.txt
+          content: "rich==13.7.0\n"
+      params:
+        project_dir: input/log-parser
+        doc_type: onboarding
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (上手|入门|Onboarding|新手)
+          weight: 2
+          note: 上手指南小节
+        - type: regex
+          pattern: (常见坑|注意|Pitfalls|坑)
+          weight: 1
+        - type: contains
+          text: log-parser
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-readme-node-1
+    title: Node 项目生成 README（chat-room）
+    tags:
+      - basic
+      - readme
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/chat-room 项目并生成 readme 文档
+      content: 请为 input/chat-room 项目生成 README 文档。
+      files:
+        - path: input/chat-room/index.js
+          content: 'const express = require("express");
+
+            const app = express();
+
+
+            app.get("/api/orders", (req, res) => res.json({ ok: true }));
+
+            app.post("/api/orders", (req, res) => res.status(201).json({ ok: true }));
+
+
+            app.listen(3000);
+
+            '
+        - path: input/chat-room/package.json
+          content: "{
+
+            \  \"name\": \"chat-room\",
+
+            \  \"version\": \"1.0.0\",
+
+            \  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },
+
+            \  \"dependencies\": { \"express\": \"^4.18.0\" }
+
+            }\n"
+      params:
+        project_dir: input/chat-room
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (快速开始|Quick Start|快速上手)
+          weight: 2
+          note: README 快速开始小节
+        - type: regex
+          pattern: (目录结构|Project Layout|目录)
+          weight: 1
+        - type: contains
+          text: chat-room
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-readme-node-2
+    title: Node 项目生成 README（file-sync）
+    tags:
+      - basic
+      - readme
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/file-sync 项目并生成 readme 文档
+      content: 请为 input/file-sync 项目生成 README 文档。
+      files:
+        - path: input/file-sync/app.js
+          content: 'const express = require("express");
+
+            const app = express();
+
+
+            app.get("/api/orders", (req, res) => res.json({ ok: true }));
+
+            app.post("/api/orders", (req, res) => res.status(201).json({ ok: true }));
+
+
+            app.listen(3000);
+
+            '
+        - path: input/file-sync/package.json
+          content: "{
+
+            \  \"name\": \"file-sync\",
+
+            \  \"version\": \"1.0.0\",
+
+            \  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },
+
+            \  \"dependencies\": { \"express\": \"^4.18.0\" }
+
+            }\n"
+      params:
+        project_dir: input/file-sync
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (快速开始|Quick Start|快速上手)
+          weight: 2
+          note: README 快速开始小节
+        - type: regex
+          pattern: (目录结构|Project Layout|目录)
+          weight: 1
+        - type: contains
+          text: file-sync
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-api-flask-1
+    title: Flask 项目生成 API 文档（billing-api）
+    tags:
+      - basic
+      - api
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/billing-api 项目并生成 api 文档
+      content: 请为 input/billing-api 项目生成 API 文档。
+      files:
+        - path: input/billing-api/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/billing-api/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/billing-api/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/billing-api
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (请求|响应|示例)
+          weight: 2
+          note: 请求/响应示例
+        - type: contains
+          text: /users
+          weight: 1
+        - type: contains
+          text: billing-api
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-api-flask-2
+    title: Flask 项目生成 API 文档（crm-api）
+    tags:
+      - basic
+      - api
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/crm-api 项目并生成 api 文档
+      content: 请为 input/crm-api 项目生成 API 文档。
+      files:
+        - path: input/crm-api/api.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/crm-api/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/crm-api/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/crm-api
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (请求|响应|示例)
+          weight: 2
+          note: 请求/响应示例
+        - type: contains
+          text: /users
+          weight: 1
+        - type: contains
+          text: crm-api
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-arch-java-1
+    title: Spring 项目生成架构说明（payment-core）
+    tags:
+      - basic
+      - arch
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/payment-core 项目并生成 arch 文档
+      content: 请为 input/payment-core 项目生成架构说明。
+      files:
+        - path: input/payment-core/OrderController.java
+          content: "import org.springframework.web.bind.annotation.*;
+
+
+            @RestController
+
+            public class OrderController {
+
+            \    @GetMapping(\"/orders\")
+
+            \    public String list() {
+
+            \        return \"ok\";
+
+            \    }
+
+
+            \    @PostMapping(\"/orders\")
+
+            \    public String create() {
+
+            \        return \"created\";
+
+            \    }
+
+            }\n"
+        - path: input/payment-core/pom.xml
+          content: "<project><artifactId>payment-core</artifactId></project>\n"
+      params:
+        project_dir: input/payment-core
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (数据流|调用链|分层)
+          weight: 2
+          note: 架构数据流/分层
+        - type: contains
+          text: payment-core
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-arch-java-2
+    title: Spring 项目生成架构说明（inventory-core）
+    tags:
+      - basic
+      - arch
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/inventory-core 项目并生成 arch 文档
+      content: 请为 input/inventory-core 项目生成架构说明。
+      files:
+        - path: input/inventory-core/StockController.java
+          content: "import org.springframework.web.bind.annotation.*;
+
+
+            @RestController
+
+            public class OrderController {
+
+            \    @GetMapping(\"/orders\")
+
+            \    public String list() {
+
+            \        return \"ok\";
+
+            \    }
+
+
+            \    @PostMapping(\"/orders\")
+
+            \    public String create() {
+
+            \        return \"created\";
+
+            \    }
+
+            }\n"
+        - path: input/inventory-core/pom.xml
+          content: "<project><artifactId>inventory-core</artifactId></project>\n"
+      params:
+        project_dir: input/inventory-core
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (数据流|调用链|分层)
+          weight: 2
+          note: 架构数据流/分层
+        - type: contains
+          text: inventory-core
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-readme-en-1
+    title: 英文 README（metrics-collector）
+    tags:
+      - basic
+      - readme
+      - en
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/metrics-collector 项目并生成 readme 文档（en）
+      content: 请为 input/metrics-collector 项目生成英文 README。
+      files:
+        - path: input/metrics-collector/collector.py
+          content: "import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/metrics-collector/requirements.txt
+          content: "prometheus-client==0.20.0\n"
+      params:
+        project_dir: input/metrics-collector
+        doc_type: readme
+        lang: en
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (Install|Quick Start|Overview|Features)
+          weight: 2
+          note: 英文 README 小节
+        - type: regex
+          pattern: (配置|Configuration|配置项)
+          weight: 1
+        - type: contains
+          text: metrics-collector
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-readme-en-2
+    title: 英文 README（backup-tool）
+    tags:
+      - basic
+      - readme
+      - en
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/backup-tool 项目并生成 readme 文档（en）
+      content: 请为 input/backup-tool 项目生成英文 README。
+      files:
+        - path: input/backup-tool/backup.py
+          content: "import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/backup-tool/requirements.txt
+          content: "click==8.1.7\n"
+      params:
+        project_dir: input/backup-tool
+        doc_type: readme
+        lang: en
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (Install|Quick Start|Overview|Features)
+          weight: 2
+          note: 英文 README 小节
+        - type: regex
+          pattern: (配置|Configuration|配置项)
+          weight: 1
+        - type: contains
+          text: backup-tool
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-onboarding-node-1
+    title: Node 项目新人上手（admin-portal）
+    tags:
+      - basic
+      - onboarding
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/admin-portal 项目并生成 onboarding 文档
+      content: 请为 input/admin-portal 项目生成新人上手指南。
+      files:
+        - path: input/admin-portal/index.js
+          content: 'const express = require("express");
+
+            const app = express();
+
+
+            app.get("/api/orders", (req, res) => res.json({ ok: true }));
+
+            app.post("/api/orders", (req, res) => res.status(201).json({ ok: true }));
+
+
+            app.listen(3000);
+
+            '
+        - path: input/admin-portal/package.json
+          content: "{
+
+            \  \"name\": \"admin-portal\",
+
+            \  \"version\": \"1.0.0\",
+
+            \  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },
+
+            \  \"dependencies\": { \"express\": \"^4.18.0\" }
+
+            }\n"
+        - path: input/admin-portal/config.js
+          content: "module.exports = { port: 3000, debug: false };\n"
+      params:
+        project_dir: input/admin-portal
+        doc_type: onboarding
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (五步|步骤|Step)
+          weight: 2
+          note: 上手步骤
+        - type: contains
+          text: admin-portal
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-onboarding-node-2
+    title: Node 项目新人上手（report-server）
+    tags:
+      - basic
+      - onboarding
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描 input/report-server 项目并生成 onboarding 文档
+      content: 请为 input/report-server 项目生成新人上手指南。
+      files:
+        - path: input/report-server/server.js
+          content: 'const express = require("express");
+
+            const app = express();
+
+
+            app.get("/api/orders", (req, res) => res.json({ ok: true }));
+
+            app.post("/api/orders", (req, res) => res.status(201).json({ ok: true }));
+
+
+            app.listen(3000);
+
+            '
+        - path: input/report-server/package.json
+          content: "{
+
+            \  \"name\": \"report-server\",
+
+            \  \"version\": \"1.0.0\",
+
+            \  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },
+
+            \  \"dependencies\": { \"express\": \"^4.18.0\" }
+
+            }\n"
+        - path: input/report-server/config.js
+          content: "module.exports = { port: 8080, debug: false };\n"
+      params:
+        project_dir: input/report-server
+        doc_type: onboarding
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (五步|步骤|Step)
+          weight: 2
+          note: 上手步骤
+        - type: contains
+          text: report-server
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-api-empty-1
+    title: 无路由项目生成 API 文档（pure-lib）
+    tags:
+      - basic
+      - api
+      - edge
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描没有路由的项目并生成 api 文档，明确说明没有接口
+      content: 请为 input/pure-lib 项目生成 API 文档（这个项目可能没有接口）。
+      files:
+        - path: input/pure-lib/utils.py
+          content: "def add(a, b):
+
+            \    return a + b
+
+
+            def mul(a, b):
+
+            \    return a * b\n"
+        - path: input/pure-lib/requirements.txt
+          content: "pytest==8.1.0\n"
+      params:
+        project_dir: input/pure-lib
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (未扫描到接口|没有.*(接口|路由)|未识别到.*接口|no endpoints|No endpoints)
+          weight: 2
+          note: 无路由时明确说明
+        - type: contains
+          text: pure-lib
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-api-empty-2
+    title: 无路由项目生成 API 文档（tiny-calc）
+    tags:
+      - basic
+      - api
+      - edge
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描没有路由的项目并生成 api 文档，明确说明没有接口
+      content: 请为 input/tiny-calc 项目生成 API 文档（这个项目可能没有接口）。
+      files:
+        - path: input/tiny-calc/calc.py
+          content: "def area(r):
+
+            \    return 3.14 * r * r\n"
+        - path: input/tiny-calc/requirements.txt
+          content: "pytest==8.1.0\n"
+      params:
+        project_dir: input/tiny-calc
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (未扫描到接口|没有.*(接口|路由)|未识别到.*接口|no endpoints|No endpoints)
+          weight: 2
+          note: 无路由时明确说明
+        - type: contains
+          text: tiny-calc
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

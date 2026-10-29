@@ -1,0 +1,1100 @@
+id: ts-b-code-explainer-g2-variation
+agentId: code-explainer
+group: g2-variation
+name: 代码讲解 · 输入变体：语言 / 规模 / 风格 / 参数组合
+description: 同一逻辑多语言、不同代码规模、注释风格与讲解深度参数组合下的讲解表现（模型链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-lang-1
+    title: 同一逻辑多语言对照（python / clamp）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: code
+      goal: 用指定语言模式讲解对应语言的代码
+      content: "def clamp(value, lo, hi):
+
+        \    if lo > hi:
+
+        \        raise ValueError(\"lo must be <= hi\")
+
+        \    return max(lo, min(hi, value))\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bclamp\b
+          weight: 2
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2
+    title: 同一逻辑多语言对照（javascript / clamp）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: code
+      goal: 用指定语言模式讲解对应语言的代码
+      content: "function clamp(value, lo, hi) {
+
+        \  if (lo > hi) throw new Error('lo must be <= hi');
+
+        \  return Math.max(lo, Math.min(hi, value));
+
+        }
+
+
+        module.exports = { clamp };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bclamp\b
+          weight: 2
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3
+    title: 同一逻辑多语言对照（go / Clamp）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: code
+      goal: 用指定语言模式讲解对应语言的代码
+      content: "package clamp
+
+
+        func Clamp(value, lo, hi int) int {
+
+        \tif value < lo {
+
+        \t\treturn lo
+
+        \t}
+
+        \tif value > hi {
+
+        \t\treturn hi
+
+        \t}
+
+        \treturn value
+
+        }\n"
+      files: []
+      params:
+        lang: go
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bClamp\b
+          weight: 2
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4
+    title: 同一逻辑多语言对照（java / Clamp）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: code
+      goal: 用指定语言模式讲解对应语言的代码
+      content: "public class Clamp {
+
+        \    public static int clamp(int value, int lo, int hi) {
+
+        \        return Math.max(lo, Math.min(hi, value));
+
+        \    }
+
+        }\n"
+      files: []
+      params:
+        lang: java
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bClamp\b
+          weight: 2
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-level-1
+    title: 讲解深度参数变体（入门）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 按不同讲解深度输出讲解文档
+      content: "def merge(left, right):
+
+        \    out = []
+
+        \    i = j = 0
+
+        \    while i < len(left) and j < len(right):
+
+        \        if left[i] <= right[j]:
+
+        \            out.append(left[i])
+
+        \            i += 1
+
+        \        else:
+
+        \            out.append(right[j])
+
+        \            j += 1
+
+        \    out.extend(left[i:])
+
+        \    out.extend(right[j:])
+
+        \    return out\n"
+      files: []
+      params:
+        lang: python
+        level: 入门
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 讲解深度：入门
+          weight: 1
+          note: 报告元信息记录讲解深度参数
+        - type: regex
+          pattern: (?i)\bmerge\b
+          weight: 1
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-level-2
+    title: 讲解深度参数变体（中级）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 按不同讲解深度输出讲解文档
+      content: "def merge(left, right):
+
+        \    out = []
+
+        \    i = j = 0
+
+        \    while i < len(left) and j < len(right):
+
+        \        if left[i] <= right[j]:
+
+        \            out.append(left[i])
+
+        \            i += 1
+
+        \        else:
+
+        \            out.append(right[j])
+
+        \            j += 1
+
+        \    out.extend(left[i:])
+
+        \    out.extend(right[j:])
+
+        \    return out\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 讲解深度：中级
+          weight: 1
+          note: 报告元信息记录讲解深度参数
+        - type: regex
+          pattern: (?i)\bmerge\b
+          weight: 1
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-level-3
+    title: 讲解深度参数变体（深入）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 按不同讲解深度输出讲解文档
+      content: "def merge(left, right):
+
+        \    out = []
+
+        \    i = j = 0
+
+        \    while i < len(left) and j < len(right):
+
+        \        if left[i] <= right[j]:
+
+        \            out.append(left[i])
+
+        \            i += 1
+
+        \        else:
+
+        \            out.append(right[j])
+
+        \            j += 1
+
+        \    out.extend(left[i:])
+
+        \    out.extend(right[j:])
+
+        \    return out\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 讲解深度：深入
+          weight: 1
+          note: 报告元信息记录讲解深度参数
+        - type: regex
+          pattern: (?i)\bmerge\b
+          weight: 1
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-level-4
+    title: 讲解深度参数变体（深入）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 按不同讲解深度输出讲解文档
+      content: "async function retryCall(fn, times, delayMs) {
+
+        \  let lastError = null;
+
+        \  for (let attempt = 0; attempt < times; attempt++) {
+
+        \    try {
+
+        \      return await fn();
+
+        \    } catch (err) {
+
+        \      lastError = err;
+
+        \      await new Promise(function (resolve) {
+
+        \        setTimeout(resolve, delayMs * (attempt + 1));
+
+        \      });
+
+        \    }
+
+        \  }
+
+        \  throw lastError;
+
+        }
+
+
+        module.exports = { retryCall };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 讲解深度：深入
+          weight: 1
+          note: 报告元信息记录讲解深度参数
+        - type: regex
+          pattern: (?i)\bretry_call\b
+          weight: 1
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-1
+    title: 代码规模变体（两行极短）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同规模的代码都要产出结构完整的讲解
+      content: "def double(x):\n    return x * 2\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bdouble\b
+          weight: 1
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-2
+    title: 代码规模变体（单行极短）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同规模的代码都要产出结构完整的讲解
+      content: "identity = lambda x: x\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bidentity\b
+          weight: 1
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-3
+    title: 代码规模变体（中等规模多函数）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同规模的代码都要产出结构完整的讲解
+      content: "import re
+
+
+
+        def tokenize(text):
+
+        \    return re.findall(r\"[\\w']+\", text.lower())
+
+
+
+        def count_words(tokens):
+
+        \    counts = {}
+
+        \    for token in tokens:
+
+        \        counts[token] = counts.get(token, 0) + 1
+
+        \    return counts
+
+
+
+        def top_n(counts, n):
+
+        \    ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+
+        \    return ranked[:n]
+
+
+
+        def pipeline(text, n=5):
+
+        \    return top_n(count_words(tokenize(text)), n)\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bpipeline\b
+          weight: 1
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-4
+    title: 代码规模变体（较长多函数文件）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同规模的代码都要产出结构完整的讲解
+      content: "import json
+
+        import os
+
+
+
+        def read_lines(path):
+
+        \    with open(path, encoding=\"utf-8\") as handle:
+
+        \        return [line.strip() for line in handle if line.strip()]
+
+
+
+        def parse_line(line):
+
+        \    parts = line.split(\",\")
+
+        \    if len(parts) < 3:
+
+        \        return None
+
+        \    return {\"id\": parts[0], \"name\": parts[1], \"score\": float(parts[2])}
+
+
+
+        def validate(row):
+
+        \    if row is None:
+
+        \        return False
+
+        \    if not row[\"id\"]:
+
+        \        return False
+
+        \    return 0 <= row[\"score\"] <= 100
+
+
+
+        def load_rows(path):
+
+        \    rows = []
+
+        \    for line in read_lines(path):
+
+        \        row = parse_line(line)
+
+        \        if validate(row):
+
+        \            rows.append(row)
+
+        \    return rows
+
+
+
+        def average(rows):
+
+        \    if not rows:
+
+        \        return 0.0
+
+        \    return sum(r[\"score\"] for r in rows) / len(rows)
+
+
+
+        def write_report(rows, out_path):
+
+        \    report = {\"count\": len(rows), \"average\": average(rows), \"rows\": rows}
+
+        \    with open(out_path, \"w\", encoding=\"utf-8\") as handle:
+
+        \        json.dump(report, handle, ensure_ascii=False, indent=2)
+
+
+
+        def process_all(in_path, out_path):
+
+        \    rows = load_rows(in_path)
+
+        \    write_report(rows, out_path)
+
+        \    return len(rows)\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bprocess_all\b
+          weight: 1
+          note: 函数名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-1
+    title: 代码风格变体（密集注释教学风格）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同注释密度与编码风格的代码讲解
+      content: "# 转账：从 from_acc 扣款，给 to_acc 加款
+
+        # 1. 校验金额必须为正
+
+        # 2. 校验余额充足
+
+        # 3. 双边记账
+
+        def transfer(from_acc, to_acc, amount):
+
+        \    # 步骤 1
+
+        \    if amount <= 0:
+
+        \        raise ValueError(\"amount must be positive\")
+
+        \    # 步骤 2
+
+        \    if from_acc.balance < amount:
+
+        \        raise ValueError(\"insufficient balance\")
+
+        \    # 步骤 3
+
+        \    from_acc.balance -= amount
+
+        \    to_acc.balance += amount
+
+        \    return from_acc.balance\n"
+      files: []
+      params:
+        lang: python
+        level: 入门
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\btransfer\b
+          weight: 1
+          note: 函数/类名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2
+    title: 代码风格变体（无注释紧凑风格）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同注释密度与编码风格的代码讲解
+      content: "def stats(xs):
+
+        \    n = len(xs)
+
+        \    if n == 0:
+
+        \        return (0, 0.0, 0.0)
+
+        \    mean = sum(xs) / n
+
+        \    var = sum((x - mean) ** 2 for x in xs) / n
+
+        \    return (n, mean, var ** 0.5)\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bstats\b
+          weight: 1
+          note: 函数/类名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3
+    title: 代码风格变体（面向对象风格）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同注释密度与编码风格的代码讲解
+      content: "class Inventory:
+
+        \    def __init__(self):
+
+        \        self._stock = {}
+
+
+        \    def receive(self, sku, qty):
+
+        \        self._stock[sku] = self._stock.get(sku, 0) + qty
+
+
+        \    def ship(self, sku, qty):
+
+        \        have = self._stock.get(sku, 0)
+
+        \        if have < qty:
+
+        \            raise ValueError(\"not enough stock\")
+
+        \        self._stock[sku] = have - qty
+
+
+        \    def low(self, threshold):
+
+        \        return sorted(k for k, v in self._stock.items() if v < threshold)\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bInventory\b
+          weight: 1
+          note: 函数/类名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4
+    title: 代码风格变体（函数式风格）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同注释密度与编码风格的代码讲解
+      content: "const transform = (items) => items
+
+        \  .filter((item) => item.active)
+
+        \  .map((item) => ({ id: item.id, label: item.name.trim() }))
+
+        \  .sort((a, b) => a.label.localeCompare(b.label));
+
+
+        module.exports = { transform };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\btransform\b
+          weight: 1
+          note: 函数/类名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-autolang-1
+    title: 自动语言检测变体（Python 特征明显）
+    tags:
+      - variation
+      - detect
+    repeat: 5
+    input:
+      kind: code
+      goal: 不指定 --lang，验证自动检测下也能产出讲解
+      content: "import re
+
+        import unicodedata
+
+
+
+        def slugify(text):
+
+        \    text = unicodedata.normalize(\"NFKD\", text)
+
+        \    text = text.encode(\"ascii\", \"ignore\").decode(\"ascii\")
+
+        \    text = re.sub(r\"[^a-zA-Z0-9]+\", \"-\", text).strip(\"-\")
+
+        \    return text.lower()\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bslugify\b
+          weight: 1
+          note: 函数/类名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-autolang-2
+    title: 自动语言检测变体（JavaScript 特征明显）
+    tags:
+      - variation
+      - detect
+    repeat: 5
+    input:
+      kind: code
+      goal: 不指定 --lang，验证自动检测下也能产出讲解
+      content: "function parseQuery(qs) {
+
+        \  const out = {};
+
+        \  qs.replace(/^\\?/, '').split('&').forEach(function (pair) {
+
+        \    if (!pair) return;
+
+        \    const parts = pair.split('=');
+
+        \    out[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+
+        \  });
+
+        \  return out;
+
+        }
+
+
+        module.exports = { parseQuery };\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bparseQuery\b
+          weight: 1
+          note: 函数/类名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-autolang-3
+    title: 自动语言检测变体（Go 特征明显）
+    tags:
+      - variation
+      - detect
+    repeat: 5
+    input:
+      kind: code
+      goal: 不指定 --lang，验证自动检测下也能产出讲解
+      content: "package stats
+
+
+        func Sum(values []float64) float64 {
+
+        \ttotal := 0.0
+
+        \tfor _, v := range values {
+
+        \t\ttotal += v
+
+        \t}
+
+        \treturn total
+
+        }\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bSum\b
+          weight: 1
+          note: 函数/类名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-autolang-4
+    title: 自动语言检测变体（Java 特征明显）
+    tags:
+      - variation
+      - detect
+    repeat: 5
+    input:
+      kind: code
+      goal: 不指定 --lang，验证自动检测下也能产出讲解
+      content: "import java.util.LinkedHashMap;
+
+        import java.util.Map;
+
+
+        public class Cache<K, V> extends LinkedHashMap<K, V> {
+
+        \    private final int capacity;
+
+
+        \    public Cache(int capacity) {
+
+        \        super(capacity + 1, 1f, true);
+
+        \        this.capacity = capacity;
+
+        \    }
+
+
+        \    @Override
+
+        \    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+
+        \        return size() > capacity;
+
+        \    }
+
+        }\n"
+      files: []
+      params:
+        lang: auto
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bCache\b
+          weight: 1
+          note: 函数/类名进结构表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

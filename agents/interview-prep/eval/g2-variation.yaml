@@ -1,0 +1,861 @@
+id: ts-b-interview-prep-g2-variation
+agentId: interview-prep
+group: g2-variation
+name: 面试准备 · 输入变体：行业 / 数量 / 类型 / 记录形态
+description: 不同行业 JD、出题数量、面试类型与练习记录形态下的稳定产出（含模型模拟面试链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-jd-1
+    title: JD 行业变体（金融）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同行业 JD 都能解析出岗位画像并出题
+      content: 请解析 金融 行业 JD 并生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：金融数据分析师
+
+            职责：负责风控数据监控。
+
+            要求：熟悉风控指标、SQL 与 Python。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 风控
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-2
+    title: JD 行业变体（医疗）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同行业 JD 都能解析出岗位画像并出题
+      content: 请解析 医疗 行业 JD 并生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：医疗数据产品经理
+
+            职责：负责医疗数据平台产品设计。
+
+            要求：熟悉数据分析与产品设计。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 数据分析
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-3
+    title: JD 行业变体（教育）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同行业 JD 都能解析出岗位画像并出题
+      content: 请解析 教育 行业 JD 并生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：教育产品经理
+
+            职责：负责在线教育产品规划。
+
+            要求：熟悉需求分析与用户研究。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 需求分析
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-4
+    title: JD 行业变体（电商）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同行业 JD 都能解析出岗位画像并出题
+      content: 请解析 电商 行业 JD 并生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：电商交易研发
+
+            职责：负责订单与支付链路研发。
+
+            要求：熟悉订单、支付业务与 Java。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 订单
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-5
+    title: JD 行业变体（游戏）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同行业 JD 都能解析出岗位画像并出题
+      content: 请解析 游戏 行业 JD 并生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：游戏服务端开发
+
+            职责：负责游戏大厅服务端。
+
+            要求：熟悉高并发、分布式与 Go。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 高并发
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-count-1
+    title: 出题数量变体（1 题）
+    tags:
+      - variation
+      - count
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同出题数量都稳定出题
+      content: 请生成 1 道题的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 题目数：1
+          weight: 2
+          note: 出题数量与参数一致
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-count-2
+    title: 出题数量变体（2 题）
+    tags:
+      - variation
+      - count
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同出题数量都稳定出题
+      content: 请生成 2 道题的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 题目数：2
+          weight: 2
+          note: 出题数量与参数一致
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-count-3
+    title: 出题数量变体（2 题）
+    tags:
+      - variation
+      - count
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同出题数量都稳定出题
+      content: 请生成 2 道题的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 题目数：2
+          weight: 2
+          note: 出题数量与参数一致
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-count-4
+    title: 出题数量变体（2 题）
+    tags:
+      - variation
+      - count
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同出题数量都稳定出题
+      content: 请生成 2 道题的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 题目数：2
+          weight: 2
+          note: 出题数量与参数一致
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-count-5
+    title: 出题数量变体（2 题）
+    tags:
+      - variation
+      - count
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同出题数量都稳定出题
+      content: 请生成 2 道题的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 题目数：2
+          weight: 2
+          note: 出题数量与参数一致
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-type-1
+    title: 面试类型变体（技术）
+    tags:
+      - variation
+      - type
+    repeat: 5
+    input:
+      kind: text
+      goal: 四种面试类型都稳定出题
+      content: 请生成 技术 面试的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：后端开发工程师
+
+            职责：负责核心交易系统的服务端研发与性能优化。
+
+            要求：
+
+            - 精通 Java 与 Spring Boot 框架
+
+            - 熟悉 MySQL、Redis、Kafka
+
+            - 了解 Kubernetes 容器化部署\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试类型：技术
+          weight: 2
+          note: 类型与参数一致
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-type-2
+    title: 面试类型变体（行为）
+    tags:
+      - variation
+      - type
+    repeat: 5
+    input:
+      kind: text
+      goal: 四种面试类型都稳定出题
+      content: 请生成 行为 面试的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 行为
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试类型：行为
+          weight: 2
+          note: 类型与参数一致
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-type-3
+    title: 面试类型变体（产品）
+    tags:
+      - variation
+      - type
+    repeat: 5
+    input:
+      kind: text
+      goal: 四种面试类型都稳定出题
+      content: 请生成 产品 面试的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：产品经理
+
+            职责：负责产品设计与需求分析。
+
+            要求：熟悉产品设计、需求分析与用户研究。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 产品
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试类型：产品
+          weight: 2
+          note: 类型与参数一致
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-type-4
+    title: 面试类型变体（综合）
+    tags:
+      - variation
+      - type
+    repeat: 5
+    input:
+      kind: text
+      goal: 四种面试类型都稳定出题
+      content: 请生成 综合 面试的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：数据分析师
+
+            职责：负责业务数据分析与指标体系搭建。
+
+            要求：
+
+            - 熟练 SQL 与 Python
+
+            - 熟悉 Pandas 与 Tableau\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试类型：综合
+          weight: 2
+          note: 类型与参数一致
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-type-5
+    title: 面试类型变体（技术）
+    tags:
+      - variation
+      - type
+    repeat: 5
+    input:
+      kind: text
+      goal: 四种面试类型都稳定出题
+      content: 请生成 技术 面试的准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：算法工程师
+
+            职责：负责推荐排序算法研发与迭代。
+
+            要求：
+
+            - 熟练 Python 与 PyTorch
+
+            - 熟悉 TensorFlow 与 Pandas
+
+            - 掌握 SQL 取数分析\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试类型：技术
+          weight: 2
+          note: 类型与参数一致
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-record-1
+    title: 记录形态变体（空记录）
+    tags:
+      - variation
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的练习记录都能排复习计划
+      content: 请结合练习记录（空记录）生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: "[]"
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 坏记录不许崩
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-record-2
+    title: 记录形态变体（近期记录）
+    tags:
+      - variation
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的练习记录都能排复习计划
+      content: 请结合练习记录（近期记录）生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: '[{"id": "Q001", "date": "2026-10-20", "score": 3, "note": "第一次练习，思路卡壳"}, {"id": "Q010", "date": "2026-10-22", "score": 4, "note": "结构更清楚了"}]'
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 坏记录不许崩
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-record-3
+    title: 记录形态变体（过期待复习）
+    tags:
+      - variation
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的练习记录都能排复习计划
+      content: 请结合练习记录（过期待复习）生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: '[{"id": "Q002", "date": "2026-09-01", "score": 2, "note": "早前练习，待复习"}, {"id": "Q003", "date": "2026-09-02", "score": 3, "note": "早前练习"}, {"id": "Q002", "date": "2026-09-10", "score": 4, "note": "复习一次"}]'
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 坏记录不许崩
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-record-4
+    title: 记录形态变体（含未知 id 与缺字段）
+    tags:
+      - variation
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的练习记录都能排复习计划
+      content: 请结合练习记录（含未知 id 与缺字段）生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: '[{"id": "Q005", "date": "2026-10-18", "score": 5, "note": "复习完成", "extra": "未知字段", "source": "manual"}, {"id": "Q006", "date": "2026-10-19", "note": "缺 score 字段"}, {"id": "Q999", "date": "2026-10-21", "score": 4, "note": "题库外的 id"}]'
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 坏记录不许崩
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-record-5
+    title: 记录形态变体（含 HTML/SQL 样式备注）
+    tags:
+      - variation
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的练习记录都能排复习计划
+      content: 请结合练习记录（含 HTML/SQL 样式备注）生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: "[{\"id\": \"Q007\", \"date\": \"2026-10-23\", \"score\": 3, \"note\": \"<script>alert('x')</script>\"}, {\"id\": \"Q008\", \"date\": \"2026-10-24\", \"score\": 4, \"note\": \"SELECT * FROM users; -- 注入样式备注\"}]"
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 坏记录不许崩
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []

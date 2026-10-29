@@ -1,0 +1,740 @@
+id: ts-b-doc-writer-g4-robust
+agentId: doc-writer
+group: g4-robust
+name: 项目文档生成 · 鲁棒性：乱码 / 损坏 / 缺字段输入
+description: 乱码、空字节、损坏 JSON/配置、缺字段等畸形项目输入，优雅处理不崩溃（离线）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-mangle-1
+    title: 格式损坏/乱码项目（mojibake）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/mojibake 项目生成文档。
+      files:
+        - path: input/mojibake/broken.py
+          content: "���� 锟斤拷 㡎塡�\n"
+      params:
+        project_dir: input/mojibake
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: mojibake
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-2
+    title: 格式损坏/乱码项目（null-bytes）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/null-bytes 项目生成文档。
+      files:
+        - path: input/null-bytes/null.py
+          content: "a = 1\0b = 2\n"
+      params:
+        project_dir: input/null-bytes
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: null-bytes
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-3
+    title: 格式损坏/乱码项目（broken-json）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/broken-json 项目生成文档。
+      files:
+        - path: input/broken-json/package.json
+          content: "{ name: 'x', scripts: { start: , }\ \n"
+      params:
+        project_dir: input/broken-json
+        doc_type: api
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: broken-json
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-4
+    title: 格式损坏/乱码项目（binaryish）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/binaryish 项目生成文档。
+      files:
+        - path: input/binaryish/blob.py
+          content: "\x01\x02\x03PK\x04\x05ÿþ\n"
+      params:
+        project_dir: input/binaryish
+        doc_type: arch
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: binaryish
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-5
+    title: 格式损坏/乱码项目（half-gbk）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/half-gbk 项目生成文档。
+      files:
+        - path: input/half-gbk/text.py
+          content: 's = "���"
+
+            # ��
+
+            '
+      params:
+        project_dir: input/half-gbk
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: half-gbk
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-6
+    title: 格式损坏/乱码项目（mixed-eol）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/mixed-eol 项目生成文档。
+      files:
+        - path: input/mixed-eol/eol.py
+          content: "a = 1\r\nb = 2\r c = 3\n\n\r\n"
+      params:
+        project_dir: input/mixed-eol
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: mixed-eol
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-7
+    title: 格式损坏/乱码项目（long-token）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/long-token 项目生成文档。
+      files:
+        - path: input/long-token/token.py
+          content: 'TOKEN = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+
+            '
+      params:
+        project_dir: input/long-token
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: long-token
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-8
+    title: 格式损坏/乱码项目（markup-soup）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/markup-soup 项目生成文档。
+      files:
+        - path: input/markup-soup/page.py
+          content: "<div><% if x %>{{ y }}</div>\n"
+      params:
+        project_dir: input/markup-soup
+        doc_type: api
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: markup-soup
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-9
+    title: 格式损坏/乱码项目（quotes-escape）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/quotes-escape 项目生成文档。
+      files:
+        - path: input/quotes-escape/q.py
+          content: "s = \"he said \\\"hi\\\" 'x' `y`\"\n"
+      params:
+        project_dir: input/quotes-escape
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: quotes-escape
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-mangle-10
+    title: 格式损坏/乱码项目（emoji-only）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 乱码与损坏文件也要优雅处理，生成骨架
+      content: 请为 input/emoji-only 项目生成文档。
+      files:
+        - path: input/emoji-only/emoji.py
+          content: "🎉🚀✨\n"
+      params:
+        project_dir: input/emoji-only
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: emoji-only
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-1
+    title: 缺字段/畸形配置项目（no-pkg-name）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/no-pkg-name 项目生成文档。
+      files:
+        - path: input/no-pkg-name/package.json
+          content: "{\n  \"version\": \"1.0.0\"\n}\n"
+      params:
+        project_dir: input/no-pkg-name
+        doc_type: api
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: no-pkg-name
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-2
+    title: 缺字段/畸形配置项目（bad-pyproject）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/bad-pyproject 项目生成文档。
+      files:
+        - path: input/bad-pyproject/pyproject.toml
+          content: "[project\nname =\ \n[project.scripts\n"
+      params:
+        project_dir: input/bad-pyproject
+        doc_type: arch
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: bad-pyproject
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-3
+    title: 缺字段/畸形配置项目（env-only）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/env-only 项目生成文档。
+      files:
+        - path: input/env-only/.env.example
+          content: "API_KEY=\nDB_HOST=\nSECRET_TOKEN=\n"
+      params:
+        project_dir: input/env-only
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: env-only
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-4
+    title: 缺字段/畸形配置项目（empty-req）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/empty-req 项目生成文档。
+      files:
+        - path: input/empty-req/requirements.txt
+          content: "\n\n"
+      params:
+        project_dir: input/empty-req
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: empty-req
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-5
+    title: 缺字段/畸形配置项目（no-ext-files）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/no-ext-files 项目生成文档。
+      files:
+        - path: input/no-ext-files/LICENSE
+          content: "MIT\n"
+      params:
+        project_dir: input/no-ext-files
+        doc_type: onboarding
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: no-ext-files
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-6
+    title: 缺字段/畸形配置项目（dup-lines）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/dup-lines 项目生成文档。
+      files:
+        - path: input/dup-lines/dup.py
+          content: "a = 1\na = 1\na = 1\na = 1\n"
+      params:
+        project_dir: input/dup-lines
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: dup-lines
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-7
+    title: 缺字段/畸形配置项目（comment-only）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/comment-only 项目生成文档。
+      files:
+        - path: input/comment-only/comments.py
+          content: "# 只有注释\n# 还是注释\n"
+      params:
+        project_dir: input/comment-only
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: comment-only
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-8
+    title: 缺字段/畸形配置项目（stray-braces）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/stray-braces 项目生成文档。
+      files:
+        - path: input/stray-braces/braces.py
+          content: 'd = dict(a=1)
+
+            print("{" + "}")
+
+            '
+      params:
+        project_dir: input/stray-braces
+        doc_type: arch
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: stray-braces
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-9
+    title: 缺字段/畸形配置项目（no-final-newline）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/no-final-newline 项目生成文档。
+      files:
+        - path: input/no-final-newline/nonewline.py
+          content: x = 1
+      params:
+        project_dir: input/no-final-newline
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: no-final-newline
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-10
+    title: 缺字段/畸形配置项目（weird-req）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形配置也要优雅处理，生成骨架
+      content: 请为 input/weird-req 项目生成文档。
+      files:
+        - path: input/weird-req/requirements.txt
+          content: "### not a dep\n??? invalid line ???\n"
+      params:
+        project_dir: input/weird-req
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: weird-req
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []

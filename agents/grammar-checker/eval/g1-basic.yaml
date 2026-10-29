@@ -1,0 +1,708 @@
+id: ts-b-grammar-checker-g1-basic
+agentId: grammar-checker
+group: g1-basic
+name: 中英校对 · 基础功能：典型中英校对问题
+description: 典型错别字/标点/空格/语法问题的完整校对链路（规则表 + 模型语义校对），规则命中为确定性断言（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-dedide
+    title: 的地得误用（短句样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段中文文本里的错别字与语法问题
+      content: "他快速的跑向终点。\n她的认真地态度让人佩服。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+          note: 产出标准校对报告
+        - type: contains
+          text: 概览
+          weight: 1
+          note: 概览章节存在
+        - type: regex
+          pattern: GR001
+          weight: 2
+          note: 确定性命中对应规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-dedide-2
+    title: 的地得误用（扩展样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段中文文本里的错别字与语法问题
+      content: "他快速的跑向终点。
+
+        她的认真地态度让人佩服。
+
+        这份报告需要认真地核对每一行数据。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+          note: 产出标准校对报告
+        - type: contains
+          text: 概览
+          weight: 1
+          note: 概览章节存在
+        - type: regex
+          pattern: GR001
+          weight: 2
+          note: 确定性命中对应规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-zaizai
+    title: 在/再混用（短句样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段中文文本里的用字错误
+      content: "我们在见吧，我在也不会来了，我们在家再家等你。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR002
+          weight: 2
+          note: 确定性命中在/再规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-zaizai-4
+    title: 在/再混用（扩展样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段中文文本里的用字错误
+      content: "我们在见吧，我在也不会来了，我们在家再家等你。
+
+        请在校对完成后再次确认。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR002
+          weight: 2
+          note: 确定性命中在/再规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-yongzuo
+    title: 做/作误用（短句样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段中文文本里的用字错误
+      content: "这项做用很明显，我要作饭了。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR003
+          weight: 2
+          note: 确定性命中做/作规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-yongzuo-6
+    title: 做/作误用（扩展样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段中文文本里的用字错误
+      content: "这项做用很明显，我要作饭了。\n他坐在椅子上写作。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR003
+          weight: 2
+          note: 确定性命中做/作规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-repeat
+    title: 重复字词（短句样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段中文文本里的重复字词
+      content: "这个的问题需要解决，我马上就就去处理。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR004
+          weight: 2
+          note: 确定性命中重复字词规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-repeat-8
+    title: 重复字词（扩展样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段中文文本里的重复字词
+      content: "这个的问题需要解决，我马上就就去处理。\n请你把把门带上。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR004
+          weight: 2
+          note: 确定性命中重复字词规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-punct
+    title: 标点问题（重复标点）
+    tags:
+      - basic
+      - punctuation
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段文本里的标点问题
+      content: "这是什么？？真的！！好。。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR005
+          weight: 2
+          note: 确定性命中标点规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-punct-10
+    title: 标点问题（中英标点混用）
+    tags:
+      - basic
+      - punctuation
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段文本里的标点问题
+      content: "今天天气很好,我们去散步吧?好吧。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR006
+          weight: 2
+          note: 确定性命中标点规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-space
+    title: 中英文之间缺空格（短句样本）
+    tags:
+      - basic
+      - spacing
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段文本里的中英混排空格问题
+      content: "我们用Python写脚本。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR007
+          weight: 2
+          note: 确定性命中中英空格规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-space-12
+    title: 中英文之间缺空格（扩展样本）
+    tags:
+      - basic
+      - spacing
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段文本里的中英混排空格问题
+      content: "我们用Python写脚本，用Java开发后端，再用Go写中间件。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR007
+          weight: 2
+          note: 确定性命中中英空格规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-en-repeat
+    title: 英文重复单词（短句样本）
+    tags:
+      - basic
+      - english
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段英文文本里的重复单词
+      content: "This is is a test of the the system.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR013
+          weight: 2
+          note: 确定性命中英文重复词规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-en-repeat-14
+    title: 英文重复单词（扩展样本）
+    tags:
+      - basic
+      - english
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段英文文本里的重复单词
+      content: "This is is a test of the the system.
+
+        We checked it twice.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR013
+          weight: 2
+          note: 确定性命中英文重复词规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-en-typo
+    title: 英文拼写错误（短句样本）
+    tags:
+      - basic
+      - english
+      - typo
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段英文文本里的拼写错误
+      content: "I recieve teh package tomorrow.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR014
+          weight: 2
+          note: 确定性命中拼写规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-en-typo-16
+    title: 英文拼写错误（扩展样本）
+    tags:
+      - basic
+      - english
+      - typo
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段英文文本里的拼写错误
+      content: "I recieve teh package tomorrow.
+
+        Please sign the delivery form.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR014
+          weight: 2
+          note: 确定性命中拼写规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-fullwidth
+    title: 全角字母数字（短句样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段文本里的全角字符问题
+      content: "价格是２０２６元，型号ＡＢＣ。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR008
+          weight: 2
+          note: 确定性命中全角字符规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-fullwidth-18
+    title: 全角字母数字（扩展样本）
+    tags:
+      - basic
+      - chinese
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段文本里的全角字符问题
+      content: "价格是２０２６元，型号ＡＢＣ。\n发货数量１００件。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR008
+          weight: 2
+          note: 确定性命中全角字符规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-longsent
+    title: 超长句子（短句样本）
+    tags:
+      - basic
+      - readability
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段文本里的可读性问题
+      content: "这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，读起来非常累。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR016
+          weight: 2
+          note: 确定性命中超长句规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-longsent-20
+    title: 超长句子（扩展样本）
+    tags:
+      - basic
+      - readability
+    repeat: 5
+    input:
+      kind: text
+      goal: 校对这段文本里的可读性问题
+      content: "这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，读起来非常累。
+
+        短句没问题。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 概览
+          weight: 1
+        - type: regex
+          pattern: GR016
+          weight: 2
+          note: 确定性命中超长句规则
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

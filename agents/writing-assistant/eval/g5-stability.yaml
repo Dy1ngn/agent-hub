@@ -1,0 +1,370 @@
+id: ts-b-writing-assistant-g5-stability
+agentId: writing-assistant
+group: g5-stability
+name: 写作润色 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线体检模式），验证输出稳定、不崩溃、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 其实我觉得这个音箱的音质还是挺好的，然后续航也不错。
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 音质还是挺好的
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 这周主要做了接口联调，然后处理了几个线上问题。
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 接口联调
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: I think maybe we should move the meeting because something came up.
+      files: []
+      params:
+        mode: rewrite
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: move the meeting
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 你们那个合同的事情麻烦快点弄一下，我们已经等了很久。
+      files: []
+      params:
+        mode: formal
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 合同的事情
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 周六有活动，反正就是挺好玩的，来不来你们自己看吧。
+      files: []
+      params:
+        mode: casual
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 周六有活动
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 这个方案成本不高，我个人认为风险可控，建议先小范围试点再推开。
+      files: []
+      params:
+        mode: shorten
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 风险可控
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 年会致辞。这一年大家都不容易，我们挺过来了。
+      files: []
+      params:
+        mode: expand
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 年会致辞
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 那个系统要升级，本周六晚上可能会不稳定，大家注意保存。
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 系统要升级
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 这款耳机的降噪效果不错，戴久了耳朵也不疼。
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 降噪效果
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证润色输出稳定
+      content: 项目申请书。本项目旨在解决长期存在的效率问题。
+      files: []
+      params:
+        mode: rewrite
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: contains
+          text: 项目申请书
+          weight: 2
+          note: 离线模式改写稿=原文，原文特征句确定性出现在报告中
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

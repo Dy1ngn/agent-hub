@@ -1,0 +1,736 @@
+id: ts-b-doc-summarizer-g3-edge
+agentId: doc-summarizer
+group: g3-edge
+name: 长文摘要 · 边界情况：空 / 超短 / 超长 / 极端参数
+description: 空文档（优雅跳过）、超短、超长（分块 map-reduce）与极端参数下的稳定产出（离线抽取式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空主文档（备用文档兜底）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: ""
+      files:
+        - path: input/extra.md
+          content: 备用文档只有一句话，用于验证空文档被优雅跳过。
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：单字
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: 好
+      files:
+        - path: input/extra.md
+          content: 备用文档只有一句话。
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：纯标点
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: 。。。，？？！！
+      files:
+        - path: input/extra.md
+          content: 备用文档只有一句话。
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：只有空行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: "\n\n\n\n\n"
+      files:
+        - path: input/extra.md
+          content: 备用文档只有一句话。
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：只有标题
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: "# 标题"
+      files:
+        - path: input/extra.md
+          content: 备用文档只有一句话。
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：纯数字
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: "1234567890"
+      files:
+        - path: input/extra.md
+          content: 备用文档只有一句话。
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：单句
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: 这是一句非常短的文档内容。
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：纯 emoji
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: 😀🚀
+      files:
+        - path: input/extra.md
+          content: 备用文档只有一句话。
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：只有分隔线
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: "---\n---\n---\n"
+      files:
+        - path: input/extra.md
+          content: 备用文档只有一句话。
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：超长单句
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出摘要报告
+      content: 这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容这是一句完全没有换行的超长文档内容
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 边界输入仍产出摘要报告
+        - type: contains
+          text: 文档信息
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: 极端参数/极端规模：keywords=1
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "天气预报。明天多云转晴，气温回升。后天有小雨，出门记得带伞。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: 极端参数/极端规模：keywords=999
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "天气预报。明天多云转晴，气温回升。后天有小雨，出门记得带伞。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "999"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: 极端参数/极端规模：超长文档（>8000 字，分块摘要）
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter. The quarterly operations review covers revenue, costs, headcount, and customer health across every region. Revenue grew steadily in all regions, with the strongest performance in the northern region. Operating costs declined because procurement renegotiated supplier contracts. Headcount remained flat while productivity improved through better tooling. Customer health scores improved as support response times fell. The next quarter will focus on retention, expansion revenue, and platform reliability. Managers should review the risk register and confirm owners for each mitigation. Finance will publish the updated forecast after the board meeting. Hiring plans prioritize platform engineering and customer success. The operations review also highlighted supply chain delays that affected two product lines. Regional leads must submit corrective actions before the end of the month. The operations review process itself was shortened by three days compared with last quarter. Data quality in the CRM improved after the cleanup campaign. Marketing reported that pipeline coverage is now above the target ratio. Legal asked teams to refresh data processing agreements before renewal season. Security training completion reached ninety percent across the company. The operations review concluded with a reminder about the upcoming freeze window. Please file expenses on time to keep the quarter close smooth. Thank you all for the disciplined execution this quarter.
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: 极端参数/极端规模：level=brief + 超短
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 一句话文档。
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: brief
+        keywords: "3"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: 极端参数/极端规模：level=detailed + 纯表格
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "| a | b |
+
+        | --- | --- |
+
+        | 1 | 2 |
+
+        | 3 | 4 |\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: 极端参数/极端规模：keywords=2 + 重复词文本
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "数据数据数据数据数据。数据数据数据数据数据。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "2"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: 极端参数/极端规模：level=brief + 空文档兜底
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: ""
+      files:
+        - path: input/extra.md
+          content: 备用文档用于兜底验证。
+      params:
+        level: brief
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: 极端参数/极端规模：keywords=1000000
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "志愿者招募公告。社区志愿服务队招募志愿者，服务内容包括助老助残与环保宣传。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "1000000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: 极端参数/极端规模：level=detailed + 中英混合长句
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "This is a mixed-language paragraph about platform reliability and 平台稳定性, covering monitoring, alerting, and on-call rotations for 服务可用性.\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: 极端参数/极端规模：level=standard + 单句
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 会议改到下周三下午两点举行。
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 极端参数仍产出摘要报告
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

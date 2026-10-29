@@ -1,0 +1,701 @@
+id: ts-b-writing-assistant-g3-edge
+agentId: writing-assistant
+group: g3-edge
+name: 写作润色 · 边界情况：空 / 超短 / 超长 / 极端参数
+description: 空输入（优雅拒绝）、超短、超长与极端参数组合下的稳定表现（离线体检模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：单字
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: 好
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：纯标点
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: ……
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：单句
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: 今天天气不错。
+      files: []
+      params:
+        mode: polish
+        tone: 自然
+        audience: 读者
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：纯英文单词
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: Hello
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：emoji 文本
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: 😀🚀
+      files: []
+      params:
+        mode: casual
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：重复词
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: 哈哈哈哈哈哈哈哈哈哈
+      files: []
+      params:
+        mode: shorten
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：无标点长串
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: 这是一段完全没有标点的很长的文字这是一段完全没有标点的很长的文字这是一段完全没有标点的很长的文字
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：超长单句
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: 这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：极短英文
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出体检报告
+      content: OK.
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 边界输入仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-empty-1
+    title: 空输入：空文本（预期优雅报错退出，无 Traceback）
+    tags:
+      - edge
+      - offline
+      - empty
+    repeat: 5
+    input:
+      kind: text
+      goal: 空输入应优雅拒绝而不是崩溃
+      content: ""
+      files: []
+      params:
+        mode: polish
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 空输入按设计以中文提示优雅退出（无报告、非零退出属预期），不允许 Python 崩栈
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: 极端参数：shorten + 超短文本
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 好
+      files: []
+      params:
+        mode: shorten
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: 极端参数：expand + 超长文本
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 这份文档的内容比较长，主要是为了测试扩写模式在长文本下的表现。文档包含多个段落，每个段落讨论一个主题。第一段讨论目标，第二段讨论计划，第三段讨论风险，第四段讨论总结。整体来看文档结构完整，用于测试的目的很明确。
+      files: []
+      params:
+        mode: expand
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: 极端参数：formal + 空语气空读者
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 这个事情我觉得要认真对待，然后尽快给出结论。
+      files: []
+      params:
+        mode: formal
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: 极端参数：casual + 空语气空读者
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 这个事情我觉得要认真对待，然后尽快给出结论。
+      files: []
+      params:
+        mode: casual
+        tone: ""
+        audience: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: 极端参数：rewrite + 超长语气串
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 项目申请书。本项目旨在解决长期存在的效率问题。
+      files: []
+      params:
+        mode: rewrite
+        tone: 非常非常正式且严肃稳重专业可靠值得信赖一丝不苟精益求精追求卓越注重细节
+        audience: 评审委员会
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: 极端参数：polish + 超长读者串
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 新版本说明。本次更新主要优化了启动速度与稳定性。
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 对产品体验有极高要求的核心用户群体以及长期关注我们的行业观察者们
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: 极端参数：polish + 单句
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 会议改到下周三。
+      files: []
+      params:
+        mode: polish
+        tone: 自然
+        audience: 读者
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: 极端参数：formal + emoji 文本
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 感谢您的支持！🎉 我们会继续努力！✨
+      files: []
+      params:
+        mode: formal
+        tone: 正式
+        audience: 客户
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: 极端参数：casual + 纯标点
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: ！！！。。。？？？
+      files: []
+      params:
+        mode: casual
+        tone: 幽默
+        audience: 朋友
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: 极端参数：expand + 单字
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 好
+      files: []
+      params:
+        mode: expand
+        tone: 自然
+        audience: 读者
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 2
+          note: 极端参数仍产出润色报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 体检章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

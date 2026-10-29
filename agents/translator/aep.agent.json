@@ -1,0 +1,48 @@
+{
+  "id": "translator",
+  "name": "多语言翻译",
+  "description": "多语言批量翻译助手，保护代码与占位符、按术语表统一术语，支持 Markdown、JSON、CSV。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "{{params.file}}",
+      "--to",
+      "{{params.to}}",
+      "--from",
+      "{{params.from}}",
+      "--out-dir",
+      "{{outputDir}}",
+      "--glossary",
+      "input/glossary.json",
+      "--batch-chars",
+      "{{params.batch}}"
+    ]
+  },
+  "output": {
+    "source": "auto",
+    "path": "{{outputDir}}/translation-report.md",
+    "format": "markdown"
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

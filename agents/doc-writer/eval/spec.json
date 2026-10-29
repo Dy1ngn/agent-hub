@@ -1,0 +1,1901 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型项目文档生成",
+      "description": "四类文档的典型小项目输入，走完整「静态扫描 + 模型生成」链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-readme-{i}",
+          "title": "Python Web 项目生成 README（{pname}）",
+          "tags": [
+            "basic",
+            "readme"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 readme 文档（zh）",
+            "content": "请为 input/{pname} 项目生成 README 文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "readme",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(功能特性|Features|特性)",
+                "weight": 2,
+                "note": "README 功能特性小节"
+              },
+              {
+                "type": "regex",
+                "pattern": "(安装|Installation|安装步骤)",
+                "weight": 2,
+                "note": "README 安装小节"
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "flask-blog",
+              "f1": "app.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "requirements.txt",
+              "c2": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "flask-shop",
+              "f1": "main.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "requirements.txt",
+              "c2": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-api-fastapi-{i}",
+          "title": "FastAPI 项目生成 API 文档（{pname}）",
+          "tags": [
+            "basic",
+            "api"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 api 文档",
+            "content": "请为 input/{pname} 项目生成 API 文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "api",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(接口|端点|Endpoints|API)",
+                "weight": 2,
+                "note": "API 文档接口小节"
+              },
+              {
+                "type": "contains",
+                "text": "/users",
+                "weight": 1,
+                "note": "路由路径出现在文档里"
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "user-service",
+              "f1": "app.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "requirements.txt",
+              "c2": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "account-api",
+              "f1": "server.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "requirements.txt",
+              "c2": "fastapi==0.110.0\nuvicorn==0.29.0\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-arch-{i}",
+          "title": "Express 项目生成架构说明（{pname}）",
+          "tags": [
+            "basic",
+            "arch"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 arch 文档",
+            "content": "请为 input/{pname} 项目生成架构说明。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "arch",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(架构|分层|Architecture)",
+                "weight": 2,
+                "note": "架构小节"
+              },
+              {
+                "type": "regex",
+                "pattern": "(依赖|技术选型|模块)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "order-gateway",
+              "f1": "index.js",
+              "c1": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "f2": "package.json",
+              "c2": "{\n  \"name\": \"{pname}\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },\n  \"dependencies\": { \"express\": \"^4.18.0\" }\n}\n"
+            },
+            {
+              "pname": "web-console",
+              "f1": "server.js",
+              "c1": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "f2": "package.json",
+              "c2": "{\n  \"name\": \"{pname}\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },\n  \"dependencies\": { \"express\": \"^4.18.0\" }\n}\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-onboarding-{i}",
+          "title": "CLI 项目生成新人上手指南（{pname}）",
+          "tags": [
+            "basic",
+            "onboarding"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 onboarding 文档",
+            "content": "请为 input/{pname} 项目生成新人上手指南。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "input/{pname}/{f3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "onboarding",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(上手|入门|Onboarding|新手)",
+                "weight": 2,
+                "note": "上手指南小节"
+              },
+              {
+                "type": "regex",
+                "pattern": "(常见坑|注意|Pitfalls|坑)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "data-tool",
+              "f1": "cli.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "click==8.1.7\n"
+            },
+            {
+              "pname": "log-parser",
+              "f1": "main.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "rich==13.7.0\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-readme-node-{i}",
+          "title": "Node 项目生成 README（{pname}）",
+          "tags": [
+            "basic",
+            "readme"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 readme 文档",
+            "content": "请为 input/{pname} 项目生成 README 文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "readme",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(快速开始|Quick Start|快速上手)",
+                "weight": 2,
+                "note": "README 快速开始小节"
+              },
+              {
+                "type": "regex",
+                "pattern": "(目录结构|Project Layout|目录)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "chat-room",
+              "f1": "index.js",
+              "c1": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "f2": "package.json",
+              "c2": "{\n  \"name\": \"{pname}\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },\n  \"dependencies\": { \"express\": \"^4.18.0\" }\n}\n"
+            },
+            {
+              "pname": "file-sync",
+              "f1": "app.js",
+              "c1": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "f2": "package.json",
+              "c2": "{\n  \"name\": \"{pname}\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },\n  \"dependencies\": { \"express\": \"^4.18.0\" }\n}\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-api-flask-{i}",
+          "title": "Flask 项目生成 API 文档（{pname}）",
+          "tags": [
+            "basic",
+            "api"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 api 文档",
+            "content": "请为 input/{pname} 项目生成 API 文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "input/{pname}/{f3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "api",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(请求|响应|示例)",
+                "weight": 2,
+                "note": "请求/响应示例"
+              },
+              {
+                "type": "contains",
+                "text": "/users",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "billing-api",
+              "f1": "app.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "crm-api",
+              "f1": "api.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-arch-java-{i}",
+          "title": "Spring 项目生成架构说明（{pname}）",
+          "tags": [
+            "basic",
+            "arch"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 arch 文档",
+            "content": "请为 input/{pname} 项目生成架构说明。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "arch",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(数据流|调用链|分层)",
+                "weight": 2,
+                "note": "架构数据流/分层"
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "payment-core",
+              "f1": "OrderController.java",
+              "c1": "import org.springframework.web.bind.annotation.*;\n\n@RestController\npublic class OrderController {\n    @GetMapping(\"/orders\")\n    public String list() {\n        return \"ok\";\n    }\n\n    @PostMapping(\"/orders\")\n    public String create() {\n        return \"created\";\n    }\n}\n",
+              "f2": "pom.xml",
+              "c2": "<project><artifactId>payment-core</artifactId></project>\n"
+            },
+            {
+              "pname": "inventory-core",
+              "f1": "StockController.java",
+              "c1": "import org.springframework.web.bind.annotation.*;\n\n@RestController\npublic class OrderController {\n    @GetMapping(\"/orders\")\n    public String list() {\n        return \"ok\";\n    }\n\n    @PostMapping(\"/orders\")\n    public String create() {\n        return \"created\";\n    }\n}\n",
+              "f2": "pom.xml",
+              "c2": "<project><artifactId>inventory-core</artifactId></project>\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-readme-en-{i}",
+          "title": "英文 README（{pname}）",
+          "tags": [
+            "basic",
+            "readme",
+            "en"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 readme 文档（en）",
+            "content": "请为 input/{pname} 项目生成英文 README。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "readme",
+              "lang": "en"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(Install|Quick Start|Overview|Features)",
+                "weight": 2,
+                "note": "英文 README 小节"
+              },
+              {
+                "type": "regex",
+                "pattern": "(配置|Configuration|配置项)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "metrics-collector",
+              "f1": "collector.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "requirements.txt",
+              "c2": "prometheus-client==0.20.0\n"
+            },
+            {
+              "pname": "backup-tool",
+              "f1": "backup.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "requirements.txt",
+              "c2": "click==8.1.7\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-onboarding-node-{i}",
+          "title": "Node 项目新人上手（{pname}）",
+          "tags": [
+            "basic",
+            "onboarding"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描 input/{pname} 项目并生成 onboarding 文档",
+            "content": "请为 input/{pname} 项目生成新人上手指南。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "input/{pname}/{f3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "onboarding",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(五步|步骤|Step)",
+                "weight": 2,
+                "note": "上手步骤"
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "admin-portal",
+              "f1": "index.js",
+              "c1": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "f2": "package.json",
+              "c2": "{\n  \"name\": \"{pname}\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },\n  \"dependencies\": { \"express\": \"^4.18.0\" }\n}\n",
+              "f3": "config.js",
+              "c3": "module.exports = { port: 3000, debug: false };\n"
+            },
+            {
+              "pname": "report-server",
+              "f1": "server.js",
+              "c1": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "f2": "package.json",
+              "c2": "{\n  \"name\": \"{pname}\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },\n  \"dependencies\": { \"express\": \"^4.18.0\" }\n}\n",
+              "f3": "config.js",
+              "c3": "module.exports = { port: 8080, debug: false };\n"
+            }
+          ]
+        },
+        {
+          "id": "g1-api-empty-{i}",
+          "title": "无路由项目生成 API 文档（{pname}）",
+          "tags": [
+            "basic",
+            "api",
+            "edge"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描没有路由的项目并生成 api 文档，明确说明没有接口",
+            "content": "请为 input/{pname} 项目生成 API 文档（这个项目可能没有接口）。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "api",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(未扫描到接口|没有.*(接口|路由)|未识别到.*接口|no endpoints|No endpoints)",
+                "weight": 2,
+                "note": "无路由时明确说明"
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "pure-lib",
+              "f1": "utils.py",
+              "c1": "def add(a, b):\n    return a + b\n\ndef mul(a, b):\n    return a * b\n",
+              "f2": "requirements.txt",
+              "c2": "pytest==8.1.0\n"
+            },
+            {
+              "pname": "tiny-calc",
+              "f1": "calc.py",
+              "c1": "def area(r):\n    return 3.14 * r * r\n",
+              "f2": "requirements.txt",
+              "c2": "pytest==8.1.0\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：项目规模 / 文件组合 / 文档类型与语言",
+      "description": "不同规模、文件组合、文档类型（正交轴）与中英文的变体输入，走模型链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-scale-{i}",
+          "title": "较大项目 README（{pname}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描较大的项目并生成 readme 文档",
+            "content": "请为 input/{pname} 项目生成 README 文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "input/{pname}/{f3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "readme",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "big-monolith",
+              "f1": "app.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n\ndef handler_1():\n    return 1\n\ndef handler_2():\n    return 2\n\ndef handler_3():\n    return 3\n\ndef handler_4():\n    return 4\n\ndef handler_5():\n    return 5\n\ndef handler_6():\n    return 6\n\ndef handler_7():\n    return 7\n\ndef handler_8():\n    return 8\n\ndef handler_9():\n    return 9\n\ndef handler_10():\n    return 10\n\ndef handler_11():\n    return 11\n\ndef handler_12():\n    return 12\n\ndef handler_13():\n    return 13\n\ndef handler_14():\n    return 14\n\ndef handler_15():\n    return 15\n\ndef handler_16():\n    return 16\n\ndef handler_17():\n    return 17\n\ndef handler_18():\n    return 18\n\ndef handler_19():\n    return 19\n\ndef handler_20():\n    return 20\n",
+              "f2": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "big-platform",
+              "f1": "service.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n\ndef handler_1():\n    return 1\n\ndef handler_2():\n    return 2\n\ndef handler_3():\n    return 3\n\ndef handler_4():\n    return 4\n\ndef handler_5():\n    return 5\n\ndef handler_6():\n    return 6\n\ndef handler_7():\n    return 7\n\ndef handler_8():\n    return 8\n\ndef handler_9():\n    return 9\n\ndef handler_10():\n    return 10\n\ndef handler_11():\n    return 11\n\ndef handler_12():\n    return 12\n\ndef handler_13():\n    return 13\n\ndef handler_14():\n    return 14\n\ndef handler_15():\n    return 15\n\ndef handler_16():\n    return 16\n\ndef handler_17():\n    return 17\n\ndef handler_18():\n    return 18\n\ndef handler_19():\n    return 19\n\ndef handler_20():\n    return 20\n",
+              "f2": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "big-crm",
+              "f1": "crm.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n\ndef handler_1():\n    return 1\n\ndef handler_2():\n    return 2\n\ndef handler_3():\n    return 3\n\ndef handler_4():\n    return 4\n\ndef handler_5():\n    return 5\n\ndef handler_6():\n    return 6\n\ndef handler_7():\n    return 7\n\ndef handler_8():\n    return 8\n\ndef handler_9():\n    return 9\n\ndef handler_10():\n    return 10\n\ndef handler_11():\n    return 11\n\ndef handler_12():\n    return 12\n\ndef handler_13():\n    return 13\n\ndef handler_14():\n    return 14\n\ndef handler_15():\n    return 15\n\ndef handler_16():\n    return 16\n\ndef handler_17():\n    return 17\n\ndef handler_18():\n    return 18\n\ndef handler_19():\n    return 19\n\ndef handler_20():\n    return 20\n",
+              "f2": "settings.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "big-erp",
+              "f1": "erp.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n\ndef handler_1():\n    return 1\n\ndef handler_2():\n    return 2\n\ndef handler_3():\n    return 3\n\ndef handler_4():\n    return 4\n\ndef handler_5():\n    return 5\n\ndef handler_6():\n    return 6\n\ndef handler_7():\n    return 7\n\ndef handler_8():\n    return 8\n\ndef handler_9():\n    return 9\n\ndef handler_10():\n    return 10\n\ndef handler_11():\n    return 11\n\ndef handler_12():\n    return 12\n\ndef handler_13():\n    return 13\n\ndef handler_14():\n    return 14\n\ndef handler_15():\n    return 15\n\ndef handler_16():\n    return 16\n\ndef handler_17():\n    return 17\n\ndef handler_18():\n    return 18\n\ndef handler_19():\n    return 19\n\ndef handler_20():\n    return 20\n",
+              "f2": "settings.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            }
+          ]
+        },
+        {
+          "id": "g2-long-{i}",
+          "title": "超长文件项目架构说明（{pname}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描含超长文件的项目并生成 arch 文档",
+            "content": "请为 input/{pname} 项目生成架构说明。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "arch",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "long-file-app",
+              "f1": "const.py",
+              "c1": "VALUE = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nimport argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "requirements.txt",
+              "c2": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "huge-config-app",
+              "f1": "settings.py",
+              "c1": "VALUE = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nimport argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "requirements.txt",
+              "c2": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "wide-table-app",
+              "f1": "table.py",
+              "c1": "VALUE = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nimport argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "requirements.txt",
+              "c2": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "archive-app",
+              "f1": "archive.py",
+              "c1": "VALUE = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nimport argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "requirements.txt",
+              "c2": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            }
+          ]
+        },
+        {
+          "id": "g2-styles-{i}",
+          "title": "多文件混合项目 API 文档（{pname}）",
+          "tags": [
+            "variation",
+            "multi-file"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描多文件混合项目并生成 api 文档",
+            "content": "请为 input/{pname} 项目生成 API 文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "input/{pname}/{f3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "api",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(接口|端点|Endpoints|API)",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "mixed-app",
+              "f1": "app.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "index.js",
+              "c2": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "f3": "package.json",
+              "c3": "{\n  \"name\": \"{pname}\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },\n  \"dependencies\": { \"express\": \"^4.18.0\" }\n}\n"
+            },
+            {
+              "pname": "mixed-service",
+              "f1": "server.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "main.js",
+              "c2": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "f3": "package.json",
+              "c3": "{\n  \"name\": \"{pname}\",\n  \"version\": \"1.0.0\",\n  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },\n  \"dependencies\": { \"express\": \"^4.18.0\" }\n}\n"
+            }
+          ]
+        },
+        {
+          "id": "g2-vars-{i}",
+          "title": "文档类型 × 语言正交变体（{pname}）",
+          "tags": [
+            "variation",
+            "matrix"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）",
+            "content": "请为 input/{pname} 项目生成文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "{doc_type}",
+              "lang": "{lang}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "项目名出现在文档里"
+              },
+              {
+                "type": "regex",
+                "pattern": "^#",
+                "weight": 1,
+                "note": "Markdown 标题开头"
+              },
+              {
+                "type": "regex",
+                "pattern": "(文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 250,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "matrix-app",
+              "f1": "app.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "f2": "requirements.txt",
+              "c2": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            }
+          ],
+          "vars": {
+            "doc_type": [
+              "readme",
+              "api",
+              "arch",
+              "onboarding"
+            ],
+            "lang": [
+              "zh",
+              "en"
+            ]
+          }
+        },
+        {
+          "id": "g2-params-{i}",
+          "title": "配置项/入口多样的项目 README（{pname}）",
+          "tags": [
+            "variation",
+            "config"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "扫描配置与入口丰富的项目并生成 readme 文档",
+            "content": "请为 input/{pname} 项目生成 README 文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "input/{pname}/{f2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "input/{pname}/{f3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "readme",
+              "lang": "zh"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "(配置|Configuration|配置项)",
+                "weight": 2,
+                "note": "配置项小节"
+              },
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "报告出现项目名（来自扫描摘要）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "config-heavy",
+              "f1": "main.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\nTIMEOUT = 30\nRETRY = 3\nBATCH_SIZE = 100\n",
+              "f3": "requirements.txt",
+              "c3": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            },
+            {
+              "pname": "entry-heavy",
+              "f1": "cli.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "f2": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "f3": "requirements.txt",
+              "c3": "flask==3.0.0\nrequests==2.31.0\nclick==8.1.7\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：极小 / 空文件 / 极端规模",
+      "description": "空文件、单行、极小项目与超大/超深/怪命名项目，离线确定性输出",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-minimal-{i}",
+          "title": "极小/极短项目（{pname}）",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "对极小项目做离线骨架文档",
+            "content": "请为 input/{pname} 项目生成文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "{doc_type}",
+              "lang": "{lang}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "骨架标题带项目名"
+              },
+              {
+                "type": "regex",
+                "pattern": "(项目简介|接口清单|分层结构|新人上手五步)",
+                "weight": 2,
+                "note": "固定小节标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "empty-proj",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "notes.txt",
+              "c1": ""
+            },
+            {
+              "pname": "one-line",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "tiny.py",
+              "c1": "print(1)\n"
+            },
+            {
+              "pname": "only-md",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "README.md",
+              "c1": "# 只有说明\n"
+            },
+            {
+              "pname": "only-json",
+              "doc_type": "api",
+              "lang": "zh",
+              "f1": "data.json",
+              "c1": "{\"a\": 1}\n"
+            },
+            {
+              "pname": "only-cfg",
+              "doc_type": "arch",
+              "lang": "zh",
+              "f1": "config.py",
+              "c2": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n",
+              "c1": "API_KEY = \"placeholder\"\nDEBUG = False\nMAX_RETRIES = 3\n"
+            },
+            {
+              "pname": "one-html",
+              "doc_type": "onboarding",
+              "lang": "zh",
+              "f1": "index.html",
+              "c1": "<html><body>hi</body></html>\n"
+            },
+            {
+              "pname": "whitespace-only",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "blank.py",
+              "c1": "   \n\n    \n"
+            },
+            {
+              "pname": "deep-only",
+              "doc_type": "arch",
+              "lang": "zh",
+              "f1": "a/b/c/d/e/deep.py",
+              "c1": "print(1)\n"
+            },
+            {
+              "pname": "two-lines",
+              "doc_type": "api",
+              "lang": "zh",
+              "f1": "mini.py",
+              "c1": "def f():\n    return 1\n"
+            },
+            {
+              "pname": "empty-main",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "main.py",
+              "c1": ""
+            }
+          ]
+        },
+        {
+          "id": "g3-extreme-{i}",
+          "title": "极端规模项目（{pname}）",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "对极端规模/命名项目做离线骨架文档",
+            "content": "请为 input/{pname} 项目生成文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "{doc_type}",
+              "lang": "{lang}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "骨架标题带项目名"
+              },
+              {
+                "type": "regex",
+                "pattern": "(项目简介|接口清单|分层结构|新人上手五步)",
+                "weight": 2,
+                "note": "固定小节标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "huge-file",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "big.py",
+              "c1": "x = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\nx = 1\n"
+            },
+            {
+              "pname": "huge-line",
+              "doc_type": "arch",
+              "lang": "zh",
+              "f1": "wide.py",
+              "c1": "W = \"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\"\n"
+            },
+            {
+              "pname": "many-files",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "m1.py",
+              "c1": "print(1)\n"
+            },
+            {
+              "pname": "deep-nest",
+              "doc_type": "onboarding",
+              "lang": "zh",
+              "f1": "a/b/c/d/e/f/g/h/deep.py",
+              "c1": "print(1)\n"
+            },
+            {
+              "pname": "long-name",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "a_very_long_module_name_for_boundary_testing_purpose.py",
+              "c1": "print(1)\n"
+            },
+            {
+              "pname": "dotted-name",
+              "doc_type": "api",
+              "lang": "zh",
+              "f1": "my.module.v2.py",
+              "c1": "print(1)\n"
+            },
+            {
+              "pname": "space-name",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "my module.py",
+              "c1": "print(1)\n"
+            },
+            {
+              "pname": "utf8-name",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "模块名.py",
+              "c1": "print(1)\n"
+            },
+            {
+              "pname": "no-ext",
+              "doc_type": "arch",
+              "lang": "zh",
+              "f1": "Makefile",
+              "c1": "run:\n    python main.py\n"
+            },
+            {
+              "pname": "many-routes",
+              "doc_type": "api",
+              "lang": "zh",
+              "f1": "api.py",
+              "c1": "@app.get(\"/r1\")\ndef h1():\n    return 1\n\n@app.get(\"/r2\")\ndef h2():\n    return 2\n\n@app.get(\"/r3\")\ndef h3():\n    return 3\n\n@app.get(\"/r4\")\ndef h4():\n    return 4\n\n@app.get(\"/r5\")\ndef h5():\n    return 5\n\n@app.get(\"/r6\")\ndef h6():\n    return 6\n\n@app.get(\"/r7\")\ndef h7():\n    return 7\n\n@app.get(\"/r8\")\ndef h8():\n    return 8\n\n@app.get(\"/r9\")\ndef h9():\n    return 9\n\n@app.get(\"/r10\")\ndef h10():\n    return 10\n\n@app.get(\"/r11\")\ndef h11():\n    return 11\n\n@app.get(\"/r12\")\ndef h12():\n    return 12\n\n@app.get(\"/r13\")\ndef h13():\n    return 13\n\n@app.get(\"/r14\")\ndef h14():\n    return 14\n\n@app.get(\"/r15\")\ndef h15():\n    return 15\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：乱码 / 损坏 / 缺字段输入",
+      "description": "乱码、空字节、损坏 JSON/配置、缺字段等畸形项目输入，优雅处理不崩溃（离线）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-mangle-{i}",
+          "title": "格式损坏/乱码项目（{pname}）",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "乱码与损坏文件也要优雅处理，生成骨架",
+            "content": "请为 input/{pname} 项目生成文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "{doc_type}",
+              "lang": "{lang}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "骨架标题带项目名"
+              },
+              {
+                "type": "regex",
+                "pattern": "(项目简介|接口清单|分层结构|新人上手五步)",
+                "weight": 2,
+                "note": "固定小节标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "mojibake",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "broken.py",
+              "c1": "���� 锟斤拷 㡎塡�\n"
+            },
+            {
+              "pname": "null-bytes",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "null.py",
+              "c1": "a = 1\u0000b = 2\n"
+            },
+            {
+              "pname": "broken-json",
+              "doc_type": "api",
+              "lang": "zh",
+              "f1": "package.json",
+              "c1": "{ name: 'x', scripts: { start: , } \n"
+            },
+            {
+              "pname": "binaryish",
+              "doc_type": "arch",
+              "lang": "zh",
+              "f1": "blob.py",
+              "c1": "\u0001\u0002\u0003PK\u0004\u0005ÿþ\n"
+            },
+            {
+              "pname": "half-gbk",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "text.py",
+              "c1": "s = \"���\"\n# ��\n"
+            },
+            {
+              "pname": "mixed-eol",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "eol.py",
+              "c1": "a = 1\r\nb = 2\r c = 3\n\n\r\n"
+            },
+            {
+              "pname": "long-token",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "token.py",
+              "c1": "TOKEN = \"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\"\n"
+            },
+            {
+              "pname": "markup-soup",
+              "doc_type": "api",
+              "lang": "zh",
+              "f1": "page.py",
+              "c1": "<div><% if x %>{{ y }}</div>\n"
+            },
+            {
+              "pname": "quotes-escape",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "q.py",
+              "c1": "s = \"he said \\\"hi\\\" 'x' `y`\"\n"
+            },
+            {
+              "pname": "emoji-only",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "emoji.py",
+              "c1": "🎉🚀✨\n"
+            }
+          ]
+        },
+        {
+          "id": "g4-missing-{i}",
+          "title": "缺字段/畸形配置项目（{pname}）",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "缺字段与畸形配置也要优雅处理，生成骨架",
+            "content": "请为 input/{pname} 项目生成文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "{doc_type}",
+              "lang": "{lang}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 2,
+                "note": "骨架标题带项目名"
+              },
+              {
+                "type": "regex",
+                "pattern": "(项目简介|接口清单|分层结构|新人上手五步)",
+                "weight": 2,
+                "note": "固定小节标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "no-pkg-name",
+              "doc_type": "api",
+              "lang": "zh",
+              "f1": "package.json",
+              "c1": "{\n  \"version\": \"1.0.0\"\n}\n"
+            },
+            {
+              "pname": "bad-pyproject",
+              "doc_type": "arch",
+              "lang": "zh",
+              "f1": "pyproject.toml",
+              "c1": "[project\nname = \n[project.scripts\n"
+            },
+            {
+              "pname": "env-only",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": ".env.example",
+              "c1": "API_KEY=\nDB_HOST=\nSECRET_TOKEN=\n"
+            },
+            {
+              "pname": "empty-req",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "requirements.txt",
+              "c1": "\n\n"
+            },
+            {
+              "pname": "no-ext-files",
+              "doc_type": "onboarding",
+              "lang": "zh",
+              "f1": "LICENSE",
+              "c1": "MIT\n"
+            },
+            {
+              "pname": "dup-lines",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "dup.py",
+              "c1": "a = 1\na = 1\na = 1\na = 1\n"
+            },
+            {
+              "pname": "comment-only",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "comments.py",
+              "c1": "# 只有注释\n# 还是注释\n"
+            },
+            {
+              "pname": "stray-braces",
+              "doc_type": "arch",
+              "lang": "zh",
+              "f1": "braces.py",
+              "c1": "d = dict(a=1)\nprint(\"{\" + \"}\")\n"
+            },
+            {
+              "pname": "no-final-newline",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "nonewline.py",
+              "c1": "x = 1"
+            },
+            {
+              "pname": "weird-req",
+              "doc_type": "readme",
+              "lang": "zh",
+              "f1": "requirements.txt",
+              "c1": "### not a dep\n??? invalid line ???\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：10 样本 × 重复 10 次",
+      "description": "10 个确定性样本各重复 10 次，离线输出必须完全一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{i}",
+          "title": "稳定性样本（{pname}）",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "同输入重复运行，输出应完全一致",
+            "content": "请为 input/{pname} 项目生成文档。",
+            "files": [
+              {
+                "path": "input/{pname}/{f1}",
+                "content": "{c1}"
+              }
+            ],
+            "params": {
+              "project_dir": "input/{pname}",
+              "doc_type": "{doc_type}",
+              "lang": "{lang}",
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{pname}",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "## {heading}",
+                "weight": 2,
+                "note": "固定小节标题"
+              },
+              {
+                "type": "contains",
+                "text": "{fname}",
+                "weight": 1,
+                "note": "扫描到的文件名出现在目录结构里"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "pname": "stable-a",
+              "doc_type": "readme",
+              "lang": "zh",
+              "heading": "项目简介",
+              "f1": "app.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "fname": "app.py"
+            },
+            {
+              "pname": "stable-b",
+              "doc_type": "api",
+              "lang": "zh",
+              "heading": "接口清单",
+              "f1": "api.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "fname": "api.py"
+            },
+            {
+              "pname": "stable-c",
+              "doc_type": "arch",
+              "lang": "zh",
+              "heading": "分层结构",
+              "f1": "index.js",
+              "c1": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "fname": "index.js"
+            },
+            {
+              "pname": "stable-d",
+              "doc_type": "onboarding",
+              "lang": "zh",
+              "heading": "新人上手五步",
+              "f1": "cli.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "fname": "cli.py"
+            },
+            {
+              "pname": "stable-e",
+              "doc_type": "readme",
+              "lang": "zh",
+              "heading": "项目简介",
+              "f1": "main.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "fname": "main.py"
+            },
+            {
+              "pname": "stable-f",
+              "doc_type": "api",
+              "lang": "zh",
+              "heading": "接口清单",
+              "f1": "server.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "fname": "server.py"
+            },
+            {
+              "pname": "stable-g",
+              "doc_type": "arch",
+              "lang": "zh",
+              "heading": "分层结构",
+              "f1": "OrderController.java",
+              "c1": "import org.springframework.web.bind.annotation.*;\n\n@RestController\npublic class OrderController {\n    @GetMapping(\"/orders\")\n    public String list() {\n        return \"ok\";\n    }\n\n    @PostMapping(\"/orders\")\n    public String create() {\n        return \"created\";\n    }\n}\n",
+              "fname": "OrderController.java"
+            },
+            {
+              "pname": "stable-h",
+              "doc_type": "onboarding",
+              "lang": "zh",
+              "heading": "新人上手五步",
+              "f1": "tool.py",
+              "c1": "import argparse\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--verbose\", action=\"store_true\")\n    parser.add_argument(\"--count\", type=int, default=10)\n    args = parser.parse_args()\n    print(\"done\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "fname": "tool.py"
+            },
+            {
+              "pname": "stable-i",
+              "doc_type": "readme",
+              "lang": "en",
+              "heading": "Project Layout",
+              "f1": "app.py",
+              "c1": "from flask import Flask\n\napp = Flask(__name__)\n\n@app.get(\"/users\")\ndef list_users():\n    return []\n\n@app.post(\"/users\")\ndef create_user():\n    return {}, 201\n\nif __name__ == \"__main__\":\n    app.run()\n",
+              "fname": "app.py"
+            },
+            {
+              "pname": "stable-j",
+              "doc_type": "arch",
+              "lang": "en",
+              "heading": "Layering",
+              "f1": "index.js",
+              "c1": "const express = require(\"express\");\nconst app = express();\n\napp.get(\"/api/orders\", (req, res) => res.json({ ok: true }));\napp.post(\"/api/orders\", (req, res) => res.status(201).json({ ok: true }));\n\napp.listen(3000);\n",
+              "fname": "index.js"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

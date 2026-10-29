@@ -1,0 +1,879 @@
+id: ts-b-expense-tracker-g4-robust
+agentId: expense-tracker
+group: g4-robust
+name: 记账分析 · 鲁棒性：损坏行 / 乱码 / 畸形预算
+description: 损坏记账行、乱码、缺金额、畸形预算表等输入，优雅处理不崩溃（离线）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-broken-1
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "!!! 乱七八糟的行 !!!
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-2
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "��� 锟斤拷消费
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-3
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 没有金额的行 元
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-4
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "日期乱了 消费 45 元 商户
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-5
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 空字节\0消费 45 元 商户
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-6
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "。。。。。。\n2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-7
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "￥￥￥\n2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-8
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行超长一行 45 元 商户
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-9
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "
+
+
+
+
+            2026-10-20 兜底消费 45 元 兜底商户
+
+
+
+            \n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-10
+    title: 损坏记账行（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的记账行不崩溃
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "-45 元 诡异负数
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+          note: 可解析的记账行仍回显
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-1
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit\n餐饮,abc\n交通,100\n,,\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-2
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "没有表头的乱账本\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-3
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: ""
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-4
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-20 兜底消费 45 元 兜底商户
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-5
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-13-45 不存在的日期 45 元 幽灵商户
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-6
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 只有商户名 没有数字
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-7
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 三十五 元 食堂
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-8
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026/10/05 斜杠日期 45 元 商户
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-9
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 ﻿带BOM消费 45 元 商户
+
+            2026-10-20 兜底消费 45 元 兜底商户\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-10
+    title: 缺字段/畸形输入（兜底商户）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段与畸形输入优雅处理
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 混合换行 45 元 商户\r
+
+            2026-10-20 兜底消费 45 元 兜底商户\r\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 兜底商户
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

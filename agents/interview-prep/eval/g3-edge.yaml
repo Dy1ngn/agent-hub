@@ -1,0 +1,528 @@
+id: ts-b-interview-prep-g3-edge
+agentId: interview-prep
+group: g3-edge
+name: 面试准备 · 边界情况：空 JD / 极端数量 / 极端种子
+description: 空 JD、极短 JD、超题库数量、负种子等边界参数下的稳定产出（离线确定性模式）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空 JD 文件
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：空 JD 文件
+      files:
+        - path: input/jd.txt
+          content: ""
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 技术
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：JD 只有一个词
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：JD 只有一个词
+      files:
+        - path: input/jd.txt
+          content: Python
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 技术
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：出题数 1（最少）
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：出题数 1（最少）
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "1"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：出题数 50（超技术题库）
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：出题数 50（超技术题库）
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 技术
+        count: "50"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：出题数 100（超全部题库）
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：出题数 100（超全部题库）
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "100"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：负随机种子
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：负随机种子
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 技术
+        count: "5"
+        seed: "-5"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：种子 0
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：种子 0
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 产品
+        count: "5"
+        seed: "0"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：空记录表
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：空记录表
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: "[]"
+      params:
+        offline: true
+        type: 行为
+        count: "5"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：JD 超长（关键词堆叠）
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：JD 超长（关键词堆叠）
+      files:
+        - path: input/jd.txt
+          content: "职位：资深开发工程师
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发
+
+            - 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "8"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：行为面全量抽题
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出准备文档，不允许崩溃
+      content: 边界用例：行为面全量抽题
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 行为
+        count: "21"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: contains
+          text: 题目清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

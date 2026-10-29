@@ -1,0 +1,270 @@
+id: ts-b-stock-analyst-g2-variation
+agentId: stock-analyst
+group: g2-variation
+name: 股票分析 · 输入变体：agent 模式（function-call + 模型）
+description: 走 agent.py 的 function-call 循环（模型生成完整报告，行情/新闻用夹具注入），验证模型链路可用（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-agent-600519
+    title: agent 模式分析 600519（up）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "600519", "seed": 21, "trend": "up", "days": 90, "sentiment": "正面"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "600519"
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-000001
+    title: agent 模式分析 000001（down）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "000001", "seed": 22, "trend": "down", "days": 90, "sentiment": "负面"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "000001"
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-AAPL
+    title: agent 模式分析 AAPL（sideways）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "AAPL", "seed": 23, "trend": "sideways", "days": 90, "sentiment": "中性"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: AAPL
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-NVDA
+    title: agent 模式分析 NVDA（volatile）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "NVDA", "seed": 24, "trend": "volatile", "days": 90, "sentiment": "正面"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: NVDA
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-300750
+    title: agent 模式分析 300750（up）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "300750", "seed": 25, "trend": "up", "days": 90, "sentiment": "中性"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "300750"
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-MSFT
+    title: agent 模式分析 MSFT（down）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "MSFT", "seed": 26, "trend": "down", "days": 90, "sentiment": "负面"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: MSFT
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-601318
+    title: agent 模式分析 601318（sideways）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "601318", "seed": 27, "trend": "sideways", "days": 90, "sentiment": "中性"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "601318"
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-002594
+    title: agent 模式分析 002594（volatile）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "002594", "seed": 28, "trend": "volatile", "days": 90, "sentiment": "正面"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "002594"
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-600036
+    title: agent 模式分析 600036（up）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "600036", "seed": 29, "trend": "up", "days": 90, "sentiment": "正面"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "600036"
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-agent-000858
+    title: agent 模式分析 000858（down）
+    tags:
+      - variation
+      - agent
+    repeat: 10
+    input:
+      kind: json
+      goal: 用 Agent 模式（工具调用 + 模型）生成完整股票分析报告
+      content: '{"symbol": "000858", "seed": 30, "trend": "down", "days": 90, "sentiment": "负面"}'
+      files: []
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "000858"
+          weight: 2
+          note: 模型报告提到标的
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

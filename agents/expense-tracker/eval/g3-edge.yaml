@@ -1,0 +1,1012 @@
+id: ts-b-expense-tracker-g3-edge
+agentId: expense-tracker
+group: g3-edge
+name: 记账分析 · 边界情况：单笔 / 零元 / 极端数值
+description: 单笔、零元、极大金额、重复行去重、月末日期等边界输入，离线确定性输出（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-minimal-1
+    title: 极小记账（食堂）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 食堂
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-2
+    title: 极小记账（包子铺）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: ""
+        - path: input/book.json
+          content: '{"version": 1, "entries": [{"id": "e01", "date": "2026-10-06", "amount": 12.5, "category": "餐饮", "merchant": "包子铺", "pay_method": "现金", "note": ""}]}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 包子铺
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-3
+    title: 极小记账（驿站）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-07 一分钱 0.01 元 驿站\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 驿站
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-4
+    title: 极小记账（免费店）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-08 零元购 0 元 免费店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 免费店
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-5
+    title: 极小记账（面馆）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-09 早饭 8 元 包子铺
+
+            2026-10-09 午饭 18 元 食堂
+
+            2026-10-09 晚饭 22 元 面馆\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面馆
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-6
+    title: 极小记账（奢侈品店）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-10 巨额消费 999999.99 元 奢侈品店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 奢侈品店
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-7
+    title: 极小记账（食堂）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-31 月末消费 45 元 食堂\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 食堂
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-8
+    title: 极小记账（面馆）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-01 月初消费 55 元 面馆\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面馆
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-9
+    title: 极小记账（杂货店）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-15 小数位 12.3456 元 杂货店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 杂货店
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-10
+    title: 极小记账（大商场）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-20 超长摘要 很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明很长的消费说明 66 元 大商场\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 大商场
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: 极端规模（商户01）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-02 批量消费01 11 元 商户01
+
+            2026-10-03 批量消费02 12 元 商户02
+
+            2026-10-04 批量消费03 13 元 商户03
+
+            2026-10-05 批量消费04 14 元 商户04
+
+            2026-10-06 批量消费05 15 元 商户05
+
+            2026-10-07 批量消费06 16 元 商户06
+
+            2026-10-08 批量消费07 17 元 商户07
+
+            2026-10-09 批量消费08 18 元 商户08
+
+            2026-10-10 批量消费09 19 元 商户09
+
+            2026-10-11 批量消费10 20 元 商户10
+
+            2026-10-12 批量消费11 21 元 商户11
+
+            2026-10-13 批量消费12 22 元 商户12
+
+            2026-10-14 批量消费13 23 元 商户13
+
+            2026-10-15 批量消费14 24 元 商户14
+
+            2026-10-16 批量消费15 25 元 商户15
+
+            2026-10-17 批量消费16 26 元 商户16
+
+            2026-10-18 批量消费17 27 元 商户17
+
+            2026-10-19 批量消费18 28 元 商户18
+
+            2026-10-20 批量消费19 29 元 商户19
+
+            2026-10-21 批量消费20 30 元 商户20
+
+            2026-10-22 批量消费21 31 元 商户21
+
+            2026-10-23 批量消费22 32 元 商户22
+
+            2026-10-24 批量消费23 33 元 商户23
+
+            2026-10-25 批量消费24 34 元 商户24
+
+            2026-10-26 批量消费25 35 元 商户25
+
+            2026-10-27 批量消费26 36 元 商户26
+
+            2026-10-28 批量消费27 37 元 商户27
+
+            2026-10-01 批量消费28 38 元 商户28
+
+            2026-10-02 批量消费29 39 元 商户29
+
+            2026-10-03 批量消费30 40 元 商户30\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 商户01
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: 极端规模（拍卖行）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 天文数字 99999999.99 元 拍卖行
+
+            2026-10-06 极小金额 0.01 元 驿站\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 拍卖行
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: 极端规模（食堂）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit\n餐饮,0\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 食堂
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: 极端规模（食堂）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit\n餐饮,999999999\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 食堂
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: 极端规模（奶茶店）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂
+
+            2026-10-06 晚饭 42 元 面馆
+
+            2026-10-07 夜宵 55 元 烧烤店
+
+            2026-10-08 早饭 9 元 包子铺
+
+            2026-10-09 下午茶 38 元 奶茶店
+
+            2026-10-10 买菜 77 元 菜市场
+
+            2026-10-11 便利店 23 元 便利店
+
+            2026-10-12 聚餐 268 元 大饭店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 奶茶店
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: 极端规模（人情往来）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 全分类一 11 元 食堂
+
+            2026-10-06 全分类二 22 元 滴滴
+
+            2026-10-07 全分类三 33 元 商场
+
+            2026-10-08 全分类四 44 元 房东
+
+            2026-10-09 全分类五 55 元 影院
+
+            2026-10-10 全分类六 66 元 医院
+
+            2026-10-11 全分类七 77 元 网校
+
+            2026-10-12 全分类八 88 元 人情往来
+
+            2026-10-13 全分类九 99 元 杂货铺\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 人情往来
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: 极端规模（食堂）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: ""
+        - path: input/book.json
+          content: '{"version": 1, "entries": [{"id": "e01", "date": "2026-10-01", "amount": 11.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e02", "date": "2026-10-02", "amount": 12.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e03", "date": "2026-10-03", "amount": 13.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e04", "date": "2026-10-04", "amount": 14.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e05", "date": "2026-10-05", "amount": 15.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e06", "date": "2026-10-06", "amount": 16.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e07", "date": "2026-10-07", "amount": 17.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e08", "date": "2026-10-08", "amount": 18.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e09", "date": "2026-10-09", "amount": 19.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e10", "date": "2026-10-10", "amount": 20.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e11", "date": "2026-10-11", "amount": 21.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e12", "date": "2026-10-12", "amount": 22.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e13", "date": "2026-10-13", "amount": 23.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e14", "date": "2026-10-14", "amount": 24.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e15", "date": "2026-10-15", "amount": 25.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e16", "date": "2026-10-16", "amount": 26.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e17", "date": "2026-10-17", "amount": 27.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e18", "date": "2026-10-18", "amount": 28.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e19", "date": "2026-10-19", "amount": 29.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e20", "date": "2026-10-20", "amount": 30.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e21", "date": "2026-10-21", "amount": 31.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e22", "date": "2026-10-22", "amount": 32.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e23", "date": "2026-10-23", "amount": 33.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e24", "date": "2026-10-24", "amount": 34.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e25", "date": "2026-10-25", "amount": 35.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e26", "date": "2026-10-26", "amount": 36.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e27", "date": "2026-10-27", "amount": 37.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}, {"id": "e28", "date": "2026-10-28", "amount": 38.00, "category": "餐饮", "merchant": "食堂", "pay_method": "现金", "note": ""}]}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 食堂
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: 极端规模（同一家店）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 同名商户 10 元 同一家店
+
+            2026-10-06 同名商户 20 元 同一家店
+
+            2026-10-07 同名商户 30 元 同一家店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 同一家店
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: 极端规模（餐厅）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2024-02-29 闰日消费 88 元 餐厅\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2024-02
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 餐厅
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: 极端规模（果园）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端规模与数值也要正常出月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 重复行 45 元 果园
+
+            2026-10-05 重复行 45 元 果园
+
+            2026-10-05 重复行 45 元 果园\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 果园
+          weight: 2
+        - type: contains
+          text: "## 分类占比"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

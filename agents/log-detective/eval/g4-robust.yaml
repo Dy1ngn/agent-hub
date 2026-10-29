@@ -1,0 +1,1087 @@
+id: ts-b-log-detective-g4-robust
+agentId: log-detective
+group: g4-robust
+name: 日志排查 · 鲁棒性：畸形日志与非法参数
+description: 乱码、NUL、控制字符、非法时间戳、坏 JSON 行、非法参数、文件缺失等异常输入下优雅处理不崩溃（离线统计）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：乱码内容
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "鲤鲦鲪 garbage 锟斤拷\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：NUL 字节
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "a\0b error line\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "ctrl\achar error\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：半行引号
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: 'unterminated "quote error
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：emoji 与繁简混排
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "😀 error 🚀 mixed 繁體與简体混排\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|样例原文
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：非法时间戳
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-13-45 99:99:99 ERROR invalid timestamp\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|级别分布
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：坏 JSON 行
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '{"bad json
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：级别名乱写
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "ERR0R weird level
+
+            warning! also weird\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|级别分布
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：非法参数 top=0
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "x\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "0"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 参数校验失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：非法参数 since
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "x\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: not-a-date
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 参数校验失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：非法参数 grep 正则
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "x\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: "["
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 参数校验失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：since 晚于 until
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "x\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: 2026-01-02
+        until: 2026-01-01
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 参数校验失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：替换符内容
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "�� replacement chars\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：超多空行
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            2026-10-28 10:00:01 ERROR after many blanks\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|Top 错误签名
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：反斜杠引号混乱
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: 'back\\slash and "quotes" mess
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：时区偏移混用
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28T10:00:01-05:00 ERROR tz offset error\n"
+        - path: input/worker.log
+          content: "2026-10-28T10:00:02+09:00 ERROR tz offset error two\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：CRLF 混合换行
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "crlf error one\r
+
+            second error\r
+
+            third error\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：前导空白行
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "    indented error line
+
+            \t\ttabbed error line\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|输入文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：注入样式内容
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "injection <script>alert(1)</script>
+
+            SELECT * FROM users; DROP TABLE users;\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|样例原文
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：日志文件不存在
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: log
+      goal: 异常输入不能让工具崩溃：要么正常统计，要么优雅报错
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/unused.log
+          content: "normal line\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/ghost.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 参数校验失败|文件不存在
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 60
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

@@ -1,0 +1,290 @@
+id: ts-b-stock-analyst-g4-robust
+agentId: stock-analyst
+group: g4-robust
+name: 股票分析 · 鲁棒性：畸形数据与非法参数
+description: 坏 K 线（字符串价格/负数/缺字段）、非法参数类型等异常输入下优雅降级（规则链路）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：K线价格是字符串
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "klines": [{"date": "2026-01-01", "open": "abc", "high": "x", "low": "y", "close": "z", "volume": "v"}, {"date": "2026-01-02", "open": "a", "high": "b", "low": "c", "close": "d", "volume": "e"}, {"date": "2026-01-03", "open": 1, "high": 2, "low": 0.5, "close": 1.5, "volume": 100}]}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：K线缺字段
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "klines": [{"close": 10}, {"close": 11}, {"close": 12}]}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：K线是空数组
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "klines": []}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：K线含负价格
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "klines": [{"date": "2026-01-01", "open": -1, "high": -2, "low": -3, "close": -4, "volume": -5}, {"date": "2026-01-02", "open": -1, "high": -2, "low": -3, "close": -4, "volume": -5}, {"date": "2026-01-03", "open": -1, "high": -2, "low": -3, "close": -4, "volume": -5}]}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：seed 是字符串乱码
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "seed": "abc", "days": 60}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：days 是负数
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "seed": 6, "days": -100}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：days 是小数字符串
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "seed": 7, "days": "3.14"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：trend 是未知值
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "seed": 8, "trend": "????"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：content 是数组 JSON
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: "[1, 2, 3]"
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：fund_score 是乱码
+    tags:
+      - robust
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 异常输入不能让工具崩溃
+      content: '{"symbol": "600519", "seed": 10, "fund_score": "xyz"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []

@@ -1,0 +1,470 @@
+id: ts-b-dependency-auditor-g5-stability
+agentId: dependency-auditor
+group: g5-stability
+name: 依赖审计 · 稳定性：同输入重复调用
+description: 10 个确定性样本（9 条规则 + 干净集 + 公告命中）各重复调用 10 次（离线模式）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：DA001 无版本约束
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA001
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 声明了 requests 但没写版本约束
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：DA003 过旧版本
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "django==2.0.11\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA003
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 固定在 2.0.11，低于内置对照表里的主流版本 4.2
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：DA005 typosquat
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requets==2.31.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA005
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 与流行包 `requests` 的编辑距离
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：DA004 git 依赖
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "git+https://github.com/x/y.git\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA004
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 依赖指向本地路径或仓库地址
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：DA008 开发依赖
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "pytest\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA008
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 是开发期工具
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：DA002 过宽约束
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "flask>=0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA002
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 过宽，等于没有约束
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：DA006 约束冲突
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.31.0\nrequests>=3.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA006
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 被声明 2 次，约束分别为
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：DA009 命名不规范
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "my_package==1.0.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA009
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 含下划线或大写字母
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：干净依赖集
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\nflask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有达到
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: 没有达到「提示」级别及以上的命中项。
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：公告命中
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一输入重复调用 10 次，确定性结论应稳定出现
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.31.0\nflask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: '[{"package": "requests", "versions": ["==2.31.0"], "severity": "high", "title": "CVE-2024-演示公告", "link": "https://example.com/cve"}]'
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 公告范围
+          weight: 2
+          note: 规则命中稳定出现
+        - type: contains
+          text: CVE-2024-演示公告
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

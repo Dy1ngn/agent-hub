@@ -1,0 +1,953 @@
+id: ts-b-doc-summarizer-g1-basic
+agentId: doc-summarizer
+group: g1-basic
+name: 长文摘要 · 基础功能：典型长文摘要
+description: 典型长文档（报告/技术文档/新闻/纪要等）的完整摘要链路（抽取式打分 + 模型生成），产出结构化摘要报告（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-annual
+    title: 年度业绩报告摘要（主题：营收）
+    tags:
+      - basic
+      - report
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这份年度报告生成中文摘要报告
+      content: "# 2025 年度业绩报告
+
+
+        本年度公司营收达到 48 亿元，同比增长 18%。营收增长主要来自云服务与数据平台两条主线。
+
+        在成本侧，全年运营成本 31 亿元，成本率同比下降 2 个百分点，经营效率明显改善。
+
+        分区域看，华东区域营收增长最快，海外营收占比提升到 22%。营收结构进一步均衡。
+
+        展望 2026 年，公司将继续围绕营收增长目标投入研发，重点推进数据平台产品化。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+          note: 产出标准摘要报告
+        - type: contains
+          text: 要点
+          weight: 1
+          note: 要点章节存在
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节存在
+        - type: regex
+          pattern: (?i)营收
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-annual-2
+    title: 年度业绩报告摘要（主题：营收）
+    tags:
+      - basic
+      - report
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这份年度报告生成中文摘要报告
+      content: "# 年度总结
+
+
+        营收方面：全年营收 48 亿元，其中订阅收入占营收比重达 61%，经常性收入占比持续提升。
+
+        利润方面：净利润 7.2 亿元，利润率 15%，主要受益于营收规模效应与费用管控。
+
+        现金流方面：经营性现金流 9.8 亿元，现金流状况健康，为营收再投入提供支撑。
+
+        风险方面：市场波动可能影响营收增速，公司将通过多元化客户结构对冲风险。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+          note: 产出标准摘要报告
+        - type: contains
+          text: 要点
+          weight: 1
+          note: 要点章节存在
+        - type: contains
+          text: 关键词
+          weight: 1
+          note: 关键词章节存在
+        - type: regex
+          pattern: (?i)营收
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-tech
+    title: 技术文档摘要（主题：微服务）
+    tags:
+      - basic
+      - tech
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇技术文档生成中文摘要报告
+      content: "# 微服务部署指南
+
+
+        本指南介绍微服务从构建到上线的完整流程，适用于微服务架构的后端系统。
+
+        第一步是构建镜像：每个微服务独立打包，镜像内只保留运行必需的依赖。
+
+        第二步是部署编排：使用容器编排平台部署微服务，配置健康检查与滚动更新策略。
+
+        第三步是监控告警：为每个微服务配置延迟、错误率与流量指标告警，保障微服务稳定运行。
+
+        常见问题：微服务之间调用超时，应优先检查网络策略与重试配置。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)微服务
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-tech-4
+    title: 技术文档摘要（主题：微服务）
+    tags:
+      - basic
+      - tech
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇技术文档生成中文摘要报告
+      content: "# 微服务网关说明
+
+
+        微服务网关负责路由、鉴权与限流，是微服务入口的统一治理层。
+
+        网关将请求路由到具体微服务，并把鉴权结果通过请求头传递给微服务。
+
+        限流规则在网关统一配置，防止个别微服务被突发流量打垮。
+
+        网关还负责访问日志采集，为微服务的可观测性提供数据来源。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: brief
+        keywords: "5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)微服务
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-product
+    title: 产品说明摘要（主题：续航）
+    tags:
+      - basic
+      - product
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇产品说明生成中文摘要报告
+      content: "# 无线耳机产品说明
+
+
+        这款无线耳机主打长续航，单次充电可连续播放 12 小时，配合充电盒总续航达 36 小时。
+
+        降噪方面，无线耳机支持主动降噪，通勤场景下降噪效果明显。
+
+        佩戴舒适度方面，单只耳机重 5 克，入耳部分采用亲肤材质，长时间佩戴无负担。
+
+        连接方面，无线耳机支持蓝牙多点连接，可在两台设备之间无缝切换。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)续航
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-product-6
+    title: 产品说明摘要（主题：续航）
+    tags:
+      - basic
+      - product
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇产品说明生成中文摘要报告
+      content: "# 新款手表评测要点
+
+
+        续航是这款手表最大的卖点，典型使用下续航 14 天，开启全部传感器后仍能坚持 7 天。
+
+        充电速度方面，手表支持快充，充电 10 分钟可以满足一整天的续航需求。
+
+        屏幕方面，手表采用常亮显示屏，亮度自动调节，强光下依然清晰。
+
+        运动功能方面，手表支持 100 多种运动模式，并提供专业的续航与心率曲线分析。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)续航
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-news
+    title: 新闻稿摘要（主题：发布会）
+    tags:
+      - basic
+      - news
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇新闻稿生成中文摘要报告
+      content: "# 新品发布会今日举行
+
+
+        今日的新品发布会吸引了超过三百家媒体到场，发布会全程线上直播。
+
+        发布会上，公司发布了三款新品，并宣布新品将于下月正式开售。
+
+        公司负责人在发布会后表示，研发投入将持续加大，发布会只是年度计划的开始。
+
+        行业分析人士认为，本次发布会显示出公司在高端市场的进取姿态。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)发布会
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-news-8
+    title: 新闻稿摘要（主题：发布会）
+    tags:
+      - basic
+      - news
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇新闻稿生成中文摘要报告
+      content: "发布会新闻速写。
+
+        发布会地点设在滨海会展中心，发布会现场设置了产品体验区。
+
+        发布会公布了售价与开售时间，发布会结束当晚预约量破十万。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: brief
+        keywords: "5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)发布会
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-meeting
+    title: 会议纪要摘要（主题：进度）
+    tags:
+      - basic
+      - meeting
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这份会议纪要生成中文摘要报告
+      content: "# 项目周会纪要
+
+
+        本周项目进度总体符合预期，后端接口联调完成 80%。
+
+        前端项目进度略慢，主要卡在设计走查，下周安排专项跟进以追赶进度。
+
+        测试方面，本周新增用例 120 条，项目进度不因缺陷修复而阻塞。
+
+        会议决定：每周同步项目进度，风险项当天升级。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)进度
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-meeting-10
+    title: 会议纪要摘要（主题：进度）
+    tags:
+      - basic
+      - meeting
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这份会议纪要生成中文摘要报告
+      content: "项目复盘会记录。
+
+        一、项目进度回顾：一季度项目进度达成 92%，二季度项目进度目标已发布。
+
+        二、问题：跨团队依赖影响项目进度，需要建立联席机制。
+
+        三、决议：成立进度专项小组，每周输出项目进度报告。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)进度
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-academic
+    title: 论文摘要（主题：准确率）
+    tags:
+      - basic
+      - academic
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇论文节选生成中文摘要报告
+      content: "# 一种改进的文本分类方法
+
+
+        本文提出一种改进的文本分类方法，在公开数据集上把准确率提升到 94.6%。
+
+        方法核心是引入注意力加权的特征融合，缓解了长文本分类准确率下降的问题。
+
+        实验表明，该方法在五个数据集上的准确率均优于基线，平均准确率提升 3.2 个百分点。
+
+        消融实验证明，注意力模块是准确率提升的主要来源。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)准确率
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-academic-12
+    title: 论文摘要（主题：准确率）
+    tags:
+      - basic
+      - academic
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇论文节选生成中文摘要报告
+      content: "实验补充说明。
+
+        实验环境：八卡服务器，批大小 64，训练 20 轮后准确率趋于稳定。
+
+        对比实验：与三种基线方法相比，本文方法准确率最高，且训练时间没有明显增加。
+
+        误差分析：准确率损失主要来自标注噪声，后续将研究噪声鲁棒训练。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)准确率
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-travel
+    title: 游记摘要（主题：海边）
+    tags:
+      - basic
+      - travel
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇游记生成中文摘要报告
+      content: "# 海边三日游记
+
+
+        第一天抵达海边小镇，海边的清晨安静得出奇，我们在海边散步到日出。
+
+        第二天出海观鲸，海上的风很大，但看到鲸鱼的那一刻所有人都欢呼起来。
+
+        第三天在海边渔村吃海鲜，海边的物价比想象中友好，老板还送了一壶黄酒。
+
+        这次海边旅行最大的收获是慢下来，听海浪、看日落、发呆。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)海边
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-travel-14
+    title: 游记摘要（主题：海边）
+    tags:
+      - basic
+      - travel
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇游记生成中文摘要报告
+      content: "海边随笔。
+
+        海边的日落是橘色的，海边的夜空能看到星星。
+
+        下次还要去海边，带上相机和一本没读完的书。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: brief
+        keywords: "5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)海边
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-policy
+    title: 政策解读摘要（主题：公积金）
+    tags:
+      - basic
+      - policy
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇政策解读生成中文摘要报告
+      content: "# 公积金新政解读
+
+
+        新政放宽了公积金贷款额度上限，双缴存职工家庭公积金贷款额度提高到 120 万元。
+
+        提取方面，公积金租房提取手续简化，线上即可办理公积金提取。
+
+        异地贷款方面，公积金异地互认范围扩大，跨城购房使用公积金更方便。
+
+        专家提醒：公积金政策因城施策，具体额度以当地公积金中心公布为准。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)公积金
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-policy-16
+    title: 政策解读摘要（主题：公积金）
+    tags:
+      - basic
+      - policy
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇政策解读生成中文摘要报告
+      content: "公积金常见问题解答。
+
+        问：公积金断缴有什么影响？答：公积金断缴会影响贷款资格，建议及时补缴。
+
+        问：公积金能提取几次？答：租房提取公积金按年度办理，购房提取一次性办理。
+
+        问：公积金利率会变吗？答：公积金贷款利率随基准调整，已发放贷款次年生效。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)公积金
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-tutorial
+    title: 教程摘要（主题：安装）
+    tags:
+      - basic
+      - tutorial
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇教程生成中文摘要报告
+      content: "# Python 环境安装教程
+
+
+        本教程讲解 Python 环境安装与虚拟环境配置，适合刚接触 Python 的同学。
+
+        第一步安装 Python：从官网下载安装包，安装时勾选加入环境变量。
+
+        第二步配置虚拟环境：使用 venv 创建虚拟环境，避免污染系统 Python 环境。
+
+        第三步安装依赖：激活虚拟环境后用 pip 安装依赖，并用 requirements.txt 固定版本。
+
+        安装完成后运行 python --version 验证安装结果。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)安装
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-tutorial-18
+    title: 教程摘要（主题：安装）
+    tags:
+      - basic
+      - tutorial
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇教程生成中文摘要报告
+      content: "数据库安装速览。
+
+        安装前检查磁盘与内存，安装过程中设置管理员密码。
+
+        安装完成后初始化数据目录，安装常见问题是端口被占用。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: brief
+        keywords: "5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)安装
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-qna
+    title: 问答/科普摘要（主题：光合作用）
+    tags:
+      - basic
+      - science
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇科普文档生成中文摘要报告
+      content: "# 光合作用是什么
+
+
+        光合作用是植物利用光能合成有机物的过程，光合作用的产物是葡萄糖和氧气。
+
+        光合作用发生在叶绿体中，叶绿素吸收光能是光合作用的第一步。
+
+        影响光合作用的因素包括光照强度、二氧化碳浓度和温度。
+
+        光合作用对地球生态至关重要，绝大多数食物链的能量都来自光合作用。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)光合作用
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-qna-20
+    title: 问答/科普摘要（主题：光合作用）
+    tags:
+      - basic
+      - science
+    repeat: 5
+    input:
+      kind: text
+      goal: 为这篇科普文档生成中文摘要报告
+      content: "光合作用小实验。
+
+        实验目的：观察光合作用产生氧气。实验材料：水草、烧杯、漏斗、试管。
+
+        实验步骤：把水草放在水中光照，收集光合作用释放的气体，用带火星木条检验。
+
+        实验结论：光合作用释放的气体能使木条复燃，说明光合作用产生氧气。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 关键词
+          weight: 1
+        - type: regex
+          pattern: (?i)光合作用
+          weight: 2
+          note: 主题词进入抽取结果
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

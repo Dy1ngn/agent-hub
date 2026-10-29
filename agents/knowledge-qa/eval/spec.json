@@ -1,0 +1,2860 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型知识库问答",
+      "description": "安装/配置/部署/排障/价格/接口/制度等典型问题与无命中兜底（检索 + 模型回答链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-install-{n}",
+          "title": "安装问题（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "回答安装相关问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何安装依赖？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "标准问法",
+              "n": "1"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖的步骤是什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "变体问法",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(安装|pip|requirements)",
+                "weight": 2,
+                "note": "命中安装指南"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-config-{n}",
+          "title": "配置问题（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "回答配置相关问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/config.md",
+              "c1": "# 配置说明\n\n## 基础配置\n\n配置文件是 config.yaml，包含端口、日志级别与缓存开关三个配置项。\n\n## 高级配置\n\n可以用环境变量覆盖配置项。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "配置项有哪些？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "标准问法",
+              "n": "1"
+            },
+            {
+              "p1": "kb/config.md",
+              "c1": "# 配置说明\n\n## 基础配置\n\n配置文件是 config.yaml，包含端口、日志级别与缓存开关三个配置项。\n\n## 高级配置\n\n可以用环境变量覆盖配置项。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "怎么修改配置？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "变体问法",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(配置|config.yaml|端口)",
+                "weight": 2,
+                "note": "命中配置说明"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-deploy-{n}",
+          "title": "部署问题（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "回答部署相关问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/deploy.md",
+              "c1": "# 部署手册\n\n## 部署流程\n\n先构建镜像，再用 kubectl apply 部署到集群。\n\n## 回滚\n\n执行 kubectl rollout undo 回滚到上一版本。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何部署到集群？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "标准问法",
+              "n": "1"
+            },
+            {
+              "p1": "kb/deploy.md",
+              "c1": "# 部署手册\n\n## 部署流程\n\n先构建镜像，再用 kubectl apply 部署到集群。\n\n## 回滚\n\n执行 kubectl rollout undo 回滚到上一版本。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "部署失败怎么回滚？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "变体问法",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(部署|kubectl|回滚)",
+                "weight": 2,
+                "note": "命中部署手册"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-trouble-{n}",
+          "title": "故障排查问题（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "回答故障排查问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "服务启动失败怎么办？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "标准问法",
+              "n": "1"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "启动失败怎么排查？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "变体问法",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(启动失败|端口|error.log|排查)",
+                "weight": 2,
+                "note": "命中常见问题"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-price-{n}",
+          "title": "价格问题（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "回答定价问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/price.md",
+              "c1": "# 定价方案\n\n标准版价格是每用户每月 99 元，企业版每用户每月 299 元，价格按年付费。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "标准版多少钱？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "标准问法",
+              "n": "1"
+            },
+            {
+              "p1": "kb/price.md",
+              "c1": "# 定价方案\n\n标准版价格是每用户每月 99 元，企业版每用户每月 299 元，价格按年付费。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "定价是多少？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "变体问法",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(99|299|价格|元|定价)",
+                "weight": 2,
+                "note": "命中定价方案"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-api-{n}",
+          "title": "接口问题（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "回答 API 接口问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/api.md",
+              "c1": "# 接口文档\n\n## 查询接口\n\n查询接口是 GET /api/users，返回用户列表。\n\n## 写入接口\n\n写入接口是 POST /api/users。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "查询接口怎么调用？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "标准问法",
+              "n": "1"
+            },
+            {
+              "p1": "kb/api.md",
+              "c1": "# 接口文档\n\n## 查询接口\n\n查询接口是 GET /api/users，返回用户列表。\n\n## 写入接口\n\n写入接口是 POST /api/users。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "有哪些接口？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "变体问法",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(接口|GET|POST|/api/users)",
+                "weight": 2,
+                "note": "命中接口文档"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-policy-{n}",
+          "title": "制度问题（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "回答休假制度问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/policy.md",
+              "c1": "# 休假制度\n\n## 年假\n\n入职满一年后年假 10 天，满三年后年假 15 天。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "年假有多少天？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "标准问法",
+              "n": "1"
+            },
+            {
+              "p1": "kb/policy.md",
+              "c1": "# 休假制度\n\n## 年假\n\n入职满一年后年假 10 天，满三年后年假 15 天。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "入职一年后年假几天？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "变体问法",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(年假|10 天|15 天|休假)",
+                "weight": 2,
+                "note": "命中休假制度"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-multi-{n}",
+          "title": "多文档命中（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "跨文档检索回答",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖和服务启动失败分别怎么处理？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "双文档",
+              "n": "1"
+            },
+            {
+              "p1": "kb/deploy.md",
+              "c1": "# 部署手册\n\n## 部署流程\n\n先构建镜像，再用 kubectl apply 部署到集群。\n\n## 回滚\n\n执行 kubectl rollout undo 回滚到上一版本。\n",
+              "p2": "kb/config.md",
+              "c2": "# 配置说明\n\n## 基础配置\n\n配置文件是 config.yaml，包含端口、日志级别与缓存开关三个配置项。\n\n## 高级配置\n\n可以用环境变量覆盖配置项。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "部署和配置都要注意什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "双文档二",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(片段|引用清单|检索得分表)",
+                "weight": 2,
+                "note": "多文档命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-nohit-{n}",
+          "title": "知识库无命中（{fmt}）",
+          "tags": [
+            "basic",
+            "no-hit"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "知识库里没有的问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "火星上的天气怎么样？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "无关问题",
+              "n": "1"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "量子纠缠如何通信？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "无关问题二",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(没有相关内容|无法回答|低于阈值)",
+                "weight": 2,
+                "note": "无命中兜底正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-mixed-{n}",
+          "title": "中英混合文档（{fmt}）",
+          "tags": [
+            "basic",
+            "kb"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "回答中英混合知识库的问题",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/mixed.md",
+              "c1": "# Install Guide\n\n安装依赖用 pip install，安装完成后运行 make test 验证。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "怎么安装 install 依赖？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "混合文档",
+              "n": "1"
+            },
+            {
+              "p1": "kb/mixed.md",
+              "c1": "# Testing\n\n运行 make test 执行单元测试，pytest 也可以。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何运行测试？",
+              "topk": "5",
+              "minscore": "0.5",
+              "fmt": "英文文档",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(install|pip|make test|pytest|测试)",
+                "weight": 2,
+                "note": "命中混合文档"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：参数 / 文档形态 / 规模",
+      "description": "top-k、min-score、超长文档、标题层级、txt/json/csv 知识库、10 篇文档、同义词扩展等变体（模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-topk-{n}",
+          "title": "检索片段数（top-k={topk}）",
+          "tags": [
+            "variation",
+            "params"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "验证 top-k 参数",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么安装？",
+              "topk": "3",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么安装？",
+              "topk": "8",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(检索片段数|片段)",
+                "weight": 2,
+                "note": "按 top-k 返回片段"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-minscore-{n}",
+          "title": "命中阈值（min-score={minscore}）",
+          "tags": [
+            "variation",
+            "params"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "验证 min-score 参数",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么安装？",
+              "topk": "5",
+              "minscore": "0.01",
+              "n": "1"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么安装？",
+              "topk": "5",
+              "minscore": "99",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(片段|没有相关内容)",
+                "weight": 2,
+                "note": "阈值行为正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-longdoc-{n}",
+          "title": "超长文档分段（{n}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "处理超长文档",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/long.md",
+              "c1": "# 超长文档\n\n## 小节 1\n\n这是第 1 个小节的内容，描述了模块 1 的使用方式与注意事项。\n\n## 小节 2\n\n这是第 2 个小节的内容，描述了模块 2 的使用方式与注意事项。\n\n## 小节 3\n\n这是第 3 个小节的内容，描述了模块 3 的使用方式与注意事项。\n\n## 小节 4\n\n这是第 4 个小节的内容，描述了模块 4 的使用方式与注意事项。\n\n## 小节 5\n\n这是第 5 个小节的内容，描述了模块 5 的使用方式与注意事项。\n\n## 小节 6\n\n这是第 6 个小节的内容，描述了模块 6 的使用方式与注意事项。\n\n## 小节 7\n\n这是第 7 个小节的内容，描述了模块 7 的使用方式与注意事项。\n\n## 小节 8\n\n这是第 8 个小节的内容，描述了模块 8 的使用方式与注意事项。\n\n## 小节 9\n\n这是第 9 个小节的内容，描述了模块 9 的使用方式与注意事项。\n\n## 小节 10\n\n这是第 10 个小节的内容，描述了模块 10 的使用方式与注意事项。\n\n## 小节 11\n\n这是第 11 个小节的内容，描述了模块 11 的使用方式与注意事项。\n\n## 小节 12\n\n这是第 12 个小节的内容，描述了模块 12 的使用方式与注意事项。\n\n## 小节 13\n\n这是第 13 个小节的内容，描述了模块 13 的使用方式与注意事项。\n\n## 小节 14\n\n这是第 14 个小节的内容，描述了模块 14 的使用方式与注意事项。\n\n## 小节 15\n\n这是第 15 个小节的内容，描述了模块 15 的使用方式与注意事项。\n\n## 小节 16\n\n这是第 16 个小节的内容，描述了模块 16 的使用方式与注意事项。\n\n## 小节 17\n\n这是第 17 个小节的内容，描述了模块 17 的使用方式与注意事项。\n\n## 小节 18\n\n这是第 18 个小节的内容，描述了模块 18 的使用方式与注意事项。\n\n## 小节 19\n\n这是第 19 个小节的内容，描述了模块 19 的使用方式与注意事项。\n\n## 小节 20\n\n这是第 20 个小节的内容，描述了模块 20 的使用方式与注意事项。\n\n## 小节 21\n\n这是第 21 个小节的内容，描述了模块 21 的使用方式与注意事项。\n\n## 小节 22\n\n这是第 22 个小节的内容，描述了模块 22 的使用方式与注意事项。\n\n## 小节 23\n\n这是第 23 个小节的内容，描述了模块 23 的使用方式与注意事项。\n\n## 小节 24\n\n这是第 24 个小节的内容，描述了模块 24 的使用方式与注意事项。\n\n## 小节 25\n\n这是第 25 个小节的内容，描述了模块 25 的使用方式与注意事项。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "小节 3 讲了什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/long.md",
+              "c1": "# 超长文档\n\n## 小节 1\n\n这是第 1 个小节的内容，描述了模块 1 的使用方式与注意事项。\n\n## 小节 2\n\n这是第 2 个小节的内容，描述了模块 2 的使用方式与注意事项。\n\n## 小节 3\n\n这是第 3 个小节的内容，描述了模块 3 的使用方式与注意事项。\n\n## 小节 4\n\n这是第 4 个小节的内容，描述了模块 4 的使用方式与注意事项。\n\n## 小节 5\n\n这是第 5 个小节的内容，描述了模块 5 的使用方式与注意事项。\n\n## 小节 6\n\n这是第 6 个小节的内容，描述了模块 6 的使用方式与注意事项。\n\n## 小节 7\n\n这是第 7 个小节的内容，描述了模块 7 的使用方式与注意事项。\n\n## 小节 8\n\n这是第 8 个小节的内容，描述了模块 8 的使用方式与注意事项。\n\n## 小节 9\n\n这是第 9 个小节的内容，描述了模块 9 的使用方式与注意事项。\n\n## 小节 10\n\n这是第 10 个小节的内容，描述了模块 10 的使用方式与注意事项。\n\n## 小节 11\n\n这是第 11 个小节的内容，描述了模块 11 的使用方式与注意事项。\n\n## 小节 12\n\n这是第 12 个小节的内容，描述了模块 12 的使用方式与注意事项。\n\n## 小节 13\n\n这是第 13 个小节的内容，描述了模块 13 的使用方式与注意事项。\n\n## 小节 14\n\n这是第 14 个小节的内容，描述了模块 14 的使用方式与注意事项。\n\n## 小节 15\n\n这是第 15 个小节的内容，描述了模块 15 的使用方式与注意事项。\n\n## 小节 16\n\n这是第 16 个小节的内容，描述了模块 16 的使用方式与注意事项。\n\n## 小节 17\n\n这是第 17 个小节的内容，描述了模块 17 的使用方式与注意事项。\n\n## 小节 18\n\n这是第 18 个小节的内容，描述了模块 18 的使用方式与注意事项。\n\n## 小节 19\n\n这是第 19 个小节的内容，描述了模块 19 的使用方式与注意事项。\n\n## 小节 20\n\n这是第 20 个小节的内容，描述了模块 20 的使用方式与注意事项。\n\n## 小节 21\n\n这是第 21 个小节的内容，描述了模块 21 的使用方式与注意事项。\n\n## 小节 22\n\n这是第 22 个小节的内容，描述了模块 22 的使用方式与注意事项。\n\n## 小节 23\n\n这是第 23 个小节的内容，描述了模块 23 的使用方式与注意事项。\n\n## 小节 24\n\n这是第 24 个小节的内容，描述了模块 24 的使用方式与注意事项。\n\n## 小节 25\n\n这是第 25 个小节的内容，描述了模块 25 的使用方式与注意事项。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "模块使用方式有哪些？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(片段|检索得分表|小节)",
+                "weight": 2,
+                "note": "长文档分段检索"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-md-{n}",
+          "title": "Markdown 标题层级（{n}）",
+          "tags": [
+            "variation",
+            "format"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "处理多级标题文档",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/deep.md",
+              "c1": "# 手册\n\n## 第一章\n\n### 依赖安装\n\n用 pip 安装依赖。\n\n### 依赖升级\n\n用 pip install -U 升级依赖。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "依赖安装怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/deep.md",
+              "c1": "# 手册\n\n## 第二章\n\n### 依赖升级\n\n升级依赖前先跑测试。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "依赖升级怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(标题路径|片段)",
+                "weight": 2,
+                "note": "保留标题面包屑"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-txt-{n}",
+          "title": "纯文本知识库（{n}）",
+          "tags": [
+            "variation",
+            "format"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "检索 .txt 文档",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/readme.txt",
+              "c1": "备份说明\n\n每天凌晨用 backup.sh 做全量备份，保留 7 天。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "备份怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/readme.txt",
+              "c1": "备份说明\n\n备份文件保留 7 天，过期自动删除。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "保留多少天？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(backup|备份|片段)",
+                "weight": 2,
+                "note": "命中 txt 文档"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-json-{n}",
+          "title": "JSON 知识库（{n}）",
+          "tags": [
+            "variation",
+            "format"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "检索 .json 文档",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/errors.json",
+              "c1": "[{\"code\": 40001, \"message\": \"签名过期\"}, {\"code\": 40002, \"message\": \"参数缺失\"}]",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "错误码 40001 是什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/errors.json",
+              "c1": "[{\"code\": 40001, \"message\": \"签名过期\"}, {\"code\": 40002, \"message\": \"参数缺失\"}]",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "签名过期是哪个错误码？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(40001|签名过期|片段)",
+                "weight": 2,
+                "note": "命中 JSON 文档"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-csv-{n}",
+          "title": "CSV 知识库（{n}）",
+          "tags": [
+            "variation",
+            "format"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "检索 .csv 文档",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/org.csv",
+              "c1": "城市,负责人,电话\n北京,张三,10086\n上海,李四,10010\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "北京的负责人是谁？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/org.csv",
+              "c1": "城市,负责人,电话\n北京,张三,10086\n上海,李四,10010\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "上海的电话是多少？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(张三|李四|10086|10010|片段)",
+                "weight": 2,
+                "note": "命中 CSV 文档"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-many-{n}",
+          "title": "10 篇文档（{n}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "多文档知识库检索",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/doc01.md",
+              "c1": "# 文档 1\n\n第 1 篇文档讲的是主题 1 的相关内容。\n",
+              "p2": "kb/doc02.md",
+              "c2": "# 文档 2\n\n第 2 篇文档讲的是主题 2 的相关内容。\n",
+              "p3": "kb/doc03.md",
+              "c3": "# 文档 3\n\n第 3 篇文档讲的是主题 3 的相关内容。\n",
+              "q": "主题 3 的内容是什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/doc02.md",
+              "c1": "# 文档 2\n\n第 2 篇文档讲的是主题 2 的相关内容。\n",
+              "p2": "kb/doc04.md",
+              "c2": "# 文档 4\n\n第 4 篇文档讲的是主题 4 的相关内容。\n",
+              "p3": "kb/doc05.md",
+              "c3": "# 文档 5\n\n第 5 篇文档讲的是主题 5 的相关内容。\n",
+              "q": "文档 2 说了什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(检索得分表|片段)",
+                "weight": 2,
+                "note": "多文档检索"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-synonym-{n}",
+          "title": "同义词查询扩展（{n}）",
+          "tags": [
+            "variation",
+            "retrieval"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "验证同义词扩展",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/install2.md",
+              "c1": "# 安装说明\n\n安装软件前先安装依赖，安装完成后验证版本。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "怎么安装软件？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/install2.md",
+              "c1": "# 配置说明\n\n配置服务需要修改配置文件里的配置项。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何配置服务？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(安装|配置|片段)",
+                "weight": 2,
+                "note": "同义词扩展命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-short-{n}",
+          "title": "一句话文档（{n}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "极短文档检索",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/short.md",
+              "c1": "最大并发是 500。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "最大并发是多少？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "1"
+            },
+            {
+              "p1": "kb/short2.md",
+              "c1": "超时时间是 30 秒。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "超时时间多长？",
+              "topk": "5",
+              "minscore": "0.5",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 1,
+                "note": "产出标准问答报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 引用清单",
+                "weight": 1,
+                "note": "报告固定结构（引用清单）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(500|30|片段|没有相关内容)",
+                "weight": 2,
+                "note": "短文档检索"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 单行 / 极值",
+      "description": "空知识库、单字文档、超长段落、空格问题、繁体/英文问题等边界输入下的稳定产出（离线检索）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出可读报告，不允许崩溃",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/empty.md",
+              "c1": "",
+              "p2": "kb/.keep",
+              "c2": "",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "有问题吗？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "没有相关内容|片段",
+              "title": "空知识库",
+              "n": "1"
+            },
+            {
+              "p1": "kb/one.md",
+              "c1": "安装\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|没有相关内容",
+              "title": "单字文档",
+              "n": "2"
+            },
+            {
+              "p1": "kb/line.md",
+              "c1": "安装依赖使用 pip install 命令。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段",
+              "title": "单行文档",
+              "n": "3"
+            },
+            {
+              "p1": "kb/huge.md",
+              "c1": "# 超长段落\n\n很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "小节讲了什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "超长单段落",
+              "n": "4"
+            },
+            {
+              "p1": "kb/blank.md",
+              "c1": "\n\n\n\n",
+              "p2": "kb/.keep",
+              "c2": "",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "没有相关内容|片段",
+              "title": "全空行文档",
+              "n": "5"
+            },
+            {
+              "p1": "kb/symbols.md",
+              "c1": "!!!@@@###$$$%%%\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "这是什么符号？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|没有相关内容",
+              "title": "纯符号文档",
+              "n": "6"
+            },
+            {
+              "p1": "kb/emoji.md",
+              "c1": "# 火箭 🚀\n\n火箭 🚀 发射需要倒计时。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "火箭怎么发射？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "emoji 文档",
+              "n": "7"
+            },
+            {
+              "p1": "kb/dup1.md",
+              "c1": "# 重复\n\n重复内容出现三次。\n",
+              "p2": "kb/dup2.md",
+              "c2": "# 重复\n\n重复内容出现三次。\n",
+              "p3": "kb/dup3.md",
+              "c3": "# 重复\n\n重复内容出现三次。\n",
+              "q": "重复内容在哪里？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "重复内容多文档",
+              "n": "8"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": " ",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "知识库问答报告|没有相关内容",
+              "title": "问题只有空格",
+              "n": "9"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "知识库问答报告",
+              "title": "超长问题",
+              "n": "10"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "a.b*c[d]? 正则特殊字符如何处理",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "知识库问答报告|片段",
+              "title": "正则特殊字符问题",
+              "n": "11"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "依賴安裝要怎麼做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|没有相关内容",
+              "title": "繁体问题",
+              "n": "12"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "How to install dependencies?",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|没有相关内容",
+              "title": "英文问题",
+              "n": "13"
+            },
+            {
+              "p1": "kb/a.md",
+              "c1": "# 混合\n\n安装依赖用 pip。\n",
+              "p2": "kb/b.txt",
+              "c2": "安装依赖用 pip。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "md 与 txt 混合",
+              "n": "14"
+            },
+            {
+              "p1": "kb/org.csv",
+              "c1": "城市,负责人\n北京,张三\n上海,李四\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "北京的负责人是谁？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|张三",
+              "title": "CSV 命中",
+              "n": "15"
+            },
+            {
+              "p1": "kb/errors.json",
+              "c1": "[{\"code\": 1, \"message\": \"错误一\"}]",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "错误码是什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|错误一",
+              "title": "JSON 命中",
+              "n": "16"
+            },
+            {
+              "p1": "kb/bom.md",
+              "c1": "﻿# 带 BOM\n\n安装依赖用 pip。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段",
+              "title": "BOM 文档",
+              "n": "17"
+            },
+            {
+              "p1": "kb/crlf.md",
+              "c1": "# 带 CRLF\r\n\r\n安装依赖用 pip。\r\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段",
+              "title": "CRLF 文档",
+              "n": "18"
+            },
+            {
+              "p1": "kb/code.md",
+              "c1": "# 代码\n\n```python\nprint('hello')\n```\n\n调用 foo() 函数。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "代码怎么写？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "代码块文档",
+              "n": "19"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "99",
+              "kw": "没有相关内容",
+              "title": "阈值极高无命中",
+              "n": "20"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 2,
+                "note": "边界输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "边界检索结果符合预期"
+              },
+              {
+                "type": "min_length",
+                "value": 120,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：坏知识库与非法参数",
+      "description": "坏 JSON、乱码、NUL、隐藏目录、非法 top-k/阈值、目录缺失等异常输入下优雅处理不崩溃（离线检索）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃：要么正常检索，要么优雅报错",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/bad.json",
+              "c2": "{bad json",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "坏 JSON 知识库文件",
+              "n": "1"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/mojibake.md",
+              "c2": "鲤鲦鲪 锟斤拷\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "乱码文件",
+              "n": "2"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/nul.md",
+              "c2": "a\u0000b\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "NUL 字节文件",
+              "n": "3"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/big.md",
+              "c2": "# 大文件\n\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n内容内容内容\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "超大文件",
+              "n": "4"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/empty.md",
+              "c2": "",
+              "p3": "kb/bad2.json",
+              "c3": "[[[",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "好文件与坏文件混合",
+              "n": "5"
+            },
+            {
+              "p1": "kb/bad1.json",
+              "c1": "{bad",
+              "p2": "kb/bad2.json",
+              "c2": "[[[",
+              "p3": "kb/bad3.json",
+              "c3": "\"str\"",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "没有相关内容",
+              "title": "全是坏文件",
+              "n": "6"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/怪名字 !@#.md",
+              "c2": "# 怪名字\n\n安装依赖用 pip。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "文件名特殊字符",
+              "n": "7"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/.hidden.md",
+              "c2": "# 隐藏文件\n\n安装依赖用 pip install 从隐藏文件来。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "隐藏文件被跳过",
+              "n": "8"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/.git/config.md",
+              "c2": "# git 配置\n\n安装依赖用 pip install 从 git 目录来。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "git 目录被跳过",
+              "n": "9"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/data.bin",
+              "c2": "（二进制扩展名）\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "非文本扩展名忽略",
+              "n": "10"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "\u0007控制字符问题如何处理？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "知识库问答报告|片段|没有相关内容",
+              "title": "问题含控制字符",
+              "n": "11"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "999",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "超大 top-k",
+              "n": "12"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0",
+              "kw": "片段|检索得分表",
+              "title": "阈值为 0",
+              "n": "13"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "99",
+              "kw": "没有相关内容",
+              "title": "阈值 99 无命中",
+              "n": "14"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "0",
+              "minscore": "0.5",
+              "kw": "未能完成|top-k",
+              "title": "非法参数 top-k=0",
+              "n": "15"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "-1",
+              "kw": "未能完成|min-score",
+              "title": "非法参数 负阈值",
+              "n": "16"
+            },
+            {
+              "p1": "input/misc/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "input/misc/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "input/misc/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "未能完成|知识库目录不存在",
+              "title": "知识库目录不存在",
+              "n": "17"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 只有标题\n#\n#\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "安装依赖怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|没有相关内容",
+              "title": "只有标题行",
+              "n": "18"
+            },
+            {
+              "p1": "kb/table.md",
+              "c1": "# 表格\n\n| 列1 | 列2 |\n| --- | --- |\n| 值1 | 值2 |\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "表格里的内容？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "表格文档",
+              "n": "19"
+            },
+            {
+              "p1": "kb/zero.md",
+              "c1": "# 零宽\n\n零​宽‌字符😀内容。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "零宽字符内容？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段|检索得分表",
+              "title": "零宽与代理对字符",
+              "n": "20"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 2,
+                "note": "异常输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "优雅处理结果符合预期"
+              },
+              {
+                "type": "min_length",
+                "value": 120,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同问题重复检索",
+      "description": "10 个确定性问题各重复调用 10 次（离线检索），断言片段、来源与得分表稳定一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：{title}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "同一问题重复检索 10 次，报告结构与来源应稳定一致",
+            "content": "请根据本地知识库回答问题，并给出来源引用。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              }
+            ],
+            "params": {
+              "q": "{q}",
+              "topk": "{topk}",
+              "minscore": "{minscore}",
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何安装依赖？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "片段",
+              "exact": "### 片段 1：",
+              "title": "命中片段排序",
+              "n": "1"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何安装依赖？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "检索得分表",
+              "exact": "## 检索得分表",
+              "title": "检索得分表",
+              "n": "2"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何安装依赖？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "引用清单",
+              "exact": "## 引用清单",
+              "title": "引用清单结构",
+              "n": "3"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "火星上的天气怎么样？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "没有相关内容",
+              "exact": "知识库里没有相关内容",
+              "title": "无命中兜底",
+              "n": "4"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何安装依赖？",
+              "topk": "2",
+              "minscore": "0.5",
+              "kw": "检索片段数",
+              "exact": "（top-k=2",
+              "title": "top-k 参数稳定",
+              "n": "5"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何安装依赖？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "标题路径",
+              "exact": "标题路径：",
+              "title": "标题面包屑",
+              "n": "6"
+            },
+            {
+              "p1": "kb/org.csv",
+              "c1": "城市,负责人\n北京,张三\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "北京的负责人是谁？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "org.csv",
+              "exact": "org.csv",
+              "title": "CSV 来源引用",
+              "n": "7"
+            },
+            {
+              "p1": "kb/notes.json",
+              "c1": "[{\"code\": 1, \"message\": \"错误一\"}]",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "错误码是什么？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "notes.json",
+              "exact": "notes.json",
+              "title": "JSON 来源引用",
+              "n": "8"
+            },
+            {
+              "p1": "kb/readme.txt",
+              "c1": "备份说明\n\n每天做全量备份。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "备份怎么做？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "readme.txt",
+              "exact": "readme.txt",
+              "title": "txt 来源引用",
+              "n": "9"
+            },
+            {
+              "p1": "kb/guide.md",
+              "c1": "# 产品安装指南\n\n## 依赖安装\n\n使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。\n\n## 虚拟环境\n\n推荐用 python3 -m venv 创建虚拟环境。\n",
+              "p2": "kb/faq.md",
+              "c2": "# 常见问题\n\n## 服务启动失败\n\n服务启动失败时先检查端口占用，再查看日志文件 error.log。\n\n## 忘记密码\n\n忘记密码请联系管理员重置密码。\n",
+              "p3": "kb/notes.md",
+              "c3": "# 杂记\n\n随便写点无关内容，用于干扰检索。\n",
+              "q": "如何安装依赖？",
+              "topk": "5",
+              "minscore": "0.5",
+              "kw": "检索得分表",
+              "exact": "| 排名 | 得分 | 来源 | 标题路径 | 命中词 |",
+              "title": "得分表表头",
+              "n": "10"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "知识库问答报告",
+                "weight": 2,
+                "note": "重复调用仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "检索结论稳定出现"
+              },
+              {
+                "type": "contains",
+                "text": "{exact}",
+                "weight": 2,
+                "note": "断言确定性细节"
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

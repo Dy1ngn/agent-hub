@@ -1,0 +1,606 @@
+id: ts-b-slide-maker-g5-stability
+agentId: slide-maker
+group: g5-stability
+name: 幻灯片生成 · 稳定性：同输入重复调用
+description: 10 个样本各重复 10 次（离线排版模式），验证输出稳定、页数与页脚一致、不崩溃（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：迁移方案
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 1：迁移方案
+      files:
+        - path: input/doc.md
+          content: "# 云平台迁移方案
+
+
+            ## 背景
+
+
+            - 机房租赁合同明年 3 月到期
+
+            - 现有集群运维成本高
+
+
+            ## 迁移方案
+
+
+            - 采用分批迁移策略，先无状态服务
+
+            - 数据库使用 DTS 双写校验
+
+            - 迁移窗口安排在凌晨低峰期
+
+
+            ## 风险与应对
+
+
+            - 回滚预案：保留旧集群两周
+
+            - 演练：正式迁移前全链路演练 2 次\n"
+      params:
+        offline: true
+        topic: 迁移方案
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 迁移方案
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：教程分享
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 2：教程分享
+      files:
+        - path: input/doc.md
+          content: "# Kubernetes 上手教程
+
+
+            ## 安装准备
+
+
+            - 准备 3 台 4C8G 虚拟机
+
+            - 安装 containerd 与 kubeadm
+
+
+            ## 集群搭建
+
+
+            - kubeadm init 初始化控制面
+
+            - 加入 worker 节点
+
+            - 安装 Calico 网络插件
+
+
+            ## 应用部署
+
+
+            - 编写 Deployment 与 Service
+
+            - 配置探针与资源限额
+
+            - 用 Helm 管理发布\n"
+      params:
+        offline: true
+        topic: 教程分享
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 教程分享
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：项目复盘
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 3：项目复盘
+      files:
+        - path: input/doc.md
+          content: "# 项目复盘：秒杀活动
+
+
+            ## 目标达成
+
+
+            - 目标 GMV 500 万，实际完成 620 万
+
+            - 订单峰值 8000 TPS
+
+
+            ## 做得好的
+
+
+            - 缓存预热提前 2 小时完成
+
+            - 限流策略保护了核心链路
+
+
+            ## 待改进
+
+
+            - 库存扣减出现 30 单超卖
+
+            - 监控告警阈值设置不合理
+
+
+            ## 行动项
+
+
+            - 下周完成库存扣减重构
+
+            - 补充压测用例 20 个\n"
+      params:
+        offline: true
+        topic: 项目复盘
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 项目复盘
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：周报
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 4：周报
+      files:
+        - path: input/doc.md
+          content: "# 第 42 周周报
+
+
+            ## 本周完成
+
+
+            - 完成支付网关联调
+
+            - 修复线上缺陷 8 个
+
+
+            ## 下周计划
+
+
+            - 启动对账模块开发
+
+            - 输出接口文档\n"
+      params:
+        offline: true
+        topic: 周报
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 周报
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：数据平台
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 5：数据平台
+      files:
+        - path: input/doc.md
+          content: "# 数据平台建设方案
+
+
+            ## 指标体系
+
+
+            | 指标 | 口径 | 负责人 |
+
+            | --- | --- | --- |
+
+            | DAU | 去重登录用户 | 张三 |
+
+            | GMV | 支付成功金额 | 李四 |
+
+
+            ## 数据链路
+
+
+            - 采集：埋点 SDK + 服务端日志
+
+            - 清洗：Flink 实时任务
+
+            - 应用：指标平台 + 报表\n"
+      params:
+        offline: true
+        topic: 数据平台
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 数据平台
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：Meetup
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 6：Meetup
+      files:
+        - path: input/doc.md
+          content: "# Cloud Native Meetup
+
+
+            ## Agenda
+
+
+            - Keynote: Scaling Kubernetes to 10k nodes
+
+            - Lightning talks from community
+
+
+            ## Speakers
+
+
+            - Alice Chen, Platform Lead
+
+            - Bob Li, SRE
+
+
+            ## Takeaways
+
+
+            - Observability first
+
+            - Automate everything\n"
+      params:
+        offline: true
+        topic: Meetup
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: Meetup
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：混合分享
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 7：混合分享
+      files:
+        - path: input/doc.md
+          content: "# 中英混合技术分享
+
+
+            ## Background
+
+
+            - 服务网格 Service Mesh 落地背景
+
+            - 采用 Istio 作为控制面
+
+
+            ## Practice
+
+
+            - 灰度发布：基于 header 路由
+
+            - 故障注入：注入 5xx 验证容错\n"
+      params:
+        offline: true
+        topic: 混合分享
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 混合分享
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：性能优化
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 8：性能优化
+      files:
+        - path: input/doc.md
+          content: "# 前端性能优化
+
+
+            ## 测量
+
+
+            - 用 Lighthouse 测量性能分
+
+            - 关注 LCP 与 CLS
+
+
+            ## 优化手段
+
+
+            - 代码分割：动态 import
+
+            - 图片：WebP + 懒加载
+
+
+            ## 示例
+
+
+            ```js
+
+            const page = await import('./page.js');
+
+            ```\n"
+      params:
+        offline: true
+        topic: 性能优化
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 性能优化
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：设计系统
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 9：设计系统
+      files:
+        - path: input/doc.md
+          content: "# 🎨 设计系统分享
+
+
+            ## 组件库
+
+
+            - 🔧 基础组件 30 个
+
+            - 📦 业务组件 12 个
+
+
+            ## 落地
+
+
+            - 🚀 三个业务线接入\n"
+      params:
+        offline: true
+        topic: 设计系统
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 设计系统
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：转型报告
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 10：转型报告
+      files:
+        - path: input/doc.md
+          content: "# 城市数字化转型报告
+
+
+            ## 趋势
+
+
+            城市数字化转型正在从单点系统建设走向全域协同。数据要素的价值被重新定义，公共数据授权运营成为新的话题。治理能力成为决定成败的关键因素，需要在制度、技术和组织三个层面同步推进。
+
+
+            ## 挑战
+
+
+            部门墙导致数据共享困难，标准不统一让系统集成成本居高不下。市民感知度低，很多项目建成即闲置。需要以用促建，围绕高频场景打磨亮点。\n"
+      params:
+        offline: true
+        topic: 转型报告
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 转型报告
+          weight: 2
+          note: 主题页脚确定性一致
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

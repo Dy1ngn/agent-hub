@@ -1,0 +1,404 @@
+id: ts-b-interview-prep-g4-robust
+agentId: interview-prep
+group: g4-robust
+name: 面试准备 · 鲁棒性：乱码 / 控制字符 / 缺字段记录
+description: 乱码 JD、控制字符、emoji、零宽字符与缺字段练习记录下优雅处理不崩溃（离线确定性模式）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：JD 乱码
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：JD 乱码
+      files:
+        - path: input/jd.txt
+          content: "职位���\n要求��� Python��"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：JD 控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：JD 控制字符
+      files:
+        - path: input/jd.txt
+          content: "职\a位：开发\n要\x02求：熟悉 Python\a"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：JD emoji 满屏
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：JD emoji 满屏
+      files:
+        - path: input/jd.txt
+          content: "😀🚀 职位：开发工程师 🚀😀\n要求：熟悉 Python 💻"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：JD 纯标点
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：JD 纯标点
+      files:
+        - path: input/jd.txt
+          content: "！！！……###@@@——\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：JD 超长单词
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：JD 超长单词
+      files:
+        - path: input/jd.txt
+          content: "职位：开发
+
+            要求：abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：记录含未知字段
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：记录含未知字段
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: '[{"id": "Q005", "date": "2026-10-18", "score": 5, "note": "复习完成", "extra": "未知字段", "source": "manual"}, {"id": "Q006", "date": "2026-10-19", "note": "缺 score 字段"}, {"id": "Q999", "date": "2026-10-21", "score": 4, "note": "题库外的 id"}]'
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：记录缺 score 字段
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：记录缺 score 字段
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: '[{"id": "Q009", "date": "2026-10-25", "note": "缺 score"}, {"id": "Q010", "date": "2026-10-26"}]'
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：记录含 HTML/SQL
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：记录含 HTML/SQL
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: "[{\"id\": \"Q007\", \"date\": \"2026-10-23\", \"score\": 3, \"note\": \"<script>alert('x')</script>\"}, {\"id\": \"Q008\", \"date\": \"2026-10-24\", \"score\": 4, \"note\": \"SELECT * FROM users; -- 注入样式备注\"}]"
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：JD 零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：JD 零宽字符
+      files:
+        - path: input/jd.txt
+          content: "职​位：开发\n要‌求：熟悉 Python‍\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：JD 中英数乱序
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：JD 中英数乱序
+      files:
+        - path: input/jd.txt
+          content: "zzz 123 中文 abc 混乱 \t\t ### 排序 456 def 异常\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

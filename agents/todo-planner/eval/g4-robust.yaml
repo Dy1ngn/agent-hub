@@ -1,0 +1,458 @@
+id: ts-b-todo-planner-g4-robust
+agentId: todo-planner
+group: g4-robust
+name: 任务拆解 · 鲁棒性：乱码 / 控制字符 / 畸形目标文本
+description: 乱码、控制字符、emoji、零宽字符、未闭合括号、重复与嵌套任务等异常输入下优雅处理不崩溃（离线确定性模式）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：目标乱码
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：目标乱码
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "��目标��\n- ��任务�"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：控制字符
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "控\a制目标\n- 任\x02务一"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：emoji 目标
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：emoji 目标
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "🚀🚀 大目标 😀\n- 📦 任务一\n- 📦 任务二"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：零宽字符
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "零​宽目‌标\n- 任‍务"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合括号引号
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：未闭合括号引号
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: '目标「未闭合
+
+          - 任务（未闭合
+
+          - 任务 "未闭合'
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：同一任务重复 30 行
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：同一任务重复 30 行
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "重复目标
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务
+
+          - 同一个任务"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：五级嵌套列表
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：五级嵌套列表
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "嵌套目标
+
+          - 一级任务
+
+          \  - 二级任务
+
+          \    - 三级任务
+
+          \      - 四级任务
+
+          \        - 五级任务"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：含代码围栏
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：含代码围栏
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "带代码的目标
+
+          ```python
+
+          print('hi')
+
+          ```
+
+          - 任务一"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：日期格式混乱
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：日期格式混乱
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "赶在 2026/13/45 之前完成
+
+          - 任务一 3 天
+
+          - 任务二 2026年99月完成"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：中英数乱序 + 超长单词
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要产出计划
+      content: 异常用例：中英数乱序 + 超长单词
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "zzz 123 中文 abc xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 456 def
+
+          - 任务一"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 异常输入仍产出计划
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

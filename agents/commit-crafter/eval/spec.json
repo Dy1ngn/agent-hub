@@ -1,0 +1,1440 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型改动的提交信息生成",
+      "description": "新增/修复/文档/测试/CI/依赖/多文件/破坏性/性能/锁文件等典型改动，走「diff 直读 + 模型生成」完整链路（启发式候选类型为确定性金标）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-feat-{n}",
+          "title": "新增业务源文件（{lang}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为新增源文件的改动生成规范提交信息",
+            "content": "这批改动新增了一个业务源文件，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "lang": "python",
+              "diff": "diff --git a/src/checkout.py b/src/checkout.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/checkout.py\n@@ -0,0 +1,3 @@\n+def checkout(cart):\n+    total = sum(item.price for item in cart)\n+    return charge(total)\n"
+            },
+            {
+              "n": "2",
+              "lang": "go",
+              "diff": "diff --git a/pkg/pricing.go b/pkg/pricing.go\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/pkg/pricing.go\n@@ -0,0 +1,9 @@\n+package pricing\n+\n+func Total(items []Item) int {\n+\tsum := 0\n+\tfor _, it := range items {\n+\t\tsum += it.Price\n+\t}\n+\treturn sum\n+}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：feat",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-fix-{n}",
+          "title": "修复线上 bug（{lang}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为 bug 修复改动生成规范提交信息",
+            "content": "这批改动修复了一个线上问题，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "lang": "python",
+              "diff": "diff --git a/src/auth.py b/src/auth.py\nindex 1111111..2222222 100644\n--- a/src/auth.py\n+++ b/src/auth.py\n@@ -1,2 +1,4 @@\n-def login(user, password):\n-    return check(user, password)\n+def login(user, password):\n+    if user is None or password is None:\n+        raise ValueError('missing credentials')\n+    return check(user, password)\n"
+            },
+            {
+              "n": "2",
+              "lang": "javascript",
+              "diff": "diff --git a/src/router.js b/src/router.js\nindex 1111111..2222222 100644\n--- a/src/router.js\n+++ b/src/router.js\n@@ -1,3 +1,4 @@\n-function match(path) {\n-  return routes[path].handler;\n-}\n+function match(path) {\n+  const route = routes[path];\n+  return route ? route.handler : notFound;\n+}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：fix",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-docs-{n}",
+          "title": "纯文档改动（{file}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为文档改动生成规范提交信息",
+            "content": "这批改动只动了文档，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "file": "README.md",
+              "diff": "diff --git a/README.md b/README.md\nindex 1111111..2222222 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,3 +1,3 @@\n-# 项目\n-\n-简介待补充。\n+# 项目\n+\n+本项目提供订单结算服务，支持优惠券与积分抵扣。\n"
+            },
+            {
+              "n": "2",
+              "file": "docs/guide.md",
+              "diff": "diff --git a/docs/guide.md b/docs/guide.md\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/docs/guide.md\n@@ -0,0 +1,5 @@\n+# 快速开始\n+\n+1. 安装依赖\n+2. 启动服务\n+3. 访问 /health\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：docs",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-test-{n}",
+          "title": "补充测试（{file}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为测试改动生成规范提交信息",
+            "content": "这批改动只补充了测试，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "file": "tests/test_auth.py",
+              "diff": "diff --git a/tests/test_auth.py b/tests/test_auth.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/tests/test_auth.py\n@@ -0,0 +1,6 @@\n+import pytest\n+from src.auth import login\n+\n+def test_login_rejects_empty_password():\n+    with pytest.raises(ValueError):\n+        login('alice', '')\n"
+            },
+            {
+              "n": "2",
+              "file": "tests/test_cart_test.go",
+              "diff": "diff --git a/tests/cart_test.go b/tests/cart_test.go\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/tests/cart_test.go\n@@ -0,0 +1,9 @@\n+package tests\n+\n+import \"testing\"\n+\n+func TestEmptyCart(t *testing.T) {\n+\tif Total(nil) != 0 {\n+\t\tt.Fatal(\"empty cart should be 0\")\n+\t}\n+}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：test",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-ci-{n}",
+          "title": "调整 CI 配置（{file}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为 CI 配置改动生成规范提交信息",
+            "content": "这批改动只调整了 CI 配置，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "file": ".github/workflows/ci.yml",
+              "diff": "diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/.github/workflows/ci.yml\n@@ -0,0 +1,8 @@\n+name: CI\n+on: [push]\n+jobs:\n+  test:\n+    runs-on: ubuntu-latest\n+    steps:\n+      - uses: actions/checkout@v4\n+      - run: pytest\n"
+            },
+            {
+              "n": "2",
+              "file": ".gitlab-ci.yml",
+              "diff": "diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml\nindex 1111111..2222222 100644\n--- a/.gitlab-ci.yml\n+++ b/.gitlab-ci.yml\n@@ -1,2 +1,3 @@\n-test:\n-  script: pytest -q\n+test:\n+  script: pytest -q --maxfail=1\n+  timeout: 10m\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：ci",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-deps-{n}",
+          "title": "依赖版本升级（{file}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为依赖升级改动生成规范提交信息",
+            "content": "这批改动只升级了依赖版本，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "file": "package.json",
+              "diff": "diff --git a/package.json b/package.json\nindex 1111111..2222222 100644\n--- a/package.json\n+++ b/package.json\n@@ -1,3 +1,3 @@\n-  \"dependencies\": {\n-    \"lodash\": \"4.17.20\"\n-  }\n+  \"dependencies\": {\n+    \"lodash\": \"4.17.21\"\n+  }\n"
+            },
+            {
+              "n": "2",
+              "file": "requirements.txt",
+              "diff": "diff --git a/requirements.txt b/requirements.txt\nindex 1111111..2222222 100644\n--- a/requirements.txt\n+++ b/requirements.txt\n@@ -1,2 +1,2 @@\n-requests==2.28.1\n-flask==2.2.2\n+requests==2.31.0\n+flask==2.3.2\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：build",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-multi-{n}",
+          "title": "多文件混合改动（{kind}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为多文件混合改动生成规范提交信息",
+            "content": "这批改动同时涉及源码和文档，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "kind": "新模块+文档",
+              "diff": "diff --git a/src/refund.py b/src/refund.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/refund.py\n@@ -0,0 +1,2 @@\n+def refund(order):\n+    return gateway.refund(order.id)\ndiff --git a/README.md b/README.md\nindex 1111111..2222222 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,1 +1,1 @@\n-支持下单。\n+支持下单与退款。\n"
+            },
+            {
+              "n": "2",
+              "kind": "新功能+修复",
+              "diff": "diff --git a/src/notify.py b/src/notify.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/notify.py\n@@ -0,0 +1,2 @@\n+def notify(user):\n+    return mailer.send(user.email)\ndiff --git a/src/b.py b/src/b.py\nindex 1111111..2222222 100644\n--- a/src/b.py\n+++ b/src/b.py\n@@ -1,2 +1,2 @@\n-def g(y):\n-    return y[0]\n+def g(y):\n+    return y[0] if y else None\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：feat",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-breaking-{n}",
+          "title": "删除公开接口（{file}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为删除接口的破坏性改动生成规范提交信息",
+            "content": "这批改动删除了一个对外接口，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "file": "src/api.py",
+              "diff": "diff --git a/src/api.py b/src/api.py\nindex 1111111..2222222 100644\n--- a/src/api.py\n+++ b/src/api.py\n@@ -1,2 +1,1 @@\n-def legacy_report(user):\n-    return build_report(user)\n+# legacy_report 已下线\n"
+            },
+            {
+              "n": "2",
+              "file": "src/legacy.go",
+              "diff": "diff --git a/src/legacy.go b/src/legacy.go\ndeleted file mode 100644\nindex 1111111..0000000\n--- a/src/legacy.go\n+++ /dev/null\n@@ -1,5 +0,0 @@\n-package src\n-\n-func Legacy() {\n-\t// deprecated\n-}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：fix",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-perf-{n}",
+          "title": "性能优化改动（{file}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为性能优化改动生成规范提交信息",
+            "content": "这批改动优化了热点路径性能，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "file": "src/report.py",
+              "diff": "diff --git a/src/report.py b/src/report.py\nindex 1111111..2222222 100644\n--- a/src/report.py\n+++ b/src/report.py\n@@ -1,5 +1,2 @@\n-def build_report(ids):\n-    rows = []\n-    for i in ids:\n-        rows.append(db.get(i))\n-    return rows\n+def build_report(ids):\n+    return db.get_many(ids)\n"
+            },
+            {
+              "n": "2",
+              "file": "src/cache.js",
+              "diff": "diff --git a/src/cache.js b/src/cache.js\nindex 1111111..2222222 100644\n--- a/src/cache.js\n+++ b/src/cache.js\n@@ -1,3 +1,7 @@\n-function get(key) {\n-  return db.query('SELECT v FROM kv WHERE k=?', key);\n-}\n+const memo = new Map();\n+function get(key) {\n+  if (memo.has(key)) return memo.get(key);\n+  const v = db.query('SELECT v FROM kv WHERE k=?', key);\n+  memo.set(key, v);\n+  return v;\n+}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：fix",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-lock-{n}",
+          "title": "锁文件同步（{file}）",
+          "tags": [
+            "commit"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "为锁文件同步改动生成规范提交信息",
+            "content": "这批改动只同步了依赖锁文件，请生成提交信息预览。",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "file": "package-lock.json",
+              "diff": "diff --git a/package-lock.json b/package-lock.json\nindex 1111111..2222222 100644\n--- a/package-lock.json\n+++ b/package-lock.json\n@@ -1,2 +1,2 @@\n-  \"lockfileVersion\": 2,\n-  \"resolved\": \"https://registry/lodash/-/lodash-4.17.20.tgz\",\n+  \"lockfileVersion\": 2,\n+  \"resolved\": \"https://registry/lodash/-/lodash-4.17.21.tgz\",\n"
+            },
+            {
+              "n": "2",
+              "file": "poetry.lock",
+              "diff": "diff --git a/poetry.lock b/poetry.lock\nindex 1111111..2222222 100644\n--- a/poetry.lock\n+++ b/poetry.lock\n@@ -1,2 +1,2 @@\n-name = \"requests\"\n-version = \"2.28.1\"\n+name = \"requests\"\n+version = \"2.31.0\"\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1,
+                "note": "产出标准预览报告"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：chore",
+                "weight": 2,
+                "note": "启发式类型判定确定性正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "最终 subject 带合规 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：风格 / 语言 / 规模 / 参数",
+      "description": "conventional/gitmoji/plain 三种风格、zh/en 两种语言，叠加 diff 形态与 --max-diff-chars 参数变体（模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-style-{n}",
+          "title": "{shape} · 风格 {style}",
+          "tags": [
+            "variation",
+            "style"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "用指定提交信息风格为改动生成提交信息",
+            "content": "风格变体样本 {n}（{shape} / {style}）",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "{style}",
+              "lang": "zh",
+              "maxchars": "60000"
+            }
+          },
+          "repeat": 2,
+          "rows": [
+            {
+              "n": "1",
+              "shape": "单行修改",
+              "diff": "diff --git a/src/config.py b/src/config.py\nindex 1111111..2222222 100644\n--- a/src/config.py\n+++ b/src/config.py\n@@ -1,1 +1,1 @@\n-TIMEOUT = 30\n+TIMEOUT = 60\n"
+            },
+            {
+              "n": "2",
+              "shape": "函数重写",
+              "diff": "diff --git a/src/parse.py b/src/parse.py\nindex 1111111..2222222 100644\n--- a/src/parse.py\n+++ b/src/parse.py\n@@ -1,2 +1,4 @@\n-def parse(raw):\n-    return raw.split('|')\n+def parse(raw):\n+    if not raw:\n+        return []\n+    return [p.strip() for p in raw.split('|') if p.strip()\n"
+            },
+            {
+              "n": "3",
+              "shape": "多文件混合",
+              "diff": "diff --git a/src/a.py b/src/a.py\nindex 1111111..2222222 100644\n--- a/src/a.py\n+++ b/src/a.py\n@@ -1,1 +1,1 @@\n-A = 1\n+A = 2\ndiff --git a/src/b.py b/src/b.py\nindex 1111111..2222222 100644\n--- a/src/b.py\n+++ b/src/b.py\n@@ -1,1 +1,1 @@\n-B = 1\n+B = 2\ndiff --git a/docs/api.md b/docs/api.md\nindex 1111111..2222222 100644\n--- a/docs/api.md\n+++ b/docs/api.md\n@@ -1,1 +1,1 @@\n-接口 v1\n+接口 v2\ndiff --git a/tests/test_a.py b/tests/test_a.py\nindex 1111111..2222222 100644\n--- a/tests/test_a.py\n+++ b/tests/test_a.py\n@@ -1,1 +1,1 @@\n-assert a() == 1\n+assert a() == 2\n"
+            },
+            {
+              "n": "4",
+              "shape": "大 diff",
+              "diff": "diff --git a/src/big.py b/src/big.py\nindex 1111111..2222222 100644\n--- a/src/big.py\n+++ b/src/big.py\n@@ -1,13 +1,13 @@\n-def f0(x):\n-def f1(x):\n-def f2(x):\n-def f3(x):\n-def f4(x):\n-def f5(x):\n-def f6(x):\n-def f7(x):\n-def f8(x):\n-def f9(x):\n-def f10(x):\n-def f11(x):\n-    return x\n+def f0(x):\n+def f1(x):\n+def f2(x):\n+def f3(x):\n+def f4(x):\n+def f5(x):\n+def f6(x):\n+def f7(x):\n+def f8(x):\n+def f9(x):\n+def f10(x):\n+def f11(x):\n+    return x * 2\n"
+            },
+            {
+              "n": "5",
+              "shape": "超多文件",
+              "diff": "diff --git a/src/mod0.py b/src/mod0.py\nindex 1111111..2222222 100644\n--- a/src/mod0.py\n+++ b/src/mod0.py\n@@ -1,1 +1,1 @@\n-V = 0\n+V = 1\ndiff --git a/src/mod1.py b/src/mod1.py\nindex 1111111..2222222 100644\n--- a/src/mod1.py\n+++ b/src/mod1.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/mod2.py b/src/mod2.py\nindex 1111111..2222222 100644\n--- a/src/mod2.py\n+++ b/src/mod2.py\n@@ -1,1 +1,1 @@\n-V = 2\n+V = 3\ndiff --git a/src/mod3.py b/src/mod3.py\nindex 1111111..2222222 100644\n--- a/src/mod3.py\n+++ b/src/mod3.py\n@@ -1,1 +1,1 @@\n-V = 3\n+V = 4\ndiff --git a/src/mod4.py b/src/mod4.py\nindex 1111111..2222222 100644\n--- a/src/mod4.py\n+++ b/src/mod4.py\n@@ -1,1 +1,1 @@\n-V = 4\n+V = 5\ndiff --git a/src/mod5.py b/src/mod5.py\nindex 1111111..2222222 100644\n--- a/src/mod5.py\n+++ b/src/mod5.py\n@@ -1,1 +1,1 @@\n-V = 5\n+V = 6\ndiff --git a/src/mod6.py b/src/mod6.py\nindex 1111111..2222222 100644\n--- a/src/mod6.py\n+++ b/src/mod6.py\n@@ -1,1 +1,1 @@\n-V = 6\n+V = 7\ndiff --git a/src/mod7.py b/src/mod7.py\nindex 1111111..2222222 100644\n--- a/src/mod7.py\n+++ b/src/mod7.py\n@@ -1,1 +1,1 @@\n-V = 7\n+V = 8\ndiff --git a/src/mod8.py b/src/mod8.py\nindex 1111111..2222222 100644\n--- a/src/mod8.py\n+++ b/src/mod8.py\n@@ -1,1 +1,1 @@\n-V = 8\n+V = 9\ndiff --git a/src/mod9.py b/src/mod9.py\nindex 1111111..2222222 100644\n--- a/src/mod9.py\n+++ b/src/mod9.py\n@@ -1,1 +1,1 @@\n-V = 9\n+V = 10\ndiff --git a/src/mod10.py b/src/mod10.py\nindex 1111111..2222222 100644\n--- a/src/mod10.py\n+++ b/src/mod10.py\n@@ -1,1 +1,1 @@\n-V = 10\n+V = 11\ndiff --git a/src/mod11.py b/src/mod11.py\nindex 1111111..2222222 100644\n--- a/src/mod11.py\n+++ b/src/mod11.py\n@@ -1,1 +1,1 @@\n-V = 11\n+V = 12\ndiff --git a/src/mod12.py b/src/mod12.py\nindex 1111111..2222222 100644\n--- a/src/mod12.py\n+++ b/src/mod12.py\n@@ -1,1 +1,1 @@\n-V = 12\n+V = 13\ndiff --git a/src/mod13.py b/src/mod13.py\nindex 1111111..2222222 100644\n--- a/src/mod13.py\n+++ b/src/mod13.py\n@@ -1,1 +1,1 @@\n-V = 13\n+V = 14\ndiff --git a/src/mod14.py b/src/mod14.py\nindex 1111111..2222222 100644\n--- a/src/mod14.py\n+++ b/src/mod14.py\n@@ -1,1 +1,1 @@\n-V = 14\n+V = 15\ndiff --git a/src/mod15.py b/src/mod15.py\nindex 1111111..2222222 100644\n--- a/src/mod15.py\n+++ b/src/mod15.py\n@@ -1,1 +1,1 @@\n-V = 15\n+V = 16\ndiff --git a/src/mod16.py b/src/mod16.py\nindex 1111111..2222222 100644\n--- a/src/mod16.py\n+++ b/src/mod16.py\n@@ -1,1 +1,1 @@\n-V = 16\n+V = 17\ndiff --git a/src/mod17.py b/src/mod17.py\nindex 1111111..2222222 100644\n--- a/src/mod17.py\n+++ b/src/mod17.py\n@@ -1,1 +1,1 @@\n-V = 17\n+V = 18\ndiff --git a/src/mod18.py b/src/mod18.py\nindex 1111111..2222222 100644\n--- a/src/mod18.py\n+++ b/src/mod18.py\n@@ -1,1 +1,1 @@\n-V = 18\n+V = 19\ndiff --git a/src/mod19.py b/src/mod19.py\nindex 1111111..2222222 100644\n--- a/src/mod19.py\n+++ b/src/mod19.py\n@@ -1,1 +1,1 @@\n-V = 19\n+V = 20\n"
+            },
+            {
+              "n": "6",
+              "shape": "新增+删除混合",
+              "diff": "diff --git a/src/new_mod.py b/src/new_mod.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/new_mod.py\n@@ -0,0 +1,2 @@\n+def new():\n+    return 1\ndiff --git a/src/old_mod.py b/src/old_mod.py\ndeleted file mode 100644\nindex 1111111..0000000\n--- a/src/old_mod.py\n+++ /dev/null\n@@ -1,2 +0,0 @@\n-def old():\n-    return 0\n"
+            },
+            {
+              "n": "7",
+              "shape": "重命名文件",
+              "diff": "diff --git a/src/util.py b/src/helpers.py\nsimilarity index 90%\nrename from src/util.py\nrename to src/helpers.py\nindex 1111111..2222222 100644\n--- a/src/util.py\n+++ b/src/helpers.py\n@@ -1,3 +1,3 @@\n-def helper(x):\n-    return x\n+def helper(x):\n+    return x if x is not None else 0\n"
+            },
+            {
+              "n": "8",
+              "shape": "二进制文件",
+              "diff": "diff --git a/assets/logo.png b/assets/logo.png\nindex 1111111..2222222 100644\nBinary files a/assets/logo.png and b/assets/logo.png differ\ndiff --git a/src/app.py b/src/app.py\nindex 1111111..2222222 100644\n--- a/src/app.py\n+++ b/src/app.py\n@@ -1,1 +1,1 @@\n-LOGO = 'old.png'\n+LOGO = 'logo.png'\n"
+            },
+            {
+              "n": "9",
+              "shape": "中文路径与注释",
+              "diff": "diff --git a/文档/说明.md b/文档/说明.md\nindex 1111111..2222222 100644\n--- a/文档/说明.md\n+++ b/文档/说明.md\n@@ -1,2 +1,2 @@\n-# 说明\n-内容待补充。\n+# 说明\n+补充了结算流程说明：下单、支付、退款。\n"
+            },
+            {
+              "n": "10",
+              "shape": "多 hunk",
+              "diff": "diff --git a/src/svc.py b/src/svc.py\nindex 1111111..2222222 100644\n--- a/src/svc.py\n+++ b/src/svc.py\n@@ -1,2 +1,2 @@\n-VERSION = '1.0'\n+VERSION = '1.1'\n@@ -10,3 +10,5 @@ def run():\n     start()\n-    wait()\n+    retry = 3\n+    for _ in range(retry):\n+        wait()\n     stop()\n"
+            }
+          ],
+          "vars": {
+            "style": [
+              "conventional",
+              "gitmoji",
+              "plain"
+            ]
+          },
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "三种风格下 subject 仍带 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-lang-{n}",
+          "title": "{shape} · 语言 {lang}",
+          "tags": [
+            "variation",
+            "language",
+            "scale"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "用指定正文语言为改动生成提交信息",
+            "content": "语言变体样本 {n}（{shape} / {lang}）",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "{lang}",
+              "maxchars": "{maxchars}"
+            }
+          },
+          "repeat": 2,
+          "rows": [
+            {
+              "n": "1",
+              "shape": "极小截断参数",
+              "maxchars": "1",
+              "diff": "diff --git a/src/a.py b/src/a.py\nindex 1111111..2222222 100644\n--- a/src/a.py\n+++ b/src/a.py\n@@ -1,1 +1,1 @@\n-A = 1\n+A = 2\n"
+            },
+            {
+              "n": "2",
+              "shape": "小截断参数",
+              "maxchars": "100",
+              "diff": "diff --git a/src/b.py b/src/b.py\nindex 1111111..2222222 100644\n--- a/src/b.py\n+++ b/src/b.py\n@@ -1,2 +1,2 @@\n-def f():\n-    return 1\n+def f():\n+    return 2\n"
+            },
+            {
+              "n": "3",
+              "shape": "中截断参数",
+              "maxchars": "500",
+              "diff": "diff --git a/src/c.py b/src/c.py\nindex 1111111..2222222 100644\n--- a/src/c.py\n+++ b/src/c.py\n@@ -1,6 +1,6 @@\n-def f0():\n    return 0\n-def f1():\n    return 1\n-def f2():\n    return 2\n-def f3():\n    return 3\n-def f4():\n    return 4\n-def f5():\n    return 5\n+def f0():\n    return 0\n+def f1():\n    return 2\n+def f2():\n    return 4\n+def f3():\n    return 6\n+def f4():\n    return 8\n+def f5():\n    return 10\n"
+            },
+            {
+              "n": "4",
+              "shape": "超长单行",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/d.py b/src/d.py\nindex 1111111..2222222 100644\n--- a/src/d.py\n+++ b/src/d.py\n@@ -1,1 +1,1 @@\n-X = 1\n+X = 2  # 改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明改动说明\n"
+            },
+            {
+              "n": "5",
+              "shape": "大 diff",
+              "maxchars": "1000000",
+              "diff": "diff --git a/src/e.py b/src/e.py\nindex 1111111..2222222 100644\n--- a/src/e.py\n+++ b/src/e.py\n@@ -1,11 +1,11 @@\n-def g0(x):\n-def g1(x):\n-def g2(x):\n-def g3(x):\n-def g4(x):\n-def g5(x):\n-def g6(x):\n-def g7(x):\n-def g8(x):\n-def g9(x):\n-    return x\n+def g0(x):\n+def g1(x):\n+def g2(x):\n+def g3(x):\n+def g4(x):\n+def g5(x):\n+def g6(x):\n+def g7(x):\n+def g8(x):\n+def g9(x):\n+    return x + 1\n"
+            },
+            {
+              "n": "6",
+              "shape": "多文件",
+              "maxchars": "5000",
+              "diff": "diff --git a/src/m0.py b/src/m0.py\nindex 1111111..2222222 100644\n--- a/src/m0.py\n+++ b/src/m0.py\n@@ -1,1 +1,1 @@\n-M = 0\n+M = 0\ndiff --git a/src/m1.py b/src/m1.py\nindex 1111111..2222222 100644\n--- a/src/m1.py\n+++ b/src/m1.py\n@@ -1,1 +1,1 @@\n-M = 1\n+M = 10\ndiff --git a/src/m2.py b/src/m2.py\nindex 1111111..2222222 100644\n--- a/src/m2.py\n+++ b/src/m2.py\n@@ -1,1 +1,1 @@\n-M = 2\n+M = 20\ndiff --git a/src/m3.py b/src/m3.py\nindex 1111111..2222222 100644\n--- a/src/m3.py\n+++ b/src/m3.py\n@@ -1,1 +1,1 @@\n-M = 3\n+M = 30\ndiff --git a/src/m4.py b/src/m4.py\nindex 1111111..2222222 100644\n--- a/src/m4.py\n+++ b/src/m4.py\n@@ -1,1 +1,1 @@\n-M = 4\n+M = 40\ndiff --git a/src/m5.py b/src/m5.py\nindex 1111111..2222222 100644\n--- a/src/m5.py\n+++ b/src/m5.py\n@@ -1,1 +1,1 @@\n-M = 5\n+M = 50\n"
+            },
+            {
+              "n": "7",
+              "shape": "纯文档",
+              "maxchars": "60000",
+              "diff": "diff --git a/docs/runbook.md b/docs/runbook.md\nindex 1111111..2222222 100644\n--- a/docs/runbook.md\n+++ b/docs/runbook.md\n@@ -1,1 +1,4 @@\n-# 手册\n+# 手册\n+\n+## 应急流程\n+1. 回滚 2. 通知 3. 复盘\n"
+            },
+            {
+              "n": "8",
+              "shape": "依赖升级",
+              "maxchars": "60000",
+              "diff": "diff --git a/package.json b/package.json\nindex 1111111..2222222 100644\n--- a/package.json\n+++ b/package.json\n@@ -1,1 +1,1 @@\n-  \"axios\": \"1.3.0\"\n+  \"axios\": \"1.6.0\"\n"
+            },
+            {
+              "n": "9",
+              "shape": "删除接口",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/deprecated.py b/src/deprecated.py\ndeleted file mode 100644\nindex 1111111..0000000\n--- a/src/deprecated.py\n+++ /dev/null\n@@ -1,2 +0,0 @@\n-def old_api():\n-    raise NotImplementedError\n"
+            },
+            {
+              "n": "10",
+              "shape": "单字符 diff",
+              "maxchars": "60000",
+              "diff": "x"
+            }
+          ],
+          "vars": {
+            "lang": [
+              "zh",
+              "en"
+            ]
+          },
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "中英文正文下 subject 仍带 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 120,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 超短 / 超长 / 极端参数",
+      "description": "空 diff、单字符、超长单行、超多文件、截断参数等边界输入下的稳定产出（离线启发式模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "边界输入也要产出结构完整的提交信息预览",
+            "content": "边界用例：{title}",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "{maxchars}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "title": "空 diff（0 字节）",
+              "maxchars": "60000",
+              "diff": ""
+            },
+            {
+              "n": "2",
+              "title": "只有空白与换行",
+              "maxchars": "60000",
+              "diff": "\n\n \n \n\n"
+            },
+            {
+              "n": "3",
+              "title": "单字符 diff",
+              "maxchars": "60000",
+              "diff": "x"
+            },
+            {
+              "n": "4",
+              "title": "超短合法 diff",
+              "maxchars": "60000",
+              "diff": "diff --git a/a.py b/a.py\nindex 1111111..2222222 100644\n--- a/a.py\n+++ b/a.py\n@@ -1,1 +1,1 @@\n-A = 1\n+A = 2\n"
+            },
+            {
+              "n": "5",
+              "title": "超长单行",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/long.py b/src/long.py\nindex 1111111..2222222 100644\n--- a/src/long.py\n+++ b/src/long.py\n@@ -1,1 +1,1 @@\n-X = 1\n+X = 2  # 改动说明：这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长\n"
+            },
+            {
+              "n": "6",
+              "title": "超多文件（30 个）",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/m0.py b/src/m0.py\nindex 1111111..2222222 100644\n--- a/src/m0.py\n+++ b/src/m0.py\n@@ -1,1 +1,1 @@\n-V = 0\n+V = 1\ndiff --git a/src/m1.py b/src/m1.py\nindex 1111111..2222222 100644\n--- a/src/m1.py\n+++ b/src/m1.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/m2.py b/src/m2.py\nindex 1111111..2222222 100644\n--- a/src/m2.py\n+++ b/src/m2.py\n@@ -1,1 +1,1 @@\n-V = 2\n+V = 3\ndiff --git a/src/m3.py b/src/m3.py\nindex 1111111..2222222 100644\n--- a/src/m3.py\n+++ b/src/m3.py\n@@ -1,1 +1,1 @@\n-V = 3\n+V = 4\ndiff --git a/src/m4.py b/src/m4.py\nindex 1111111..2222222 100644\n--- a/src/m4.py\n+++ b/src/m4.py\n@@ -1,1 +1,1 @@\n-V = 4\n+V = 5\ndiff --git a/src/m5.py b/src/m5.py\nindex 1111111..2222222 100644\n--- a/src/m5.py\n+++ b/src/m5.py\n@@ -1,1 +1,1 @@\n-V = 5\n+V = 6\ndiff --git a/src/m6.py b/src/m6.py\nindex 1111111..2222222 100644\n--- a/src/m6.py\n+++ b/src/m6.py\n@@ -1,1 +1,1 @@\n-V = 6\n+V = 7\ndiff --git a/src/m7.py b/src/m7.py\nindex 1111111..2222222 100644\n--- a/src/m7.py\n+++ b/src/m7.py\n@@ -1,1 +1,1 @@\n-V = 7\n+V = 8\ndiff --git a/src/m8.py b/src/m8.py\nindex 1111111..2222222 100644\n--- a/src/m8.py\n+++ b/src/m8.py\n@@ -1,1 +1,1 @@\n-V = 8\n+V = 9\ndiff --git a/src/m9.py b/src/m9.py\nindex 1111111..2222222 100644\n--- a/src/m9.py\n+++ b/src/m9.py\n@@ -1,1 +1,1 @@\n-V = 9\n+V = 10\ndiff --git a/src/m10.py b/src/m10.py\nindex 1111111..2222222 100644\n--- a/src/m10.py\n+++ b/src/m10.py\n@@ -1,1 +1,1 @@\n-V = 10\n+V = 11\ndiff --git a/src/m11.py b/src/m11.py\nindex 1111111..2222222 100644\n--- a/src/m11.py\n+++ b/src/m11.py\n@@ -1,1 +1,1 @@\n-V = 11\n+V = 12\ndiff --git a/src/m12.py b/src/m12.py\nindex 1111111..2222222 100644\n--- a/src/m12.py\n+++ b/src/m12.py\n@@ -1,1 +1,1 @@\n-V = 12\n+V = 13\ndiff --git a/src/m13.py b/src/m13.py\nindex 1111111..2222222 100644\n--- a/src/m13.py\n+++ b/src/m13.py\n@@ -1,1 +1,1 @@\n-V = 13\n+V = 14\ndiff --git a/src/m14.py b/src/m14.py\nindex 1111111..2222222 100644\n--- a/src/m14.py\n+++ b/src/m14.py\n@@ -1,1 +1,1 @@\n-V = 14\n+V = 15\ndiff --git a/src/m15.py b/src/m15.py\nindex 1111111..2222222 100644\n--- a/src/m15.py\n+++ b/src/m15.py\n@@ -1,1 +1,1 @@\n-V = 15\n+V = 16\ndiff --git a/src/m16.py b/src/m16.py\nindex 1111111..2222222 100644\n--- a/src/m16.py\n+++ b/src/m16.py\n@@ -1,1 +1,1 @@\n-V = 16\n+V = 17\ndiff --git a/src/m17.py b/src/m17.py\nindex 1111111..2222222 100644\n--- a/src/m17.py\n+++ b/src/m17.py\n@@ -1,1 +1,1 @@\n-V = 17\n+V = 18\ndiff --git a/src/m18.py b/src/m18.py\nindex 1111111..2222222 100644\n--- a/src/m18.py\n+++ b/src/m18.py\n@@ -1,1 +1,1 @@\n-V = 18\n+V = 19\ndiff --git a/src/m19.py b/src/m19.py\nindex 1111111..2222222 100644\n--- a/src/m19.py\n+++ b/src/m19.py\n@@ -1,1 +1,1 @@\n-V = 19\n+V = 20\ndiff --git a/src/m20.py b/src/m20.py\nindex 1111111..2222222 100644\n--- a/src/m20.py\n+++ b/src/m20.py\n@@ -1,1 +1,1 @@\n-V = 20\n+V = 21\ndiff --git a/src/m21.py b/src/m21.py\nindex 1111111..2222222 100644\n--- a/src/m21.py\n+++ b/src/m21.py\n@@ -1,1 +1,1 @@\n-V = 21\n+V = 22\ndiff --git a/src/m22.py b/src/m22.py\nindex 1111111..2222222 100644\n--- a/src/m22.py\n+++ b/src/m22.py\n@@ -1,1 +1,1 @@\n-V = 22\n+V = 23\ndiff --git a/src/m23.py b/src/m23.py\nindex 1111111..2222222 100644\n--- a/src/m23.py\n+++ b/src/m23.py\n@@ -1,1 +1,1 @@\n-V = 23\n+V = 24\ndiff --git a/src/m24.py b/src/m24.py\nindex 1111111..2222222 100644\n--- a/src/m24.py\n+++ b/src/m24.py\n@@ -1,1 +1,1 @@\n-V = 24\n+V = 25\ndiff --git a/src/m25.py b/src/m25.py\nindex 1111111..2222222 100644\n--- a/src/m25.py\n+++ b/src/m25.py\n@@ -1,1 +1,1 @@\n-V = 25\n+V = 26\ndiff --git a/src/m26.py b/src/m26.py\nindex 1111111..2222222 100644\n--- a/src/m26.py\n+++ b/src/m26.py\n@@ -1,1 +1,1 @@\n-V = 26\n+V = 27\ndiff --git a/src/m27.py b/src/m27.py\nindex 1111111..2222222 100644\n--- a/src/m27.py\n+++ b/src/m27.py\n@@ -1,1 +1,1 @@\n-V = 27\n+V = 28\ndiff --git a/src/m28.py b/src/m28.py\nindex 1111111..2222222 100644\n--- a/src/m28.py\n+++ b/src/m28.py\n@@ -1,1 +1,1 @@\n-V = 28\n+V = 29\ndiff --git a/src/m29.py b/src/m29.py\nindex 1111111..2222222 100644\n--- a/src/m29.py\n+++ b/src/m29.py\n@@ -1,1 +1,1 @@\n-V = 29\n+V = 30\n"
+            },
+            {
+              "n": "7",
+              "title": "超大 diff（触发截断）",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/big0.py b/src/big0.py\nindex 1111111..2222222 100644\n--- a/src/big0.py\n+++ b/src/big0.py\n@@ -1,2 +1,2 @@\n-def f0(x):\n-    return x\n+def f0(x):\n+    return x * 3\ndiff --git a/src/big1.py b/src/big1.py\nindex 1111111..2222222 100644\n--- a/src/big1.py\n+++ b/src/big1.py\n@@ -1,2 +1,2 @@\n-def f1(x):\n-    return x\n+def f1(x):\n+    return x * 3\ndiff --git a/src/big2.py b/src/big2.py\nindex 1111111..2222222 100644\n--- a/src/big2.py\n+++ b/src/big2.py\n@@ -1,2 +1,2 @@\n-def f2(x):\n-    return x\n+def f2(x):\n+    return x * 3\ndiff --git a/src/big3.py b/src/big3.py\nindex 1111111..2222222 100644\n--- a/src/big3.py\n+++ b/src/big3.py\n@@ -1,2 +1,2 @@\n-def f3(x):\n-    return x\n+def f3(x):\n+    return x * 3\ndiff --git a/src/big4.py b/src/big4.py\nindex 1111111..2222222 100644\n--- a/src/big4.py\n+++ b/src/big4.py\n@@ -1,2 +1,2 @@\n-def f4(x):\n-    return x\n+def f4(x):\n+    return x * 3\ndiff --git a/src/big5.py b/src/big5.py\nindex 1111111..2222222 100644\n--- a/src/big5.py\n+++ b/src/big5.py\n@@ -1,2 +1,2 @@\n-def f5(x):\n-    return x\n+def f5(x):\n+    return x * 3\ndiff --git a/src/big6.py b/src/big6.py\nindex 1111111..2222222 100644\n--- a/src/big6.py\n+++ b/src/big6.py\n@@ -1,2 +1,2 @@\n-def f6(x):\n-    return x\n+def f6(x):\n+    return x * 3\ndiff --git a/src/big7.py b/src/big7.py\nindex 1111111..2222222 100644\n--- a/src/big7.py\n+++ b/src/big7.py\n@@ -1,2 +1,2 @@\n-def f7(x):\n-    return x\n+def f7(x):\n+    return x * 3\ndiff --git a/src/big8.py b/src/big8.py\nindex 1111111..2222222 100644\n--- a/src/big8.py\n+++ b/src/big8.py\n@@ -1,2 +1,2 @@\n-def f8(x):\n-    return x\n+def f8(x):\n+    return x * 3\ndiff --git a/src/big9.py b/src/big9.py\nindex 1111111..2222222 100644\n--- a/src/big9.py\n+++ b/src/big9.py\n@@ -1,2 +1,2 @@\n-def f9(x):\n-    return x\n+def f9(x):\n+    return x * 3\ndiff --git a/src/big10.py b/src/big10.py\nindex 1111111..2222222 100644\n--- a/src/big10.py\n+++ b/src/big10.py\n@@ -1,2 +1,2 @@\n-def f10(x):\n-    return x\n+def f10(x):\n+    return x * 3\ndiff --git a/src/big11.py b/src/big11.py\nindex 1111111..2222222 100644\n--- a/src/big11.py\n+++ b/src/big11.py\n@@ -1,2 +1,2 @@\n-def f11(x):\n-    return x\n+def f11(x):\n+    return x * 3\ndiff --git a/src/big12.py b/src/big12.py\nindex 1111111..2222222 100644\n--- a/src/big12.py\n+++ b/src/big12.py\n@@ -1,2 +1,2 @@\n-def f12(x):\n-    return x\n+def f12(x):\n+    return x * 3\ndiff --git a/src/big13.py b/src/big13.py\nindex 1111111..2222222 100644\n--- a/src/big13.py\n+++ b/src/big13.py\n@@ -1,2 +1,2 @@\n-def f13(x):\n-    return x\n+def f13(x):\n+    return x * 3\ndiff --git a/src/big14.py b/src/big14.py\nindex 1111111..2222222 100644\n--- a/src/big14.py\n+++ b/src/big14.py\n@@ -1,2 +1,2 @@\n-def f14(x):\n-    return x\n+def f14(x):\n+    return x * 3\ndiff --git a/src/big15.py b/src/big15.py\nindex 1111111..2222222 100644\n--- a/src/big15.py\n+++ b/src/big15.py\n@@ -1,2 +1,2 @@\n-def f15(x):\n-    return x\n+def f15(x):\n+    return x * 3\ndiff --git a/src/big16.py b/src/big16.py\nindex 1111111..2222222 100644\n--- a/src/big16.py\n+++ b/src/big16.py\n@@ -1,2 +1,2 @@\n-def f16(x):\n-    return x\n+def f16(x):\n+    return x * 3\ndiff --git a/src/big17.py b/src/big17.py\nindex 1111111..2222222 100644\n--- a/src/big17.py\n+++ b/src/big17.py\n@@ -1,2 +1,2 @@\n-def f17(x):\n-    return x\n+def f17(x):\n+    return x * 3\ndiff --git a/src/big18.py b/src/big18.py\nindex 1111111..2222222 100644\n--- a/src/big18.py\n+++ b/src/big18.py\n@@ -1,2 +1,2 @@\n-def f18(x):\n-    return x\n+def f18(x):\n+    return x * 3\ndiff --git a/src/big19.py b/src/big19.py\nindex 1111111..2222222 100644\n--- a/src/big19.py\n+++ b/src/big19.py\n@@ -1,2 +1,2 @@\n-def f19(x):\n-    return x\n+def f19(x):\n+    return x * 3\ndiff --git a/src/big20.py b/src/big20.py\nindex 1111111..2222222 100644\n--- a/src/big20.py\n+++ b/src/big20.py\n@@ -1,2 +1,2 @@\n-def f20(x):\n-    return x\n+def f20(x):\n+    return x * 3\ndiff --git a/src/big21.py b/src/big21.py\nindex 1111111..2222222 100644\n--- a/src/big21.py\n+++ b/src/big21.py\n@@ -1,2 +1,2 @@\n-def f21(x):\n-    return x\n+def f21(x):\n+    return x * 3\ndiff --git a/src/big22.py b/src/big22.py\nindex 1111111..2222222 100644\n--- a/src/big22.py\n+++ b/src/big22.py\n@@ -1,2 +1,2 @@\n-def f22(x):\n-    return x\n+def f22(x):\n+    return x * 3\ndiff --git a/src/big23.py b/src/big23.py\nindex 1111111..2222222 100644\n--- a/src/big23.py\n+++ b/src/big23.py\n@@ -1,2 +1,2 @@\n-def f23(x):\n-    return x\n+def f23(x):\n+    return x * 3\ndiff --git a/src/big24.py b/src/big24.py\nindex 1111111..2222222 100644\n--- a/src/big24.py\n+++ b/src/big24.py\n@@ -1,2 +1,2 @@\n-def f24(x):\n-    return x\n+def f24(x):\n+    return x * 3\ndiff --git a/src/big25.py b/src/big25.py\nindex 1111111..2222222 100644\n--- a/src/big25.py\n+++ b/src/big25.py\n@@ -1,2 +1,2 @@\n-def f25(x):\n-    return x\n+def f25(x):\n+    return x * 3\ndiff --git a/src/big26.py b/src/big26.py\nindex 1111111..2222222 100644\n--- a/src/big26.py\n+++ b/src/big26.py\n@@ -1,2 +1,2 @@\n-def f26(x):\n-    return x\n+def f26(x):\n+    return x * 3\ndiff --git a/src/big27.py b/src/big27.py\nindex 1111111..2222222 100644\n--- a/src/big27.py\n+++ b/src/big27.py\n@@ -1,2 +1,2 @@\n-def f27(x):\n-    return x\n+def f27(x):\n+    return x * 3\ndiff --git a/src/big28.py b/src/big28.py\nindex 1111111..2222222 100644\n--- a/src/big28.py\n+++ b/src/big28.py\n@@ -1,2 +1,2 @@\n-def f28(x):\n-    return x\n+def f28(x):\n+    return x * 3\ndiff --git a/src/big29.py b/src/big29.py\nindex 1111111..2222222 100644\n--- a/src/big29.py\n+++ b/src/big29.py\n@@ -1,2 +1,2 @@\n-def f29(x):\n-    return x\n+def f29(x):\n+    return x * 3\ndiff --git a/src/big30.py b/src/big30.py\nindex 1111111..2222222 100644\n--- a/src/big30.py\n+++ b/src/big30.py\n@@ -1,2 +1,2 @@\n-def f30(x):\n-    return x\n+def f30(x):\n+    return x * 3\ndiff --git a/src/big31.py b/src/big31.py\nindex 1111111..2222222 100644\n--- a/src/big31.py\n+++ b/src/big31.py\n@@ -1,2 +1,2 @@\n-def f31(x):\n-    return x\n+def f31(x):\n+    return x * 3\ndiff --git a/src/big32.py b/src/big32.py\nindex 1111111..2222222 100644\n--- a/src/big32.py\n+++ b/src/big32.py\n@@ -1,2 +1,2 @@\n-def f32(x):\n-    return x\n+def f32(x):\n+    return x * 3\ndiff --git a/src/big33.py b/src/big33.py\nindex 1111111..2222222 100644\n--- a/src/big33.py\n+++ b/src/big33.py\n@@ -1,2 +1,2 @@\n-def f33(x):\n-    return x\n+def f33(x):\n+    return x * 3\ndiff --git a/src/big34.py b/src/big34.py\nindex 1111111..2222222 100644\n--- a/src/big34.py\n+++ b/src/big34.py\n@@ -1,2 +1,2 @@\n-def f34(x):\n-    return x\n+def f34(x):\n+    return x * 3\ndiff --git a/src/big35.py b/src/big35.py\nindex 1111111..2222222 100644\n--- a/src/big35.py\n+++ b/src/big35.py\n@@ -1,2 +1,2 @@\n-def f35(x):\n-    return x\n+def f35(x):\n+    return x * 3\ndiff --git a/src/big36.py b/src/big36.py\nindex 1111111..2222222 100644\n--- a/src/big36.py\n+++ b/src/big36.py\n@@ -1,2 +1,2 @@\n-def f36(x):\n-    return x\n+def f36(x):\n+    return x * 3\ndiff --git a/src/big37.py b/src/big37.py\nindex 1111111..2222222 100644\n--- a/src/big37.py\n+++ b/src/big37.py\n@@ -1,2 +1,2 @@\n-def f37(x):\n-    return x\n+def f37(x):\n+    return x * 3\ndiff --git a/src/big38.py b/src/big38.py\nindex 1111111..2222222 100644\n--- a/src/big38.py\n+++ b/src/big38.py\n@@ -1,2 +1,2 @@\n-def f38(x):\n-    return x\n+def f38(x):\n+    return x * 3\ndiff --git a/src/big39.py b/src/big39.py\nindex 1111111..2222222 100644\n--- a/src/big39.py\n+++ b/src/big39.py\n@@ -1,2 +1,2 @@\n-def f39(x):\n-    return x\n+def f39(x):\n+    return x * 3\n"
+            },
+            {
+              "n": "8",
+              "title": "极端参数 maxchars=1",
+              "maxchars": "1",
+              "diff": "diff --git a/src/tiny.py b/src/tiny.py\nindex 1111111..2222222 100644\n--- a/src/tiny.py\n+++ b/src/tiny.py\n@@ -1,1 +1,1 @@\n-T = 1\n+T = 2\n"
+            },
+            {
+              "n": "9",
+              "title": "极端参数 maxchars=100000000",
+              "maxchars": "100000000",
+              "diff": "diff --git a/src/huge.py b/src/huge.py\nindex 1111111..2222222 100644\n--- a/src/huge.py\n+++ b/src/huge.py\n@@ -1,1 +1,1 @@\n-H = 1\n+H = 2\n"
+            },
+            {
+              "n": "10",
+              "title": "只有简化 +++ 头",
+              "maxchars": "60000",
+              "diff": "--- a/x.py\n+++ b/x.py\n@@ -0,0 +1 @@\n+hi\n"
+            },
+            {
+              "n": "11",
+              "title": "git 引号路径（非 ASCII）",
+              "maxchars": "60000",
+              "diff": "diff --git \"a/\\346\\226\\207\\346\\241\\243.py\" \"b/\\346\\226\\207\\346\\241\\243.py\"\nindex 1111111..2222222 100644\n--- \"a/\\346\\226\\207\\346\\241\\243.py\"\n+++ \"b/\\346\\226\\207\\346\\241\\243.py\"\n@@ -1 +1 @@\n-old\n+new\n"
+            },
+            {
+              "n": "12",
+              "title": "只有删除文件",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/gone.py b/src/gone.py\ndeleted file mode 100644\nindex 1111111..0000000\n--- a/src/gone.py\n+++ /dev/null\n@@ -1,2 +0,0 @@\n-def gone():\n-    pass\n"
+            },
+            {
+              "n": "13",
+              "title": "只有重命名",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/old_name.py b/src/new_name.py\nsimilarity index 100%\nrename from src/old_name.py\nrename to src/new_name.py\n"
+            },
+            {
+              "n": "14",
+              "title": "只有二进制文件",
+              "maxchars": "60000",
+              "diff": "diff --git a/assets/a.bin b/assets/a.bin\nindex 1111111..2222222 100644\nBinary files a/assets/a.bin and b/assets/a.bin differ\n"
+            },
+            {
+              "n": "15",
+              "title": "空 hunk 头",
+              "maxchars": "60000",
+              "diff": "diff --git a/e.py b/e.py\nindex 1111111..2222222 100644\n--- a/e.py\n+++ b/e.py\n@@ -0,0 +0,0 @@\n"
+            },
+            {
+              "n": "16",
+              "title": "巨型新增（200 行）",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/big_add.py b/src/big_add.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/big_add.py\n@@ -0,0 +1,200 @@\n+def line0():\n+def line1():\n+def line2():\n+def line3():\n+def line4():\n+def line5():\n+def line6():\n+def line7():\n+def line8():\n+def line9():\n+def line10():\n+def line11():\n+def line12():\n+def line13():\n+def line14():\n+def line15():\n+def line16():\n+def line17():\n+def line18():\n+def line19():\n+def line20():\n+def line21():\n+def line22():\n+def line23():\n+def line24():\n+def line25():\n+def line26():\n+def line27():\n+def line28():\n+def line29():\n+def line30():\n+def line31():\n+def line32():\n+def line33():\n+def line34():\n+def line35():\n+def line36():\n+def line37():\n+def line38():\n+def line39():\n+def line40():\n+def line41():\n+def line42():\n+def line43():\n+def line44():\n+def line45():\n+def line46():\n+def line47():\n+def line48():\n+def line49():\n+def line50():\n+def line51():\n+def line52():\n+def line53():\n+def line54():\n+def line55():\n+def line56():\n+def line57():\n+def line58():\n+def line59():\n+def line60():\n+def line61():\n+def line62():\n+def line63():\n+def line64():\n+def line65():\n+def line66():\n+def line67():\n+def line68():\n+def line69():\n+def line70():\n+def line71():\n+def line72():\n+def line73():\n+def line74():\n+def line75():\n+def line76():\n+def line77():\n+def line78():\n+def line79():\n+def line80():\n+def line81():\n+def line82():\n+def line83():\n+def line84():\n+def line85():\n+def line86():\n+def line87():\n+def line88():\n+def line89():\n+def line90():\n+def line91():\n+def line92():\n+def line93():\n+def line94():\n+def line95():\n+def line96():\n+def line97():\n+def line98():\n+def line99():\n+    return 0\n+    return 1\n+    return 2\n+    return 3\n+    return 4\n+    return 5\n+    return 6\n+    return 7\n+    return 8\n+    return 9\n+    return 10\n+    return 11\n+    return 12\n+    return 13\n+    return 14\n+    return 15\n+    return 16\n+    return 17\n+    return 18\n+    return 19\n+    return 20\n+    return 21\n+    return 22\n+    return 23\n+    return 24\n+    return 25\n+    return 26\n+    return 27\n+    return 28\n+    return 29\n+    return 30\n+    return 31\n+    return 32\n+    return 33\n+    return 34\n+    return 35\n+    return 36\n+    return 37\n+    return 38\n+    return 39\n+    return 40\n+    return 41\n+    return 42\n+    return 43\n+    return 44\n+    return 45\n+    return 46\n+    return 47\n+    return 48\n+    return 49\n+    return 50\n+    return 51\n+    return 52\n+    return 53\n+    return 54\n+    return 55\n+    return 56\n+    return 57\n+    return 58\n+    return 59\n+    return 60\n+    return 61\n+    return 62\n+    return 63\n+    return 64\n+    return 65\n+    return 66\n+    return 67\n+    return 68\n+    return 69\n+    return 70\n+    return 71\n+    return 72\n+    return 73\n+    return 74\n+    return 75\n+    return 76\n+    return 77\n+    return 78\n+    return 79\n+    return 80\n+    return 81\n+    return 82\n+    return 83\n+    return 84\n+    return 85\n+    return 86\n+    return 87\n+    return 88\n+    return 89\n+    return 90\n+    return 91\n+    return 92\n+    return 93\n+    return 94\n+    return 95\n+    return 96\n+    return 97\n+    return 98\n+    return 99\n"
+            },
+            {
+              "n": "17",
+              "title": "巨型删除（200 行）",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/big_del.py b/src/big_del.py\ndeleted file mode 100644\nindex 1111111..0000000\n--- a/src/big_del.py\n+++ /dev/null\n@@ -1,200 +0,0 @@\n-def line0():\n-def line1():\n-def line2():\n-def line3():\n-def line4():\n-def line5():\n-def line6():\n-def line7():\n-def line8():\n-def line9():\n-def line10():\n-def line11():\n-def line12():\n-def line13():\n-def line14():\n-def line15():\n-def line16():\n-def line17():\n-def line18():\n-def line19():\n-def line20():\n-def line21():\n-def line22():\n-def line23():\n-def line24():\n-def line25():\n-def line26():\n-def line27():\n-def line28():\n-def line29():\n-def line30():\n-def line31():\n-def line32():\n-def line33():\n-def line34():\n-def line35():\n-def line36():\n-def line37():\n-def line38():\n-def line39():\n-def line40():\n-def line41():\n-def line42():\n-def line43():\n-def line44():\n-def line45():\n-def line46():\n-def line47():\n-def line48():\n-def line49():\n-def line50():\n-def line51():\n-def line52():\n-def line53():\n-def line54():\n-def line55():\n-def line56():\n-def line57():\n-def line58():\n-def line59():\n-def line60():\n-def line61():\n-def line62():\n-def line63():\n-def line64():\n-def line65():\n-def line66():\n-def line67():\n-def line68():\n-def line69():\n-def line70():\n-def line71():\n-def line72():\n-def line73():\n-def line74():\n-def line75():\n-def line76():\n-def line77():\n-def line78():\n-def line79():\n-def line80():\n-def line81():\n-def line82():\n-def line83():\n-def line84():\n-def line85():\n-def line86():\n-def line87():\n-def line88():\n-def line89():\n-def line90():\n-def line91():\n-def line92():\n-def line93():\n-def line94():\n-def line95():\n-def line96():\n-def line97():\n-def line98():\n-def line99():\n-    return 0\n-    return 1\n-    return 2\n-    return 3\n-    return 4\n-    return 5\n-    return 6\n-    return 7\n-    return 8\n-    return 9\n-    return 10\n-    return 11\n-    return 12\n-    return 13\n-    return 14\n-    return 15\n-    return 16\n-    return 17\n-    return 18\n-    return 19\n-    return 20\n-    return 21\n-    return 22\n-    return 23\n-    return 24\n-    return 25\n-    return 26\n-    return 27\n-    return 28\n-    return 29\n-    return 30\n-    return 31\n-    return 32\n-    return 33\n-    return 34\n-    return 35\n-    return 36\n-    return 37\n-    return 38\n-    return 39\n-    return 40\n-    return 41\n-    return 42\n-    return 43\n-    return 44\n-    return 45\n-    return 46\n-    return 47\n-    return 48\n-    return 49\n-    return 50\n-    return 51\n-    return 52\n-    return 53\n-    return 54\n-    return 55\n-    return 56\n-    return 57\n-    return 58\n-    return 59\n-    return 60\n-    return 61\n-    return 62\n-    return 63\n-    return 64\n-    return 65\n-    return 66\n-    return 67\n-    return 68\n-    return 69\n-    return 70\n-    return 71\n-    return 72\n-    return 73\n-    return 74\n-    return 75\n-    return 76\n-    return 77\n-    return 78\n-    return 79\n-    return 80\n-    return 81\n-    return 82\n-    return 83\n-    return 84\n-    return 85\n-    return 86\n-    return 87\n-    return 88\n-    return 89\n-    return 90\n-    return 91\n-    return 92\n-    return 93\n-    return 94\n-    return 95\n-    return 96\n-    return 97\n-    return 98\n-    return 99\n"
+            },
+            {
+              "n": "18",
+              "title": "中文与空格路径",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/我的 模块.py b/src/我的 模块.py\nindex 1111111..2222222 100644\n--- a/src/我的 模块.py\n+++ b/src/我的 模块.py\n@@ -1,1 +1,1 @@\n-值 = 1\n+值 = 2\n"
+            },
+            {
+              "n": "19",
+              "title": "空 diff + 极端参数",
+              "maxchars": "1",
+              "diff": ""
+            },
+            {
+              "n": "20",
+              "title": "CRLF 换行 diff",
+              "maxchars": "60000",
+              "diff": "diff --git a/crlf.py b/crlf.py\r\nindex 1111111..2222222 100644\r\n--- a/crlf.py\r\n+++ b/crlf.py\r\n@@ -1 +1 @@\r\n-A = 1\r\n+A = 2\r\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 2,
+                "note": "边界输入仍产出预览"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "兜底 subject 仍带 type 前缀"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 120,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形 / 乱码 / 缺字段",
+      "description": "乱码、控制字符、零宽字符、畸形 hunk、缺字段、极端参数下优雅处理不崩溃（离线启发式模式；style/lang 覆盖常规与极端组合）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "畸形/乱码/缺字段输入不能让工具崩溃",
+            "content": "异常用例：{title}",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "{maxchars}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "title": "乱码内容",
+              "maxchars": "60000",
+              "diff": "diff --git a/a.py b/a.py\nindex 111..222 100644\n--- a/a.py\n+++ b/a.py\n@@ -1 +1 @@\n-ä½ å¥½\n+æ ½è¿\n"
+            },
+            {
+              "n": "2",
+              "title": "控制字符",
+              "maxchars": "60000",
+              "diff": "diff --git a/b.py b/b.py\nindex 111..222 100644\n--- a/b.py\n+++ b/b.py\n@@ -1 +1 @@\n-x\u0007 = 1\n+y\u0007 = 2\n"
+            },
+            {
+              "n": "3",
+              "title": "零宽字符",
+              "maxchars": "60000",
+              "diff": "diff --git a/c.py b/c.py\nindex 111..222 100644\n--- a/c.py\n+++ b/c.py\n@@ -1 +1 @@\n-a​ = 1\n+b‌﻿ = 2\n"
+            },
+            {
+              "n": "4",
+              "title": "emoji 路径与内容",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/🚀.py b/src/🚀.py\nindex 1111111..2222222 100644\n--- a/src/🚀.py\n+++ b/src/🚀.py\n@@ -1,1 +1,1 @@\n-V = '😀'\n+V = '🚀🚀'\n"
+            },
+            {
+              "n": "5",
+              "title": "未闭合引号路径",
+              "maxchars": "60000",
+              "diff": "diff --git \"a/broken.py b/broken.py\nindex 111..222 100644\n--- \"a/broken.py\n+++ \"b/broken.py\n@@ -1 +1 @@\n-x = 1\n+y = 2\n"
+            },
+            {
+              "n": "6",
+              "title": "畸形 hunk 头",
+              "maxchars": "60000",
+              "diff": "diff --git a/d.py b/d.py\nindex 111..222 100644\n--- a/d.py\n+++ b/d.py\n@@ garbage here @@\n-x = 1\n+y = 2\n"
+            },
+            {
+              "n": "7",
+              "title": "缺 +++ 头",
+              "maxchars": "60000",
+              "diff": "diff --git a/e.py b/e.py\nindex 111..222 100644\n@@ -1 +1 @@\n-x = 1\n+y = 2\n"
+            },
+            {
+              "n": "8",
+              "title": "纯散文无 diff 结构",
+              "maxchars": "60000",
+              "diff": "今天改了一些东西，具体如下：修了登录，又改了样式，还删了一行代码。"
+            },
+            {
+              "n": "9",
+              "title": "NUL 字节",
+              "maxchars": "60000",
+              "diff": "diff --git a/f.py b/f.py\nindex 111..222 100644\n--- a/f.py\n+++ b/f.py\n@@ -1 +1 @@\n-x\u0000 = 1\n+y\u0000 = 2\n"
+            },
+            {
+              "n": "10",
+              "title": "超长路径",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp.py b/src/pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp.py\nindex 1111111..2222222 100644\n--- a/src/pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp.py\n+++ b/src/pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp.py\n@@ -1,1 +1,1 @@\n-X = 1\n+X = 2\n"
+            },
+            {
+              "n": "11",
+              "title": "latin-1 字符",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/café.py b/src/café.py\nindex 1111111..2222222 100644\n--- a/src/café.py\n+++ b/src/café.py\n@@ -1,1 +1,1 @@\n-nom = 'café résumé'\n+nom = 'café naïve'\n"
+            },
+            {
+              "n": "12",
+              "title": "重复 diff 头（10 次）",
+              "maxchars": "60000",
+              "diff": "diff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\ndiff --git a/src/dup.py b/src/dup.py\nindex 1111111..2222222 100644\n--- a/src/dup.py\n+++ b/src/dup.py\n@@ -1,1 +1,1 @@\n-V = 1\n+V = 2\n"
+            },
+            {
+              "n": "13",
+              "title": "垃圾行混入",
+              "maxchars": "60000",
+              "diff": "hello world\nnew file mode\nnot a diff at all\n@@@\n###\ndiff --git a/g.py b/g.py\n--- a/g.py\n+++ b/g.py\n@@ -1 +1 @@\n-a = 1\n+b = 2\n"
+            },
+            {
+              "n": "14",
+              "title": "只有 index 行",
+              "maxchars": "60000",
+              "diff": "index 1111111..2222222 100644\n"
+            },
+            {
+              "n": "15",
+              "title": "半截 diff（只有 --- 行）",
+              "maxchars": "60000",
+              "diff": "--- a/half.py\n"
+            },
+            {
+              "n": "16",
+              "title": "乱码 + maxchars=1",
+              "maxchars": "1",
+              "diff": "diff --git a/i.py b/i.py\n@@ -1 +1 @@\n-æ ½\n+è¿\n"
+            },
+            {
+              "n": "17",
+              "title": "畸形 hunk + maxchars=2",
+              "maxchars": "2",
+              "diff": "diff --git a/j.py b/j.py\n@@ broken @@\n-x = (\n+y = )\n"
+            },
+            {
+              "n": "18",
+              "title": "散文 + gitmoji 风格",
+              "maxchars": "60000",
+              "diff": "改了点什么？改了点什么。改了点什么！"
+            },
+            {
+              "n": "19",
+              "title": "零宽字符 + en 语言",
+              "maxchars": "60000",
+              "diff": "diff --git a/k.py b/k.py\nindex 111..222 100644\n--- a/k.py\n+++ b/k.py\n@@ -1 +1 @@\n-a​\n+b​\n"
+            },
+            {
+              "n": "20",
+              "title": "空行 + 注释行",
+              "maxchars": "60000",
+              "diff": "\n# 这不是 diff\n\n# 也不是\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 2,
+                "note": "异常输入仍产出预览"
+              },
+              {
+                "type": "contains",
+                "text": "候选类型",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2,
+                "note": "异常输入下兜底 subject 仍合规"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 120,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复调用 10 次（离线启发式模式），验证输出稳定、分类一致、不崩溃",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：样本 {n}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "repeat": 10,
+          "input": {
+            "kind": "code",
+            "goal": "重复调用验证输出稳定",
+            "content": "稳定性样本 {n}",
+            "files": [
+              {
+                "path": "input/change.diff",
+                "content": "{diff}"
+              }
+            ],
+            "params": {
+              "style": "conventional",
+              "lang": "zh",
+              "maxchars": "60000",
+              "offline": true
+            }
+          },
+          "rows": [
+            {
+              "n": "1",
+              "ctype": "feat",
+              "diff": "diff --git a/src/feature.py b/src/feature.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/feature.py\n@@ -0,0 +1,2 @@\n+def feature():\n+    return 'ok'\n"
+            },
+            {
+              "n": "2",
+              "ctype": "fix",
+              "diff": "diff --git a/src/fix.py b/src/fix.py\nindex 1111111..2222222 100644\n--- a/src/fix.py\n+++ b/src/fix.py\n@@ -1,2 +1,2 @@\n-def f(x):\n-    return x[0]\n+def f(x):\n+    return x[0] if x else None\n"
+            },
+            {
+              "n": "3",
+              "ctype": "docs",
+              "diff": "diff --git a/README.md b/README.md\nindex 1111111..2222222 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,1 +1,3 @@\n-# 标题\n+# 标题\n+\n+新增使用说明。\n"
+            },
+            {
+              "n": "4",
+              "ctype": "test",
+              "diff": "diff --git a/tests/test_f.py b/tests/test_f.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/tests/test_f.py\n@@ -0,0 +1,2 @@\n+def test_f():\n+    assert True\n"
+            },
+            {
+              "n": "5",
+              "ctype": "ci",
+              "diff": "diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/.github/workflows/ci.yml\n@@ -0,0 +1,2 @@\n+name: ci\n+on: push\n"
+            },
+            {
+              "n": "6",
+              "ctype": "build",
+              "diff": "diff --git a/requirements.txt b/requirements.txt\nindex 1111111..2222222 100644\n--- a/requirements.txt\n+++ b/requirements.txt\n@@ -1,1 +1,1 @@\n-flask==2.2.2\n+flask==2.3.2\n"
+            },
+            {
+              "n": "7",
+              "ctype": "chore",
+              "diff": "diff --git a/package-lock.json b/package-lock.json\nindex 1111111..2222222 100644\n--- a/package-lock.json\n+++ b/package-lock.json\n@@ -1,1 +1,1 @@\n-  \"version\": \"4.17.20\",\n+  \"version\": \"4.17.21\",\n"
+            },
+            {
+              "n": "8",
+              "ctype": "feat",
+              "diff": "diff --git a/src/alpha.py b/src/alpha.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/alpha.py\n@@ -0,0 +1,1 @@\n+A = 1\ndiff --git a/src/beta.py b/src/beta.py\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/src/beta.py\n@@ -0,0 +1,1 @@\n+B = 2\n"
+            },
+            {
+              "n": "9",
+              "ctype": "fix",
+              "diff": "diff --git a/src/svc.py b/src/svc.py\nindex 1111111..2222222 100644\n--- a/src/svc.py\n+++ b/src/svc.py\n@@ -1,2 +1,5 @@\n-def run():\n-    go()\n+def run():\n+    try:\n+        go()\n+    except Exception:\n+        retry()\n"
+            },
+            {
+              "n": "10",
+              "ctype": "fix",
+              "diff": "diff --git a/src/x.py b/src/x.py\nindex 1111111..2222222 100644\n--- a/src/x.py\n+++ b/src/x.py\n@@ -1,1 +1,1 @@\n-X = 1\n+X = 2\ndiff --git a/docs/x.md b/docs/x.md\nindex 1111111..2222222 100644\n--- a/docs/x.md\n+++ b/docs/x.md\n@@ -1,1 +1,1 @@\n-旧说明\n+新说明\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "最终提交信息",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "候选类型：{ctype}",
+                "weight": 2,
+                "note": "确定性分类稳定"
+              },
+              {
+                "type": "regex",
+                "pattern": "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: ",
+                "weight": 2
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 120,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

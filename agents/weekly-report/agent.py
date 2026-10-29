@@ -171,6 +171,70 @@ def collect_git_commits(repo, days=None, author=None):
     return parse_git_log(proc.stdout)
 
 
+def parse_commit_lines(text):
+    """从文本解析 commit 列表（与 parse_git_log 同构）。
+
+    每行一条：`日期 | 提交说明 | +新增 -删除 | 文件列表（逗号/空格分隔）`，
+    除提交说明外各字段都可省略；'#' 开头是注释行、空行跳过。
+    格式不严格的行尽量宽容解析（缺日期归入"未标注日期"，缺统计按 0 计）。
+    """
+    commits = []
+    for raw_line in (text or "").lstrip("\ufeff").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        fields = [field.strip() for field in line.split("|")]
+        head = fields[0]
+        date_match = DATE_IN_TEXT_RE.search(head)
+        date = date_match.group(0) if date_match else ""
+        if len(fields) > 1:
+            subject = fields[1]
+        else:
+            subject = head
+            if date_match:
+                subject = (head[:date_match.start()] + " " + head[date_match.end():]).strip()
+        if not subject:
+            continue
+
+        added = deleted = 0
+        if len(fields) > 2 and fields[2]:
+            plus = re.search(r"\+(\d+)", fields[2])
+            minus = re.search(r"\D-(\d+)", fields[2]) or re.search(r"^-(\d+)", fields[2])
+            numbers = re.findall(r"\d+", fields[2])
+            if plus or minus:
+                added = int(plus.group(1)) if plus else 0
+                deleted = int(minus.group(1)) if minus else 0
+            elif numbers:
+                added = int(numbers[0])
+                deleted = int(numbers[1]) if len(numbers) > 1 else 0
+
+        paths = []
+        if len(fields) > 3 and fields[3]:
+            paths = [item for item in re.split(r"[,，;；\s]+", fields[3]) if item]
+        files = []
+        if paths:
+            per_added, rest_added = added // len(paths), added % len(paths)
+            per_deleted, rest_deleted = deleted // len(paths), deleted % len(paths)
+            for index, path in enumerate(paths):
+                files.append({
+                    "path": path,
+                    "added": per_added + (rest_added if index == 0 else 0),
+                    "deleted": per_deleted + (rest_deleted if index == 0 else 0),
+                })
+
+        commits.append({
+            "hash": "",
+            "date": date,
+            "author": "",
+            "subject": subject,
+            "body": "",
+            "files": files,
+            "added": added,
+            "deleted": deleted,
+        })
+    return commits
+
+
 # ---------- 统计与分类 ----------
 
 def classify_commit(subject):
@@ -260,7 +324,7 @@ def parse_notes(text, reference_date=None):
     groups = []
     current = None
     year = reference_date.year
-    for raw_line in (text or "").splitlines():
+    for raw_line in (text or "").lstrip("\ufeff").splitlines():
         line = raw_line.rstrip()
         if not line.strip():
             continue
@@ -932,6 +996,28 @@ def run_self_test():
         assert result["ok"] is True
         assert fake.state["calls"] == 2
 
+        # --- parse_commit_lines：从文本文件解析 commit 列表 ---
+        parsed_commits = parse_commit_lines(
+            "# 注释行\n"
+            "2026-10-27 | feat: 新增登录接口 | +120 -30 | src/auth/login.py,src/auth/api.py\n"
+            "2026-10-28 | 修复金额计算\n"
+            "只有说明没有日期\n"
+        )
+        assert len(parsed_commits) == 3, parsed_commits
+        assert parsed_commits[0]["date"] == "2026-10-27", parsed_commits[0]
+        assert parsed_commits[0]["added"] == 120 and parsed_commits[0]["deleted"] == 30
+        assert len(parsed_commits[0]["files"]) == 2
+        assert parsed_commits[1]["subject"] == "修复金额计算", parsed_commits[1]
+        commit_stats = aggregate_git(parsed_commits)
+        assert commit_stats["count"] == 3
+        assert commit_stats["types"]["feat"] == 1 and commit_stats["types"]["fix"] == 1
+
+        # --- UTF-8 BOM 容忍（Windows 常见） ---
+        bom_notes = parse_notes("\ufeff# 工作记录\n## 2026-10-28\n- [x] BOM 容忍测试\n")
+        assert bom_notes["done"] == ["BOM 容忍测试"], bom_notes
+        bom_commits = parse_commit_lines("\ufeff# 注释\n2026-10-28 | feat: BOM 提交 | +1 -1 | src/bom.py\n")
+        assert len(bom_commits) == 1 and bom_commits[0]["subject"] == "feat: BOM 提交", bom_commits
+
     print("SELF-TEST OK")
 
 
@@ -946,16 +1032,22 @@ def build_parser():
             "  python3 agent.py --repo ~/projects/myapp --days 7 --output 周报.md\n"
             "  python3 agent.py --repo . --notes 工作记录.md --type weekly\n"
             "  python3 agent.py --notes 工作记录.md --offline\n"
+            "  python3 agent.py --commits commits.txt --notes 工作记录.md --offline\n"
             "  python3 agent.py --repo . --model qwen3.8-max\n"
         ),
     )
     parser.add_argument(
         "--repo", default="",
-        help="git 仓库路径（默认当前目录；不是 git 仓库时只用 --notes 的数据）",
+        help="git 仓库路径（默认当前目录；不是 git 仓库时只用 --notes / --commits 的数据）",
     )
     parser.add_argument(
         "--notes", default="",
         help="工作记录 markdown 文件（按 '## 日期' 分组、'- [x] / - [ ]' 记条目）",
+    )
+    parser.add_argument(
+        "--commits", default="",
+        help="commit 列表文本文件：每行 '日期 | 提交说明 | +新增 -删除 | 文件列表（逗号分隔）'，"
+             "各字段都可省略（'#' 开头为注释行）；用于没有 git 仓库时提供提交数据，可与 --repo 同时用",
     )
     parser.add_argument(
         "--days", type=int, default=0,
@@ -1002,8 +1094,8 @@ def main():
         run_self_test()
         return
 
-    if not args.repo and not args.notes:
-        parser.error("请至少提供 --repo 或 --notes 之一作为数据来源")
+    if not args.repo and not args.notes and not args.commits:
+        parser.error("请至少提供 --repo / --notes / --commits 之一作为数据来源")
     if args.days < 0:
         parser.error("--days 不能是负数")
 
@@ -1030,6 +1122,24 @@ def main():
             source_parts.append("git（%s，最近 %d 天）" % (repo_path, days))
             print("[git] commit %d 次，新增 %d 行、删除 %d 行，活跃 %d 天"
                   % (git_stats["count"], git_stats["added"], git_stats["deleted"], git_stats["active_days"]))
+
+    # ---- commit 列表文件（没有 git 仓库时的提交数据来源） ----
+    if args.commits:
+        commits_path = Path(args.commits).expanduser()
+        if not commits_path.exists():
+            print("错误：找不到 commit 列表文件：%s" % commits_path, file=sys.stderr)
+            sys.exit(1)
+        try:
+            commits_text = commits_path.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            print("错误：读取 commit 列表失败：%s" % exc, file=sys.stderr)
+            sys.exit(1)
+        file_commits = parse_commit_lines(commits_text)
+        commits = commits + file_commits
+        git_stats = aggregate_git(commits)
+        source_parts.append("%s（commit 列表 %d 条）" % (commits_path.name, len(file_commits)))
+        print("[commits] 从 %s 读到 %d 条 commit 记录，累计 %d 条"
+              % (commits_path.name, len(file_commits), len(commits)))
 
     # ---- 工作记录解析 ----
     notes = parse_notes("", reference_date=datetime.now().date())

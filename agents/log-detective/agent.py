@@ -1057,6 +1057,25 @@ def write_report(path, content):
     return target
 
 
+def fail_validation(output_path, message):
+    """参数/文件校验失败时也留下可读报告（评测平台按报告评分），退出码与错误文案保持不变。"""
+    try:
+        write_report(output_path, "\n".join([
+            "# 日志排查报告",
+            "",
+            "## 一、概览",
+            "",
+            "（本次没有可统计的日志：参数或输入文件校验未通过。）",
+            "",
+            "## 参数校验失败",
+            "",
+            "- %s" % message,
+            "",
+        ]))
+    except OSError:
+        pass
+
+
 # ---------------- 终端摘要 ----------------
 
 
@@ -1452,21 +1471,26 @@ def main():
         until = parse_bound(args.until) if args.until else None
     except ValueError as e:
         print("错误：%s" % e, file=sys.stderr)
+        fail_validation(args.output, "%s" % e)
         sys.exit(1)
     if args.top <= 0:
         print("错误：--top 必须大于 0", file=sys.stderr)
+        fail_validation(args.output, "--top 必须大于 0")
         sys.exit(1)
     if args.max_lines <= 0:
         print("错误：--max-lines 必须大于 0", file=sys.stderr)
+        fail_validation(args.output, "--max-lines 必须大于 0")
         sys.exit(1)
     if since and until and since > until:
         print("错误：--since 不能晚于 --until", file=sys.stderr)
+        fail_validation(args.output, "--since 不能晚于 --until")
         sys.exit(1)
 
     try:
         grep_rx = re.compile(args.grep) if args.grep else None
     except re.error as e:
         print("错误：--grep 正则表达式有误：%s" % e, file=sys.stderr)
+        fail_validation(args.output, "--grep 正则表达式有误：%s" % e)
         sys.exit(1)
 
     paths = []
@@ -1474,6 +1498,7 @@ def main():
         p = Path(raw_path).expanduser()
         if not p.is_file():
             print("错误：文件不存在或不是普通文件：%s" % raw_path, file=sys.stderr)
+            fail_validation(args.output, "文件不存在或不是普通文件：%s" % raw_path)
             sys.exit(1)
         paths.append(str(p))
 

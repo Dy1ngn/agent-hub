@@ -1,0 +1,43 @@
+{
+  "id": "code-reviewer",
+  "name": "代码审查",
+  "description": "14 条静态规则 + 模型语义审查，检查安全、性能、可读性与潜在 bug，输出中文 Markdown 审查报告",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--static-only"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "{{workDir}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "建议"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

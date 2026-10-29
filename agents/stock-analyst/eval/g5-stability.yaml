@@ -1,0 +1,330 @@
+id: ts-b-stock-analyst-g5-stability
+agentId: stock-analyst
+group: g5-stability
+name: 股票分析 · 稳定性：同输入重复调用
+description: 10 个行情样本各重复调用 10 次（规则链路），验证确定性输出与稳定性（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：600519（up）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "600519", "seed": 41, "trend": "up", "days": 120, "fund_score": 70, "sentiment": "正面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: "600519"
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：600519（down）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "600519", "seed": 42, "trend": "down", "days": 120, "fund_score": 30, "sentiment": "负面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: "600519"
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：000001（sideways）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "000001", "seed": 43, "trend": "sideways", "days": 120, "fund_score": 50, "sentiment": "中性"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: "000001"
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：000001（volatile）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "000001", "seed": 44, "trend": "volatile", "days": 120, "fund_score": 55, "sentiment": "中性"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: "000001"
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：AAPL（up）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "AAPL", "seed": 45, "trend": "up", "days": 120, "fund_score": 65, "sentiment": "正面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: AAPL
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：AAPL（down）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "AAPL", "seed": 46, "trend": "down", "days": 120, "fund_score": 35, "sentiment": "负面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: AAPL
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：NVDA（sideways）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "NVDA", "seed": 47, "trend": "sideways", "days": 120, "fund_score": 48, "sentiment": "中性"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: NVDA
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：NVDA（volatile）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "NVDA", "seed": 48, "trend": "volatile", "days": 120, "fund_score": 52, "sentiment": "中性"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: NVDA
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：601318（up）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "601318", "seed": 49, "trend": "up", "days": 120, "fund_score": 60, "sentiment": "正面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: "601318"
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：601318（down）
+    tags:
+      - stability
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 重复调用验证稳定性
+      content: '{"symbol": "601318", "seed": 50, "trend": "down", "days": 120, "fund_score": 40, "sentiment": "负面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+        - type: contains
+          text: "601318"
+          weight: 1
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

@@ -1,0 +1,786 @@
+id: ts-b-release-notes-g4-robust
+agentId: release-notes
+group: g4-robust
+name: 发布说明生成 · 鲁棒性：畸形 / 乱码 / 缺字段
+description: 乱码、控制字符、NUL、未闭合 scope、全角冒号、乱码版本参数等异常输入下优雅处理不崩溃（离线确定性模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：乱码提交
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 乱码提交
+      files:
+        - path: input/commits.txt
+          content: "ä½ å¥½ä¸–ç•Œ\næ ½è¿äº†é…ç½®"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 控制字符
+      files:
+        - path: input/commits.txt
+          content: "feat: 带\a控制字符\nfix: 另\a一条"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：零宽字符
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 零宽字符
+      files:
+        - path: input/commits.txt
+          content: "feat: 零​宽‌字﻿符"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：纯 emoji
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 纯 emoji
+      files:
+        - path: input/commits.txt
+          content: 🚀🚀
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合 scope
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 未闭合 scope
+      files:
+        - path: input/commits.txt
+          content: "feat(unclosed: 描述一下"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：畸形 BREAKING 行
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 畸形 BREAKING 行
+      files:
+        - path: input/commits.txt
+          content: "BREAKING-CHANGE: 说明文字"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：NUL 字节
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: NUL 字节
+      files:
+        - path: input/commits.txt
+          content: "feat: 带\0空字节\nfix: 另\0一条"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：多重 scope 符号
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 多重 scope 符号
+      files:
+        - path: input/commits.txt
+          content: "feat(a)(b)(c): 嵌套范围"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：全角冒号
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 全角冒号
+      files:
+        - path: input/commits.txt
+          content: feat：全角冒号提交
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：from 乱码参数
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: from 乱码参数
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增二维码登录"
+      params:
+        from: banana
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: banana
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：version 乱码参数
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: version 乱码参数
+      files:
+        - path: input/commits.txt
+          content: "feat(auth): 增加登录失败重试限制
+
+            fix(auth): 修复空指针导致的登录崩溃
+
+            feat(ui): 新增深色模式开关
+
+            fix(pay): 修复重复扣款问题
+
+            docs: 更新部署文档\n"
+      params:
+        from: ""
+        to: HEAD
+        version: "!!!@@@"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "!!!@@@"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：from 缺第三段
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: from 缺第三段
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增导出功能
+
+            fix: 修复导出空文件
+
+            perf: 导出提速
+
+            docs: 导出说明
+
+            test: 导出用例\n"
+      params:
+        from: v1.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：零宽 + 乱码混合
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 零宽 + 乱码混合
+      files:
+        - path: input/commits.txt
+          content: "fix: ​ä½ å¥½‌"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 问题修复"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：超长 scope 与描述
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 超长 scope 与描述
+      files:
+        - path: input/commits.txt
+          content: "feat(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx): 超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：markdown 表格行
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: markdown 表格行
+      files:
+        - path: input/commits.txt
+          content: "docs: 更新表格\n| a | b |\n| --- | --- |"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：字面换行转义
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 字面换行转义
+      files:
+        - path: input/commits.txt
+          content: "fix: 修复\\n转义问题"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 问题修复"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：纯数字消息
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 纯数字消息
+      files:
+        - path: input/commits.txt
+          content: "12345\n67890"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：控制字符 + from 乱码
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 控制字符 + from 乱码
+      files:
+        - path: input/commits.txt
+          content: "feat: a\ab"
+      params:
+        from: ???v
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: ???v
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：中文 scope
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 中文 scope
+      files:
+        - path: input/commits.txt
+          content: "feat(中文范围): 中文范围描述"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：空 BREAKING 内容
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 空 BREAKING 内容
+      files:
+        - path: input/commits.txt
+          content: "feat!: 改动 BREAKING CHANGE:"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: 破坏性变更
+          weight: 2
+          note: 异常输入下确定性结论仍正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []

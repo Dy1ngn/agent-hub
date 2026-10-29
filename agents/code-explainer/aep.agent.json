@@ -1,0 +1,44 @@
+{
+  "id": "code-explainer",
+  "name": "代码讲解",
+  "description": "代码讲解学习助手：提取结构与复杂度，生成中文分层讲解、术语词典与自测题。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/code.txt",
+    "args": [
+      "input/code.txt",
+      "--lang",
+      "{{params.lang}}",
+      "--level",
+      "{{params.level}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "auto",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown"
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

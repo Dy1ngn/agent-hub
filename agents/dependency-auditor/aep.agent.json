@@ -1,0 +1,47 @@
+{
+  "id": "dependency-auditor",
+  "name": "依赖审计",
+  "description": "解析多种依赖清单并按内置规则做风险审计，输出评分、风险清单与升级建议的中文报告。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 240000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "input/deps",
+      "--output",
+      "{{outputDir}}/report.md",
+      "--advisory",
+      "input/advisory.json",
+      "--min-level",
+      "{{params.level}}"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "升级与替换建议"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

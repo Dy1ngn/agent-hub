@@ -1,0 +1,864 @@
+id: ts-b-dependency-auditor-g4-robust
+agentId: dependency-auditor
+group: g4-robust
+name: 依赖审计 · 鲁棒性：畸形清单与坏公告文件
+description: 坏 TOML/JSON、乱码包名、非法约束、控制字符、坏公告文件、目录缺失等异常输入下优雅处理不崩溃（离线模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：坏 TOML + 正常清单
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/pyproject.toml
+          content: '[project
+
+            name = "x"
+
+            '
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\nflask==3.0.3\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：坏 package.json + 正常清单
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/package.json
+          content: "{not json"
+        - path: input/deps/requirements.txt
+          content: "requests\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：乱码包名
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "鲤鲦鲪==1.0.0\n锟斤拷>=2.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：非法版本约束
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "pkg===\npkg2>=abc\npkg3==\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：包名带空格
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "bad name==1.0.0\nanother bad>=2\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\a
+
+            flask==3.0.3\a\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：超长单行
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "pkg==999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：NUL 字节
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3
+
+            flask==3.0.\03\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：emoji 包名
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "😀pkg==1.0.0\n🚀==2.0.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：非法约束符号
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "pkg~1.0\npkg2@1.0\npkg3:1.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：公告文件坏 JSON
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "{"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 解析备注|公告文件读取失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：公告文件顶层字符串
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: '"oops"'
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 解析备注|公告文件读取失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：公告条目缺字段
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: '[{"versions": [">=1.0"]}, {"package": ""}]'
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：公告版本格式怪
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: '[{"package": "requests", "versions": ["abc", "", "*"], "severity": "unknown", "title": "怪公告"}]'
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 怪公告|本地公告命中
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：清单目录不存在
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/notes/a.txt
+          content: "（占位）\n"
+        - path: input/notes/b.txt
+          content: "（占位）\n"
+        - path: input/notes/c.txt
+          content: "（占位）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 路径检查失败|路径不存在|解析备注
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：目录里没有清单
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/keep.txt
+          content: "（无关文件）\n"
+        - path: input/deps/keep2.txt
+          content: "（无关文件）\n"
+        - path: input/deps/keep3.txt
+          content: "（无关文件）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：目录里只有无关文件
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/README.md
+          content: "（无关文件）\n"
+        - path: input/deps/data.txt
+          content: "（无关文件）\n"
+        - path: input/deps/main.py
+          content: "print('hi')\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：BOM 与多语言注释
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "﻿# 说明 comment
+
+            requests==2.32.3
+
+            # komentar
+
+            flask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：package.json 值为对象
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/package.json
+          content: '{"name": "app", "dependencies": {"x": {"version": 1}, "lodash": "4.17.21"}}'
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：坏 Pipfile.lock
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃：要么正常审计，要么优雅报错
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/Pipfile.lock
+          content: "{bad json"
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

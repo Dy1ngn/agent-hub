@@ -1,0 +1,607 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型中英校对问题",
+      "description": "典型错别字/标点/空格/语法问题的完整校对链路（规则表 + 模型语义校对），规则命中为确定性断言",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-dedide",
+          "title": "的地得误用（{title}）",
+          "tags": ["basic", "chinese"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段中文文本里的错别字与语法问题",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR001", "doc": "他快速的跑向终点。\n她的认真地态度让人佩服。\n" },
+            { "title": "扩展样本", "rule": "GR001", "doc": "他快速的跑向终点。\n她的认真地态度让人佩服。\n这份报告需要认真地核对每一行数据。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1, "note": "产出标准校对报告" },
+              { "type": "contains", "text": "概览", "weight": 1, "note": "概览章节存在" },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中对应规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-zaizai",
+          "title": "在/再混用（{title}）",
+          "tags": ["basic", "chinese"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段中文文本里的用字错误",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR002", "doc": "我们在见吧，我在也不会来了，我们在家再家等你。\n" },
+            { "title": "扩展样本", "rule": "GR002", "doc": "我们在见吧，我在也不会来了，我们在家再家等你。\n请在校对完成后再次确认。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中在/再规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-yongzuo",
+          "title": "做/作误用（{title}）",
+          "tags": ["basic", "chinese"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段中文文本里的用字错误",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR003", "doc": "这项做用很明显，我要作饭了。\n" },
+            { "title": "扩展样本", "rule": "GR003", "doc": "这项做用很明显，我要作饭了。\n他坐在椅子上写作。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中做/作规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-repeat",
+          "title": "重复字词（{title}）",
+          "tags": ["basic", "chinese"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段中文文本里的重复字词",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR004", "doc": "这个的问题需要解决，我马上就就去处理。\n" },
+            { "title": "扩展样本", "rule": "GR004", "doc": "这个的问题需要解决，我马上就就去处理。\n请你把把门带上。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中重复字词规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-punct",
+          "title": "标点问题（{title}）",
+          "tags": ["basic", "punctuation"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段文本里的标点问题",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "重复标点", "rule": "GR005", "doc": "这是什么？？真的！！好。。\n" },
+            { "title": "中英标点混用", "rule": "GR006", "doc": "今天天气很好,我们去散步吧?好吧。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中标点规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-space",
+          "title": "中英文之间缺空格（{title}）",
+          "tags": ["basic", "spacing"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段文本里的中英混排空格问题",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR007", "doc": "我们用Python写脚本。\n" },
+            { "title": "扩展样本", "rule": "GR007", "doc": "我们用Python写脚本，用Java开发后端，再用Go写中间件。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中中英空格规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-en-repeat",
+          "title": "英文重复单词（{title}）",
+          "tags": ["basic", "english"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段英文文本里的重复单词",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR013", "doc": "This is is a test of the the system.\n" },
+            { "title": "扩展样本", "rule": "GR013", "doc": "This is is a test of the the system.\nWe checked it twice.\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中英文重复词规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-en-typo",
+          "title": "英文拼写错误（{title}）",
+          "tags": ["basic", "english", "typo"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段英文文本里的拼写错误",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR014", "doc": "I recieve teh package tomorrow.\n" },
+            { "title": "扩展样本", "rule": "GR014", "doc": "I recieve teh package tomorrow.\nPlease sign the delivery form.\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中拼写规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-fullwidth",
+          "title": "全角字母数字（{title}）",
+          "tags": ["basic", "chinese"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段文本里的全角字符问题",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR008", "doc": "价格是２０２６元，型号ＡＢＣ。\n" },
+            { "title": "扩展样本", "rule": "GR008", "doc": "价格是２０２６元，型号ＡＢＣ。\n发货数量１００件。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中全角字符规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-longsent",
+          "title": "超长句子（{title}）",
+          "tags": ["basic", "readability"],
+          "input": {
+            "kind": "text",
+            "goal": "校对这段文本里的可读性问题",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "短句样本", "rule": "GR016", "doc": "这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，读起来非常累。\n" },
+            { "title": "扩展样本", "rule": "GR016", "doc": "这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，读起来非常累。\n短句没问题。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "{rule}", "weight": 2, "note": "确定性命中超长句规则" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：语言 / 规模 / 文体 / 参数组合",
+      "description": "不同语言模式、最低级别过滤、文档规模与文体下的校对表现（模型语义校对链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-lang-{n}",
+          "title": "语言模式变体（{langLabel}）",
+          "tags": ["variation", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "按指定语言模式校对文档",
+            "content": "{doc}",
+            "params": { "lang": "{lang}", "min": "{min}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "lang": "auto", "langLabel": "自动（中英混合）", "min": "提示", "doc": "我们用Python写脚本。This is is a mixed document.\n" },
+            { "n": "2", "lang": "中文", "langLabel": "中文", "min": "提示", "doc": "他快速的跑向终点。我们用Python写脚本。\n" },
+            { "n": "3", "lang": "英文", "langLabel": "英文", "min": "提示", "doc": "I recieve teh package tomorrow. This is is fine.\n" },
+            { "n": "4", "lang": "auto", "langLabel": "自动（中英混合）", "min": "警告", "doc": "今天天气很好,我们去散步吧。We use Java daily.\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "语言模式：{langLabel}", "weight": 2, "note": "报告元信息记录语言模式参数" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-minlevel-{n}",
+          "title": "最低级别过滤变体（{min}）",
+          "tags": ["variation", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "按指定最低展示级别输出校对报告",
+            "content": "{doc}",
+            "params": { "lang": "{lang}", "min": "{min}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "lang": "auto", "min": "提示", "doc": "这是什么？？真的！！\nI recieve teh package.\n" },
+            { "n": "2", "lang": "auto", "min": "警告", "doc": "这是什么？？真的！！\nI recieve teh package.\n" },
+            { "n": "3", "lang": "auto", "min": "错误", "doc": "这是什么？？真的！！\nI recieve teh package.\n" },
+            { "n": "4", "lang": "中文", "min": "提示", "doc": "这个的问题需要解决，我马上就就去处理。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "contains", "text": "最小展示级别：{min}", "weight": 2, "note": "报告元信息记录级别参数" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-scale-{n}",
+          "title": "文档规模变体（{title}）",
+          "tags": ["variation", "scale"],
+          "input": {
+            "kind": "text",
+            "goal": "不同规模文档都要产出完整校对报告",
+            "content": "{doc}",
+            "params": { "lang": "{lang}", "min": "{min}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "单句", "lang": "auto", "min": "提示", "doc": "他快速的跑向终点。\n" },
+            { "n": "2", "title": "短段落", "lang": "auto", "min": "提示", "doc": "他快速的跑向终点。\n她的认真地态度让人佩服。\n今天天气很好,我们去散步吧。\n" },
+            { "n": "3", "title": "中等文档", "lang": "auto", "min": "提示", "doc": "项目周报。\n本周我们用Python写脚本，完成了数据清洗。这个的问题需要解决，我马上就就去处理。\n下周计划：优化性能，补充测试。This is is a good week.\n风险：接口联调时间紧张，需要提前沟通。\n" },
+            { "n": "4", "title": "较长文档", "lang": "auto", "min": "提示", "doc": "季度总结报告。\n一、总体情况。本季度团队用Python写脚本，用Java开发后端服务，整体进展顺利。\n二、存在的问题。这个的问题需要解决，我马上就就去处理。部分文档标点混用,需要统一。\n三、下季度计划。继续推进自动化测试，这是什么？？真的！！需要认真对待。\n四、风险提示。I recieve teh feedback regularly. This is is something to watch.\n五、其他事项。价格是２０２６元，型号ＡＢＣ。发货数量１００件。\n补充说明：他快速的跑向终点，她的认真地态度让人佩服。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "regex", "pattern": "问题合计：[0-9]+ 个", "weight": 1, "note": "统计格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-style-{n}",
+          "title": "文体变体（{title}）",
+          "tags": ["variation", "style"],
+          "input": {
+            "kind": "text",
+            "goal": "不同文体的文档都要给出校对意见",
+            "content": "{doc}",
+            "params": { "lang": "{lang}", "min": "{min}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "商务邮件", "lang": "auto", "min": "提示", "doc": "尊敬的客户：\n您好！关于合同的事我们再见吧，我在也不会拖延了。\n顺祝商祺。\n" },
+            { "n": "2", "title": "技术文档", "lang": "auto", "min": "提示", "doc": "# 部署说明\n\n我们用Python写脚本完成部署。\n注意：配置文件中的逗号,必须使用英文逗号。\n" },
+            { "n": "3", "title": "营销文案", "lang": "auto", "min": "提示", "doc": "这是什么？？真的！！超值好物等你来抢。。\n全网最低价，快来下单！\n" },
+            { "n": "4", "title": "论文摘要", "lang": "英文", "min": "提示", "doc": "This is is a study of the the scheduling problem.\nWe recieve teh results and analyse them.\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "regex", "pattern": "校对文件：[0-9]+ 个", "weight": 1, "note": "统计格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-multi-{n}",
+          "title": "多问题混合文档（{n}）",
+          "tags": ["variation", "mixed"],
+          "input": {
+            "kind": "text",
+            "goal": "一份文档同时含多类问题，都要被报出来",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "doc": "他快速的跑向终点。\n这是什么？？真的！！\n我们用Python写脚本。\n" },
+            { "n": "2", "doc": "我们在见吧，我在也不会来了。\n这个的问题需要解决。\n价格是２０２６元。\n" },
+            { "n": "3", "doc": "这项做用很明显。\n今天天气很好,我们去散步吧。\nI recieve teh package tomorrow.\n" },
+            { "n": "4", "doc": "This is is a test of the the system.\n你好  世界。\n末尾有空格的行。  \n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 1 },
+              { "type": "regex", "pattern": "GR[0-9][0-9][0-9]", "weight": 2, "note": "规则命中带规则编号" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 极短 / 极端参数",
+      "description": "空文件、极短文本、纯符号与极端参数组合下的稳定产出（离线纯规则模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": ["edge", "offline"],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出校对报告",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "空文件", "doc": "" },
+            { "n": "2", "title": "单字", "doc": "好" },
+            { "n": "3", "title": "纯标点", "doc": "。。。，？？！！" },
+            { "n": "4", "title": "只有空格", "doc": "   \n  \n   " },
+            { "n": "5", "title": "只有换行", "doc": "\n\n\n\n\n" },
+            { "n": "6", "title": "单个英文词", "doc": "hello" },
+            { "n": "7", "title": "纯数字", "doc": "1234567890" },
+            { "n": "8", "title": "纯 emoji", "doc": "\ud83d\ude00\ud83d\ude80" },
+            { "n": "9", "title": "超长单行（无换行）", "doc": "这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本" },
+            { "n": "10", "title": "极短中英混合", "doc": "我like它" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 2, "note": "边界输入仍产出校对报告" },
+              { "type": "contains", "text": "附录：文件清单", "weight": 1, "note": "附录章节仍存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g3-extreme-{n}",
+          "title": "极端参数：{title}",
+          "tags": ["edge", "offline", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "极端参数组合下也要优雅产出",
+            "content": "{doc}",
+            "params": { "lang": "{lang}", "min": "{min}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "min=错误 + 仅提示级问题", "lang": "auto", "min": "错误", "doc": "这是什么？？真的！！\n" },
+            { "n": "2", "title": "min=错误 + 干净文本", "lang": "auto", "min": "错误", "doc": "今天天气不错。\n" },
+            { "n": "3", "title": "min=警告 + 混合问题", "lang": "auto", "min": "警告", "doc": "他快速的跑向终点。\nI recieve teh package.\n" },
+            { "n": "4", "title": "英文模式 + 中文文本", "lang": "英文", "min": "提示", "doc": "他快速的跑向终点。\n" },
+            { "n": "5", "title": "中文模式 + 英文文本", "lang": "中文", "min": "提示", "doc": "This is is a test of the the system.\n" },
+            { "n": "6", "title": "英文模式 + 英文拼写问题", "lang": "英文", "min": "提示", "doc": "I recieve teh package tomorrow.\n" },
+            { "n": "7", "title": "min=提示 + 空文件", "lang": "auto", "min": "提示", "doc": "" },
+            { "n": "8", "title": "min=错误 + 空文件", "lang": "auto", "min": "错误", "doc": "" },
+            { "n": "9", "title": "中文模式 + 标点问题", "lang": "中文", "min": "提示", "doc": "这是什么？？真的！！好。。\n" },
+            { "n": "10", "title": "min=警告 + 超长句", "lang": "auto", "min": "警告", "doc": "这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，读起来非常累。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 2, "note": "极端参数仍产出校对报告" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形 / 乱码 / 编码异常输入",
+      "description": "乱码、控制字符、零宽字符、结构损坏等异常输入下不崩溃、优雅降级（离线纯规则模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": ["robust", "offline"],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "mojibake 乱码", "doc": "鐑傛嵁鏂囨。閿欒緶銆傝繖鏄حاض涔辩爜銆�\n" },
+            { "n": "2", "title": "控制字符", "doc": "a\u0007b = 2\u0007c = 3\u0007\n" },
+            { "n": "3", "title": "零宽字符", "doc": "a\u200bb\u200cc\u200dd\n" },
+            { "n": "4", "title": "emoji 与变体选择符", "doc": "❤️‍🔥😀👍🏽🚀✨\n" },
+            { "n": "5", "title": "RTL 希伯来文", "doc": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd hello\n" },
+            { "n": "6", "title": "未闭合代码块", "doc": "```python\nprint(1)\n" },
+            { "n": "7", "title": "重复标点 50 次", "doc": "啊啊啊啊啊啊啊啊啊啊！！！！！！！！！！。。。。。。。。。。？？？？？？？？？？\n" },
+            { "n": "8", "title": "混合换行符", "doc": "第一行\r\n第二行\r第三行\n\n第四行\r\n" },
+            { "n": "9", "title": "超长单词", "doc": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" },
+            { "n": "10", "title": "HTML 标签嵌文本", "doc": "<div><p>hello &amp; world</p><script>var x = 1;</script></div>\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 2, "note": "异常输入仍产出校对报告" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g4-encoding-{n}",
+          "title": "编码/字符异常：{title}",
+          "tags": ["robust", "offline", "encoding"],
+          "input": {
+            "kind": "text",
+            "goal": "编码异常输入不能让工具崩溃",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "BOM 开头", "doc": "\ufeff这是带 BOM 的文本。\n" },
+            { "n": "2", "title": "全角空格", "doc": "全角\u3000空格\u3000测试\n" },
+            { "n": "3", "title": "制表符混合", "doc": "列一\t列二\t\t列三\n值一  值二\t值三\n" },
+            { "n": "4", "title": "数学符号", "doc": "∑∫√∞≠≤≥±×÷π\n" },
+            { "n": "5", "title": "韩文/日文混合", "doc": "안녕하세요 こんにちは 你好\n" },
+            { "n": "6", "title": "零宽连接符", "doc": "a\u200db\u200dc\ufe0fd\n" },
+            { "n": "7", "title": "不成对括号", "doc": "（(（[[[{{{\n" },
+            { "n": "8", "title": "JSON 片段", "doc": "{\"name\": \"测试\", \"value\": 123,}\n" },
+            { "n": "9", "title": "重复单词垃圾", "doc": "foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo\n" },
+            { "n": "10", "title": "竖线表格乱列", "doc": "| a | b | c |\n|---|---|\n| 1 | 2 | 3 | 4 |\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 2, "note": "编码异常仍产出校对报告" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复调用 10 次（离线纯规则模式），验证输出稳定、不崩溃、结构一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：样本 {n}",
+          "tags": ["stability", "offline"],
+          "repeat": 10,
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证校对输出稳定",
+            "content": "{doc}",
+            "params": { "lang": "auto", "min": "提示", "offline": true }
+          },
+          "rows": [
+            { "n": "1", "doc": "他快速的跑向终点。\n她的认真地态度让人佩服。\n" },
+            { "n": "2", "doc": "我们在见吧，我在也不会来了，我们在家再家等你。\n" },
+            { "n": "3", "doc": "这项做用很明显，我要作饭了。\n" },
+            { "n": "4", "doc": "这个的问题需要解决，我马上就就去处理。\n" },
+            { "n": "5", "doc": "这是什么？？真的！！好。。\n" },
+            { "n": "6", "doc": "我们用Python写脚本。\n" },
+            { "n": "7", "doc": "价格是２０２６元，型号ＡＢＣ。\n" },
+            { "n": "8", "doc": "This is is a test of the the system.\n" },
+            { "n": "9", "doc": "I recieve teh package tomorrow.\n" },
+            { "n": "10", "doc": "这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，读起来非常累。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "校对报告", "weight": 2 },
+              { "type": "contains", "text": "概览", "weight": 1 },
+              { "type": "regex", "pattern": "GR[0-9][0-9][0-9]", "weight": 2, "note": "规则命中带规则编号" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

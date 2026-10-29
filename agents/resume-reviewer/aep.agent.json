@@ -1,0 +1,47 @@
+{
+  "id": "resume-reviewer",
+  "name": "简历诊断",
+  "description": "简历诊断与 JD 匹配：结构、动词、量化、日期体检，技能关键词匹配打分，输出改写示例报告。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "{{params.resume}}",
+      "--jd",
+      "input/jd.txt",
+      "--role",
+      "{{params.role}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "建议"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

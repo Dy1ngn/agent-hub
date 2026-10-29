@@ -1,0 +1,516 @@
+id: ts-b-todo-planner-g3-edge
+agentId: todo-planner
+group: g3-edge
+name: 任务拆解 · 边界情况：空 / 极短 / 极多 / 极端窗口
+description: 空目标、极短目标、40 行任务、1 天/365 天窗口等边界输入下的稳定产出（离线确定性模式）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空目标（--goal 与文件都为空）
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：空目标（--goal 与文件都为空）
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：极短目标
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：极短目标
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: 学 Python
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：目标只有一个标点
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：目标只有一个标点
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: 。
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：40 行任务列表
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：40 行任务列表
+      files:
+        - path: input/goal.md
+          content: "推进大项目
+
+            - 任务 1
+
+            - 任务 2
+
+            - 任务 3
+
+            - 任务 4
+
+            - 任务 5
+
+            - 任务 6
+
+            - 任务 7
+
+            - 任务 8
+
+            - 任务 9
+
+            - 任务 10
+
+            - 任务 11
+
+            - 任务 12
+
+            - 任务 13
+
+            - 任务 14
+
+            - 任务 15
+
+            - 任务 16
+
+            - 任务 17
+
+            - 任务 18
+
+            - 任务 19
+
+            - 任务 20
+
+            - 任务 21
+
+            - 任务 22
+
+            - 任务 23
+
+            - 任务 24
+
+            - 任务 25
+
+            - 任务 26
+
+            - 任务 27
+
+            - 任务 28
+
+            - 任务 29
+
+            - 任务 30
+
+            - 任务 31
+
+            - 任务 32
+
+            - 任务 33
+
+            - 任务 34
+
+            - 任务 35
+
+            - 任务 36
+
+            - 任务 37
+
+            - 任务 38
+
+            - 任务 39
+
+            - 任务 40"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：窗口只有 1 天
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：窗口只有 1 天
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        offline: true
+        goal: ""
+        days: "1"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：窗口 365 天
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：窗口 365 天
+      files:
+        - path: input/goal.md
+          content: "三个月上线小程序商城
+
+            第一阶段：需求与设计（2 周）
+
+            - 输出 PRD
+
+            - 完成原型评审
+
+            第二阶段：开发（6 周）
+
+            - 完成商品与订单模块
+
+            - 完成支付对接
+
+            第三阶段：上线（2 周）
+
+            - 灰度发布
+
+            - 正式上线
+
+            约束：预算不超过 20 万元，团队 5 人"
+      params:
+        offline: true
+        goal: ""
+        days: "365"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：只有约束行
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：只有约束行
+      files:
+        - path: input/goal.md
+          content: 约束：一周内完成，预算 1000 元
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：全是顿号
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：全是顿号
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: 、、、、
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：超长单行 500 字
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：超长单行 500 字
+      files:
+        - path: input/goal.md
+          content: "完成一个大项目
+
+            - 推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：目标只走 --goal 参数
+    tags:
+      - edge
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 边界输入也要产出计划，不允许崩溃
+      content: 边界用例：目标只走 --goal 参数
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        offline: true
+        goal: "一个月内上线官网首页\n- 定稿设计\n- 开发页面\n- 验收上线"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+          note: 边界输入仍产出计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: ValueError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

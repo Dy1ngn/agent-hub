@@ -1,0 +1,926 @@
+id: ts-b-data-cleaner-g1-basic
+agentId: data-cleaner
+group: g1-basic
+name: 表格清洗 · 基础功能：典型表格质量体检
+description: 缺失/重复/异常值/格式等典型质量问题的常规输入，走完整「确定性体检 + 模型解读」链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-missing-1
+    title: 缺失值体检（CSV）
+    tags:
+      - basic
+      - missing
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检表格的缺失值情况
+      content: 请对这份表格做质量体检。
+      files:
+        - path: input/data.csv
+          content: "id,name,city,amount
+
+            1,张三,北京,100
+
+            2,,上海,250
+
+            3,李四,,
+
+            4,,,
+
+            5,王五,广州,120\n"
+      params:
+        file: input/data.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (缺失值|缺失|空值)
+          weight: 2
+          note: 识别缺失值问题
+      requiredSuggestions: []
+  - id: g1-missing-2
+    title: 缺失值体检（JSON）
+    tags:
+      - basic
+      - missing
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检表格的缺失值情况
+      content: 请对这份表格做质量体检。
+      files:
+        - path: input/data.json
+          content: '[{"id": 1, "email": "a@example.com", "age": 30}, {"id": 2, "email": "", "age": null}, {"id": 3, "email": "c@example.com"}, {"id": 4, "email": null, "age": 28}]'
+      params:
+        file: input/data.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (缺失值|缺失|空值)
+          weight: 2
+          note: 识别缺失值问题
+      requiredSuggestions: []
+  - id: g1-dup-1
+    title: 重复行与疑似重复（CSV）
+    tags:
+      - basic
+      - duplicate
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出完全重复行与疑似重复记录
+      content: 请检查这份表格的重复情况。
+      files:
+        - path: input/orders.csv
+          content: "order_id,user,amount
+
+            A001,张三,100
+
+            A002,李四,250
+
+            A001,张三,100
+
+            A003,王五,80
+
+            A002,李四,250\n"
+      params:
+        file: input/orders.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (重复行|疑似重复|去重|完全重复)
+          weight: 2
+          note: 识别重复记录
+      requiredSuggestions: []
+  - id: g1-dup-2
+    title: 重复行与疑似重复（TSV）
+    tags:
+      - basic
+      - duplicate
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出完全重复行与疑似重复记录
+      content: 请检查这份表格的重复情况。
+      files:
+        - path: input/orders.tsv
+          content: "order_id\tuser\tamount
+
+            B001\t张三\t100
+
+            B002\t李四\t250
+
+            B001\t张三\t100
+
+            B001\t张三\t300\n"
+      params:
+        file: input/orders.tsv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (重复行|疑似重复|去重|完全重复)
+          weight: 2
+          note: 识别重复记录
+      requiredSuggestions: []
+  - id: g1-outlier-1
+    title: 数值异常值检测（CSV）
+    tags:
+      - basic
+      - outlier
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出数值列的异常值
+      content: 请检查数值列有没有异常值。
+      files:
+        - path: input/sales.csv
+          content: "day,amount
+
+            1,100
+
+            2,110
+
+            3,95
+
+            4,105
+
+            5,98
+
+            6,102
+
+            7,12000
+
+            8,99\n"
+      params:
+        file: input/sales.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (异常值|IQR|z-?score|极端值)
+          weight: 2
+          note: 识别数值异常值
+      requiredSuggestions: []
+  - id: g1-outlier-2
+    title: 数值异常值检测（JSON）
+    tags:
+      - basic
+      - outlier
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出数值列的异常值
+      content: 请检查数值列有没有异常值。
+      files:
+        - path: input/sales.json
+          content: '[{"day": 1, "amount": 50}, {"day": 2, "amount": 55}, {"day": 3, "amount": 48}, {"day": 4, "amount": 52}, {"day": 5, "amount": -9999}, {"day": 6, "amount": 51}]'
+      params:
+        file: input/sales.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (异常值|IQR|z-?score|极端值)
+          weight: 2
+          note: 识别数值异常值
+      requiredSuggestions: []
+  - id: g1-format-1
+    title: 格式不一致检测（CSV）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出空白、全角半角、日期格式等格式问题
+      content: 请检查格式一致性。
+      files:
+        - path: input/users.csv
+          content: "name,signup
+
+            \ 张三 ,2024-01-05
+
+            李四,2024年2月6日
+
+            王五 ,20240307
+
+            赵六,04/08/2024\n"
+      params:
+        file: input/users.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (前后空白|全角|日期格式混用|格式不一致)
+          weight: 2
+          note: 识别格式不一致
+      requiredSuggestions: []
+  - id: g1-format-2
+    title: 格式不一致检测（JSON）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出空白、全角半角、日期格式等格式问题
+      content: 请检查格式一致性。
+      files:
+        - path: input/users.json
+          content: '[{"name": " 张三 ", "signup": "2024-01-05"}, {"name": "李四 ", "signup": "2024年2月6日"}, {"name": "王五", "signup": "20240307"}]'
+      params:
+        file: input/users.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (前后空白|全角|日期格式混用|格式不一致)
+          weight: 2
+          note: 识别格式不一致
+      requiredSuggestions: []
+  - id: g1-types-1
+    title: 列类型推断与统计（CSV）
+    tags:
+      - basic
+      - types
+    repeat: 5
+    input:
+      kind: table
+      goal: 推断列类型并给出统计摘要
+      content: 请给出列类型与统计摘要。
+      files:
+        - path: input/mixed.csv
+          content: "id,score,active,day,note
+
+            1,95.5,true,2024-01-01,ok
+
+            2,88.0,false,2024-01-02,good
+
+            3,76.5,true,2024-01-03,nice
+
+            4,91.0,false,2024-01-04,fine\n"
+      params:
+        file: input/mixed.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 列类型
+          weight: 1
+          note: 输出列类型小节
+        - type: regex
+          pattern: (整数|浮点数|布尔|日期|文本)
+          weight: 1
+          note: 推断出列类型
+      requiredSuggestions: []
+  - id: g1-types-2
+    title: 列类型推断与统计（JSON）
+    tags:
+      - basic
+      - types
+    repeat: 5
+    input:
+      kind: table
+      goal: 推断列类型并给出统计摘要
+      content: 请给出列类型与统计摘要。
+      files:
+        - path: input/mixed.json
+          content: '[{"id": 1, "score": 1.5, "active": true, "day": "2024-02-01"}, {"id": 2, "score": 2.5, "active": false, "day": "2024-02-02"}, {"id": 3, "score": 3.5, "active": true, "day": "2024-02-03"}]'
+      params:
+        file: input/mixed.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 列类型
+          weight: 1
+          note: 输出列类型小节
+        - type: regex
+          pattern: (整数|浮点数|布尔|日期|文本)
+          weight: 1
+          note: 推断出列类型
+      requiredSuggestions: []
+  - id: g1-const-1
+    title: 常量列与类别分布（CSV）
+    tags:
+      - basic
+      - distribution
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出常量列并给出类别分布
+      content: 请检查有没有常量列。
+      files:
+        - path: input/const.csv
+          content: "region,level,qty
+
+            华东,A,10
+
+            华东,A,20
+
+            华东,A,30
+
+            华东,A,40\n"
+      params:
+        file: input/const.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (常量列|类别分布|高基数列)
+          weight: 2
+          note: 识别常量列/分布
+      requiredSuggestions: []
+  - id: g1-const-2
+    title: 常量列与类别分布（JSON）
+    tags:
+      - basic
+      - distribution
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出常量列并给出类别分布
+      content: 请检查有没有常量列。
+      files:
+        - path: input/const.json
+          content: '[{"region": "华北", "level": "B", "qty": 5}, {"region": "华北", "level": "B", "qty": 7}, {"region": "华北", "level": "B", "qty": 9}]'
+      params:
+        file: input/const.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (常量列|类别分布|高基数列)
+          weight: 2
+          note: 识别常量列/分布
+      requiredSuggestions: []
+  - id: g1-units-1
+    title: 数字带单位/千分位（CSV）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出带货币符号/千分位的数字
+      content: 请检查数字格式问题。
+      files:
+        - path: input/price.csv
+          content: 'item,price
+
+            苹果,"1,200"
+
+            香蕉,¥300
+
+            橙子,450元
+
+            梨,99
+
+            '
+      params:
+        file: input/price.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (千分位|货币符号|数字带单位|还原成纯数字)
+          weight: 2
+          note: 识别数字格式问题
+      requiredSuggestions: []
+  - id: g1-units-2
+    title: 数字带单位/千分位（JSON）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: table
+      goal: 找出带货币符号/千分位的数字
+      content: 请检查数字格式问题。
+      files:
+        - path: input/price.json
+          content: '[{"item": "苹果", "price": "1,200"}, {"item": "香蕉", "price": "¥300"}, {"item": "橙子", "price": "450元"}]'
+      params:
+        file: input/price.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (千分位|货币符号|数字带单位|还原成纯数字)
+          weight: 2
+          note: 识别数字格式问题
+      requiredSuggestions: []
+  - id: g1-clean-1
+    title: 干净表格（CSV）
+    tags:
+      - basic
+      - clean
+    repeat: 5
+    input:
+      kind: table
+      goal: 对干净数据给出确认结论
+      content: 这份表格看起来没问题，请确认。
+      files:
+        - path: input/clean.csv
+          content: "id,name,score
+
+            1,张三,90
+
+            2,李四,85
+
+            3,王五,78
+
+            4,赵六,92
+
+            5,钱七,88\n"
+      params:
+        file: input/clean.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (数据整体干净|可以直接进入下一步|没有需要清洗)
+          weight: 2
+          note: 确认数据干净
+      requiredSuggestions: []
+  - id: g1-clean-2
+    title: 干净表格（JSON）
+    tags:
+      - basic
+      - clean
+    repeat: 5
+    input:
+      kind: table
+      goal: 对干净数据给出确认结论
+      content: 这份表格看起来没问题，请确认。
+      files:
+        - path: input/clean.json
+          content: '[{"id": 1, "name": "张三", "score": 90}, {"id": 2, "name": "李四", "score": 85}, {"id": 3, "name": "王五", "score": 78}]'
+      params:
+        file: input/clean.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (数据整体干净|可以直接进入下一步|没有需要清洗)
+          weight: 2
+          note: 确认数据干净
+      requiredSuggestions: []
+  - id: g1-jsoncols-1
+    title: JSON 列式结构（列式）
+    tags:
+      - basic
+      - json
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检列式 JSON 数据
+      content: 请体检这份 JSON 数据。
+      files:
+        - path: input/cols.json
+          content: '{"name": ["张三", "李四", "王五", ""], "score": [90, 85, 78, 88]}'
+      params:
+        file: input/cols.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)json
+          weight: 1
+          note: 识别 JSON 数据源
+      requiredSuggestions: []
+  - id: g1-jsoncols-2
+    title: JSON 列式结构（混合缺失）
+    tags:
+      - basic
+      - json
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检列式 JSON 数据
+      content: 请体检这份 JSON 数据。
+      files:
+        - path: input/cols2.json
+          content: '{"a": ["x", "y", ""], "b": [1, 2, 3], "c": ["m", null, "o"]}'
+      params:
+        file: input/cols2.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)json
+          weight: 1
+          note: 识别 JSON 数据源
+      requiredSuggestions: []
+  - id: g1-mixed-1
+    title: 多问题混合表格（CSV）
+    tags:
+      - basic
+      - mixed
+    repeat: 5
+    input:
+      kind: table
+      goal: 一次性找出缺失、重复、异常值等多种问题
+      content: 请做一次全面体检。
+      files:
+        - path: input/messy.csv
+          content: "id,name,amount
+
+            1,张三,100
+
+            2,,250
+
+            3,李四,80
+
+            1,张三,100
+
+            5,王五,30000
+
+            6,,\n"
+      params:
+        file: input/messy.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: 缺失值
+          weight: 1
+          note: 识别出预期的质量问题
+        - type: regex
+          pattern: (重复行|异常值)
+          weight: 1
+          note: 识别出预期的质量问题
+        - type: suggestions_at_least
+          value: 1
+          weight: 1
+          target: suggestions
+          note: 建议小节至少给出 1 条建议
+      requiredSuggestions: []
+  - id: g1-mixed-2
+    title: 多问题混合表格（TSV）
+    tags:
+      - basic
+      - mixed
+    repeat: 5
+    input:
+      kind: table
+      goal: 一次性找出缺失、重复、异常值等多种问题
+      content: 请做一次全面体检。
+      files:
+        - path: input/messy.tsv
+          content: "id\tname\tamount
+
+            1\t张三\t100
+
+            2\t\t250
+
+            3\t李四\t
+
+            1\t张三\t100
+
+            5\t王五\t90000\n"
+      params:
+        file: input/messy.tsv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: 缺失值
+          weight: 1
+          note: 识别出预期的质量问题
+        - type: regex
+          pattern: (重复行|异常值)
+          weight: 1
+          note: 识别出预期的质量问题
+        - type: suggestions_at_least
+          value: 1
+          weight: 1
+          target: suggestions
+          note: 建议小节至少给出 1 条建议
+      requiredSuggestions: []

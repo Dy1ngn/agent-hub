@@ -1,0 +1,290 @@
+id: ts-b-stock-analyst-g3-edge
+agentId: stock-analyst
+group: g3-edge
+name: 股票分析 · 边界情况：数据不足 / 空输入 / 极端参数
+description: K 线不足 30 根、空代码、days=0/500 等边界：给出明确结论而不是崩溃（规则链路）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：K线只有10天
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: '{"symbol": "600519", "seed": 1, "days": 10}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：K线只有1天
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: '{"symbol": "600519", "seed": 2, "days": 1}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：days=0
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: '{"symbol": "600519", "seed": 3, "days": 0}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：空股票代码
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: '{"symbol": "", "seed": 4, "days": 60}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：空 content
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: ""
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：days=500 上限
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: '{"symbol": "AAPL", "seed": 6, "days": 500}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：恰好29根K线
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: '{"symbol": "000001", "seed": 7, "days": 29}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：恰好30根K线
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: '{"symbol": "000001", "seed": 8, "days": 30}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：股票代码是特殊符号
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: '{"symbol": "@@@", "seed": 9, "days": 60}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：content 不是 JSON
+    tags:
+      - edge
+      - rule
+    repeat: 10
+    input:
+      kind: json
+      goal: 边界输入下给出明确结论
+      content: just-a-symbol-600519
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 80
+          weight: 1
+      requiredSuggestions: []

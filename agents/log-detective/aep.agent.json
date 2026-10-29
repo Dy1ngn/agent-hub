@@ -1,0 +1,52 @@
+{
+  "id": "log-detective",
+  "name": "日志排查",
+  "description": "流式扫描多种格式日志并聚合错误签名、时间分布与访问日志指标，再由 Claude 给出根因假设和排查命令的日志排查助手。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--stats-only"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "{{params.log1}}",
+      "{{params.log2}}",
+      "--output",
+      "{{outputDir}}/report.md",
+      "--top",
+      "{{params.top}}",
+      "--since",
+      "{{params.since}}",
+      "--until",
+      "{{params.until}}",
+      "--grep",
+      "{{params.grep}}"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "下一步排查命令"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

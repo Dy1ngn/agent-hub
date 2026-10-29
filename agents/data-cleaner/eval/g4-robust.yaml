@@ -1,0 +1,744 @@
+id: ts-b-data-cleaner-g4-robust
+agentId: data-cleaner
+group: g4-robust
+name: 表格清洗 · 鲁棒性：畸形输入与坏 JSON
+description: 列数不齐、未闭合引号、乱码、坏 JSON、NUL 字节、文件不存在等异常输入下优雅处理不崩溃（离线模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：列数不齐
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：列数不齐
+      files:
+        - path: input/bad1.csv
+          content: "a,b\n1,2,3\n4\n5,6,7\n"
+      params:
+        file: input/bad1.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|问题清单
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：引号未闭合
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：引号未闭合
+      files:
+        - path: input/bad2.csv
+          content: 'a,b
+
+            "x,2
+
+            y,3
+
+            '
+      params:
+        file: input/bad2.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：分隔符混用
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：分隔符混用
+      files:
+        - path: input/bad3.csv
+          content: "a;b\n1;2\nx,y\n3;4\n"
+      params:
+        file: input/bad3.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：乱码字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：乱码字符
+      files:
+        - path: input/bad4.csv
+          content: "a,b\n鲤鲦鲪,2\n锟斤拷,3\n"
+      params:
+        file: input/bad4.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：坏 JSON 截断
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：坏 JSON 截断
+      files:
+        - path: input/bad5.json
+          content: '{"a": [1,2'
+      params:
+        file: input/bad5.json
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 失败文件|解析失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：坏 JSON 顶层标量数组
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：坏 JSON 顶层标量数组
+      files:
+        - path: input/bad6.json
+          content: "[1,2,3]"
+      params:
+        file: input/bad6.json
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 失败文件|空表
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：坏 JSON 顶层字符串
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：坏 JSON 顶层字符串
+      files:
+        - path: input/bad7.json
+          content: '"hello"'
+      params:
+        file: input/bad7.json
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 失败文件|解析失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：空 JSON 对象
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：空 JSON 对象
+      files:
+        - path: input/bad8.json
+          content: "{}"
+      params:
+        file: input/bad8.json
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 失败文件|空表
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：NUL 字节
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：NUL 字节
+      files:
+        - path: input/bad9.csv
+          content: "a,b\n1\01,2\n"
+      params:
+        file: input/bad9.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 失败文件|解析失败
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：文件不存在
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：文件不存在
+      files:
+        - path: input/unused.csv
+          content: （这份夹具文件不应被读取：参数指向不存在的 ghost.csv）
+      params:
+        file: input/ghost.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 失败文件|找不到文件
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：只有空白与制表符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：只有空白与制表符
+      files:
+        - path: input/bad11.csv
+          content: "   \t\ \n \t\n"
+      params:
+        file: input/bad11.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 失败文件|空表
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：控制字符 BEL
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：控制字符 BEL
+      files:
+        - path: input/bad12.csv
+          content: "a,b\n1\a1,2\nx\ay,3\n"
+      params:
+        file: input/bad12.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：零宽字符
+      files:
+        - path: input/bad13.csv
+          content: "a,b\n1​,2\n3‌,4\n"
+      params:
+        file: input/bad13.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：混合换行符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：混合换行符
+      files:
+        - path: input/bad14.csv
+          content: "a,b\r1,2\r3,4\r\n5,6\n"
+      params:
+        file: input/bad14.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：超长单行
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：超长单行
+      files:
+        - path: input/bad15.csv
+          content: "note
+
+            超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本\n"
+      params:
+        file: input/bad15.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 统计摘要|文本长度分布
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：整列缺失
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：整列缺失
+      files:
+        - path: input/bad16.csv
+          content: "a,b,c\n,,\nx,,\n,,\n"
+      params:
+        file: input/bad16.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 缺失值|严重|警告
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：公式注入样式内容
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：公式注入样式内容
+      files:
+        - path: input/bad17.csv
+          content: "a,b\n=SUM(A1),2\n+1,3\n-1,4\n"
+      params:
+        file: input/bad17.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：HTML 脚本片段
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：HTML 脚本片段
+      files:
+        - path: input/bad18.csv
+          content: 'a,b
+
+            "<script>alert(1)</script>",x
+
+            "<b>粗体</b>",y
+
+            '
+      params:
+        file: input/bad18.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：重复列名加列数不齐
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：重复列名加列数不齐
+      files:
+        - path: input/bad19.csv
+          content: "a,a\n1\n2,3,4\n"
+      params:
+        file: input/bad19.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|列类型
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：emoji 与控制字符混合
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告
+      content: 样本：emoji 与控制字符混合
+      files:
+        - path: input/bad20.csv
+          content: "a,b\n😀\a,2\n​🚀,3\n"
+      params:
+        file: input/bad20.csv
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 数据概览|文本
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

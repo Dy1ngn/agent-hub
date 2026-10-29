@@ -1,0 +1,930 @@
+id: ts-b-sql-chat-g4-robust
+agentId: sql-chat
+group: g4-robust
+name: SQL 问答 · 鲁棒性：坏数据源与非法 SQL
+description: 畸形 CSV、坏 JSON、NUL、写操作 SQL、多语句、坏列名、非法参数等异常输入下优雅拒绝不崩溃（离线 --sql）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：列数不齐 CSV
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city\n1,北京,extra\n2\n3,上海\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 列数不齐
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果|查询未执行完成
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：引号未闭合
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: 'id,city
+
+            1,"北京
+
+            2,上海
+
+            '
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 引号未闭合
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果|查询未执行完成
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：分隔符混用
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id;city\n1;北京\n2,上海\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 分隔符混用
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果|查询未执行完成
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：乱码内容
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "鲤鲦鲪,2\n锟斤拷,3\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 乱码内容
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果|查询未执行完成
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：坏 JSON 截断
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.json
+          content: '{"a": [1,2'
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.json
+        q: 坏 JSON
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|未产生结果
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：JSON 顶层非数组
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.json
+          content: '{"a": 1}'
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.json
+        q: JSON 顶层对象
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|未产生结果
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：NUL 字节
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city\n1\0,北京\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: NUL 字节
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果|查询未执行完成
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：非法 SQL 写操作
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 写操作
+        sql: DELETE FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|已拒绝|只允许
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：非法 SQL 多语句
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 多语句
+        sql: SELECT 1; SELECT 2
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|一条
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：SQL 列不存在
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 坏列名
+        sql: SELECT bad_col FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|SQLite
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：非法参数 limit=0
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 非法参数
+        sql: SELECT * FROM data
+        limit: "0"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|正整数
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：非法参数 limit=-5
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 非法参数
+        sql: SELECT * FROM data
+        limit: "-5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|正整数
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：数据源不存在
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/unused.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/ghost.csv
+        q: 缺数据源
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|数据源不存在
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city\n1,北京\a\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 控制字符
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果|查询未执行完成
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：超长单元格
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,note
+
+            1,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 超长单元格
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：emoji 值
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,name\n1,😀甲\n2,🚀乙\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: emoji 值
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：SQL 注入样式值
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,name
+
+            1,\"'); DROP TABLE data; --\"\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 注入样式值
+        sql: SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：只读 PRAGMA
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 只读 PRAGMA
+        sql: PRAGMA table_info(data)
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：EXPLAIN 查询
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 执行计划
+        sql: EXPLAIN QUERY PLAN SELECT * FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：SQL 只有注释
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: table
+      goal: 异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 只有注释
+        sql: -- just a comment
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询未执行完成|SQL 为空
+          weight: 2
+          note: 优雅处理结果符合预期
+        - type: min_length
+          value: 100
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

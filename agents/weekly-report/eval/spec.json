@@ -1,0 +1,1949 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：git + 工作记录周报",
+      "description": "典型提交与工作记录输入，走完整「采集 + 模型生成」链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-feat-{i}",
+          "title": "功能提交 + 工作记录（{subject}）",
+          "tags": [
+            "basic",
+            "git"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "生成周报：git 提交 + 工作记录合并",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2,
+                "note": "commit 说明回显在数据附录"
+              },
+              {
+                "type": "contains",
+                "text": "## 本周完成",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增支付回调接口",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增登录鉴权 | +220 -40 | src/auth/login.py,src/auth/token.py\n2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | docs: 补充鉴权文档 | +80 -0 | docs/auth.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-26\n- [x] 对齐鉴权接口字段\n- [ ] 补充鉴权单测\n\n## 2026-10-28\n- [x] 联调登录流程\n- [ ] 整理发版清单\n",
+              "subject": "feat: 新增登录鉴权",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g1-daily-{i}",
+          "title": "日报（{subject}）",
+          "tags": [
+            "basic",
+            "daily"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "生成日报",
+            "content": "请生成工作日报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "## 今日完成",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "fix: 修复金额计算精度",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增登录鉴权 | +220 -40 | src/auth/login.py,src/auth/token.py\n2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | docs: 补充鉴权文档 | +80 -0 | docs/auth.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-26\n- [x] 对齐鉴权接口字段\n- [ ] 补充鉴权单测\n\n## 2026-10-28\n- [x] 联调登录流程\n- [ ] 整理发版清单\n",
+              "subject": "docs: 补充鉴权文档",
+              "rt": "daily",
+              "days": "1"
+            }
+          ]
+        },
+        {
+          "id": "g1-weekly-{i}",
+          "title": "周报计划小节（{subject}）",
+          "tags": [
+            "basic",
+            "weekly"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "生成周报并给出下周期计划",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "## 下周计划",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "## 风险与需要支持",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "docs: 补充支付模块文档",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增登录鉴权 | +220 -40 | src/auth/login.py,src/auth/token.py\n2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | docs: 补充鉴权文档 | +80 -0 | docs/auth.md\n2026-10-28 | docs: 补充支付模块文档 | +64 -0 | docs/pay.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-26\n- [x] 对齐鉴权接口字段\n- [ ] 补充鉴权单测\n\n## 2026-10-28\n- [x] 联调登录流程\n- [ ] 整理发版清单\n",
+              "subject": "docs: 补充支付模块文档",
+              "rt": "weekly",
+              "days": "14"
+            }
+          ]
+        },
+        {
+          "id": "g1-mixed-{i}",
+          "title": "全部提交类型（{subject}）",
+          "tags": [
+            "basic",
+            "classification"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "按提交类型分类统计",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "### 分类统计表",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(新功能|缺陷修复|文档|重构|测试|杂项)",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-26 | feat: 新增订单导出 | +120 -20 | src/order/export.py\n2026-10-26 | fix: 修复订单分页 | +30 -10 | src/order/list.py\n2026-10-27 | docs: 更新订单文档 | +40 -0 | docs/order.md\n2026-10-27 | refactor: 拆分订单服务 | +200 -180 | src/order/service.py\n2026-10-28 | test: 补充订单单测 | +150 -0 | tests/test_order.py\n2026-10-28 | chore: 升级构建脚本 | +15 -5 | build.py\n2026-10-28 | 调整订单超时时间 | +4 -4 | src/order/conf.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 参加架构评审会\n- [x] 整理网关压测数据\n- [ ] 跟进容量评估结论\n",
+              "subject": "refactor: 拆分订单服务",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增支付导出 | +120 -20 | src/order/export.py\n2026-10-26 | fix: 修复支付分页 | +30 -10 | src/order/list.py\n2026-10-27 | docs: 更新支付文档 | +40 -0 | docs/order.md\n2026-10-27 | refactor: 拆分支付服务 | +200 -180 | src/order/service.py\n2026-10-28 | test: 补充支付单测 | +150 -0 | tests/test_order.py\n2026-10-28 | chore: 升级构建脚本 | +15 -5 | build.py\n2026-10-28 | 调整支付超时时间 | +4 -4 | src/order/conf.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 参加架构评审会\n- [x] 整理网关压测数据\n- [ ] 跟进容量评估结论\n",
+              "subject": "test: 补充支付单测",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g1-modules-{i}",
+          "title": "模块聚合（{subject}）",
+          "tags": [
+            "basic",
+            "modules"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "按模块聚合提交统计",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "### 模块统计表",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "src",
+                "weight": 1,
+                "note": "模块名回显"
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-26 | feat: 新增网关路由 | +90 -10 | src/gateway/router.py\n2026-10-27 | feat: 新增前端页面 | +300 -20 | web/src/page.js\n2026-10-27 | fix: 修复脚本参数 | +12 -3 | scripts/run.py\n2026-10-28 | docs: 更新部署文档 | +60 -0 | docs/deploy.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 参加架构评审会\n- [x] 整理网关压测数据\n- [ ] 跟进容量评估结论\n",
+              "subject": "feat: 新增网关路由",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增监控面板 | +90 -10 | src/gateway/router.py\n2026-10-27 | feat: 新增管理后台 | +300 -20 | web/src/page.js\n2026-10-27 | fix: 修复脚本参数 | +12 -3 | scripts/run.py\n2026-10-28 | docs: 更新部署文档 | +60 -0 | docs/deploy.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 参加架构评审会\n- [x] 整理网关压测数据\n- [ ] 跟进容量评估结论\n",
+              "subject": "feat: 新增监控面板",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g1-notes-{i}",
+          "title": "工作记录为主（{note}）",
+          "tags": [
+            "basic",
+            "notes"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "以工作记录为主的周报",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{note}",
+                "weight": 2,
+                "note": "工作记录条目回显"
+              },
+              {
+                "type": "contains",
+                "text": "### 按日明细",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "# 没有提交\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "note": "完成支付模块联调",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 没有提交\n",
+              "notes": "# 工作记录\n\n## 2026-10-26\n- [x] 对齐鉴权接口字段\n- [ ] 补充鉴权单测\n\n## 2026-10-28\n- [x] 联调登录流程\n- [ ] 整理发版清单\n",
+              "note": "联调登录流程",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g1-cn-{i}",
+          "title": "中文提交说明（{subject}）",
+          "tags": [
+            "basic",
+            "chinese"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "中文提交说明的分类统计",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "(新增|修复|更新)",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-26 | 新增用户画像接口 | +180 -30 | src/user/profile.py\n2026-10-27 | 修复头像上传失败 | +42 -16 | src/user/avatar.py\n2026-10-28 | 更新接口文档 | +55 -0 | docs/user.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "新增用户画像接口",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | 新增库存同步接口 | +180 -30 | src/user/profile.py\n2026-10-27 | 修复图片裁剪失败 | +42 -16 | src/user/avatar.py\n2026-10-28 | 更新接口文档 | +55 -0 | docs/user.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "新增库存同步接口",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g1-window-{i}",
+          "title": "两周窗口多提交（{subject}）",
+          "tags": [
+            "basic",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "两周窗口的多提交周报",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "commit 总数 \\| 10",
+                "weight": 2,
+                "note": "commit 计数正确"
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-16 | feat: 新增模块功能01 | +57 -3 | src/mod2/service.py\n2026-10-17 | feat: 新增模块功能02 | +64 -6 | src/mod3/service.py\n2026-10-18 | feat: 新增模块功能03 | +71 -9 | src/mod4/service.py\n2026-10-19 | feat: 新增模块功能04 | +78 -12 | src/mod1/service.py\n2026-10-20 | feat: 新增模块功能05 | +85 -15 | src/mod2/service.py\n2026-10-21 | feat: 新增模块功能06 | +92 -18 | src/mod3/service.py\n2026-10-22 | feat: 新增模块功能07 | +99 -21 | src/mod4/service.py\n2026-10-23 | feat: 新增模块功能08 | +106 -24 | src/mod1/service.py\n2026-10-24 | feat: 新增模块功能09 | +113 -27 | src/mod2/service.py\n2026-10-25 | feat: 新增模块功能10 | +120 -30 | src/mod3/service.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增模块功能01",
+              "rt": "weekly",
+              "days": "14"
+            },
+            {
+              "commits": "2026-10-16 | feat: 新增平台能力01 | +57 -3 | src/mod2/service.py\n2026-10-17 | feat: 新增平台能力02 | +64 -6 | src/mod3/service.py\n2026-10-18 | feat: 新增平台能力03 | +71 -9 | src/mod4/service.py\n2026-10-19 | feat: 新增平台能力04 | +78 -12 | src/mod1/service.py\n2026-10-20 | feat: 新增平台能力05 | +85 -15 | src/mod2/service.py\n2026-10-21 | feat: 新增平台能力06 | +92 -18 | src/mod3/service.py\n2026-10-22 | feat: 新增平台能力07 | +99 -21 | src/mod4/service.py\n2026-10-23 | feat: 新增平台能力08 | +106 -24 | src/mod1/service.py\n2026-10-24 | feat: 新增平台能力09 | +113 -27 | src/mod2/service.py\n2026-10-25 | feat: 新增平台能力10 | +120 -30 | src/mod3/service.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增平台能力01",
+              "rt": "weekly",
+              "days": "14"
+            }
+          ]
+        },
+        {
+          "id": "g1-single-{i}",
+          "title": "单条提交 + 单条记录（{subject}）",
+          "tags": [
+            "basic",
+            "minimal"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "最小输入的周报",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "## 概述",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-28 | feat: 新增二维码登录 | +40 -0 | src/auth/qr.py\n",
+              "notes": "## 2026-10-28\n- [x] 调研二维码登录方案\n",
+              "subject": "feat: 新增二维码登录",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | fix: 修复验证码过期 | +12 -4 | src/auth/captcha.py\n",
+              "notes": "## 2026-10-28\n- [x] 复现验证码过期问题\n",
+              "subject": "fix: 修复验证码过期",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g1-merge-{i}",
+          "title": "提交与记录重复去重（{subject}）",
+          "tags": [
+            "basic",
+            "dedup"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "git 说明与工作记录重复时合并去重",
+            "content": "请生成工作周报。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "合并去重丢弃的重复条目 \\| [1-9]",
+                "weight": 2,
+                "note": "重复条目被去重"
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | feat: 新增报表导出 | +140 -30 | src/report/export.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] fix: 修复登录跳转\n- [x] 联调报表导出接口\n\n## 2026-10-28\n- [ ] 补充报表单测\n",
+              "subject": "fix: 修复登录跳转",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-27 | fix: 修复支付回调 | +25 -8 | src/auth/redirect.py\n2026-10-28 | feat: 新增账单推送 | +140 -30 | src/report/export.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] fix: 修复支付回调\n- [x] 联调账单推送接口\n\n## 2026-10-28\n- [ ] 补充报表单测\n",
+              "subject": "fix: 修复支付回调",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：窗口 / 提交量 / 记录格式 / 参数",
+      "description": "统计窗口、提交量、工作记录格式与报告类型参数变体，走模型链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-windows-{i}",
+          "title": "统计窗口变体（{days} 天）",
+          "tags": [
+            "variation",
+            "window"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同统计窗口的报告",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "### 每日分布",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增支付回调接口",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增支付回调接口",
+              "rt": "weekly",
+              "days": "14"
+            },
+            {
+              "commits": "2026-10-16 | feat: 新增模块功能01 | +57 -3 | src/mod2/service.py\n2026-10-17 | feat: 新增模块功能02 | +64 -6 | src/mod3/service.py\n2026-10-18 | feat: 新增模块功能03 | +71 -9 | src/mod4/service.py\n2026-10-19 | feat: 新增模块功能04 | +78 -12 | src/mod1/service.py\n2026-10-20 | feat: 新增模块功能05 | +85 -15 | src/mod2/service.py\n2026-10-21 | feat: 新增模块功能06 | +92 -18 | src/mod3/service.py\n2026-10-22 | feat: 新增模块功能07 | +99 -21 | src/mod4/service.py\n2026-10-23 | feat: 新增模块功能08 | +106 -24 | src/mod1/service.py\n2026-10-24 | feat: 新增模块功能09 | +113 -27 | src/mod2/service.py\n2026-10-25 | feat: 新增模块功能10 | +120 -30 | src/mod3/service.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增模块功能01",
+              "rt": "weekly",
+              "days": "30"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增登录鉴权 | +220 -40 | src/auth/login.py,src/auth/token.py\n2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | docs: 补充鉴权文档 | +80 -0 | docs/auth.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-26\n- [x] 对齐鉴权接口字段\n- [ ] 补充鉴权单测\n\n## 2026-10-28\n- [x] 联调登录流程\n- [ ] 整理发版清单\n",
+              "subject": "feat: 新增登录鉴权",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增登录鉴权 | +220 -40 | src/auth/login.py,src/auth/token.py\n2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | docs: 补充鉴权文档 | +80 -0 | docs/auth.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-26\n- [x] 对齐鉴权接口字段\n- [ ] 补充鉴权单测\n\n## 2026-10-28\n- [x] 联调登录流程\n- [ ] 整理发版清单\n",
+              "subject": "feat: 新增登录鉴权",
+              "rt": "daily",
+              "days": "3"
+            }
+          ]
+        },
+        {
+          "id": "g2-volume-{i}",
+          "title": "提交量变体（{subject}）",
+          "tags": [
+            "variation",
+            "volume"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同提交量的报告",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "## 概述",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-28 | feat: 新增二维码登录 | +40 -0 | src/auth/qr.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增二维码登录",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "fix: 修复金额计算精度",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增订单导出 | +120 -20 | src/order/export.py\n2026-10-26 | fix: 修复订单分页 | +30 -10 | src/order/list.py\n2026-10-27 | docs: 更新订单文档 | +40 -0 | docs/order.md\n2026-10-27 | refactor: 拆分订单服务 | +200 -180 | src/order/service.py\n2026-10-28 | test: 补充订单单测 | +150 -0 | tests/test_order.py\n2026-10-28 | chore: 升级构建脚本 | +15 -5 | build.py\n2026-10-28 | 调整订单超时时间 | +4 -4 | src/order/conf.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 参加架构评审会\n- [x] 整理网关压测数据\n- [ ] 跟进容量评估结论\n",
+              "subject": "chore: 升级构建脚本",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-16 | feat: 新增模块功能01 | +57 -3 | src/mod2/service.py\n2026-10-17 | feat: 新增模块功能02 | +64 -6 | src/mod3/service.py\n2026-10-18 | feat: 新增模块功能03 | +71 -9 | src/mod4/service.py\n2026-10-19 | feat: 新增模块功能04 | +78 -12 | src/mod1/service.py\n2026-10-20 | feat: 新增模块功能05 | +85 -15 | src/mod2/service.py\n2026-10-21 | feat: 新增模块功能06 | +92 -18 | src/mod3/service.py\n2026-10-22 | feat: 新增模块功能07 | +99 -21 | src/mod4/service.py\n2026-10-23 | feat: 新增模块功能08 | +106 -24 | src/mod1/service.py\n2026-10-24 | feat: 新增模块功能09 | +113 -27 | src/mod2/service.py\n2026-10-25 | feat: 新增模块功能10 | +120 -30 | src/mod3/service.py\n# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增模块功能10",
+              "rt": "weekly",
+              "days": "30"
+            },
+            {
+              "commits": "2026-10-21 | feat: 批量功能01 | +10 -1 | src/m2/a.py\n2026-10-22 | feat: 批量功能02 | +20 -2 | src/m3/a.py\n2026-10-23 | feat: 批量功能03 | +30 -3 | src/m1/a.py\n2026-10-24 | feat: 批量功能04 | +40 -4 | src/m2/a.py\n2026-10-25 | feat: 批量功能05 | +50 -5 | src/m3/a.py\n2026-10-26 | feat: 批量功能06 | +60 -6 | src/m1/a.py\n2026-10-27 | feat: 批量功能07 | +70 -7 | src/m2/a.py\n2026-10-28 | feat: 批量功能08 | +80 -8 | src/m3/a.py\n2026-10-29 | feat: 批量功能09 | +90 -9 | src/m1/a.py\n2026-10-20 | feat: 批量功能10 | +100 -10 | src/m2/a.py\n2026-10-21 | feat: 批量功能11 | +110 -11 | src/m3/a.py\n2026-10-22 | feat: 批量功能12 | +120 -12 | src/m1/a.py\n2026-10-23 | feat: 批量功能13 | +130 -13 | src/m2/a.py\n2026-10-24 | feat: 批量功能14 | +140 -14 | src/m3/a.py\n2026-10-25 | feat: 批量功能15 | +150 -15 | src/m1/a.py\n2026-10-26 | feat: 批量功能16 | +160 -16 | src/m2/a.py\n2026-10-27 | feat: 批量功能17 | +170 -17 | src/m3/a.py\n2026-10-28 | feat: 批量功能18 | +180 -18 | src/m1/a.py\n2026-10-29 | feat: 批量功能19 | +190 -19 | src/m2/a.py\n2026-10-20 | feat: 批量功能20 | +200 -20 | src/m3/a.py\n2026-10-21 | feat: 批量功能21 | +210 -21 | src/m1/a.py\n2026-10-22 | feat: 批量功能22 | +220 -22 | src/m2/a.py\n2026-10-23 | feat: 批量功能23 | +230 -23 | src/m3/a.py\n2026-10-24 | feat: 批量功能24 | +240 -24 | src/m1/a.py\n2026-10-25 | feat: 批量功能25 | +250 -25 | src/m2/a.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 批量功能01",
+              "rt": "weekly",
+              "days": "14"
+            }
+          ]
+        },
+        {
+          "id": "g2-notes-style-{i}",
+          "title": "工作记录格式变体（{note}）",
+          "tags": [
+            "variation",
+            "notes"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同日期标题写法的工作记录",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{note}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "### 按日明细",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成配置中心接入\n- [ ] 推进灰度方案\n",
+              "note": "完成配置中心接入",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 10.27\n- [x] 完成配置中心接入\n- [ ] 推进灰度方案\n",
+              "note": "完成配置中心接入",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 周一\n- [x] 完成配置中心接入\n- [ ] 推进灰度方案\n",
+              "note": "完成配置中心接入",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 星期三\n- [x] 完成配置中心接入\n- [ ] 推进灰度方案\n",
+              "note": "完成配置中心接入",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "- [x] 完成配置中心接入\n- [ ] 推进灰度方案\n",
+              "note": "完成配置中心接入",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g2-params-{i}",
+          "title": "报告类型 × 窗口参数（{rt}）",
+          "tags": [
+            "variation",
+            "params"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同报告类型与统计窗口参数",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "## 数据附录",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增支付回调接口",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增支付回调接口",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增登录鉴权 | +220 -40 | src/auth/login.py,src/auth/token.py\n2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | docs: 补充鉴权文档 | +80 -0 | docs/auth.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-26\n- [x] 对齐鉴权接口字段\n- [ ] 补充鉴权单测\n\n## 2026-10-28\n- [x] 联调登录流程\n- [ ] 整理发版清单\n",
+              "subject": "fix: 修复登录跳转",
+              "rt": "weekly",
+              "days": "30"
+            },
+            {
+              "commits": "2026-10-26 | 新增用户画像接口 | +180 -30 | src/user/profile.py\n2026-10-27 | 修复头像上传失败 | +42 -16 | src/user/avatar.py\n2026-10-28 | 更新接口文档 | +55 -0 | docs/user.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "修复头像上传失败",
+              "rt": "daily",
+              "days": "2"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增网关路由 | +90 -10 | src/gateway/router.py\n2026-10-27 | feat: 新增前端页面 | +300 -20 | web/src/page.js\n2026-10-27 | fix: 修复脚本参数 | +12 -3 | scripts/run.py\n2026-10-28 | docs: 更新部署文档 | +60 -0 | docs/deploy.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 参加架构评审会\n- [x] 整理网关压测数据\n- [ ] 跟进容量评估结论\n",
+              "subject": "docs: 更新部署文档",
+              "rt": "weekly",
+              "days": "3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：单条 / 零行 / 极端数值",
+      "description": "单条提交或记录、零行改动、巨大数值、超长说明等边界输入，离线确定性输出",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-minimal-{i}",
+          "title": "极小输入（{subject}）",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "极小输入也要优雅出报告",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-28 | feat: 新增二维码登录 | +40 -0 | src/auth/qr.py\n",
+              "notes": "",
+              "subject": "feat: 新增二维码登录",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "",
+              "notes": "- [x] 只有一条记录\n",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "# 只有注释\n",
+              "notes": "## 2026-10-28\n- [ ] 只有一条计划\n",
+              "subject": "x",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "2026-10-28 | a | +0 -0 | x.py\n",
+              "notes": "",
+              "subject": "a",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | fix: 零行改动 | +0 -0 | src/x.py\n",
+              "notes": "- [x] 零行改动验证\n",
+              "subject": "fix: 零行改动",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 巨大改动 | +9999999 -8888888 | src/big.py\n",
+              "notes": "",
+              "subject": "feat: 巨大改动",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "无日期的提交说明 | +10 -2 | src/nd.py\n",
+              "notes": "",
+              "subject": "无日期的提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 单文件提交 | +7 -1 | README.md\n",
+              "notes": "",
+              "subject": "feat: 单文件提交",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "",
+              "notes": "- 无勾选状态的条目\n",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 超长说明很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字 | +1 -1 | src/long.py\n",
+              "notes": "",
+              "subject": "feat: 超长说明",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g3-extreme-{i}",
+          "title": "极端规模（{subject}）",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "超多条目与极端数值也要正常出报告",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "## 数据附录",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-11 | feat: 批量功能01 | +13 -2 | src/m2/a.py\n2026-10-12 | feat: 批量功能02 | +26 -4 | src/m3/a.py\n2026-10-13 | feat: 批量功能03 | +39 -6 | src/m4/a.py\n2026-10-14 | feat: 批量功能04 | +52 -8 | src/m5/a.py\n2026-10-15 | feat: 批量功能05 | +65 -10 | src/m1/a.py\n2026-10-16 | feat: 批量功能06 | +78 -12 | src/m2/a.py\n2026-10-17 | feat: 批量功能07 | +91 -14 | src/m3/a.py\n2026-10-18 | feat: 批量功能08 | +104 -16 | src/m4/a.py\n2026-10-19 | feat: 批量功能09 | +117 -18 | src/m5/a.py\n2026-10-20 | feat: 批量功能10 | +130 -20 | src/m1/a.py\n2026-10-21 | feat: 批量功能11 | +143 -22 | src/m2/a.py\n2026-10-22 | feat: 批量功能12 | +156 -24 | src/m3/a.py\n2026-10-23 | feat: 批量功能13 | +169 -26 | src/m4/a.py\n2026-10-24 | feat: 批量功能14 | +182 -28 | src/m5/a.py\n2026-10-25 | feat: 批量功能15 | +195 -30 | src/m1/a.py\n2026-10-26 | feat: 批量功能16 | +208 -32 | src/m2/a.py\n2026-10-27 | feat: 批量功能17 | +221 -34 | src/m3/a.py\n2026-10-10 | feat: 批量功能18 | +234 -36 | src/m4/a.py\n2026-10-11 | feat: 批量功能19 | +247 -38 | src/m5/a.py\n2026-10-12 | feat: 批量功能20 | +260 -40 | src/m1/a.py\n2026-10-13 | feat: 批量功能21 | +273 -42 | src/m2/a.py\n2026-10-14 | feat: 批量功能22 | +286 -44 | src/m3/a.py\n2026-10-15 | feat: 批量功能23 | +299 -46 | src/m4/a.py\n2026-10-16 | feat: 批量功能24 | +312 -48 | src/m5/a.py\n2026-10-17 | feat: 批量功能25 | +325 -50 | src/m1/a.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 批量功能01",
+              "rt": "weekly",
+              "days": "30"
+            },
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 批量记录条目01\n- [x] 批量记录条目02\n- [x] 批量记录条目03\n- [x] 批量记录条目04\n- [x] 批量记录条目05\n- [x] 批量记录条目06\n- [x] 批量记录条目07\n- [x] 批量记录条目08\n- [x] 批量记录条目09\n- [x] 批量记录条目10\n- [x] 批量记录条目11\n- [x] 批量记录条目12\n- [x] 批量记录条目13\n- [x] 批量记录条目14\n- [x] 批量记录条目15\n- [x] 批量记录条目16\n- [x] 批量记录条目17\n- [x] 批量记录条目18\n- [x] 批量记录条目19\n- [x] 批量记录条目20\n- [x] 批量记录条目21\n- [x] 批量记录条目22\n- [x] 批量记录条目23\n- [x] 批量记录条目24\n- [x] 批量记录条目25\n- [x] 批量记录条目26\n- [x] 批量记录条目27\n- [x] 批量记录条目28\n- [x] 批量记录条目29\n- [x] 批量记录条目30\n- [x] 批量记录条目31\n- [x] 批量记录条目32\n- [x] 批量记录条目33\n- [x] 批量记录条目34\n- [x] 批量记录条目35\n- [x] 批量记录条目36\n- [x] 批量记录条目37\n- [x] 批量记录条目38\n- [x] 批量记录条目39\n- [x] 批量记录条目40\n- [x] 批量记录条目41\n- [x] 批量记录条目42\n- [x] 批量记录条目43\n- [x] 批量记录条目44\n- [x] 批量记录条目45\n- [x] 批量记录条目46\n- [x] 批量记录条目47\n- [x] 批量记录条目48\n- [x] 批量记录条目49\n- [x] 批量记录条目50\n",
+              "subject": "feat: 新增支付回调接口",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 超长提交说明内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容 | +5 -5 | src/long.py\n",
+              "notes": "",
+              "subject": "feat: 超长提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 天文数字 | +99999999 -99999999 | src/big.py\n",
+              "notes": "",
+              "subject": "feat: 天文数字",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-21 | feat: 多模块01 | +5 -1 | mod1/a.py\n2026-10-22 | feat: 多模块02 | +10 -2 | mod2/a.py\n2026-10-23 | feat: 多模块03 | +15 -3 | mod3/a.py\n2026-10-24 | feat: 多模块04 | +20 -4 | mod4/a.py\n2026-10-25 | feat: 多模块05 | +25 -5 | mod5/a.py\n2026-10-26 | feat: 多模块06 | +30 -6 | mod6/a.py\n2026-10-27 | feat: 多模块07 | +35 -7 | mod7/a.py\n2026-10-28 | feat: 多模块08 | +40 -8 | mod8/a.py\n2026-10-29 | feat: 多模块09 | +45 -9 | mod9/a.py\n2026-10-20 | feat: 多模块10 | +50 -10 | mod10/a.py\n",
+              "notes": "",
+              "subject": "feat: 多模块01",
+              "rt": "weekly",
+              "days": "14"
+            },
+            {
+              "commits": "2026-10-15 | feat: 逐日提交01 | +10 -2 | src/daily.py\n2026-10-16 | feat: 逐日提交02 | +10 -2 | src/daily.py\n2026-10-17 | feat: 逐日提交03 | +10 -2 | src/daily.py\n2026-10-18 | feat: 逐日提交04 | +10 -2 | src/daily.py\n2026-10-19 | feat: 逐日提交05 | +10 -2 | src/daily.py\n2026-10-20 | feat: 逐日提交06 | +10 -2 | src/daily.py\n2026-10-21 | feat: 逐日提交07 | +10 -2 | src/daily.py\n2026-10-22 | feat: 逐日提交08 | +10 -2 | src/daily.py\n2026-10-23 | feat: 逐日提交09 | +10 -2 | src/daily.py\n2026-10-24 | feat: 逐日提交10 | +10 -2 | src/daily.py\n2026-10-25 | feat: 逐日提交11 | +10 -2 | src/daily.py\n2026-10-26 | feat: 逐日提交12 | +10 -2 | src/daily.py\n2026-10-27 | feat: 逐日提交13 | +10 -2 | src/daily.py\n2026-10-28 | feat: 逐日提交14 | +10 -2 | src/daily.py\n2026-10-29 | feat: 逐日提交15 | +10 -2 | src/daily.py\n",
+              "notes": "",
+              "subject": "feat: 逐日提交01",
+              "rt": "weekly",
+              "days": "30"
+            },
+            {
+              "commits": "2026-10-21 | feat: 甲 | +1 -1 | src/t.py\n2026-10-22 | fix: 乙 | +2 -2 | src/t.py\n2026-10-23 | docs: 丙 | +3 -3 | src/t.py\n2026-10-24 | refactor: 丁 | +4 -4 | src/t.py\n2026-10-25 | test: 戊 | +5 -5 | src/t.py\n2026-10-26 | chore: 己 | +6 -6 | src/t.py\n2026-10-27 | 其他说明 | +7 -7 | src/t.py\n2026-10-28 | feat: 庚 | +8 -8 | src/t.py\n2026-10-29 | fix: 辛 | +9 -9 | src/t.py\n2026-10-20 | docs: 壬 | +10 -10 | src/t.py\n",
+              "notes": "",
+              "subject": "refactor: 丁",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n",
+              "notes": "",
+              "subject": "feat: 重复说明",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "2026-10-28 | daily: 日报提交 | +30 -10 | src/x.py\n",
+              "notes": "# 记录\n## 2026-10-28\n- [x] 日报记录条目\n- [ ] 明日计划一\n",
+              "subject": "daily: 日报提交",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "2026-10-28 | feat: 混合输入 | +20 -5 | src/x.py\n",
+              "notes": "# 记录\n\n## 周一\n- [x] 周一记录\n\n## 周二\n- [ ] 周二计划\n",
+              "subject": "feat: 混合输入",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：损坏行 / 乱码 / 缺字段",
+      "description": "损坏 commit 行、乱码、坏统计字段、畸形工作记录，优雅处理不崩溃（离线）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-broken-{i}",
+          "title": "损坏 commit 行（{subject}）",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "损坏的 commit 列表不崩溃",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2,
+                "note": "可解析的提交仍回显"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "!!! 乱七八糟的行 !!!\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "��� 锟斤拷\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 |  | +1 -0 |\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "|||||\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 坏统计字段 | abc | src/x.py\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 坏文件字段 | +5 -5 | ,,,,\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-13-45 | feat: 不存在的日期 | +1 -1 | src/x.py\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 空字节\u0000提交 | +2 -2 | src/x.py\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 超长行 | +1 -1 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "\n\n\n\n2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n\n\n\n",
+              "notes": "# 工作记录\n\n## 2026-10-28\n- [x] 兜底记录条目\n",
+              "subject": "feat: 兜底提交说明",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        },
+        {
+          "id": "g4-missing-{i}",
+          "title": "缺字段/畸形记录（{note}）",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "缺字段的工作记录不崩溃",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{note}",
+                "weight": 2,
+                "note": "可解析的记录仍回显"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "## 2026-10-28\n- [x] 兜底记录条目\n## 2026-13-45\n- [ ] 坏日期标题\n",
+              "note": "兜底记录条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "### 只有标题没有条目\n#### 再来一个标题\n",
+              "note": "兜底提交说明",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "- [x] 兜底记录条目\n- [x] \n- [ ]\n- [x] 正常条目\n",
+              "note": "正常条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "﻿- [x] 兜底记录条目\n",
+              "note": "兜底记录条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "- [x] 兜底记录条目\r\n- [ ] 混合换行\r\n",
+              "note": "兜底记录条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "# 工作记录\n## 标题1\n## 标题2\n## 标题3\n## 标题4\n## 标题5\n## 标题6\n## 标题7\n## 标题8\n## 标题9\n## 标题10\n- [x] 兜底记录条目\n",
+              "note": "兜底记录条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "- [x] 兜底记录条目\n- [x] 兜底记录条目\n- [x] 兜底记录条目\n",
+              "note": "兜底记录条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "- [x] ����乱码记录条目\n",
+              "note": "����乱码记录条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "- [x] 兜底记录条目\n## 周八\n- [ ] 无效星期\n",
+              "note": "兜底记录条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n",
+              "notes": "## 2026-10-28\n- [x] 兜底记录条目\n- [x] 含 | 管道 与 {花括号} 的条目\n",
+              "note": "兜底记录条目",
+              "subject": "x",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：10 样本 × 重复 10 次",
+      "description": "10 个确定性样本各重复 10 次，离线输出必须完全一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{i}",
+          "title": "稳定性样本（{subject}）",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "同输入重复运行，输出应完全一致",
+            "content": "请生成报告。",
+            "files": [
+              {
+                "path": "input/notes.md",
+                "content": "{notes}"
+              },
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "report_type": "{rt}",
+              "days": "{days}",
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "# 工作(周报|日报)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2,
+                "note": "commit 说明回显"
+              },
+              {
+                "type": "contains",
+                "text": "{note}",
+                "weight": 1,
+                "note": "工作记录回显"
+              },
+              {
+                "type": "contains",
+                "text": "### 数量汇总",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "commits": "# 日期 | 提交说明 | +新增 -删除 | 文件\n2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py\n2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增支付回调接口",
+              "note": "完成支付模块联调",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增登录鉴权 | +220 -40 | src/auth/login.py,src/auth/token.py\n2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | docs: 补充鉴权文档 | +80 -0 | docs/auth.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-26\n- [x] 对齐鉴权接口字段\n- [ ] 补充鉴权单测\n\n## 2026-10-28\n- [x] 联调登录流程\n- [ ] 整理发版清单\n",
+              "subject": "fix: 修复登录跳转",
+              "note": "对齐鉴权接口字段",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增订单导出 | +120 -20 | src/order/export.py\n2026-10-26 | fix: 修复订单分页 | +30 -10 | src/order/list.py\n2026-10-27 | docs: 更新订单文档 | +40 -0 | docs/order.md\n2026-10-27 | refactor: 拆分订单服务 | +200 -180 | src/order/service.py\n2026-10-28 | test: 补充订单单测 | +150 -0 | tests/test_order.py\n2026-10-28 | chore: 升级构建脚本 | +15 -5 | build.py\n2026-10-28 | 调整订单超时时间 | +4 -4 | src/order/conf.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 参加架构评审会\n- [x] 整理网关压测数据\n- [ ] 跟进容量评估结论\n",
+              "subject": "refactor: 拆分订单服务",
+              "note": "参加架构评审会",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | feat: 新增网关路由 | +90 -10 | src/gateway/router.py\n2026-10-27 | feat: 新增前端页面 | +300 -20 | web/src/page.js\n2026-10-27 | fix: 修复脚本参数 | +12 -3 | scripts/run.py\n2026-10-28 | docs: 更新部署文档 | +60 -0 | docs/deploy.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 参加架构评审会\n- [x] 整理网关压测数据\n- [ ] 跟进容量评估结论\n",
+              "subject": "feat: 新增网关路由",
+              "note": "整理网关压测数据",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-26 | 新增用户画像接口 | +180 -30 | src/user/profile.py\n2026-10-27 | 修复头像上传失败 | +42 -16 | src/user/avatar.py\n2026-10-28 | 更新接口文档 | +55 -0 | docs/user.md\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "新增用户画像接口",
+              "note": "排查线上慢查询问题",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-16 | feat: 新增模块功能01 | +57 -3 | src/mod2/service.py\n2026-10-17 | feat: 新增模块功能02 | +64 -6 | src/mod3/service.py\n2026-10-18 | feat: 新增模块功能03 | +71 -9 | src/mod4/service.py\n2026-10-19 | feat: 新增模块功能04 | +78 -12 | src/mod1/service.py\n2026-10-20 | feat: 新增模块功能05 | +85 -15 | src/mod2/service.py\n2026-10-21 | feat: 新增模块功能06 | +92 -18 | src/mod3/service.py\n2026-10-22 | feat: 新增模块功能07 | +99 -21 | src/mod4/service.py\n2026-10-23 | feat: 新增模块功能08 | +106 -24 | src/mod1/service.py\n2026-10-24 | feat: 新增模块功能09 | +113 -27 | src/mod2/service.py\n2026-10-25 | feat: 新增模块功能10 | +120 -30 | src/mod3/service.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] 完成支付模块联调\n- [ ] 继续补齐单元测试\n\n## 2026-10-28\n- [x] 排查线上慢查询问题\n- [ ] 输出对接文档\n",
+              "subject": "feat: 新增模块功能01",
+              "note": "输出对接文档",
+              "rt": "weekly",
+              "days": "14"
+            },
+            {
+              "commits": "2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py\n2026-10-28 | feat: 新增报表导出 | +140 -30 | src/report/export.py\n",
+              "notes": "# 工作记录\n\n## 2026-10-27\n- [x] fix: 修复登录跳转\n- [x] 联调报表导出接口\n\n## 2026-10-28\n- [ ] 补充报表单测\n",
+              "subject": "fix: 修复登录跳转",
+              "note": "补充报表单测",
+              "rt": "weekly",
+              "days": "7"
+            },
+            {
+              "commits": "2026-10-28 | feat: 新增二维码登录 | +40 -0 | src/auth/qr.py\n",
+              "notes": "## 2026-10-28\n- [x] 调研二维码登录方案\n",
+              "subject": "feat: 新增二维码登录",
+              "note": "调研二维码登录方案",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "2026-10-28 | fix: 修复验证码过期 | +12 -4 | src/auth/captcha.py\n",
+              "notes": "## 2026-10-28\n- [x] 复现验证码过期问题\n",
+              "subject": "fix: 修复验证码过期",
+              "note": "复现验证码过期问题",
+              "rt": "daily",
+              "days": "1"
+            },
+            {
+              "commits": "2026-10-28 | docs: 更新部署文档 | +60 -0 | docs/deploy.md\n",
+              "notes": "## 2026-10-28\n- [x] 梳理部署文档结构\n",
+              "subject": "docs: 更新部署文档",
+              "note": "梳理部署文档结构",
+              "rt": "weekly",
+              "days": "7"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

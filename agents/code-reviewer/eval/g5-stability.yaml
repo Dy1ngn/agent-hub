@@ -1,0 +1,378 @@
+id: ts-b-code-reviewer-g5-stability
+agentId: code-reviewer
+group: g5-stability
+name: 代码审查 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线静态模式），验证输出稳定、不崩溃、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 1
+      files:
+        - path: input/stable1.py
+          content: "import os
+
+
+            def read_config(path):
+
+            \    f = open(path)
+
+            \    data = f.read()
+
+            \    return eval(data)\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 2
+      files:
+        - path: input/stable2.py
+          content: "def transfer(from_acc, to_acc, amount):
+
+            \    from_acc.balance -= amount
+
+            \    to_acc.balance += amount\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 3
+      files:
+        - path: input/stable3.py
+          content: "PASSWORD = 'admin123'
+
+
+            def login(user, pwd):
+
+            \    return user == 'admin' and pwd == PASSWORD\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 4
+      files:
+        - path: input/stable4.py
+          content: "def batch(items):
+
+            \    for i in range(len(items) + 1):
+
+            \        print(items[i])\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 5
+      files:
+        - path: input/stable5.py
+          content: "def run(cmd):
+
+            \    import subprocess
+
+            \    return subprocess.getoutput('ls ' + cmd)\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 6
+      files:
+        - path: input/stable6.py
+          content: "def divide(a, b):
+
+            \    return a / b
+
+
+            def ratio(xs):
+
+            \    return divide(sum(xs), len(xs))\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 7
+      files:
+        - path: input/stable7.py
+          content: "KEY = 'AKIA1234567890EXAMPLE'
+
+
+            def sign(payload):
+
+            \    import hashlib
+
+            \    return hashlib.md5((KEY + payload).encode()).hexdigest()\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 8
+      files:
+        - path: input/stable8.py
+          content: "def render(user):
+
+            \    return '<b>' + user.name + '</b>'\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 9
+      files:
+        - path: input/stable9.py
+          content: "def load_users():
+
+            \    users = []
+
+            \    for id in range(100):
+
+            \        users.append(db.get_user(id))
+
+            \    return users\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证稳定性
+      content: 稳定性样本 10
+      files:
+        - path: input/stable10.py
+          content: "def parse(raw):
+
+            \    try:
+
+            \        return raw.split('|')[1]
+
+            \    except Exception:
+
+            \        pass\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|警告|建议|严重)
+          weight: 1
+      requiredSuggestions: []

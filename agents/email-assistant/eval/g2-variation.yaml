@@ -1,0 +1,1117 @@
+id: ts-b-email-assistant-g2-variation
+agentId: email-assistant
+group: g2-variation
+name: 邮件助手 · 输入变体：长度 / 语气参数 / 多文件 / 邮件头风格
+description: 正文长度、回复语气参数、多文件混合与邮件头风格变体，走模型链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-length-1
+    title: 正文长度变体（一句话通知）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的邮件正文
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/tiny.txt
+          content: "Subject: 一句话通知
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            好。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 一句话通知
+          weight: 2
+        - type: contains
+          text: "### 正文（已剥离引用，共剥离 0 行）"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-length-2
+    title: 正文长度变体（周会纪要确认）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的邮件正文
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/medium.txt
+          content: "Subject: 周会纪要确认
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            本周周会纪要请确认，主要讨论了发布计划。
+
+            如有异议请提出。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 周会纪要确认
+          weight: 2
+        - type: contains
+          text: "### 正文（已剥离引用，共剥离 0 行）"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-length-3
+    title: 正文长度变体（季度总结与规划）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的邮件正文
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/long.txt
+          content: "Subject: 季度总结与规划
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            这是一封很长的邮件正文。
+
+            第 1 段：项目进度、风险与后续安排都写在这里。
+
+            第 2 段：项目进度、风险与后续安排都写在这里。
+
+            第 3 段：项目进度、风险与后续安排都写在这里。
+
+            第 4 段：项目进度、风险与后续安排都写在这里。
+
+            第 5 段：项目进度、风险与后续安排都写在这里。
+
+            第 6 段：项目进度、风险与后续安排都写在这里。
+
+            第 7 段：项目进度、风险与后续安排都写在这里。
+
+            第 8 段：项目进度、风险与后续安排都写在这里。
+
+            第 9 段：项目进度、风险与后续安排都写在这里。
+
+            第 10 段：项目进度、风险与后续安排都写在这里。
+
+            第 11 段：项目进度、风险与后续安排都写在这里。
+
+            第 12 段：项目进度、风险与后续安排都写在这里。
+
+            第 13 段：项目进度、风险与后续安排都写在这里。
+
+            第 14 段：项目进度、风险与后续安排都写在这里。
+
+            第 15 段：项目进度、风险与后续安排都写在这里。
+
+            第 16 段：项目进度、风险与后续安排都写在这里。
+
+            第 17 段：项目进度、风险与后续安排都写在这里。
+
+            第 18 段：项目进度、风险与后续安排都写在这里。
+
+            第 19 段：项目进度、风险与后续安排都写在这里。
+
+            第 20 段：项目进度、风险与后续安排都写在这里。
+
+            第 21 段：项目进度、风险与后续安排都写在这里。
+
+            第 22 段：项目进度、风险与后续安排都写在这里。
+
+            第 23 段：项目进度、风险与后续安排都写在这里。
+
+            第 24 段：项目进度、风险与后续安排都写在这里。
+
+            第 25 段：项目进度、风险与后续安排都写在这里。
+
+            第 26 段：项目进度、风险与后续安排都写在这里。
+
+            第 27 段：项目进度、风险与后续安排都写在这里。
+
+            第 28 段：项目进度、风险与后续安排都写在这里。
+
+            第 29 段：项目进度、风险与后续安排都写在这里。
+
+            第 30 段：项目进度、风险与后续安排都写在这里。
+
+            第 31 段：项目进度、风险与后续安排都写在这里。
+
+            第 32 段：项目进度、风险与后续安排都写在这里。
+
+            第 33 段：项目进度、风险与后续安排都写在这里。
+
+            第 34 段：项目进度、风险与后续安排都写在这里。
+
+            第 35 段：项目进度、风险与后续安排都写在这里。
+
+            第 36 段：项目进度、风险与后续安排都写在这里。
+
+            第 37 段：项目进度、风险与后续安排都写在这里。
+
+            第 38 段：项目进度、风险与后续安排都写在这里。
+
+            第 39 段：项目进度、风险与后续安排都写在这里。
+
+            第 40 段：项目进度、风险与后续安排都写在这里。
+
+            第 41 段：项目进度、风险与后续安排都写在这里。
+
+            第 42 段：项目进度、风险与后续安排都写在这里。
+
+            第 43 段：项目进度、风险与后续安排都写在这里。
+
+            第 44 段：项目进度、风险与后续安排都写在这里。
+
+            第 45 段：项目进度、风险与后续安排都写在这里。
+
+            第 46 段：项目进度、风险与后续安排都写在这里。
+
+            第 47 段：项目进度、风险与后续安排都写在这里。
+
+            第 48 段：项目进度、风险与后续安排都写在这里。
+
+            第 49 段：项目进度、风险与后续安排都写在这里。
+
+            第 50 段：项目进度、风险与后续安排都写在这里。
+
+            第 51 段：项目进度、风险与后续安排都写在这里。
+
+            第 52 段：项目进度、风险与后续安排都写在这里。
+
+            第 53 段：项目进度、风险与后续安排都写在这里。
+
+            第 54 段：项目进度、风险与后续安排都写在这里。
+
+            第 55 段：项目进度、风险与后续安排都写在这里。
+
+            第 56 段：项目进度、风险与后续安排都写在这里。
+
+            第 57 段：项目进度、风险与后续安排都写在这里。
+
+            第 58 段：项目进度、风险与后续安排都写在这里。
+
+            第 59 段：项目进度、风险与后续安排都写在这里。
+
+            请在 2026-11-09 前确认。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 季度总结与规划
+          weight: 2
+        - type: contains
+          text: "### 正文（已剥离引用，共剥离 0 行）"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-length-4
+    title: 正文长度变体（三个问题需要确认）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的邮件正文
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/questions.txt
+          content: "Subject: 三个问题需要确认
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            方案 A 可行吗？预算够吗？排期来得及吗？请回复。\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 三个问题需要确认
+          weight: 2
+        - type: contains
+          text: "### 正文（已剥离引用，共剥离 0 行）"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-length-5
+    title: 正文长度变体（空正文邮件）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的邮件正文
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/blank.txt
+          content: "Subject: 空正文邮件
+
+            From: a@example.com
+
+            To: b@example.com
+
+            \n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 空正文邮件
+          weight: 2
+        - type: contains
+          text: "### 正文（已剥离引用，共剥离 0 行）"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-tone-1
+    title: 语气参数变体（正式）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 用不同语气起草回复
+      content: 请处理 input/ 目录下的邮件并按指定语气起草回复。
+      files:
+        - path: input/mail.txt
+          content: "Subject: 紧急：合同确认（请今天内回复）
+
+            From: 张三 <zhangsan@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四，你好：
+
+            这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？
+
+            请尽快回复：是否需要法务复核？能否今天内给出结论？\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 「正式」语气
+          weight: 2
+          note: 按指定语气起草
+        - type: contains
+          text: 紧急：合同确认（请今天内回复）
+          weight: 2
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-tone-2
+    title: 语气参数变体（友好）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 用不同语气起草回复
+      content: 请处理 input/ 目录下的邮件并按指定语气起草回复。
+      files:
+        - path: input/mail.txt
+          content: "Subject: 紧急：合同确认（请今天内回复）
+
+            From: 张三 <zhangsan@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四，你好：
+
+            这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？
+
+            请尽快回复：是否需要法务复核？能否今天内给出结论？\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 「友好」语气
+          weight: 2
+          note: 按指定语气起草
+        - type: contains
+          text: 紧急：合同确认（请今天内回复）
+          weight: 2
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-tone-3
+    title: 语气参数变体（简洁）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 用不同语气起草回复
+      content: 请处理 input/ 目录下的邮件并按指定语气起草回复。
+      files:
+        - path: input/mail.txt
+          content: "Subject: 紧急：合同确认（请今天内回复）
+
+            From: 张三 <zhangsan@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四，你好：
+
+            这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？
+
+            请尽快回复：是否需要法务复核？能否今天内给出结论？\n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 「简洁」语气
+          weight: 2
+          note: 按指定语气起草
+        - type: contains
+          text: 紧急：合同确认（请今天内回复）
+          weight: 2
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-tone-4
+    title: 语气参数变体（正式）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 用不同语气起草回复
+      content: 请处理 input/ 目录下的邮件并按指定语气起草回复。
+      files:
+        - path: input/mail2.txt
+          content: "Subject: 十月账单与报销明细
+
+            From: 财务 <finance@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四你好，十月账单已出，合计 1234.56 元，明细见下。
+
+            如有疑问请在 2026-11-05 前反馈。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 「正式」语气
+          weight: 2
+          note: 按指定语气起草
+        - type: contains
+          text: 十月账单与报销明细
+          weight: 2
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-tone-5
+    title: 语气参数变体（友好）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 用不同语气起草回复
+      content: 请处理 input/ 目录下的邮件并按指定语气起草回复。
+      files:
+        - path: input/mail2.txt
+          content: "Subject: 十月账单与报销明细
+
+            From: 财务 <finance@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四你好，十月账单已出，合计 1234.56 元，明细见下。
+
+            如有疑问请在 2026-11-05 前反馈。\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 「友好」语气
+          weight: 2
+          note: 按指定语气起草
+        - type: contains
+          text: 十月账单与报销明细
+          weight: 2
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-1
+    title: 多文件混合输入（2 个文件）
+    tags:
+      - variation
+      - multi-file
+    repeat: 5
+    input:
+      kind: text
+      goal: 一次处理多个邮件文件
+      content: 请处理 input/ 目录下的全部邮件文件。
+      files:
+        - path: input/a.txt
+          content: "Subject: 产品月刊第 12 期
+
+            From: 运营 <ops@example.com>
+
+            To: 订阅者 <list@example.com>
+
+
+            本期产品月刊介绍新功能与团队动态，欢迎浏览。\n"
+        - path: input/b.txt
+          content: "记得明天下午三点提交周报，别忘了带上数据截图。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 产品月刊第 12 期
+          weight: 2
+        - type: regex
+          pattern: 处理邮件数：2
+          weight: 2
+          note: 解析出正确邮件数
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-2
+    title: 多文件混合输入（2 个文件）
+    tags:
+      - variation
+      - multi-file
+    repeat: 5
+    input:
+      kind: text
+      goal: 一次处理多个邮件文件
+      content: 请处理 input/ 目录下的全部邮件文件。
+      files:
+        - path: input/c.eml
+          content: "From: carol@example.com
+
+            To: team@example.com
+
+            Subject: Q4 Planning Meeting Agenda
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+
+
+            Hi team,
+
+
+            The Q4 planning meeting is on 2026-11-02. Please review the agenda.\n"
+        - path: input/d.txt
+          content: "Subject: 十月账单与报销明细
+
+            From: 财务 <finance@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四你好，十月账单已出，合计 1234.56 元，明细见下。
+
+            如有疑问请在 2026-11-05 前反馈。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Q4 Planning Meeting Agenda
+          weight: 2
+        - type: regex
+          pattern: 处理邮件数：2
+          weight: 2
+          note: 解析出正确邮件数
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-3
+    title: 多文件混合输入（4 个文件）
+    tags:
+      - variation
+      - multi-file
+    repeat: 5
+    input:
+      kind: text
+      goal: 一次处理多个邮件文件
+      content: 请处理 input/ 目录下的全部邮件文件。
+      files:
+        - path: input/e.mbox
+          content: "From - Mon Oct 26 09:00:00 2026
+
+            From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Weekly Report
+
+            Date: Mon, 26 Oct 2026 09:00:00 +0800
+
+
+            Please find the weekly report.
+
+
+            From - Tue Oct 27 10:00:00 2026
+
+            From: carol@example.com
+
+            To: bob@example.com
+
+            Subject: Server Maintenance
+
+            Date: Tue, 27 Oct 2026 10:00:00 +0800
+
+
+            Maintenance is tonight.
+
+
+            From - Wed Oct 28 11:00:00 2026
+
+            From: dave@example.com
+
+            To: bob@example.com
+
+            Subject: Budget Approval
+
+            Date: Wed, 28 Oct 2026 11:00:00 +0800
+
+
+            Budget approval is pending.\n"
+        - path: input/f.txt
+          content: "Subject: 产品月刊第 12 期
+
+            From: 运营 <ops@example.com>
+
+            To: 订阅者 <list@example.com>
+
+
+            本期产品月刊介绍新功能与团队动态，欢迎浏览。\n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Weekly Report
+          weight: 2
+        - type: regex
+          pattern: 处理邮件数：4
+          weight: 2
+          note: 解析出正确邮件数
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-4
+    title: 多文件混合输入（2 个文件）
+    tags:
+      - variation
+      - multi-file
+    repeat: 5
+    input:
+      kind: text
+      goal: 一次处理多个邮件文件
+      content: 请处理 input/ 目录下的全部邮件文件。
+      files:
+        - path: input/g.eml
+          content: 'From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Contract Draft
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            MIME-Version: 1.0
+
+            Content-Type: multipart/mixed; boundary="BBB"
+
+
+            --BBB
+
+            Content-Type: text/plain
+
+
+            Please review the attached report.
+
+
+            --BBB
+
+            Content-Type: application/pdf; name="report.pdf"
+
+            Content-Transfer-Encoding: base64
+
+            Content-Disposition: attachment; filename="report.pdf"
+
+
+            JVBERi0xLjQK
+
+            --BBB--
+
+            '
+        - path: input/h.txt
+          content: "Subject: 紧急：合同确认（请今天内回复）
+
+            From: 张三 <zhangsan@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四，你好：
+
+            这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？
+
+            请尽快回复：是否需要法务复核？能否今天内给出结论？\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Contract Draft
+          weight: 2
+        - type: regex
+          pattern: 处理邮件数：2
+          weight: 2
+          note: 解析出正确邮件数
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-5
+    title: 多文件混合输入（2 个文件）
+    tags:
+      - variation
+      - multi-file
+    repeat: 5
+    input:
+      kind: text
+      goal: 一次处理多个邮件文件
+      content: 请处理 input/ 目录下的全部邮件文件。
+      files:
+        - path: input/i.txt
+          content: "Subject: 跨团队协作方案 / Cross-team Plan
+
+            From: Emily <emily@example.com>
+
+            To: 王五 <wangwu@example.com>
+
+
+            王五你好，这是中英双语的协作方案 draft，请查收。
+
+            Please send feedback before 2026-11-03. 谢谢！\n"
+        - path: input/j.eml
+          content: "From: erin@example.com
+
+            To: bob@example.com
+
+            Subject: Re: Server Migration Plan
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            In-Reply-To: <parent@example.com>
+
+            References: <root@example.com> <parent@example.com>
+
+
+
+            Following up on the migration plan discussed last week.\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 跨团队协作方案 / Cross-team Plan
+          weight: 2
+        - type: regex
+          pattern: 处理邮件数：2
+          weight: 2
+          note: 解析出正确邮件数
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-headers-1
+    title: "邮件头风格变体（Re: 发布窗口确认）"
+    tags:
+      - variation
+      - headers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同邮件头写法的邮件
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/re.txt
+          content: "Subject: Re: 发布窗口确认
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            发布窗口请确认。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "Re: 发布窗口确认"
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-headers-2
+    title: "邮件头风格变体（Fwd: 客户反馈汇总）"
+    tags:
+      - variation
+      - headers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同邮件头写法的邮件
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/fwd.txt
+          content: "Subject: Fwd: 客户反馈汇总
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            转发客户反馈，请跟进。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "Fwd: 客户反馈汇总"
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-headers-3
+    title: 邮件头风格变体（缺发件人的邮件）
+    tags:
+      - variation
+      - headers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同邮件头写法的邮件
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/nofrom.txt
+          content: "Subject: 缺发件人的邮件
+
+            To: b@example.com
+
+
+            这封邮件没有 From 头。\n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 缺发件人的邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-headers-4
+    title: 邮件头风格变体（半角冒头风格）
+    tags:
+      - variation
+      - headers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同邮件头写法的邮件
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/colon.txt
+          content: "Subject: 半角冒头风格
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            正文内容，供测试。\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 半角冒头风格
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-headers-5
+    title: 邮件头风格变体（重复头邮件）
+    tags:
+      - variation
+      - headers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同邮件头写法的邮件
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/dups.txt
+          content: "Subject: 重复头邮件
+
+            Subject: 重复头邮件
+
+            From: a@example.com
+
+            From: c@example.com
+
+            To: b@example.com
+
+
+            重复头也能解析。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 重复头邮件
+          weight: 2
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

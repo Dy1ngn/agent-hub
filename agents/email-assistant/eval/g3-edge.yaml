@@ -1,0 +1,870 @@
+id: ts-b-email-assistant-g3-edge
+agentId: email-assistant
+group: g3-edge
+name: 邮件助手 · 边界情况：空 / 极短 / 极端数值
+description: 空邮件、极短正文、超长主题/正文、极端金额等边界输入，离线确定性输出（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-minimal-1
+    title: 极小/空邮件（empty）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/empty.txt
+          content: ""
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: empty
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-2
+    title: 极小/空邮件（oneline）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/oneline.txt
+          content: "好。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: oneline
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-3
+    title: 极小/空邮件（Only Headers）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/headersonly.eml
+          content: "From: a@example.com
+
+            To: b@example.com
+
+            Subject: Only Headers
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            \n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Only Headers
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-4
+    title: 极小/空邮件（只有主题）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/subjectonly.txt
+          content: "Subject: 只有主题
+
+            From: a@example.com
+
+            \n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 只有主题
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-5
+    title: 极小/空邮件（spaces）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/spaces.txt
+          content: "  \ \n\n \ \n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: spaces
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-6
+    title: 极小/空邮件（Tiny）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/tiny.eml
+          content: "From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Tiny
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+
+
+            hi"
+      params:
+        tone: 简洁
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Tiny
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-7
+    title: 极小/空邮件（一个问句）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/question.txt
+          content: "Subject: 一个问句
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            在吗？\n"
+      params:
+        tone: 简洁
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 一个问句
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-8
+    title: 极小/空邮件（🎉🎉🎉）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/emoji.txt
+          content: "Subject: 🎉🎉🎉
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            🎉🚀✨\n"
+      params:
+        tone: 友好
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 🎉🎉🎉
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-9
+    title: 极小/空邮件（oneword）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/oneword.txt
+          content: "嗯\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: oneword
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-10
+    title: 极小/空邮件（只有日期）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小与空内容邮件也要优雅处理
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/dateonly.txt
+          content: "Subject: 只有日期
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            2026-10-28\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 只有日期
+          weight: 2
+        - type: regex
+          pattern: (正文为空|无摘要|摘要)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: 极端数值/超长（巨额账单）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/bigmoney.txt
+          content: "Subject: 巨额账单
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            本次金额 999999.99 元，请核对。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 巨额账单
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: 极端数值/超长（一分钱）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/cent.txt
+          content: "Subject: 一分钱
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            金额 0.01 元。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 一分钱
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: 极端数值/超长（超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/longsubject.txt
+          content: "Subject: 超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            正文。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: 极端数值/超长（超长正文）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/longbody.txt
+          content: "Subject: 超长正文
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 超长正文
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: 极端数值/超长（十连问）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/manyq.txt
+          content: "Subject: 十连问
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            问题1？问题2？问题3？问题4？问题5？问题6？问题7？问题8？问题9？问题10？\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 十连问
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: 极端数值/超长（链接汇总）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/manylinks.txt
+          content: "Subject: 链接汇总
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            https://example.com/page1 https://example.com/page2 https://example.com/page3 https://example.com/page4 https://example.com/page5 https://example.com/page6 https://example.com/page7 https://example.com/page8 https://example.com/page9 https://example.com/page10 https://example.com/page11 https://example.com/page12 https://example.com/page13 https://example.com/page14 https://example.com/page15 https://example.com/page16 https://example.com/page17 https://example.com/page18 https://example.com/page19 https://example.com/page20\n"
+      params:
+        tone: 简洁
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 链接汇总
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: 极端数值/超长（电话本）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/manyphones.txt
+          content: "Subject: 电话本
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            联系电话 13800138000 或 13900139000 或 010-88886666。\n"
+      params:
+        tone: 简洁
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 电话本
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: 极端数值/超长（零金额）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/zerolike.txt
+          content: "Subject: 零金额
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            金额 0 元。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 零金额
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: 极端数值/超长（排期密集）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/dates.txt
+          content: "Subject: 排期密集
+
+            From: a@example.com
+
+            To: b@example.com
+
+
+            2026-10-01 立项，2026-10-15 联调，2026-10-30 发布。\n"
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 排期密集
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: 极端数值/超长（Contract Draft）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端数值与超长内容也要正常出报告
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/bigattach.eml
+          content: 'From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Contract Draft
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            MIME-Version: 1.0
+
+            Content-Type: multipart/mixed; boundary="BBB"
+
+
+            --BBB
+
+            Content-Type: text/plain
+
+
+            Please review the attached report.
+
+
+            --BBB
+
+            Content-Type: application/pdf; name="report.pdf"
+
+            Content-Transfer-Encoding: base64
+
+            Content-Disposition: attachment; filename="report.pdf"
+
+
+            QUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJD
+
+            --BBB--
+
+            '
+      params:
+        tone: 正式
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Contract Draft
+          weight: 2
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

@@ -910,6 +910,321 @@ def generate_doc(client, model, doc_type, summary, lang, max_tokens=DEFAULT_MAX_
     return strip_code_fence(response_text(response))
 
 
+# ---------- B2. 离线骨架（确定性，不调用模型、不联网） ----------
+
+
+def _dep_names(summary):
+    deps = summary.get("dependencies") or {}
+    names = []
+    for value in deps.values():
+        for item in (value if isinstance(value, list) else [value]):
+            name = str(item).strip()
+            if name and name not in names:
+                names.append(name)
+    return names
+
+
+def _route_rows(summary):
+    rows = []
+    for route in summary.get("api_routes") or []:
+        rows.append("| %s | %s | %s | %s |" % (
+            route.get("method") or "-",
+            route.get("path") or "-",
+            route.get("handler") or "-",
+            route.get("source") or "-",
+        ))
+    return rows
+
+
+def skeleton_doc(doc_type, summary, lang="zh"):
+    """离线确定性骨架文档：只用静态扫描摘要拼出固定结构，不调用模型、不联网。
+
+    小节标题与 DOC_INSTRUCTIONS_ZH 的要求一一对应（固定标题便于离线断言），
+    素材全部来自扫描摘要，不编造摘要里没有的内容。
+    """
+    zh = lang != "en"
+    name = str(summary.get("project_name") or ("项目" if zh else "project"))
+    tree = str(summary.get("tree") or "").strip() or ("（空目录）" if zh else "(empty)")
+    langs = summary.get("languages") or []
+    lang_text = "、".join(
+        "%s %d 文件/%d 行" % (x.get("language"), x.get("files"), x.get("lines"))
+        for x in langs[:6]
+    ) or ("（未识别到代码文件）" if zh else "(no code files)")
+    entries = summary.get("entry_points") or []
+    entry_names = [str(e.get("name") or e.get("path") or "-") for e in entries[:10]]
+    deps = _dep_names(summary)
+    dep_files = list((summary.get("dependencies") or {}).keys())
+    configs = [str(c) for c in (summary.get("config_names") or [])]
+    cli_args = [str(a.get("name") or "-") for a in (summary.get("cli_args") or [])]
+    routes = summary.get("api_routes") or []
+    files_scanned = summary.get("files_scanned") or 0
+
+    if zh:
+        head_intro = (
+            "本文档由 doc-writer 的离线确定性模式（--offline）生成：不调用模型、不联网，"
+            "全部素材来自本地静态扫描摘要（共 %d 个文件）。\n\n主要语言与代码量：%s"
+            % (files_scanned, lang_text)
+        )
+        lines = {
+            "readme": [
+                "# %s" % name,
+                "",
+                "## 项目简介",
+                "",
+                head_intro,
+                "",
+                "## 功能特性",
+                "",
+                "- 静态扫描识别入口点 %d 个%s" % (
+                    len(entries), ("：" + "、".join(entry_names)) if entry_names else ""),
+                "- 静态扫描识别 API 路由 %d 条、CLI 参数 %d 个、配置项 %d 个"
+                % (len(routes), len(cli_args), len(configs)),
+                "- 依赖清单：%s" % ("、".join(deps) if deps else "（未识别到依赖文件）"),
+                "",
+                "## 环境要求",
+                "",
+                "- 主要语言：%s" % lang_text,
+                "- 依赖文件：%s" % ("、".join(dep_files) if dep_files else "（无）"),
+                "",
+                "## 安装步骤",
+                "",
+                "- 按依赖文件安装，例如 `pip install -r requirements.txt` 或 `npm install`（以实际依赖文件为准）",
+                "- 依赖清单：%s" % ("、".join(deps) if deps else "（无）"),
+                "",
+                "## 快速开始",
+                "",
+                ("- 入口点：%s" % "、".join(entry_names)) if entry_names
+                else "- （未识别到入口点，请按实际入口启动）",
+                ("- CLI 参数：%s" % "、".join(cli_args[:20])) if cli_args else "- （未识别到 CLI 参数）",
+                "",
+                "## 目录结构",
+                "",
+                "```text",
+                tree,
+                "```",
+                "",
+                "## 配置项",
+                "",
+                "| 配置项 | 说明 | 是否必填 |",
+                "| --- | --- | --- |",
+            ] + (
+                ["| %s | <你的值> | 否 |" % c for c in configs[:30]] if configs
+                else ["| （未扫描到配置项） | - | - |"]
+            ) + [
+                "",
+                "## 常见问题",
+                "",
+                "- Q：为什么扫描不到接口？A：只有常见路由框架的声明会被正则识别，框架外的路由需人工补充。",
+                "- Q：配置项的值在哪里？A：扫描只记录配置项名字、不读取值，请自行把占位符 `<你的值>` 换成真实值。",
+                "- Q：文档会编造接口吗？A：不会，骨架只引用扫描摘要里真实出现的文件、接口与配置项。",
+                "",
+            ],
+            "api": [
+                "# %s API 文档" % name,
+                "",
+                "## 接口清单",
+                "",
+                "| 方法 | 路径 | 说明 | 来源文件:行号 |",
+                "| --- | --- | --- | --- |",
+            ] + (_route_rows(summary) or ["| （未扫描到接口） | - | - | - |"]) + [
+                "",
+                "## 请求与响应示例",
+                "",
+            ] + [
+                line
+                for r in routes[:20]
+                for line in (
+                    "### %s %s" % (r.get("method") or "-", r.get("path") or "-"),
+                    "",
+                    "- 请求示例：（示例为推断值）`curl -X %s %s`" % (
+                        r.get("method") or "GET", r.get("path") or "/"),
+                    "- 响应示例：（示例为推断值）`{\"ok\": true}`",
+                    "- 来源：%s" % (r.get("source") or "-"),
+                    "",
+                )
+            ] + (
+                [] if routes else [
+                    "未扫描到接口，因此没有请求与响应示例；请确认项目里存在可识别的路由声明。",
+                    "",
+                ]
+            ),
+            "arch": [
+                "# %s 架构说明" % name,
+                "",
+                "## 分层结构",
+                "",
+                "```text",
+                tree,
+                "```",
+                "",
+                "## 关键模块职责",
+                "",
+            ] + (
+                ["- %s" % e for e in entry_names] if entry_names else ["- （未识别到入口模块）"]
+            ) + [
+                "- 依赖文件：%s" % ("、".join(dep_files) if dep_files else "（无）"),
+                "",
+                "## 数据流 / 调用链",
+                "",
+            ] + (
+                ["- %s %s -> %s（%s）" % (
+                    r.get("method"), r.get("path"), r.get("handler"), r.get("source"))
+                    for r in routes[:20]] if routes else ["- （未扫描到接口调用链）"]
+            ) + [
+                "",
+                "## 技术选型",
+                "",
+                "- 依赖清单：%s" % ("、".join(deps) if deps else "（未识别到依赖）"),
+                "- 语言与代码量：%s" % lang_text,
+                "",
+            ],
+            "onboarding": [
+                "# %s 新人上手指南" % name,
+                "",
+                "## 新人上手五步",
+                "",
+                "1. 阅读目录结构，了解 %s 的模块划分" % name,
+                "2. 安装依赖：%s" % ("、".join(deps) if deps else "（未识别到依赖文件）"),
+                "3. 准备配置项：%s" % ("、".join(configs[:20]) if configs else "（未扫描到配置项）"),
+                "4. 找到入口点并本地启动：%s" % ("、".join(entry_names) if entry_names else "（未识别到入口点）"),
+                "5. 跑通一次最小流程后，再阅读 API / 架构文档",
+                "",
+                "## 本地跑起来的最小路径",
+                "",
+                "- 入口点：%s" % ("、".join(entry_names) if entry_names else "（未识别到入口点）"),
+                "- CLI 参数：%s" % ("、".join(cli_args[:20]) if cli_args else "（未识别到 CLI 参数）"),
+                "",
+                "## 目录结构",
+                "",
+                "```text",
+                tree,
+                "```",
+                "",
+                "## 常见坑",
+                "",
+                "- 配置项 %s 只有名字没有值，本地运行前要先补齐占位符。" % (
+                    "、".join(configs[:10]) if configs else "（未扫描到配置项）"),
+                "- 扫描按 --max-files / --max-file-chars 截断，大仓库里超出部分不会进入文档。",
+                "- 接口示例若没有真实代码支撑属于推断值，联调前要人工确认。",
+                "",
+            ],
+        }
+    else:
+        lines = {
+            "readme": [
+                "# %s" % name,
+                "",
+                "## Overview",
+                "",
+                "Generated by doc-writer offline mode (--offline) from the static scan summary (%d files). Languages: %s"
+                % (files_scanned, lang_text),
+                "",
+                "## Features",
+                "",
+                "- Entry points detected: %d%s" % (
+                    len(entries), (": " + ", ".join(entry_names)) if entry_names else ""),
+                "- API routes: %d, CLI args: %d, config keys: %d" % (len(routes), len(cli_args), len(configs)),
+                "",
+                "## Requirements",
+                "",
+                "- Languages: %s" % lang_text,
+                "",
+                "## Installation",
+                "",
+                "- Install from dependency files: %s" % (", ".join(deps) if deps else "(none)"),
+                "",
+                "## Quick Start",
+                "",
+                "- Entry points: %s" % (", ".join(entry_names) if entry_names else "(none)"),
+                "",
+                "## Project Layout",
+                "",
+                "```text",
+                tree,
+                "```",
+                "",
+                "## Configuration",
+                "",
+                "| Key | Description | Required |",
+                "| --- | --- | --- |",
+            ] + (
+                ["| %s | <your-value> | no |" % c for c in configs[:30]] if configs
+                else ["| (none) | - | - |"]
+            ) + [
+                "",
+                "## FAQ",
+                "",
+                "- Q: Why are no endpoints listed? A: Only common route patterns are recognized.",
+                "- Q: Where are config values? A: Only key names are scanned; fill in placeholders yourself.",
+                "",
+            ],
+            "api": [
+                "# %s API Reference" % name,
+                "",
+                "## Endpoints",
+                "",
+                "| Method | Path | Description | Source |",
+                "| --- | --- | --- | --- |",
+            ] + (_route_rows(summary) or ["| (no endpoints scanned) | - | - | - |"]) + [
+                "",
+                "## Request / Response Examples",
+                "",
+                "No verified examples beyond the scanned routes; treat any example as inferred.",
+                "",
+            ],
+            "arch": [
+                "# %s Architecture" % name,
+                "",
+                "## Layering",
+                "",
+                "```text",
+                tree,
+                "```",
+                "",
+                "## Key Modules",
+                "",
+            ] + (["- %s" % e for e in entry_names] if entry_names else ["- (none)"]) + [
+                "",
+                "## Data Flow",
+                "",
+                "- Dependencies: %s" % (", ".join(deps) if deps else "(none)"),
+                "",
+                "## Tech Choices",
+                "",
+                "- Languages: %s" % lang_text,
+                "",
+            ],
+            "onboarding": [
+                "# %s Onboarding" % name,
+                "",
+                "## Five Steps",
+                "",
+                "1. Read the project layout of %s" % name,
+                "2. Install dependencies: %s" % (", ".join(deps) if deps else "(none)"),
+                "3. Prepare config keys: %s" % (", ".join(configs[:20]) if configs else "(none)"),
+                "4. Start from entry points: %s" % (", ".join(entry_names) if entry_names else "(none)"),
+                "5. Run the minimal flow once",
+                "",
+                "## Minimal Path",
+                "",
+                "- Entry points: %s" % (", ".join(entry_names) if entry_names else "(none)"),
+                "",
+                "## Project Layout",
+                "",
+                "```text",
+                tree,
+                "```",
+                "",
+                "## Common Pitfalls",
+                "",
+                "- Config keys have no scanned values; fill in placeholders before running.",
+                "- Scanning is capped by --max-files.",
+                "",
+            ],
+        }
+    return "\n".join(lines[doc_type]).rstrip() + "\n"
+
+
 # ---------- 输出 ----------
 
 
@@ -1227,6 +1542,11 @@ def build_parser():
         help="只做静态扫描并打印摘要，不调用模型、不写文件、不联网",
     )
     parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="纯确定性模式：只用静态扫描摘要生成文档骨架，不调用模型、不需要 API key、不联网",
+    )
+    parser.add_argument(
         "--max-files",
         type=int,
         default=DEFAULT_MAX_FILES,
@@ -1290,6 +1610,31 @@ def main():
     if args.dry_run:
         print_dry_run(scan, summary, targets)
         return
+
+    # --- 第二阶段 A：离线确定性骨架（不调用模型、不联网） ---
+    if args.offline:
+        print("-" * 60)
+        print("📴 离线确定性模式（--offline）：%s ｜ 文档类型：%s" % (args.lang, "、".join(types)))
+        print("-" * 60)
+        written = []
+        for doc_type, target in targets:
+            if target.exists() and not args.force:
+                print("⏭️  跳过 [%s]：%s 已存在（加 --force 可覆盖）" % (doc_type, target))
+                continue
+            content = skeleton_doc(doc_type, summary, args.lang)
+            try:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(content.rstrip() + "\n", encoding="utf-8")
+            except OSError as e:
+                print("   ❌ [%s] 写文件失败：%s" % (doc_type, e), file=sys.stderr)
+                sys.exit(1)
+            print("   ✅ 已写入 %s（%d 字符）" % (target, len(content)))
+            written.append(str(target))
+        print("-" * 60)
+        print("✅ 离线骨架生成 %d 份（未调用模型）：" % len(written))
+        for item in written:
+            print("   - %s" % item)
+        return 0
 
     # --- 第二阶段：模型生成 ---
     if not os.environ.get("ANTHROPIC_API_KEY") and not os.environ.get("ANTHROPIC_AUTH_TOKEN"):

@@ -1,0 +1,1110 @@
+id: ts-b-commit-crafter-g4-robust
+agentId: commit-crafter
+group: g4-robust
+name: 提交信息生成 · 鲁棒性：畸形 / 乱码 / 缺字段
+description: 乱码、控制字符、零宽字符、畸形 hunk、缺字段、极端参数下优雅处理不崩溃（离线启发式模式；style/lang 覆盖常规与极端组合）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：乱码内容
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：乱码内容
+      files:
+        - path: input/change.diff
+          content: "diff --git a/a.py b/a.py
+
+            index 111..222 100644
+
+            --- a/a.py
+
+            +++ b/a.py
+
+            @@ -1 +1 @@
+
+            -ä½ å¥½
+
+            +æ ½è¿\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：控制字符
+      files:
+        - path: input/change.diff
+          content: "diff --git a/b.py b/b.py
+
+            index 111..222 100644
+
+            --- a/b.py
+
+            +++ b/b.py
+
+            @@ -1 +1 @@
+
+            -x\a = 1
+
+            +y\a = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：零宽字符
+      files:
+        - path: input/change.diff
+          content: "diff --git a/c.py b/c.py
+
+            index 111..222 100644
+
+            --- a/c.py
+
+            +++ b/c.py
+
+            @@ -1 +1 @@
+
+            -a​ = 1
+
+            +b‌﻿ = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：emoji 路径与内容
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：emoji 路径与内容
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/🚀.py b/src/🚀.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/🚀.py
+
+            +++ b/src/🚀.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = '😀'
+
+            +V = '🚀🚀'\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合引号路径
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：未闭合引号路径
+      files:
+        - path: input/change.diff
+          content: 'diff --git "a/broken.py b/broken.py
+
+            index 111..222 100644
+
+            --- "a/broken.py
+
+            +++ "b/broken.py
+
+            @@ -1 +1 @@
+
+            -x = 1
+
+            +y = 2
+
+            '
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：畸形 hunk 头
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：畸形 hunk 头
+      files:
+        - path: input/change.diff
+          content: "diff --git a/d.py b/d.py
+
+            index 111..222 100644
+
+            --- a/d.py
+
+            +++ b/d.py
+
+            @@ garbage here @@
+
+            -x = 1
+
+            +y = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：缺 +++ 头
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：缺 +++ 头
+      files:
+        - path: input/change.diff
+          content: "diff --git a/e.py b/e.py
+
+            index 111..222 100644
+
+            @@ -1 +1 @@
+
+            -x = 1
+
+            +y = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：纯散文无 diff 结构
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：纯散文无 diff 结构
+      files:
+        - path: input/change.diff
+          content: 今天改了一些东西，具体如下：修了登录，又改了样式，还删了一行代码。
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：NUL 字节
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：NUL 字节
+      files:
+        - path: input/change.diff
+          content: "diff --git a/f.py b/f.py
+
+            index 111..222 100644
+
+            --- a/f.py
+
+            +++ b/f.py
+
+            @@ -1 +1 @@
+
+            -x\0 = 1
+
+            +y\0 = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：超长路径
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：超长路径
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp.py b/src/pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp.py
+
+            +++ b/src/pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp.py
+
+            @@ -1,1 +1,1 @@
+
+            -X = 1
+
+            +X = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：latin-1 字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：latin-1 字符
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/café.py b/src/café.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/café.py
+
+            +++ b/src/café.py
+
+            @@ -1,1 +1,1 @@
+
+            -nom = 'café résumé'
+
+            +nom = 'café naïve'\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：重复 diff 头（10 次）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：重复 diff 头（10 次）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/dup.py b/src/dup.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/dup.py
+
+            +++ b/src/dup.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：垃圾行混入
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：垃圾行混入
+      files:
+        - path: input/change.diff
+          content: "hello world
+
+            new file mode
+
+            not a diff at all
+
+            @@@
+
+            ###
+
+            diff --git a/g.py b/g.py
+
+            --- a/g.py
+
+            +++ b/g.py
+
+            @@ -1 +1 @@
+
+            -a = 1
+
+            +b = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：只有 index 行
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：只有 index 行
+      files:
+        - path: input/change.diff
+          content: "index 1111111..2222222 100644\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：半截 diff（只有 --- 行）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：半截 diff（只有 --- 行）
+      files:
+        - path: input/change.diff
+          content: "--- a/half.py\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：乱码 + maxchars=1
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：乱码 + maxchars=1
+      files:
+        - path: input/change.diff
+          content: "diff --git a/i.py b/i.py
+
+            @@ -1 +1 @@
+
+            -æ ½
+
+            +è¿\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：畸形 hunk + maxchars=2
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：畸形 hunk + maxchars=2
+      files:
+        - path: input/change.diff
+          content: "diff --git a/j.py b/j.py
+
+            @@ broken @@
+
+            -x = (
+
+            +y = )\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "2"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：散文 + gitmoji 风格
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：散文 + gitmoji 风格
+      files:
+        - path: input/change.diff
+          content: 改了点什么？改了点什么。改了点什么！
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：零宽字符 + en 语言
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：零宽字符 + en 语言
+      files:
+        - path: input/change.diff
+          content: "diff --git a/k.py b/k.py
+
+            index 111..222 100644
+
+            --- a/k.py
+
+            +++ b/k.py
+
+            @@ -1 +1 @@
+
+            -a​
+
+            +b​\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：空行 + 注释行
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/缺字段输入不能让工具崩溃
+      content: 异常用例：空行 + 注释行
+      files:
+        - path: input/change.diff
+          content: "\n# 这不是 diff\n\n# 也不是\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 异常输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 异常输入下兜底 subject 仍合规
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []

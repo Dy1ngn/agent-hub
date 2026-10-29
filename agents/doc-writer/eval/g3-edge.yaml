@@ -1,0 +1,2440 @@
+id: ts-b-doc-writer-g3-edge
+agentId: doc-writer
+group: g3-edge
+name: 项目文档生成 · 边界情况：极小 / 空文件 / 极端规模
+description: 空文件、单行、极小项目与超大/超深/怪命名项目，离线确定性输出（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-minimal-1
+    title: 极小/极短项目（empty-proj）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/empty-proj 项目生成文档。
+      files:
+        - path: input/empty-proj/notes.txt
+          content: ""
+      params:
+        project_dir: input/empty-proj
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: empty-proj
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-2
+    title: 极小/极短项目（one-line）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/one-line 项目生成文档。
+      files:
+        - path: input/one-line/tiny.py
+          content: "print(1)\n"
+      params:
+        project_dir: input/one-line
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: one-line
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-3
+    title: 极小/极短项目（only-md）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/only-md 项目生成文档。
+      files:
+        - path: input/only-md/README.md
+          content: "# 只有说明\n"
+      params:
+        project_dir: input/only-md
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: only-md
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-4
+    title: 极小/极短项目（only-json）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/only-json 项目生成文档。
+      files:
+        - path: input/only-json/data.json
+          content: '{"a": 1}
+
+            '
+      params:
+        project_dir: input/only-json
+        doc_type: api
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: only-json
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-5
+    title: 极小/极短项目（only-cfg）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/only-cfg 项目生成文档。
+      files:
+        - path: input/only-cfg/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+      params:
+        project_dir: input/only-cfg
+        doc_type: arch
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: only-cfg
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-6
+    title: 极小/极短项目（one-html）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/one-html 项目生成文档。
+      files:
+        - path: input/one-html/index.html
+          content: "<html><body>hi</body></html>\n"
+      params:
+        project_dir: input/one-html
+        doc_type: onboarding
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: one-html
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-7
+    title: 极小/极短项目（whitespace-only）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/whitespace-only 项目生成文档。
+      files:
+        - path: input/whitespace-only/blank.py
+          content: "  \ \n\n   \ \n"
+      params:
+        project_dir: input/whitespace-only
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: whitespace-only
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-8
+    title: 极小/极短项目（deep-only）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/deep-only 项目生成文档。
+      files:
+        - path: input/deep-only/a/b/c/d/e/deep.py
+          content: "print(1)\n"
+      params:
+        project_dir: input/deep-only
+        doc_type: arch
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: deep-only
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-9
+    title: 极小/极短项目（two-lines）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/two-lines 项目生成文档。
+      files:
+        - path: input/two-lines/mini.py
+          content: "def f():\n    return 1\n"
+      params:
+        project_dir: input/two-lines
+        doc_type: api
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: two-lines
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-10
+    title: 极小/极短项目（empty-main）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极小项目做离线骨架文档
+      content: 请为 input/empty-main 项目生成文档。
+      files:
+        - path: input/empty-main/main.py
+          content: ""
+      params:
+        project_dir: input/empty-main
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: empty-main
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: 极端规模项目（huge-file）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/huge-file 项目生成文档。
+      files:
+        - path: input/huge-file/big.py
+          content: "x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1
+
+            x = 1\n"
+      params:
+        project_dir: input/huge-file
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: huge-file
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: 极端规模项目（huge-line）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/huge-line 项目生成文档。
+      files:
+        - path: input/huge-line/wide.py
+          content: 'W = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+
+            '
+      params:
+        project_dir: input/huge-line
+        doc_type: arch
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: huge-line
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: 极端规模项目（many-files）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/many-files 项目生成文档。
+      files:
+        - path: input/many-files/m1.py
+          content: "print(1)\n"
+      params:
+        project_dir: input/many-files
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: many-files
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: 极端规模项目（deep-nest）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/deep-nest 项目生成文档。
+      files:
+        - path: input/deep-nest/a/b/c/d/e/f/g/h/deep.py
+          content: "print(1)\n"
+      params:
+        project_dir: input/deep-nest
+        doc_type: onboarding
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: deep-nest
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: 极端规模项目（long-name）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/long-name 项目生成文档。
+      files:
+        - path: input/long-name/a_very_long_module_name_for_boundary_testing_purpose.py
+          content: "print(1)\n"
+      params:
+        project_dir: input/long-name
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: long-name
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: 极端规模项目（dotted-name）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/dotted-name 项目生成文档。
+      files:
+        - path: input/dotted-name/my.module.v2.py
+          content: "print(1)\n"
+      params:
+        project_dir: input/dotted-name
+        doc_type: api
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: dotted-name
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: 极端规模项目（space-name）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/space-name 项目生成文档。
+      files:
+        - path: input/space-name/my module.py
+          content: "print(1)\n"
+      params:
+        project_dir: input/space-name
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: space-name
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: 极端规模项目（utf8-name）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/utf8-name 项目生成文档。
+      files:
+        - path: input/utf8-name/模块名.py
+          content: "print(1)\n"
+      params:
+        project_dir: input/utf8-name
+        doc_type: readme
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: utf8-name
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: 极端规模项目（no-ext）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/no-ext 项目生成文档。
+      files:
+        - path: input/no-ext/Makefile
+          content: "run:\n    python main.py\n"
+      params:
+        project_dir: input/no-ext
+        doc_type: arch
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: no-ext
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: 极端规模项目（many-routes）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 对极端规模/命名项目做离线骨架文档
+      content: 请为 input/many-routes 项目生成文档。
+      files:
+        - path: input/many-routes/api.py
+          content: "@app.get(\"/r1\")
+
+            def h1():
+
+            \    return 1
+
+
+            @app.get(\"/r2\")
+
+            def h2():
+
+            \    return 2
+
+
+            @app.get(\"/r3\")
+
+            def h3():
+
+            \    return 3
+
+
+            @app.get(\"/r4\")
+
+            def h4():
+
+            \    return 4
+
+
+            @app.get(\"/r5\")
+
+            def h5():
+
+            \    return 5
+
+
+            @app.get(\"/r6\")
+
+            def h6():
+
+            \    return 6
+
+
+            @app.get(\"/r7\")
+
+            def h7():
+
+            \    return 7
+
+
+            @app.get(\"/r8\")
+
+            def h8():
+
+            \    return 8
+
+
+            @app.get(\"/r9\")
+
+            def h9():
+
+            \    return 9
+
+
+            @app.get(\"/r10\")
+
+            def h10():
+
+            \    return 10
+
+
+            @app.get(\"/r11\")
+
+            def h11():
+
+            \    return 11
+
+
+            @app.get(\"/r12\")
+
+            def h12():
+
+            \    return 12
+
+
+            @app.get(\"/r13\")
+
+            def h13():
+
+            \    return 13
+
+
+            @app.get(\"/r14\")
+
+            def h14():
+
+            \    return 14
+
+
+            @app.get(\"/r15\")
+
+            def h15():
+
+            \    return 15\n"
+      params:
+        project_dir: input/many-routes
+        doc_type: api
+        lang: zh
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: many-routes
+          weight: 2
+          note: 骨架标题带项目名
+        - type: regex
+          pattern: (项目简介|接口清单|分层结构|新人上手五步)
+          weight: 2
+          note: 固定小节标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []

@@ -1,0 +1,1576 @@
+id: ts-b-prompt-optimizer-g2-variation
+agentId: prompt-optimizer
+group: g2-variation
+name: 提示词优化 · 输入变体：规模 / 结构 / 语言 / 参数
+description: 超短到超长、列表/代码块/标题/中英混排等结构形态，叠加三种优化风格与不同任务目标（模型链路）（40 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-style-1
+    title: 超短提示词 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 写个函数。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-1-2
+    title: 超短提示词 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 写个函数。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-1-3
+    title: 超短提示词 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 写个函数。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2
+    title: 单行超长提示词 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 把这句话扩写成产品介绍：这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2-5
+    title: 单行超长提示词 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 把这句话扩写成产品介绍：这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2-6
+    title: 单行超长提示词 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 把这句话扩写成产品介绍：这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，这是一款智能音箱，
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3
+    title: 多段落长文 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "第 0 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 1 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 2 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 3 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 4 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 5 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 6 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 7 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 8 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 9 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 10 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 11 段：请检查下面的服务日志并给出结论，注意区分告警级别。"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3-8
+    title: 多段落长文 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "第 0 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 1 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 2 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 3 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 4 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 5 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 6 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 7 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 8 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 9 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 10 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 11 段：请检查下面的服务日志并给出结论，注意区分告警级别。"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3-9
+    title: 多段落长文 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "第 0 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 1 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 2 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 3 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 4 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 5 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 6 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 7 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 8 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 9 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 10 段：请检查下面的服务日志并给出结论，注意区分告警级别。
+
+
+        第 11 段：请检查下面的服务日志并给出结论，注意区分告警级别。"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4
+    title: 编号列表结构 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "准备一场技术面试：
+
+        1. 出 5 道算法题
+
+        2. 每题给评分标准
+
+        3. 控制在 60 分钟内
+
+        4. 输出表格"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4-11
+    title: 编号列表结构 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "准备一场技术面试：
+
+        1. 出 5 道算法题
+
+        2. 每题给评分标准
+
+        3. 控制在 60 分钟内
+
+        4. 输出表格"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4-12
+    title: 编号列表结构 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "准备一场技术面试：
+
+        1. 出 5 道算法题
+
+        2. 每题给评分标准
+
+        3. 控制在 60 分钟内
+
+        4. 输出表格"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-5
+    title: 项目符号结构 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "写招聘 JD：
+
+        - 岗位职责 3 条
+
+        - 任职要求 5 条
+
+        - 薪资范围
+
+        - 输出 Markdown"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-5-14
+    title: 项目符号结构 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "写招聘 JD：
+
+        - 岗位职责 3 条
+
+        - 任职要求 5 条
+
+        - 薪资范围
+
+        - 输出 Markdown"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-5-15
+    title: 项目符号结构 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "写招聘 JD：
+
+        - 岗位职责 3 条
+
+        - 任职要求 5 条
+
+        - 薪资范围
+
+        - 输出 Markdown"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-6
+    title: 内嵌代码块 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "解释这段代码在做什么，输出中文说明：
+
+        ```python
+
+        def f(x):
+
+        \    return x[::-1]
+
+        ```"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-6-17
+    title: 内嵌代码块 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "解释这段代码在做什么，输出中文说明：
+
+        ```python
+
+        def f(x):
+
+        \    return x[::-1]
+
+        ```"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-6-18
+    title: 内嵌代码块 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "解释这段代码在做什么，输出中文说明：
+
+        ```python
+
+        def f(x):
+
+        \    return x[::-1]
+
+        ```"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-7
+    title: 中英混排 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 把这段 API 文档翻译成 English，术语保留原样，输出 bilingual 对照表。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-7-20
+    title: 中英混排 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 把这段 API 文档翻译成 English，术语保留原样，输出 bilingual 对照表。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-7-21
+    title: 中英混排 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 把这段 API 文档翻译成 English，术语保留原样，输出 bilingual 对照表。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-8
+    title: 带 markdown 标题 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "# 目标
+
+        做竞品分析
+
+
+        # 输入
+
+        三家竞品的定价页
+
+
+        # 输出
+
+        对比表格"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-8-23
+    title: 带 markdown 标题 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "# 目标
+
+        做竞品分析
+
+
+        # 输入
+
+        三家竞品的定价页
+
+
+        # 输出
+
+        对比表格"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-8-24
+    title: 带 markdown 标题 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: "# 目标
+
+        做竞品分析
+
+
+        # 输入
+
+        三家竞品的定价页
+
+
+        # 输出
+
+        对比表格"
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-9
+    title: 带括号注释 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 生成测试用例（覆盖边界、异常、性能），每条用例给出前置条件与预期结果（用表格）。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-9-26
+    title: 带括号注释 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 生成测试用例（覆盖边界、异常、性能），每条用例给出前置条件与预期结果（用表格）。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-9-27
+    title: 带括号注释 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: 生成测试用例（覆盖边界、异常、性能），每条用例给出前置条件与预期结果（用表格）。
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-10
+    title: 纯英文提示词 · 优化风格 简洁
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: Summarize the meeting transcript into decisions, action items, and owners. Output as a markdown list.
+      files: []
+      params:
+        goal: 优化提示词
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-10-29
+    title: 纯英文提示词 · 优化风格 详细
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: Summarize the meeting transcript into decisions, action items, and owners. Output as a markdown list.
+      files: []
+      params:
+        goal: 优化提示词
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-10-30
+    title: 纯英文提示词 · 优化风格 结构化
+    tags:
+      - prompt
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模与结构形态的提示词在三种优化风格下的体检
+      content: Summarize the meeting transcript into decisions, action items, and owners. Output as a markdown list.
+      files: []
+      params:
+        goal: 优化提示词
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 二、五要素体检表"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-1
+    title: 模糊词堆叠 · 让它更明确
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: 请帮我把这份文档写得不错、较好一点，尽量专业，改完给我看，大概 500 字左右，语气要合适，必要时可以适当补充一些例子。
+      files: []
+      params:
+        goal: 让它更明确
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-2
+    title: 缺要素 · 补全要素
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: 写一个函数，把两个列表合并去重后排序返回，注意处理空列表，输出 Python 代码。
+      files: []
+      params:
+        goal: 补全要素
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-3
+    title: 占位符模板 · 保持占位符不变
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: "你是数据分析助手。今天是 {{date}}。
+
+        任务：根据用户提供的销售数据生成周报。
+
+        约束：只用给定数据，不得编造；数字保留两位小数。
+
+        输出格式：Markdown，含「本周概览」「异常项」「下周建议」三节。
+
+        示例：输入「周一 100，周二 200」→ 输出「本周合计 300，环比……」。"
+      files: []
+      params:
+        goal: 保持占位符不变
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-4
+    title: 英文提示词 · improve clarity
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: Write a friendly email to a customer whose order is delayed. Keep it under 120 words, apologize once, mention the new delivery date, and end with a clear next step. Output the email body only.
+      files: []
+      params:
+        goal: improve clarity
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-5
+    title: 完整五要素 · 微调结构
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: "# 角色
+
+        你是资深运维工程师。
+
+
+        # 任务
+
+        为给定服务写巡检清单。
+
+
+        # 背景
+
+        服务是支付网关，日峰值 5000 QPS。
+
+
+        # 约束
+
+        不要推荐付费工具。
+
+
+        # 输出格式
+
+        分点清单，每点一行。
+
+
+        # 示例
+
+        输入「redis」→ 输出「检查内存命中率……」。"
+      files: []
+      params:
+        goal: 微调结构
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-6
+    title: 超短 · 扩写需求
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: 写个函数。
+      files: []
+      params:
+        goal: 扩写需求
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-7
+    title: 超长 · 压缩长度
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: 把这段日志分析写清楚：错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，错误日志很多，
+      files: []
+      params:
+        goal: 压缩长度
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-8
+    title: 表格需求 · 输出对齐表格
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: 对比 5 款 CI 工具，列出价格、并发数、生态，输出表格。
+      files: []
+      params:
+        goal: 输出对齐表格
+        style: 结构化
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-9
+    title: 代码生成 · 约束输出
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: "生成 3 个正则表达式：匹配邮箱、手机号、身份证号。
+
+        要求：每个正则附一行说明，输出代码块。"
+      files: []
+      params:
+        goal: 约束输出
+        style: 详细
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-goal-10
+    title: 翻译任务 · 术语统一
+    tags:
+      - prompt
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同任务目标与优化风格组合下的体检
+      content: "把下面的段落翻译成英文，保持术语一致，不要增删事实，输出译文即可：
+
+        本系统支持多租户部署，租户之间数据完全隔离。"
+      files: []
+      params:
+        goal: 术语统一
+        style: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "## 四、问题清单"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

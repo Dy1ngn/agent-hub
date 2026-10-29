@@ -1,0 +1,46 @@
+{
+  "id": "test-generator",
+  "name": "单元测试生成",
+  "description": "用 ast 分析被测函数签名与异常，生成 pytest/unittest 测试骨架与用例清单，可选模型补全断言。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "{{params.src}}",
+      "--framework",
+      "{{params.framework}}",
+      "--coverage",
+      "{{params.coverage}}",
+      "--output-dir",
+      "{{outputDir}}/tests",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown"
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

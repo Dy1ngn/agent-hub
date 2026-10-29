@@ -1,0 +1,1085 @@
+id: ts-b-expense-tracker-g2-variation
+agentId: expense-tracker
+group: g2-variation
+name: 记账分析 · 输入变体：笔数 / 写法 / 预算 / 月份参数
+description: 记账笔数、书写风格、预算表与月份参数变体，走模型链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-volume-1
+    title: 笔数变体（1 笔）
+    tags:
+      - variation
+      - volume
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账笔数的月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 食堂
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 1 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-volume-2
+    title: 笔数变体（3 笔）
+    tags:
+      - variation
+      - volume
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账笔数的月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂
+
+            2026-10-06 打车 45 元 滴滴
+
+            2026-10-07 购物 88 元 商场\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 商场
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 3 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-volume-3
+    title: 笔数变体（8 笔）
+    tags:
+      - variation
+      - volume
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账笔数的月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-02 午饭 21 元 食堂
+
+            2026-10-03 午饭 22 元 食堂
+
+            2026-10-04 午饭 23 元 食堂
+
+            2026-10-05 午饭 24 元 食堂
+
+            2026-10-06 午饭 25 元 食堂
+
+            2026-10-07 午饭 26 元 食堂
+
+            2026-10-08 午饭 27 元 食堂
+
+            2026-10-09 午饭 28 元 食堂\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 食堂
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 8 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-volume-4
+    title: 笔数变体（15 笔）
+    tags:
+      - variation
+      - volume
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账笔数的月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-01 打车 26 元 滴滴
+
+            2026-10-02 打车 27 元 滴滴
+
+            2026-10-03 打车 28 元 滴滴
+
+            2026-10-04 打车 29 元 滴滴
+
+            2026-10-05 打车 30 元 滴滴
+
+            2026-10-06 打车 31 元 滴滴
+
+            2026-10-07 打车 32 元 滴滴
+
+            2026-10-08 打车 33 元 滴滴
+
+            2026-10-09 打车 34 元 滴滴
+
+            2026-10-10 打车 35 元 滴滴
+
+            2026-10-11 打车 36 元 滴滴
+
+            2026-10-12 打车 37 元 滴滴
+
+            2026-10-13 打车 38 元 滴滴
+
+            2026-10-14 打车 39 元 滴滴
+
+            2026-10-15 打车 40 元 滴滴\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 滴滴
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 15 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-volume-5
+    title: 笔数变体（25 笔）
+    tags:
+      - variation
+      - volume
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账笔数的月报
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-02 买菜 31 元 菜市场
+
+            2026-10-03 买菜 32 元 菜市场
+
+            2026-10-04 买菜 33 元 菜市场
+
+            2026-10-05 买菜 34 元 菜市场
+
+            2026-10-06 买菜 35 元 菜市场
+
+            2026-10-07 买菜 36 元 菜市场
+
+            2026-10-08 买菜 37 元 菜市场
+
+            2026-10-09 买菜 38 元 菜市场
+
+            2026-10-10 买菜 39 元 菜市场
+
+            2026-10-11 买菜 40 元 菜市场
+
+            2026-10-12 买菜 41 元 菜市场
+
+            2026-10-13 买菜 42 元 菜市场
+
+            2026-10-14 买菜 43 元 菜市场
+
+            2026-10-15 买菜 44 元 菜市场
+
+            2026-10-16 买菜 45 元 菜市场
+
+            2026-10-17 买菜 46 元 菜市场
+
+            2026-10-18 买菜 47 元 菜市场
+
+            2026-10-19 买菜 48 元 菜市场
+
+            2026-10-20 买菜 49 元 菜市场
+
+            2026-10-21 买菜 50 元 菜市场
+
+            2026-10-22 买菜 51 元 菜市场
+
+            2026-10-23 买菜 52 元 菜市场
+
+            2026-10-24 买菜 53 元 菜市场
+
+            2026-10-25 买菜 54 元 菜市场
+
+            2026-10-26 买菜 55 元 菜市场\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 菜市场
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 25 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-styles-1
+    title: 记账写法变体（午饭）
+    tags:
+      - variation
+      - styles
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账书写风格
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 午饭
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 1 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-styles-2
+    title: 记账写法变体（打车）
+    tags:
+      - variation
+      - styles
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账书写风格
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-06 打车￥45.5 支付宝\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 打车
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 1 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-styles-3
+    title: 记账写法变体（沃尔玛）
+    tags:
+      - variation
+      - styles
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账书写风格
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-07 超市购物 238 元 沃尔玛 刷卡\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 沃尔玛
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 1 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-styles-4
+    title: 记账写法变体（星巴克）
+    tags:
+      - variation
+      - styles
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账书写风格
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-08 买咖啡 28 元 星巴克 ☕\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 星巴克
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 1 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-styles-5
+    title: 记账写法变体（火锅）
+    tags:
+      - variation
+      - styles
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同记账书写风格
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-09 晚饭吃了火锅一共花了 188 元，用微信支付的\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 火锅
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 1 笔
+          weight: 2
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-budget-1
+    title: 预算表变体（正常）
+    tags:
+      - variation
+      - budget
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同预算表的对比
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂
+
+            2026-10-06 打车 45 元 滴滴\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit\n餐饮,1000\n交通,1000\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 正常
+          weight: 2
+        - type: contains
+          text: "## 预算对比"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-budget-2
+    title: 预算表变体（超支）
+    tags:
+      - variation
+      - budget
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同预算表的对比
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂
+
+            2026-10-06 打车 45 元 滴滴\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit\n餐饮,10\n交通,10\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 超支
+          weight: 2
+        - type: contains
+          text: "## 预算对比"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-budget-3
+    title: 预算表变体（娱乐）
+    tags:
+      - variation
+      - budget
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同预算表的对比
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂
+
+            2026-10-06 打车 45 元 滴滴\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit\n娱乐,999\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 娱乐
+          weight: 2
+        - type: contains
+          text: "## 预算对比"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-budget-4
+    title: 预算表变体（餐饮）
+    tags:
+      - variation
+      - budget
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同预算表的对比
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit\n餐饮,35\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 餐饮
+          weight: 2
+        - type: contains
+          text: "## 预算对比"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-budget-5
+    title: 预算表变体（购物）
+    tags:
+      - variation
+      - budget
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同预算表的对比
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂
+
+            2026-10-06 打车 45 元 滴滴
+
+            2026-10-07 购物 88 元 商场\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 购物
+          weight: 2
+        - type: contains
+          text: "## 预算对比"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-months-1
+    title: 月份参数变体（2026-08）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同月份参数
+      content: 请生成指定月份的月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-08-05 午饭 35 元 食堂\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-08
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 食堂
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 1 笔
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-08）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-months-2
+    title: 月份参数变体（2026-09）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同月份参数
+      content: 请生成指定月份的月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-09-15 打车 45 元 滴滴
+
+            2026-09-20 买书 60 元 书店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-09
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 书店
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-09）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-months-3
+    title: 月份参数变体（2026-10）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同月份参数
+      content: 请生成指定月份的月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-25 买水果 45 元 果园\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 果园
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 1 笔
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-months-4
+    title: 月份参数变体（2026-11）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同月份参数
+      content: 请生成指定月份的月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-11-11 购物 300 元 商场
+
+            2026-11-12 午饭 30 元 食堂
+
+            2026-11-13 咖啡 25 元 咖啡店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-11
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 咖啡店
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 3 笔
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-11）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-months-5
+    title: 月份参数变体（2026-12）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同月份参数
+      content: 请生成指定月份的月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-12-25 圣诞大餐 268 元 餐厅
+
+            2026-12-31 年末购物 520 元 商场\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-12
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 圣诞大餐
+          weight: 2
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+        - type: contains
+          text: "## 本月概览"
+          weight: 1
+        - type: contains
+          text: "# 开销报告（2026-12）"
+          weight: 2
+          note: 报告固定标题
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []

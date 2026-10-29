@@ -1,0 +1,1206 @@
+id: ts-b-meeting-minutes-g2-variation
+agentId: meeting-minutes
+group: g2-variation
+name: 会议纪要 · 输入变体：长度 / 人数 / 格式 / 参数
+description: 逐字稿长度、参与人数、书写格式与标题日期参数变体，走模型链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-length-1
+    title: 逐字稿长度变体（极短会）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三：好。\n"
+      params:
+        title: 极短会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 极短会
+          weight: 2
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：极短会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-length-2
+    title: 逐字稿长度变体（短会）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三：今天确认发布计划。\n李四：同意。\n"
+      params:
+        title: 短会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 短会
+          weight: 2
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：短会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-length-3
+    title: 逐字稿长度变体（标准评审会）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[09:30] 张三：各位好，今天讨论支付模块上线安排。
+
+            [09:31] 李四：目前接口已经全部联调完成，测试覆盖率 82%。
+
+            [09:35] 王五：灰度方案我建议先放 10% 流量，观察两天。
+
+            [09:40] 张三：决定下周一开始灰度发布，李四负责监控。
+
+            [09:45] 李四：我负责监控告警，周五前给出观察报告。
+
+            [09:50] 王五：遗留问题是回滚预案还没有评审。\n"
+      params:
+        title: 标准评审会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 标准评审会
+          weight: 2
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：标准评审会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-length-4
+    title: 逐字稿长度变体（合并长会）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[09:30] 张三：各位好，今天讨论支付模块上线安排。
+
+            [09:31] 李四：目前接口已经全部联调完成，测试覆盖率 82%。
+
+            [09:35] 王五：灰度方案我建议先放 10% 流量，观察两天。
+
+            [09:40] 张三：决定下周一开始灰度发布，李四负责监控。
+
+            [09:45] 李四：我负责监控告警，周五前给出观察报告。
+
+            [09:50] 王五：遗留问题是回滚预案还没有评审。
+
+
+            [10:00] 陈晨：昨天完成登录模块，今天做权限校验。
+
+            [10:01] 刘洋：昨天修复了三个 bug，今天继续排查内存问题。
+
+            [10:02] 赵敏：昨天写接口文档，今天对齐字段命名。
+
+            [10:03] 陈晨：没有阻塞。
+
+
+            主持人：本次会议要定下三件事。
+
+            张三：我负责输出接口文档，2026-11-05 前完成。
+
+            李四：我负责补单元测试，截止周五。
+
+            王五：我负责联系运维扩容，下周三前搞定。
+
+            主持人：决定按以上分工执行。\n"
+      params:
+        title: 合并长会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 合并长会
+          weight: 2
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：合并长会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-length-5
+    title: 逐字稿长度变体（超长会议）
+    tags:
+      - variation
+      - length
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同长度的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "发言者02：这是第 1 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者03：这是第 2 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者04：这是第 3 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者05：这是第 4 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者06：这是第 5 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者07：这是第 6 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者08：这是第 7 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者09：这是第 8 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者10：这是第 9 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者11：这是第 10 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者12：这是第 11 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者13：这是第 12 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者14：这是第 13 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者15：这是第 14 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者16：这是第 15 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者17：这是第 16 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者18：这是第 17 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者19：这是第 18 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者20：这是第 19 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者01：这是第 20 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者02：这是第 21 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者03：这是第 22 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者04：这是第 23 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者05：这是第 24 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者06：这是第 25 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者07：这是第 26 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者08：这是第 27 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者09：这是第 28 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者10：这是第 29 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者11：这是第 30 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者12：这是第 31 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者13：这是第 32 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者14：这是第 33 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者15：这是第 34 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者16：这是第 35 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者17：这是第 36 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者18：这是第 37 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者19：这是第 38 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者20：这是第 39 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者01：这是第 40 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者02：这是第 41 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者03：这是第 42 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者04：这是第 43 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者05：这是第 44 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者06：这是第 45 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者07：这是第 46 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者08：这是第 47 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者09：这是第 48 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者10：这是第 49 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者11：这是第 50 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者12：这是第 51 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者13：这是第 52 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者14：这是第 53 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者15：这是第 54 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者16：这是第 55 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者17：这是第 56 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者18：这是第 57 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者19：这是第 58 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者20：这是第 59 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者01：这是第 60 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者02：这是第 61 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者03：这是第 62 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者04：这是第 63 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者05：这是第 64 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者06：这是第 65 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者07：这是第 66 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者08：这是第 67 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者09：这是第 68 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者10：这是第 69 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者11：这是第 70 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者12：这是第 71 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者13：这是第 72 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者14：这是第 73 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者15：这是第 74 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者16：这是第 75 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者17：这是第 76 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者18：这是第 77 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者19：这是第 78 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者20：这是第 79 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者01：这是第 80 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者02：这是第 81 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者03：这是第 82 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者04：这是第 83 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者05：这是第 84 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者06：这是第 85 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者07：这是第 86 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者08：这是第 87 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者09：这是第 88 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者10：这是第 89 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者11：这是第 90 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者12：这是第 91 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者13：这是第 92 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者14：这是第 93 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者15：这是第 94 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者16：这是第 95 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者17：这是第 96 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者18：这是第 97 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者19：这是第 98 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者20：这是第 99 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者01：这是第 100 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者02：这是第 101 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者03：这是第 102 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者04：这是第 103 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者05：这是第 104 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者06：这是第 105 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者07：这是第 106 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者08：这是第 107 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者09：这是第 108 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者10：这是第 109 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者11：这是第 110 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者12：这是第 111 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者13：这是第 112 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者14：这是第 113 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者15：这是第 114 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者16：这是第 115 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者17：这是第 116 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者18：这是第 117 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者19：这是第 118 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者20：这是第 119 轮发言，内容是关于项目进展与风险的详细说明。
+
+            发言者01：这是第 120 轮发言，内容是关于项目进展与风险的详细说明。"
+      params:
+        title: 超长会议
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 超长会议
+          weight: 2
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：超长会议"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-speakers-1
+    title: 参与人数变体（单人汇报）
+    tags:
+      - variation
+      - speakers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同参与人数的会议
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "独白者：本次会议只有我一个人汇报。\n"
+      params:
+        title: 单人汇报
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 独白者
+          weight: 2
+        - type: regex
+          pattern: 参与人
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：单人汇报"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-speakers-2
+    title: 参与人数变体（两人沟通）
+    tags:
+      - variation
+      - speakers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同参与人数的会议
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "甲：先说结论。\n乙：补充细节。\n"
+      params:
+        title: 两人沟通
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 甲
+          weight: 2
+        - type: regex
+          pattern: 参与人
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：两人沟通"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-speakers-3
+    title: 参与人数变体（四人讨论）
+    tags:
+      - variation
+      - speakers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同参与人数的会议
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "甲：一。\n乙：二。\n丙：三。\n丁：四。\n"
+      params:
+        title: 四人讨论
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 丙
+          weight: 2
+        - type: regex
+          pattern: 参与人
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：四人讨论"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-speakers-4
+    title: 参与人数变体（八人周会）
+    tags:
+      - variation
+      - speakers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同参与人数的会议
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "成员1：进度正常。
+
+            成员2：进度正常。
+
+            成员3：进度正常。
+
+            成员4：进度正常。
+
+            成员5：进度正常。
+
+            成员6：进度正常。
+
+            成员7：进度正常。
+
+            成员8：进度正常。"
+      params:
+        title: 八人周会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 成员8
+          weight: 2
+        - type: regex
+          pattern: 参与人
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：八人周会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-speakers-5
+    title: 参与人数变体（十二人大会）
+    tags:
+      - variation
+      - speakers
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同参与人数的会议
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "同事1：同步一下进展。
+
+            同事2：同步一下进展。
+
+            同事3：同步一下进展。
+
+            同事4：同步一下进展。
+
+            同事5：同步一下进展。
+
+            同事6：同步一下进展。
+
+            同事7：同步一下进展。
+
+            同事8：同步一下进展。
+
+            同事9：同步一下进展。
+
+            同事10：同步一下进展。
+
+            同事11：同步一下进展。
+
+            同事12：同步一下进展。"
+      params:
+        title: 十二人大会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 同事12
+          weight: 2
+        - type: regex
+          pattern: 参与人
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：十二人大会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-1
+    title: 格式风格变体（全角冒号）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同逐字稿书写风格
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三：全角冒号格式。\n李四：继续保持。\n"
+      params:
+        title: 全角冒号
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 张三
+          weight: 2
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：全角冒号"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-2
+    title: 格式风格变体（Halfwidth Style）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同逐字稿书写风格
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "Tom: halfwidth colon style.
+
+            Jerry: keep going.\n"
+      params:
+        title: Halfwidth Style
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Tom
+          weight: 2
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：Halfwidth Style"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-3
+    title: 格式风格变体（箭头风格）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同逐字稿书写风格
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三> 箭头风格。\n李四> 了解。\n"
+      params:
+        title: 箭头风格
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 李四
+          weight: 2
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：箭头风格"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-4
+    title: 格式风格变体（方括号时间）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同逐字稿书写风格
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[08:00] 张三：带方括号时间。\n[08:05] 李四：收到。\n"
+      params:
+        title: 方括号时间
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 张三
+          weight: 2
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：方括号时间"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-5
+    title: 格式风格变体（裸时间戳）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理不同逐字稿书写风格
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "08:00 张三: 裸时间戳风格。\n08:05 李四: 收到。\n"
+      params:
+        title: 裸时间戳
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 李四
+          weight: 2
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：裸时间戳"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-params-1
+    title: 标题/日期参数变体（支付模块上线评审）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同会议标题与日期参数
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[09:30] 张三：各位好，今天讨论支付模块上线安排。
+
+            [09:31] 李四：目前接口已经全部联调完成，测试覆盖率 82%。
+
+            [09:35] 王五：灰度方案我建议先放 10% 流量，观察两天。
+
+            [09:40] 张三：决定下周一开始灰度发布，李四负责监控。
+
+            [09:45] 李四：我负责监控告警，周五前给出观察报告。
+
+            [09:50] 王五：遗留问题是回滚预案还没有评审。\n"
+      params:
+        title: 支付模块上线评审
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 支付模块上线评审
+          weight: 2
+        - type: contains
+          text: "## 决议"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：支付模块上线评审"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-params-2
+    title: 标题/日期参数变体（Payment Launch Review）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同会议标题与日期参数
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[09:30] 张三：各位好，今天讨论支付模块上线安排。
+
+            [09:31] 李四：目前接口已经全部联调完成，测试覆盖率 82%。
+
+            [09:35] 王五：灰度方案我建议先放 10% 流量，观察两天。
+
+            [09:40] 张三：决定下周一开始灰度发布，李四负责监控。
+
+            [09:45] 李四：我负责监控告警，周五前给出观察报告。
+
+            [09:50] 王五：遗留问题是回滚预案还没有评审。\n"
+      params:
+        title: Payment Launch Review
+        date: 2026-11-01
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Payment Launch Review
+          weight: 2
+        - type: contains
+          text: "## 决议"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：Payment Launch Review"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-params-3
+    title: 标题/日期参数变体（事故复盘（P1））
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同会议标题与日期参数
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "议题：10-27 线上事故复盘
+
+            孙工：事故原因是缓存击穿，导致数据库连接被打满。
+
+            周工：监控在 14:03 告警，14:20 恢复。
+
+            孙工：决定本周内上线缓存预热与限流。
+
+            周工：我负责补一份故障演练方案，截止时间 2026-11-03。
+
+            孙工：风险是旧版本客户端可能不兼容新限流策略。\n"
+      params:
+        title: 事故复盘（P1）
+        date: 2026-10-20
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 事故复盘（P1）
+          weight: 2
+        - type: contains
+          text: "## 决议"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：事故复盘（P1）"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-params-4
+    title: 标题/日期参数变体（年度预算讨论-终版）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同会议标题与日期参数
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三：今天讨论年度预算。
+
+            李四：研发线预算增加 20%。
+
+            张三：决定预算方案下周提交财务。\n"
+      params:
+        title: 年度预算讨论-终版
+        date: 2027-01-15
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 年度预算讨论-终版
+          weight: 2
+        - type: contains
+          text: "## 决议"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：年度预算讨论-终版"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-params-5
+    title: 标题/日期参数变体（Q4 Roadmap Review）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同会议标题与日期参数
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "Alice: Let's review the release plan for version 2.0.
+
+            Bob: The API migration is done, but load testing is pending.
+
+            Alice: Decision: ship the beta next Monday.
+
+            Bob: I will finish the load test report by Friday.\n"
+      params:
+        title: Q4 Roadmap Review
+        date: 2026-12-31
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Q4 Roadmap Review
+          weight: 2
+        - type: contains
+          text: "## 决议"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：Q4 Roadmap Review"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

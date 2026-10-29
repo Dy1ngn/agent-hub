@@ -1,0 +1,690 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型多语言翻译",
+      "description": "典型文档（技术文档/产品说明/邮件/表格等）的完整翻译链路（占位符保护 + 术语表 + 模型翻译），产出翻译报告",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-tech-md",
+          "title": "技术文档中译英（{file}）",
+          "tags": ["basic", "markdown"],
+          "input": {
+            "kind": "text",
+            "goal": "把技术文档翻译成目标语言，代码块保持不译",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/api-guide.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# 接入指南\n\n本服务通过 接口 对外提供数据查询能力，数据库 连接串在配置文件中管理。\n\n调用示例：\n\n```bash\ncurl https://api.example.com/v1/query\n```\n\n注意：接口 有速率限制，请做好重试。\n" },
+            { "file": "input/deploy.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# 部署说明\n\n部署前准备数据库 与缓存实例。负载均衡 需要开启健康检查。\n\n部署步骤：\n\n1. 构建镜像\n2. 推送镜像\n3. 滚动发布\n\n部署完成后观察日志与指标。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1, "note": "产出标准翻译报告" },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1, "note": "术语表被加载" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-product-md",
+          "title": "产品说明中译日（{file}）",
+          "tags": ["basic", "markdown"],
+          "input": {
+            "kind": "text",
+            "goal": "把产品说明翻译成日语",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/product.md", "to": "日语", "from": "中文", "batch": "6000", "src": "# 智能音箱\n\n智能音箱支持语音助手与音乐播放。唤醒词可以自定义。\n\n- 支持蓝牙连接\n- 支持定时闹钟\n- 支持智能家居控制\n" },
+            { "file": "input/manual.md", "to": "日语", "from": "中文", "batch": "6000", "src": "# 使用说明书\n\n第一次使用请先充电两小时。长按电源键开机。\n\n如需恢复出厂设置，请在设置菜单中选择“重置”。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-blog-en2zh",
+          "title": "博客英译中（{file}）",
+          "tags": ["basic", "english"],
+          "input": {
+            "kind": "text",
+            "goal": "把英文博客翻译成中文",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/blog.md", "to": "中文", "from": "英文", "batch": "6000", "src": "# Why We Migrated\n\nWe migrated the service for reliability. The database was the bottleneck.\n\nThe new design uses caching and a message queue. Latency dropped by forty percent.\n\nMigration took three weekends. It was worth it.\n" },
+            { "file": "input/post.md", "to": "中文", "from": "英文", "batch": "6000", "src": "# Notes on Testing\n\nTesting is a habit, not a phase. We write tests first for tricky logic.\n\nFlaky tests are bugs. We quarantine them and fix them within a week.\n\nTesting saves us from Friday incidents.\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-email-fr",
+          "title": "商务邮件中译法（{file}）",
+          "tags": ["basic", "email"],
+          "input": {
+            "kind": "text",
+            "goal": "把商务邮件翻译成法语",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/mail.txt", "to": "法语", "from": "中文", "batch": "6000", "src": "尊敬的客户：\n\n感谢贵司一直以来的信任。关于新合同的条款，我们已按上周会议的结论完成修订。\n\n请查收附件并在本周五前反馈。\n\n顺祝商祺！\n" },
+            { "file": "input/invite.txt", "to": "法语", "from": "中文", "batch": "6000", "src": "您好：\n\n诚挚邀请您参加下月十日举办的合作伙伴大会。大会将发布新产品与合作政策。\n\n期待您的莅临。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-manual-de",
+          "title": "说明书中译德（{file}）",
+          "tags": ["basic", "manual"],
+          "input": {
+            "kind": "text",
+            "goal": "把说明书翻译成德语",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/guide.txt", "to": "德语", "from": "中文", "batch": "6000", "src": "安全注意事项：\n\n1. 请勿在潮湿环境中使用本设备。\n2. 请使用原装电源适配器。\n3. 长期不用时请断开电源。\n\n出现异味或异响时请立即停止使用并联系售后。\n" },
+            { "file": "input/warranty.txt", "to": "德语", "from": "中文", "batch": "6000", "src": "保修条款：\n\n整机保修一年，电池保修六个月。人为损坏不在保修范围内。\n\n保修时请出示购买发票与保修卡。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-ui-ko",
+          "title": "界面文案中译韩（{file}）",
+          "tags": ["basic", "json"],
+          "input": {
+            "kind": "text",
+            "goal": "把 JSON 界面文案翻译成韩语，只译值不译键",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/ui.json", "to": "韩语", "from": "中文", "batch": "6000", "src": "{\n  \"login\": \"登录\",\n  \"logout\": \"退出登录\",\n  \"settings\": \"设置\",\n  \"save\": \"保存\",\n  \"cancel\": \"取消\"\n}\n" },
+            { "file": "input/errors.json", "to": "韩语", "from": "中文", "batch": "6000", "src": "{\n  \"network_error\": \"网络异常，请稍后重试\",\n  \"auth_failed\": \"登录状态失效，请重新登录\",\n  \"quota_exceeded\": \"额度已用完\"\n}\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-api-en",
+          "title": "API 文档中译英（{file}）",
+          "tags": ["basic", "api"],
+          "input": {
+            "kind": "text",
+            "goal": "把 API 文档翻译成英语，占位符保持原样",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/api.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# 查询 接口\n\n请求路径：`GET /v1/users/{{userId}}`\n\n响应字段：`name`、`email`、`created_at`。\n\n错误码：404 表示用户不存在。占位符 {{userId}} 不应被翻译。\n" },
+            { "file": "input/webhook.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# Webhook 说明\n\n事件推送地址由客户配置。签名算法使用 HMAC-SHA256。\n\n重试策略：失败后按 1s、5s、30s 重试三次。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-news-es",
+          "title": "新闻稿中译西（{file}）",
+          "tags": ["basic", "news"],
+          "input": {
+            "kind": "text",
+            "goal": "把新闻稿翻译成西班牙语",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/news.txt", "to": "西班牙语", "from": "中文", "batch": "6000", "src": "本报讯：本市地铁五号线今日开通试运营。五号线全长 32 公里，设站 24 座。\n\n试运营期间发车间隔为八分钟。乘客可通过官方应用查询实时到站信息。\n" },
+            { "file": "input/brief.txt", "to": "西班牙语", "from": "中文", "batch": "6000", "src": "行业动态：国内新能源汽车销量再创新高，出口保持快速增长。\n\n分析人士认为，产业链优势是出口增长的主要原因。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-meeting-ru",
+          "title": "会议记录中译俄（{file}）",
+          "tags": ["basic", "meeting"],
+          "input": {
+            "kind": "text",
+            "goal": "把会议记录翻译成俄语",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/minutes.txt", "to": "俄语", "from": "中文", "batch": "6000", "src": "会议记录：\n\n议题一：上线时间确认，定于本月二十日。\n议题二：值班安排，采用双人轮岗。\n议题三：预算审批，待财务回复。\n\n行动项：各负责人周三前更新进度。\n" },
+            { "file": "input/standup.txt", "to": "俄语", "from": "中文", "batch": "6000", "src": "站会记录：\n\n昨日完成接口联调，今日继续测试。阻塞项：测试环境数据库 资源不足。\n\n需要运维同学协助扩容。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-table-csv",
+          "title": "CSV 表格中译英（{file}）",
+          "tags": ["basic", "csv"],
+          "input": {
+            "kind": "text",
+            "goal": "把 CSV 表格数据列翻译成英语，表头保持不译",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "file": "input/products.csv", "to": "英语", "from": "中文", "batch": "6000", "src": "名称,类别,备注\n无线耳机,数码,支持降噪\n保温杯,生活,容量 500 毫升\n登山包,户外,防泼水\n" },
+            { "file": "input/courses.csv", "to": "英语", "from": "中文", "batch": "6000", "src": "课程,讲师,简介\n数据分析入门,李老师,面向零基础学员\n机器学习实战,王老师,含三个实战项目\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：格式 / 语言对 / 规模 / 参数组合",
+      "description": "不同文件格式（md/json/csv/txt）、语言对、文本规模与 batch-chars 参数下的翻译表现（模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-format-{n}",
+          "title": "文件格式变体（{name}）",
+          "tags": ["variation", "format"],
+          "input": {
+            "kind": "text",
+            "goal": "不同格式的文件都要正常翻译并记录在报告里",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "name": "note.md", "file": "input/note.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# 便签\n\n明天上午十点开会，讨论季度计划。\n" },
+            { "n": "2", "name": "data.json", "file": "input/data.json", "to": "英语", "from": "中文", "batch": "6000", "src": "{\n  \"title\": \"季度报表\",\n  \"summary\": \"营收稳步增长\"\n}\n" },
+            { "n": "3", "name": "table.csv", "file": "input/table.csv", "to": "英语", "from": "中文", "batch": "6000", "src": "城市,人口\n北京,2189 万\n上海,2487 万\n" },
+            { "n": "4", "name": "plain.txt", "file": "input/plain.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "这是一段普通文本，用于验证纯文本翻译流程。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "`{name}`", "weight": 2, "note": "文件清单记录输入文件名" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-langpair-{n}",
+          "title": "语言对变体（{from} → {to}）",
+          "tags": ["variation", "language"],
+          "input": {
+            "kind": "text",
+            "goal": "不同语言对的翻译都要正常产出报告",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "公司简介：我们专注企业服务十年，服务客户超过五千家。\n" },
+            { "n": "2", "file": "input/doc.txt", "to": "中文", "from": "英文", "batch": "6000", "src": "Company profile: we have focused on enterprise services for ten years.\n" },
+            { "n": "3", "file": "input/doc.txt", "to": "日语", "from": "中文", "batch": "6000", "src": "公司简介：我们专注企业服务十年，服务客户超过五千家。\n" },
+            { "n": "4", "file": "input/doc.txt", "to": "阿拉伯语", "from": "中文", "batch": "6000", "src": "公司简介：我们专注企业服务十年，服务客户超过五千家。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "源语言：{from}", "weight": 1, "note": "报告元信息记录源语言" },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 2, "note": "报告元信息记录目标语言" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-size-{n}",
+          "title": "文本规模变体（{title}）",
+          "tags": ["variation", "scale"],
+          "input": {
+            "kind": "text",
+            "goal": "不同规模的文本都要正常翻译",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "超短一句", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "你好。\n" },
+            { "n": "2", "title": "短文", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "今日安排：上午开会，下午写方案，晚上复盘。\n" },
+            { "n": "3", "title": "中等文档", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# 项目方案\n\n项目目标：搭建统一的数据平台，打通各业务线数据。\n\n项目范围：数据接入、数据治理、数据服务三部分。\n\n项目计划：第一季度完成接入，第二季度完成治理，第三季度对外提供数据服务。\n\n项目风险：数据质量与跨团队协作是主要风险，需要专项跟进。\n" },
+            { "n": "4", "title": "较长文档（分多批）", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "200", "src": "产品年度总结。产品在这一年里完成了三次大版本迭代，用户规模稳步增长。\n产品团队完善了需求评审流程，需求交付周期缩短了两成。\n产品质量方面，线上缺陷数量同比下降三成，用户满意度稳步提升。\n产品商业化方面，付费转化率提升到 4.5%，续费率保持在九成以上。\n产品技术方面，完成了微服务拆分与灰度发布体系建设。\n产品运营方面，社区活跃度提升，月活创作者突破十万。\n产品安全方面，通过了第三方安全认证。\n产品体验方面，首屏加载时间缩短到一秒以内。\n产品数据方面，搭建了统一的指标体系。\n产品下一步的重点是国际化与生态建设。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "regex", "pattern": "批次：[0-9]+ 个", "weight": 1, "note": "批次统计格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-protect-{n}",
+          "title": "保护结构变体（{title}）",
+          "tags": ["variation", "protect"],
+          "input": {
+            "kind": "text",
+            "goal": "代码块/占位符/链接等结构应被保护不译，流程不崩溃",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "代码块", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "安装方法：\n\n```bash\npip install demo\n```\n\n安装完成后即可使用。\n" },
+            { "n": "2", "title": "双花括号占位符", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "您好 {{用户名}}，您的验证码是 {{验证码}}，五分钟内有效。\n" },
+            { "n": "3", "title": "HTML 标签与链接", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "详见 <a href=\"https://example.com\">帮助中心</a>，图片：![示意图](https://example.com/a.png)。\n" },
+            { "n": "4", "title": "行内代码与格式串", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "使用 `--verbose` 参数查看日志，格式串 %s 与时间戳需要保留。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "contains", "text": "文件清单", "weight": 1, "note": "文件清单章节存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-batch-{n}",
+          "title": "批大小参数变体（batch={batch}）",
+          "tags": ["variation", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "不同批大小参数下都要正常翻译并统计批次",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "200", "src": "章节一：背景介绍。行业进入存量竞争阶段，获客成本持续上升。\n章节二：解决方案。通过内容运营与私域运营降低获客成本。\n章节三：预期效果。预计半年内获客成本下降两成。\n" },
+            { "n": "2", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "600", "src": "章节一：背景介绍。行业进入存量竞争阶段，获客成本持续上升。\n章节二：解决方案。通过内容运营与私域运营降低获客成本。\n章节三：预期效果。预计半年内获客成本下降两成。\n" },
+            { "n": "3", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "章节一：背景介绍。行业进入存量竞争阶段，获客成本持续上升。\n章节二：解决方案。通过内容运营与私域运营降低获客成本。\n章节三：预期效果。预计半年内获客成本下降两成。\n" },
+            { "n": "4", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "100000", "src": "章节一：背景介绍。行业进入存量竞争阶段，获客成本持续上升。\n章节二：解决方案。通过内容运营与私域运营降低获客成本。\n章节三：预期效果。预计半年内获客成本下降两成。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 1 },
+              { "type": "regex", "pattern": "批次：[0-9]+ 个", "weight": 1, "note": "批次统计格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 超短 / 超长 / 极端参数",
+      "description": "空文件、极短文本与极端参数组合下的稳定产出（离线确定性模式：译文保留原文 + 术语表替换）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": ["edge", "offline"],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出翻译报告",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "空文件", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "" },
+            { "n": "2", "title": "单字", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "好" },
+            { "n": "3", "title": "纯标点", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "。。。，？？！！" },
+            { "n": "4", "title": "只有空格", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "   \n  " },
+            { "n": "5", "title": "只有换行", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "\n\n\n" },
+            { "n": "6", "title": "纯 emoji", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "\ud83d\ude00\ud83d\ude80" },
+            { "n": "7", "title": "纯数字", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "1234567890" },
+            { "n": "8", "title": "单个英文词", "file": "input/doc.txt", "to": "中文", "from": "英文", "batch": "6000", "src": "hello" },
+            { "n": "9", "title": "超长单行", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本" },
+            { "n": "10", "title": "极短中英混合", "file": "input/doc.txt", "to": "英语", "from": "自动识别", "batch": "6000", "src": "我like它" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 2, "note": "边界输入仍产出翻译报告" },
+              { "type": "contains", "text": "统计概览", "weight": 1, "note": "确定性章节仍存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g3-extreme-{n}",
+          "title": "极端参数：{title}",
+          "tags": ["edge", "offline", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "极端参数组合下也要优雅产出",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "batch=200 + 较长文本（多批）", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "200", "src": "年度总结。营收稳步增长，成本持续优化，现金流健康。\n团队规模保持稳定，人效提升明显。客户满意度创新高。\n产品完成三次大版本迭代，技术债清理过半。\n市场方面，新签客户数增长三成，老客户续约率保持九成。\n风险方面，关注宏观环境与汇率波动带来的影响。\n" },
+            { "n": "2", "title": "batch=100000 + 较长文本（单批）", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "100000", "src": "年度总结。营收稳步增长，成本持续优化，现金流健康。\n团队规模保持稳定，人效提升明显。客户满意度创新高。\n产品完成三次大版本迭代，技术债清理过半。\n市场方面，新签客户数增长三成，老客户续约率保持九成。\n风险方面，关注宏观环境与汇率波动带来的影响。\n" },
+            { "n": "3", "title": "源语言=目标语言（中→中）", "file": "input/doc.txt", "to": "中文", "from": "中文", "batch": "6000", "src": "同一语言翻译：这段文本的源语言与目标语言相同。\n" },
+            { "n": "4", "title": "源语言=目标语言（英→英）", "file": "input/doc.txt", "to": "英语", "from": "英语", "batch": "6000", "src": "Same language translation request for this short text.\n" },
+            { "n": "5", "title": "生僻目标语言（世界语）", "file": "input/doc.txt", "to": "世界语", "from": "中文", "batch": "6000", "src": "世界语翻译测试：这是一段用于测试生僻目标语言的文本。\n" },
+            { "n": "6", "title": "自动识别源语言", "file": "input/doc.txt", "to": "日语", "from": "自动识别", "batch": "6000", "src": "自动识别测试：这段文本没有显式指定源语言。\n" },
+            { "n": "7", "title": "JSON 文件 + 法语", "file": "input/data.json", "to": "法语", "from": "中文", "batch": "200", "src": "{\n  \"greeting\": \"你好\",\n  \"farewell\": \"再见\"\n}\n" },
+            { "n": "8", "title": "CSV 文件 + 德语", "file": "input/table.csv", "to": "德语", "from": "中文", "batch": "200", "src": "水果,颜色\n苹果,红色\n香蕉,黄色\n" },
+            { "n": "9", "title": "batch=200 + 空文件", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "200", "src": "" },
+            { "n": "10", "title": "markdown + 韩语", "file": "input/doc.md", "to": "韩语", "from": "中文", "batch": "6000", "src": "# 标题\n\n带结构的 markdown 文档，用于验证结构化翻译。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 2, "note": "极端参数仍产出翻译报告" },
+              { "type": "contains", "text": "目标语言：{to}", "weight": 1, "note": "报告元信息记录目标语言" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形 / 乱码 / 编码异常输入",
+      "description": "乱码、控制字符、畸形 JSON/CSV 等异常输入下不崩溃、优雅降级（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": ["robust", "offline"],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "mojibake 乱码", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "鐑傛嵁鏂囨。閿欒緶銆傝繖鏄حاض涔辩爜銆傛嵁鏂囨。閿欒緶銆傛嵁鏂囨。\n" },
+            { "n": "2", "title": "控制字符", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "a\u0007b\u0007c\u0007\n" },
+            { "n": "3", "title": "零宽字符", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "a\u200bb\u200cc\u200dd\n" },
+            { "n": "4", "title": "未闭合代码块", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# 文档\n\n```bash\necho hello\n" },
+            { "n": "5", "title": "未闭合占位符", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "你好 {{name，验证码 {{code 未闭合。\n" },
+            { "n": "6", "title": "奇怪引号", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "他说：\u201c这是一段带\u2018花式引号\u2019的文字\u201d。\n" },
+            { "n": "7", "title": "RTL 文本", "file": "input/doc.txt", "to": "英语", "from": "自动识别", "batch": "6000", "src": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u062b\u0627\u0644 \u0639\u0644\u0649 \u0627\u0644\u0643\u0648\u062f\n" },
+            { "n": "8", "title": "emoji 与 ZWJ", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "❤️‍🔥😀👍🏽🚀✨\n" },
+            { "n": "9", "title": "混合换行符", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "第一行\r\n第二行\r第三行\n" },
+            { "n": "10", "title": "重复空白", "file": "input/doc.txt", "to": "英语", "from": "中文", "batch": "6000", "src": "字    字    字    字\n\n\n\n字\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 2, "note": "异常输入仍产出翻译报告" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g4-format-{n}",
+          "title": "结构损坏文件：{title}",
+          "tags": ["robust", "offline", "format"],
+          "input": {
+            "kind": "text",
+            "goal": "结构损坏的 JSON/CSV 不能让工具崩溃",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "畸形 JSON（应兜底按纯文本）", "noteCheck": "JSON 解析失败", "file": "input/data.json", "to": "英语", "from": "中文", "batch": "6000", "src": "{\"name\": \"测试\", \"value\": 123,}\n" },
+            { "n": "2", "title": "JSON 数组", "noteCheck": "翻译报告", "file": "input/data.json", "to": "英语", "from": "中文", "batch": "6000", "src": "[\"第一条\", \"第二条\", \"第三条\"]\n" },
+            { "n": "3", "title": "JSON 空对象", "noteCheck": "翻译报告", "file": "input/data.json", "to": "英语", "from": "中文", "batch": "6000", "src": "{}\n" },
+            { "n": "4", "title": "JSON 深嵌套", "noteCheck": "翻译报告", "file": "input/data.json", "to": "英语", "from": "中文", "batch": "6000", "src": "{\"a\": {\"b\": {\"c\": {\"d\": \"深层的值\"}}}}\n" },
+            { "n": "5", "title": "JSON 值含逗号引号", "noteCheck": "翻译报告", "file": "input/data.json", "to": "英语", "from": "中文", "batch": "6000", "src": "{\"quote\": \"他说：\\\"你好，世界\\\"\"}\n" },
+            { "n": "6", "title": "CSV 行列不齐", "noteCheck": "翻译报告", "file": "input/table.csv", "to": "英语", "from": "中文", "batch": "6000", "src": "a,b,c\n1,2\n3,4,5,6\n7\n" },
+            { "n": "7", "title": "CSV 引号内换行", "noteCheck": "翻译报告", "file": "input/table.csv", "to": "英语", "from": "中文", "batch": "6000", "src": "名称,备注\n甲,\"第一行\n第二行\"\n" },
+            { "n": "8", "title": "TSV 文件", "noteCheck": "翻译报告", "file": "input/table.tsv", "to": "英语", "from": "中文", "batch": "6000", "src": "列一\t列二\n值一\t值二\n" },
+            { "n": "9", "title": "CSV 空表头", "noteCheck": "翻译报告", "file": "input/table.csv", "to": "英语", "from": "中文", "batch": "6000", "src": ",,\n值一,值二,值三\n" },
+            { "n": "10", "title": "CSV 超多列", "noteCheck": "翻译报告", "file": "input/table.csv", "to": "英语", "from": "中文", "batch": "6000", "src": "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10\n一,二,三,四,五,六,七,八,九,十\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 2, "note": "结构损坏仍产出翻译报告" },
+              { "type": "contains", "text": "{noteCheck}", "weight": 1, "note": "畸形 JSON 兜底说明进报告，其余用例校验标题" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复调用 10 次（离线确定性模式），验证输出稳定、不崩溃、结构一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：样本 {n}",
+          "tags": ["stability", "offline"],
+          "repeat": 10,
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证翻译输出稳定",
+            "content": "翻译任务：{file} → {to}",
+            "files": [
+              { "path": "{file}", "content": "{src}" },
+              { "path": "input/glossary.json", "content": "{\"数据库\": \"Database\", \"接口\": \"API\", \"负载均衡\": \"Load Balancer\"}" }
+            ],
+            "params": { "file": "{file}", "to": "{to}", "from": "{from}", "batch": "{batch}", "offline": true }
+          },
+          "rows": [
+            { "n": "1", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# 接入指南\n\n通过 接口 查询数据，数据库 连接串在配置文件中。\n" },
+            { "n": "2", "file": "input/doc.md", "to": "英语", "from": "中文", "batch": "6000", "src": "# 负载均衡\n\n负载均衡 需要开启健康检查，数据库 只在内网开放。\n" },
+            { "n": "3", "file": "input/doc.json", "to": "日语", "from": "中文", "batch": "6000", "src": "{\n  \"title\": \"说明书\",\n  \"body\": \"请按步骤操作\"\n}\n" },
+            { "n": "4", "file": "input/doc.csv", "to": "英语", "from": "中文", "batch": "6000", "src": "名称,数量\n苹果,10\n香蕉,20\n" },
+            { "n": "5", "file": "input/doc.txt", "to": "法语", "from": "中文", "batch": "6000", "src": "这是一段用于稳定性测试的普通文本。\n" },
+            { "n": "6", "file": "input/doc.txt", "to": "中文", "from": "英文", "batch": "6000", "src": "This is a stability test sample in English.\n" },
+            { "n": "7", "file": "input/doc.md", "to": "德语", "from": "中文", "batch": "200", "src": "短文本稳定性样本：今天天气不错，适合出门。\n" },
+            { "n": "8", "file": "input/doc.txt", "to": "韩语", "from": "中文", "batch": "6000", "src": "混合内容 sample 123，用于重复调用验证。\n" },
+            { "n": "9", "file": "input/doc.json", "to": "英语", "from": "中文", "batch": "6000", "src": "{\n  \"a\": \"甲\",\n  \"b\": \"乙\"\n}\n" },
+            { "n": "10", "file": "input/doc.txt", "to": "西班牙语", "from": "中文", "batch": "6000", "src": "稳定性样本：重复调用应得到一致的报告结构。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "翻译报告", "weight": 2 },
+              { "type": "contains", "text": "文件清单", "weight": 1 },
+              { "type": "contains", "text": "术语表：3 条", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 2 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

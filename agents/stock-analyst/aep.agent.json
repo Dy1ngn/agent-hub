@@ -1,0 +1,44 @@
+{
+  "id": "stock-analyst",
+  "name": "股票分析",
+  "description": "A股/美股股票分析：技术指标、资金流向、舆情、综合评分与明日预测（评测走 case_runner.py 直接调用源码，不再依赖本地 HTTP API）",
+  "runtime": "python",
+  "entry": "case_runner.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--mode",
+      "agent",
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--mode",
+      "rule"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "",
+    "args": [
+      "--case",
+      "{{caseFile}}",
+      "--output",
+      "{{outputDir}}/report.json"
+    ]
+  },
+  "output": {
+    "source": "report-json",
+    "path": "",
+    "format": "json"
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

@@ -1,0 +1,408 @@
+id: ts-b-doc-summarizer-g5-stability
+agentId: doc-summarizer
+group: g5-stability
+name: 长文摘要 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线抽取式），验证输出稳定、不崩溃、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "# 年度报告
+
+
+        公司营收稳步增长，利润率达到预期目标。研发投入持续加大，新产品收入占比提升。
+
+        海外业务扩展顺利，客户结构进一步均衡。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "技术文档。系统采用微服务架构，网关负责路由与鉴权。消息队列削峰填谷，缓存降低数据库压力。
+
+        监控体系覆盖指标、日志与链路追踪。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "Product brief. The product focuses on reliability and ease of use. Customers praise the onboarding flow.
+
+        The roadmap includes reporting features and mobile support.\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "# 会议纪要
+
+
+        会议讨论了三个议题：上线计划、人员安排与预算。上线计划定在下月十五号。
+
+        人员安排已确认，预算待财务复核。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "调研摘要。本次调研覆盖五百名用户，调研显示价格与售后是用户最关心的两个因素。
+
+        调研还发现短视频渠道的转化率最高。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "# 说明书
+
+
+        安装步骤：第一步接通电源，第二步连接网络，第三步完成初始化设置。
+
+        使用中如遇故障，请参照说明书的故障排查表。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "新闻速报。今日发布的行业报告显示，行业整体增速回升，头部企业市场份额扩大。
+
+        报告预计明年行业增速将保持在两位数。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "# 教程
+
+
+        本文介绍数据备份的三种方式：全量备份、增量备份与差异备份。
+
+        建议生产环境每天做增量备份，每周做全量备份。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "评论合集。读者认为文章逻辑清晰，例子贴合实际。也有读者建议增加图表与参考文献。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证摘要输出稳定
+      content: "产品评测。这款设备的优点是续航长、发热低，缺点是接口偏少。综合来看性价比不错。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+        - type: contains
+          text: 要点
+          weight: 1
+        - type: contains
+          text: 抽取式原句
+          weight: 1
+          note: 离线抽取章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

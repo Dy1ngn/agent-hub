@@ -1,0 +1,1019 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型缺陷代码审查",
+      "description": "常见真实缺陷（安全/并发/性能/资源泄漏/吞异常等）的典型输入，走完整「静态规则 + 模型语义审查」链路",
+      "judge": true,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-sqli",
+          "title": "SQL 拼接注入（{lang}）",
+          "tags": [
+            "security",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "审查这段代码里的高置信问题，尤其是安全问题",
+            "content": "请审查 input/ 目录下的代码，找出安全与可靠性问题。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "lang": "python",
+              "file": "app.py",
+              "code": "import sqlite3\n\ndef find_user(name):\n    conn = sqlite3.connect('app.db')\n    cur = conn.cursor()\n    cur.execute(\"SELECT * FROM users WHERE name = '\" + name + \"'\")\n    return cur.fetchall()\n"
+            },
+            {
+              "lang": "javascript",
+              "file": "app.js",
+              "code": "const { Client } = require('pg');\n\nasync function findUser(name) {\n  const client = new Client();\n  await client.connect();\n  const res = await client.query(\"SELECT * FROM users WHERE name = '\" + name + \"'\");\n  return res.rows;\n}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1,
+                "note": "产出标准报告"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)(sql|注入|injection|拼接)",
+                "weight": 2,
+                "note": "识别出 SQL 注入风险"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-resource",
+          "title": "资源未释放 / 未关闭（{lang}）",
+          "tags": [
+            "reliability",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出资源泄漏与异常处理问题",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "lang": "python",
+              "file": "export.py",
+              "code": "import csv\n\ndef export_rows(rows, path):\n    f = open(path, 'w')\n    writer = csv.writer(f)\n    for row in rows:\n        writer.writerow(row)\n    return path\n"
+            },
+            {
+              "lang": "java",
+              "file": "Export.java",
+              "code": "import java.io.*;\npublic class Export {\n  void export(String[] rows, String path) throws Exception {\n    FileWriter fw = new FileWriter(path);\n    for (String row : rows) {\n      fw.write(row);\n      fw.write(\"\\n\");\n    }\n  }\n}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(关闭|释放|close|泄漏|上下文|finally|with)",
+                "weight": 2,
+                "note": "识别资源未释放"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-swallow",
+          "title": "吞掉异常继续成功返回",
+          "tags": [
+            "reliability",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出错误处理方面的缺陷",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "pay_callback.py",
+              "code": "def handle_payment_callback(payload):\n    try:\n        amount = payload['amount']\n        charge(amount)\n    except Exception:\n        pass\n    return {'status': 'ok'}\n"
+            },
+            {
+              "file": "order.py",
+              "code": "def save_order(order):\n    try:\n        db.insert(order)\n    except Exception as exc:\n        print('error:', exc)\n    return True\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(异常|吞|except|错误处理|静默|捕获)",
+                "weight": 2,
+                "note": "识别吞异常"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-concurrency",
+          "title": "先读后写缺少原子性 / 竞态",
+          "tags": [
+            "concurrency",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出并发与一致性问题",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "inventory.py",
+              "code": "def deduct_stock(item_id, qty):\n    stock = db.query(item_id)\n    if stock.quantity >= qty:\n        stock.quantity -= qty\n        db.save(stock)\n    return stock.quantity\n"
+            },
+            {
+              "file": "inventory.js",
+              "code": "async function deductStock(itemId, qty) {\n  const stock = await db.get(itemId);\n  if (stock.quantity >= qty) {\n    stock.quantity -= qty;\n    await db.save(stock);\n  }\n  return stock.quantity;\n}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(并发|竞态|原子|锁|事务|race|lock|transaction)",
+                "weight": 2,
+                "note": "识别并发缺陷"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-nplus1",
+          "title": "循环内逐条查询（N+1）",
+          "tags": [
+            "performance",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出性能问题",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "report.py",
+              "code": "def build_report(order_ids):\n    rows = []\n    for oid in order_ids:\n        order = db.get_order(oid)\n        user = db.get_user(order.user_id)\n        rows.append((order, user))\n    return rows\n"
+            },
+            {
+              "file": "report.js",
+              "code": "function buildReport(orderIds) {\n  const rows = [];\n  for (const oid of orderIds) {\n    const order = db.getOrder(oid);\n    rows.push([order, db.getUser(order.userId)]);\n  }\n  return rows;\n}\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(N\\+1|循环.*(查询|调用)|批量|性能|batch|查询次数)",
+                "weight": 2,
+                "note": "识别 N+1 查询"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-secret",
+          "title": "硬编码密钥",
+          "tags": [
+            "security",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出安全隐患",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "config.py",
+              "code": "AWS_SECRET_ACCESS_KEY = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'\nDEBUG = True\n\ndef connect():\n    return boto3.client('s3', aws_secret_access_key=AWS_SECRET_ACCESS_KEY)\n"
+            },
+            {
+              "file": "config.js",
+              "code": "const config = {\n  apiKey: 'sk-live-51H8xQ2Zb9vL0mN4pR7sT6uW3xY5zA1bC2d',\n  debug: true\n};\nmodule.exports = config;\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(密钥|硬编码|secret|credential|凭据|泄露)",
+                "weight": 2,
+                "note": "识别硬编码密钥"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-null",
+          "title": "空值 / None 未校验",
+          "tags": [
+            "correctness",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出潜在崩溃点",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "profile.py",
+              "code": "def display_name(user):\n    return user['profile']['name'].strip().title()\n\ndef render(users):\n    return [display_name(u) for u in users]\n"
+            },
+            {
+              "file": "profile.js",
+              "code": "function displayName(user) {\n  return user.profile.name.trim().replace(/\\b\\w/g, c => c.toUpperCase());\n}\nmodule.exports = { displayName };\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(空值|None|null|未校验|可选|崩溃|KeyError|TypeError|防御)",
+                "weight": 2,
+                "note": "识别空值风险"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-xss",
+          "title": "未转义输出（XSS）",
+          "tags": [
+            "security",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出 Web 安全问题",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "view.js",
+              "code": "function renderComment(comment) {\n  document.getElementById('list').innerHTML += '<div>' + comment.text + '</div>';\n}\nmodule.exports = { renderComment };\n"
+            },
+            {
+              "file": "server.js",
+              "code": "const express = require('express');\nconst app = express();\napp.get('/hi', (req, res) => {\n  res.send('<h1>Hello ' + req.query.name + '</h1>');\n});\nmodule.exports = app;\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)(xss|转义|escape|注入|innerHTML|sanitize|过滤)",
+                "weight": 2,
+                "note": "识别 XSS 风险"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-weakhash",
+          "title": "弱哈希存密码",
+          "tags": [
+            "security",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出密码存储相关问题",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "auth.py",
+              "code": "import hashlib\n\ndef hash_password(password):\n    return hashlib.md5(password.encode()).hexdigest()\n\ndef register(user, password):\n    user.password_hash = hash_password(password)\n    db.save(user)\n"
+            },
+            {
+              "file": "auth.js",
+              "code": "const crypto = require('crypto');\nfunction hashPassword(password) {\n  return crypto.createHash('sha1').update(password).digest('hex');\n}\nmodule.exports = { hashPassword };\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(md5|sha1|弱哈希|bcrypt|加盐|慢哈希|密码)",
+                "weight": 2,
+                "note": "识别弱哈希"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-offbyone",
+          "title": "边界越界 / off-by-one",
+          "tags": [
+            "correctness",
+            "basic"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "找出边界处理问题",
+            "content": "请审查 input/ 目录下的代码。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "window.py",
+              "code": "def moving_sum(values, k):\n    out = []\n    for i in range(len(values)):\n        total = 0\n        for j in range(i, i + k + 1):\n            total += values[j]\n        out.append(total)\n    return out\n"
+            },
+            {
+              "file": "topn.py",
+              "code": "def top_n(items, n):\n    result = []\n    for i in range(n + 1):\n        result.append(items[i])\n    return result\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(越界|边界|IndexError|off-by-one|范围|len\\(\\))",
+                "weight": 2,
+                "note": "识别越界风险"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ],
+      "judgeWeight": 0.3
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：语言 / 规模 / 内容形态",
+      "description": "不同语言与文件规模下的表现：多文件、大文件、混合语言、注释密度等变体（模型语义审查链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-multi-{n}",
+          "title": "多文件混合审查（{n}）",
+          "tags": [
+            "variation",
+            "multi-file"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "审查这批文件里的高置信问题",
+            "content": "多文件审查样本 {n}",
+            "files": [
+              {
+                "path": "input/service{n}.py",
+                "content": "{code1}"
+              },
+              {
+                "path": "input/util{n}.js",
+                "content": "{code2}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 4,
+          "rows": [
+            {
+              "n": "1",
+              "code1": "def load(path):\n    f = open(path)\n    return eval(f.read())\n",
+              "code2": "module.exports = { run: (cmd) => require('child_process').execSync('ls ' + cmd).toString() };\n"
+            },
+            {
+              "n": "2",
+              "code1": "def transfer(a, b, amount):\n    a.balance -= amount\n    b.balance += amount\n    db.save(a)\n    db.save(b)\n",
+              "code2": "function pick(arr, i) {\n  return arr[i + 1];\n}\nmodule.exports = { pick };\n"
+            },
+            {
+              "n": "3",
+              "code1": "TOKEN = 'hf_1a2b3c4d5e6f7g8h9i0j'\n\ndef call_api():\n    return requests.get(API, headers={'Authorization': TOKEN})\n",
+              "code2": "const cache = {};\nfunction get(k) {\n  return cache[k].value;\n}\nmodule.exports = { get };\n"
+            },
+            {
+              "n": "4",
+              "code1": "def parse_log(path):\n    out = []\n    for line in open(path):\n        out.append(line.split(','))\n    return out\n",
+              "code2": "function renderList(items) {\n  return items.map(i => '<li>' + i.name + '</li>').join('');\n}\nmodule.exports = { renderList };\n"
+            },
+            {
+              "n": "5",
+              "code1": "import threading\n\nbalance = 0\n\ndef deposit(amount):\n    global balance\n    balance += amount\n",
+              "code2": "async function withdraw(acc, amount) {\n  if (acc.balance > amount) {\n    await sleep(10);\n    acc.balance -= amount;\n  }\n}\nmodule.exports = { withdraw };\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(问题|风险|建议|严重|警告)",
+                "weight": 1,
+                "note": "报告包含问题类描述"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-big-{n}",
+          "title": "较大文件审查（{n}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "审查较长文件里的问题",
+            "content": "文件较长，关注高置信问题。",
+            "files": [
+              {
+                "path": "input/big{n}.py",
+                "content": "{code}"
+              }
+            ],
+            "params": {}
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "code": "import os\n\nCONFIG = {}\n\ndef init_config():\n    for line in open('config.ini'):\n        k, v = line.split('=')\n        CONFIG[k] = v\n\ndef get(key):\n    return CONFIG[key]\n\ndef dump():\n    return eval(open('state.txt').read())\n\ndef save_state(state):\n    f = open('state.txt', 'w')\n    f.write(repr(state))\n\ndef run_cmd(cmd):\n    os.system('tool ' + cmd)\n\ndef batch_run(cmds):\n    for c in cmds:\n        run_cmd(c)\n\ndef report(items):\n    out = []\n    for i in items:\n        out.append(str(i))\n    return '\\n'.join(out)\n"
+            },
+            {
+              "n": "2",
+              "code": "class Repo:\n    def __init__(self):\n        self.cache = {}\n    def get(self, key):\n        return self.cache[key].lower()\n    def put(self, key, value):\n        self.cache[key] = value\n    def bulk(self, pairs):\n        for p in pairs:\n            self.put(p[0], p[1])\n    def search(self, needle):\n        out = []\n        for k in self.cache:\n            if needle in self.cache[k]:\n                out.append(k)\n        return out\n    def export(self, path):\n        f = open(path, 'w')\n        f.write(str(self.cache))\n"
+            },
+            {
+              "n": "3",
+              "code": "SECRET = 'sk-4f8a2b7c9d1e3f5g7h9j'\nDEBUG = True\n\ndef fetch(url):\n    import urllib.request\n    return urllib.request.urlopen(url).read().decode()\n\ndef parse(html):\n    import re\n    return re.findall('<a href=\"(.*)\">', html)\n\ndef crawl(urls):\n    all_links = []\n    for u in urls:\n        all_links.extend(parse(fetch(u)))\n    return all_links\n\ndef save(links):\n    for i in range(len(links) + 1):\n        print(links[i])\n"
+            },
+            {
+              "n": "4",
+              "code": "def divide(a, b):\n    try:\n        return a / b\n    except:\n        return 0\n\ndef average(values):\n    return sum(values) / len(values)\n\ndef normalize(values):\n    m = average(values)\n    return [v - m for v in values]\n\ndef pipeline(values):\n    return normalize(values)\n"
+            },
+            {
+              "n": "5",
+              "code": "import json\n\nHANDLERS = {}\n\ndef register(name):\n    def deco(fn):\n        HANDLERS[name] = fn\n        return fn\n    return deco\n\n@register('ping')\ndef ping(payload):\n    return {'pong': payload}\n\ndef dispatch(raw):\n    data = json.loads(raw)\n    return HANDLERS[data['type']](data['payload'])\n\ndef handle_all(raws):\n    out = []\n    for raw in raws:\n        try:\n            out.append(dispatch(raw))\n        except Exception:\n            pass\n    return out\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：极小 / 空 / 特殊内容",
+      "description": "空文件、单行、纯注释、超长行、纯数据文件等边界输入下的稳定产出（离线静态模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "对边界输入也要产出报告",
+            "content": "边界用例：{title}",
+            "files": [
+              {
+                "path": "input/edge{n}{ext}",
+                "content": "{code}"
+              }
+            ],
+            "params": {
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "title": "空文件",
+              "ext": ".py",
+              "code": ""
+            },
+            {
+              "n": "2",
+              "title": "单字符文件",
+              "ext": ".py",
+              "code": "x"
+            },
+            {
+              "n": "3",
+              "title": "纯注释",
+              "ext": ".py",
+              "code": "# 只是一些注释\n# 没有实际代码\n"
+            },
+            {
+              "n": "4",
+              "title": "超长单行",
+              "ext": ".py",
+              "code": "a = 1; b = 2; c = 3; d = 4; e = 5; f = 6; g = 7; h = 8; i = 9; j = 10; k = 11; l = 12; m = 13; n = 14; o = 15; p = 16; q = 17; r = 18; s = 19; t = 20;"
+            },
+            {
+              "n": "5",
+              "title": "纯数据 JSON",
+              "ext": ".txt",
+              "code": "{\"a\": 1, \"b\": [1, 2, 3], \"c\": {\"d\": null}}"
+            },
+            {
+              "n": "6",
+              "title": "只有空行",
+              "ext": ".txt",
+              "code": "\n\n\n\n\n"
+            },
+            {
+              "n": "7",
+              "title": "只有 shebang",
+              "ext": ".py",
+              "code": "#!/usr/bin/env python3\n"
+            },
+            {
+              "n": "8",
+              "title": "HTML 片段",
+              "ext": ".html",
+              "code": "<div><p>hello</p><script>var x = 1;</script></div>"
+            },
+            {
+              "n": "9",
+              "title": "Markdown 文档",
+              "ext": ".md",
+              "code": "# 标题\n\n- 列表一\n- 列表二\n"
+            },
+            {
+              "n": "10",
+              "title": "超长标识符",
+              "ext": ".py",
+              "code": "averyveryverylongidentifiernamethatgoesonandonandonandonandonandonandon = 1"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 2,
+                "note": "边界输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "SyntaxError",
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形 / 编码异常输入",
+      "description": "乱码、控制字符、零宽字符、损坏语法等异常输入下不崩溃、优雅降级（离线静态模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "code",
+            "goal": "异常输入不能让工具崩溃",
+            "content": "异常用例：{title}",
+            "files": [
+              {
+                "path": "input/bad{n}.py",
+                "content": "{code}"
+              }
+            ],
+            "params": {
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "title": "语法损坏",
+              "code": "def broken(:\n    pass\n@@@ ###\n"
+            },
+            {
+              "n": "2",
+              "title": "非法转义",
+              "code": "s = '\\q\\z\\' \n"
+            },
+            {
+              "n": "3",
+              "title": "控制字符",
+              "code": "a = 1\u0007b = 2\u0007c = 3\n"
+            },
+            {
+              "n": "4",
+              "title": "混合中英数字符",
+              "code": "变量 = 1\nmixed_变量_2 = '值'\n# 注释 with English and 123\n"
+            },
+            {
+              "n": "5",
+              "title": "未闭合引号",
+              "code": "s = 'unterminated\nprint(s)\n"
+            },
+            {
+              "n": "6",
+              "title": "未闭合括号",
+              "code": "def f(a, b:\n    return a + b\n"
+            },
+            {
+              "n": "7",
+              "title": "零宽字符",
+              "code": "a​ = 1\nb‌ = 2\n"
+            },
+            {
+              "n": "8",
+              "title": "emoji 标识符",
+              "code": "😀 = 1\n🚀🚀 = 2\n"
+            },
+            {
+              "n": "9",
+              "title": "超多空行",
+              "code": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            },
+            {
+              "n": "10",
+              "title": "重复定义",
+              "code": "def f():\n    return 1\ndef f():\n    return 2\ndef f():\n    return 3\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 2,
+                "note": "异常输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "not_contains",
+                "text": "SyntaxError",
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复调用 10 次（离线静态模式），验证输出稳定、不崩溃、结构一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：样本 {n}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "repeat": 10,
+          "input": {
+            "kind": "code",
+            "goal": "重复调用验证稳定性",
+            "content": "稳定性样本 {n}",
+            "files": [
+              {
+                "path": "input/stable{n}.py",
+                "content": "{code}"
+              }
+            ],
+            "params": {
+              "offline": true
+            }
+          },
+          "rows": [
+            {
+              "n": "1",
+              "code": "import os\n\ndef read_config(path):\n    f = open(path)\n    data = f.read()\n    return eval(data)\n"
+            },
+            {
+              "n": "2",
+              "code": "def transfer(from_acc, to_acc, amount):\n    from_acc.balance -= amount\n    to_acc.balance += amount\n"
+            },
+            {
+              "n": "3",
+              "code": "PASSWORD = 'admin123'\n\ndef login(user, pwd):\n    return user == 'admin' and pwd == PASSWORD\n"
+            },
+            {
+              "n": "4",
+              "code": "def batch(items):\n    for i in range(len(items) + 1):\n        print(items[i])\n"
+            },
+            {
+              "n": "5",
+              "code": "def run(cmd):\n    import subprocess\n    return subprocess.getoutput('ls ' + cmd)\n"
+            },
+            {
+              "n": "6",
+              "code": "def divide(a, b):\n    return a / b\n\ndef ratio(xs):\n    return divide(sum(xs), len(xs))\n"
+            },
+            {
+              "n": "7",
+              "code": "KEY = 'AKIA1234567890EXAMPLE'\n\ndef sign(payload):\n    import hashlib\n    return hashlib.md5((KEY + payload).encode()).hexdigest()\n"
+            },
+            {
+              "n": "8",
+              "code": "def render(user):\n    return '<b>' + user.name + '</b>'\n"
+            },
+            {
+              "n": "9",
+              "code": "def load_users():\n    users = []\n    for id in range(100):\n        users.append(db.get_user(id))\n    return users\n"
+            },
+            {
+              "n": "10",
+              "code": "def parse(raw):\n    try:\n        return raw.split('|')[1]\n    except Exception:\n        pass\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "代码审查报告",
+                "weight": 2
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(问题|风险|警告|建议|严重)",
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

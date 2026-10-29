@@ -1,0 +1,586 @@
+id: ts-b-expense-tracker-g5-stability
+agentId: expense-tracker
+group: g5-stability
+name: 记账分析 · 稳定性：10 样本 × 重复 10 次
+description: 10 个确定性记账样本各重复 10 次，离线输出必须完全一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性样本（星巴克）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂
+
+            2026-10-06 晚饭 42 元 面馆
+
+            2026-10-07 咖啡 18 元 星巴克\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 1
+        - type: contains
+          text: 星巴克
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 3 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性样本（沃尔玛）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-08 打车 45.5 元 支付宝
+
+            2026-10-09 超市购物 238 元 沃尔玛\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 1
+        - type: contains
+          text: 沃尔玛
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性样本（苹果直营店）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: ""
+        - path: input/book.json
+          content: '{"version": 1, "entries": [{"id": "e01", "date": "2026-10-02", "amount": 68.0, "category": "餐饮", "merchant": "全家便利店", "pay_method": "微信", "note": ""}, {"id": "e02", "date": "2026-10-09", "amount": 1200.0, "category": "购物", "merchant": "苹果直营店", "pay_method": "信用卡", "note": ""}]}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 1
+        - type: contains
+          text: 苹果直营店
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性样本（大饭店）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-05 午饭 35 元 食堂
+
+            2026-10-06 聚餐 320 元 大饭店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit\n餐饮,200\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 1
+        - type: contains
+          text: 大饭店
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性样本（包子铺）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-11-02 早饭 15 元 包子铺
+
+            2026-11-05 电影票 60 元 影院\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-11
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-11）"
+          weight: 1
+        - type: contains
+          text: 包子铺
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性样本（京东）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-10 午饭 20 元 食堂
+
+            2026-10-11 买电脑 12999 元 京东\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 1
+        - type: contains
+          text: 京东
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性样本（健身房）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-25 买水果 45 元 果园
+
+            2026-10-26 打车 30 元 滴滴\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": [{"id": "e01", "date": "2026-10-15", "amount": 88.0, "category": "娱乐", "merchant": "健身房", "pay_method": "支付宝", "note": ""}]}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 1
+        - type: contains
+          text: 健身房
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 3 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性样本（书店）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-09-15 打车 45 元 滴滴
+
+            2026-09-20 买书 60 元 书店\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-09
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-09）"
+          weight: 1
+        - type: contains
+          text: 书店
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性样本（商场）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-10-01 午饭 30 元 食堂
+
+            2026-10-02 打车 40 元 滴滴
+
+            2026-10-03 买鞋 399 元 商场\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300
+
+            居住,2000
+
+            娱乐,200
+
+            医疗,200
+
+            教育,200
+
+            人情,200
+
+            其他,100\n"
+      params:
+        month: 2026-10
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-10）"
+          weight: 1
+        - type: contains
+          text: 商场
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 3 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性样本（圣诞大餐）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成月报。
+      files:
+        - path: input/expenses.txt
+          content: "2026-12-25 圣诞大餐 268 元 餐厅
+
+            2026-12-31 年末购物 520 元 商场\n"
+        - path: input/book.json
+          content: '{"version": 1, "entries": []}'
+        - path: input/budget.csv
+          content: "category,limit
+
+            餐饮,100
+
+            交通,200
+
+            购物,300\n"
+      params:
+        month: 2026-12
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 开销报告（2026-12）"
+          weight: 1
+        - type: contains
+          text: 圣诞大餐
+          weight: 2
+          note: 商户回显
+        - type: regex
+          pattern: 记账笔数 \| 2 笔
+          weight: 2
+          note: 笔数统计正确
+        - type: contains
+          text: "## 明细"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

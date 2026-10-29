@@ -1,0 +1,973 @@
+id: ts-b-weekly-report-g3-edge
+agentId: weekly-report
+group: g3-edge
+name: 周报日报 · 边界情况：单条 / 零行 / 极端数值
+description: 单条提交或记录、零行改动、巨大数值、超长说明等边界输入，离线确定性输出（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-minimal-1
+    title: "极小输入（feat: 新增二维码登录）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 新增二维码登录 | +40 -0 | src/auth/qr.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-2
+    title: 极小输入（x）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "- [x] 只有一条记录\n"
+        - path: input/commits.txt
+          content: ""
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-3
+    title: 极小输入（x）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "## 2026-10-28\n- [ ] 只有一条计划\n"
+        - path: input/commits.txt
+          content: "# 只有注释\n"
+      params:
+        report_type: daily
+        days: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-4
+    title: 极小输入（a）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-28 | a | +0 -0 | x.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-5
+    title: "极小输入（fix: 零行改动）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "- [x] 零行改动验证\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | fix: 零行改动 | +0 -0 | src/x.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-6
+    title: "极小输入（feat: 巨大改动）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 巨大改动 | +9999999 -8888888 | src/big.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-7
+    title: 极小输入（无日期的提交说明）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "无日期的提交说明 | +10 -2 | src/nd.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-8
+    title: "极小输入（feat: 单文件提交）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 单文件提交 | +7 -1 | README.md\n"
+      params:
+        report_type: daily
+        days: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-9
+    title: 极小输入（x）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "- 无勾选状态的条目\n"
+        - path: input/commits.txt
+          content: ""
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-minimal-10
+    title: "极小输入（feat: 超长说明）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 极小输入也要优雅出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 超长说明很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字很长的说明文字 | +1 -1 | src/long.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: "极端规模（feat: 批量功能01）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-27
+
+            - [x] 完成支付模块联调
+
+            - [ ] 继续补齐单元测试
+
+
+            ## 2026-10-28
+
+            - [x] 排查线上慢查询问题
+
+            - [ ] 输出对接文档\n"
+        - path: input/commits.txt
+          content: "2026-10-11 | feat: 批量功能01 | +13 -2 | src/m2/a.py
+
+            2026-10-12 | feat: 批量功能02 | +26 -4 | src/m3/a.py
+
+            2026-10-13 | feat: 批量功能03 | +39 -6 | src/m4/a.py
+
+            2026-10-14 | feat: 批量功能04 | +52 -8 | src/m5/a.py
+
+            2026-10-15 | feat: 批量功能05 | +65 -10 | src/m1/a.py
+
+            2026-10-16 | feat: 批量功能06 | +78 -12 | src/m2/a.py
+
+            2026-10-17 | feat: 批量功能07 | +91 -14 | src/m3/a.py
+
+            2026-10-18 | feat: 批量功能08 | +104 -16 | src/m4/a.py
+
+            2026-10-19 | feat: 批量功能09 | +117 -18 | src/m5/a.py
+
+            2026-10-20 | feat: 批量功能10 | +130 -20 | src/m1/a.py
+
+            2026-10-21 | feat: 批量功能11 | +143 -22 | src/m2/a.py
+
+            2026-10-22 | feat: 批量功能12 | +156 -24 | src/m3/a.py
+
+            2026-10-23 | feat: 批量功能13 | +169 -26 | src/m4/a.py
+
+            2026-10-24 | feat: 批量功能14 | +182 -28 | src/m5/a.py
+
+            2026-10-25 | feat: 批量功能15 | +195 -30 | src/m1/a.py
+
+            2026-10-26 | feat: 批量功能16 | +208 -32 | src/m2/a.py
+
+            2026-10-27 | feat: 批量功能17 | +221 -34 | src/m3/a.py
+
+            2026-10-10 | feat: 批量功能18 | +234 -36 | src/m4/a.py
+
+            2026-10-11 | feat: 批量功能19 | +247 -38 | src/m5/a.py
+
+            2026-10-12 | feat: 批量功能20 | +260 -40 | src/m1/a.py
+
+            2026-10-13 | feat: 批量功能21 | +273 -42 | src/m2/a.py
+
+            2026-10-14 | feat: 批量功能22 | +286 -44 | src/m3/a.py
+
+            2026-10-15 | feat: 批量功能23 | +299 -46 | src/m4/a.py
+
+            2026-10-16 | feat: 批量功能24 | +312 -48 | src/m5/a.py
+
+            2026-10-17 | feat: 批量功能25 | +325 -50 | src/m1/a.py\n"
+      params:
+        report_type: weekly
+        days: "30"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: "极端规模（feat: 新增支付回调接口）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-27
+
+            - [x] 批量记录条目01
+
+            - [x] 批量记录条目02
+
+            - [x] 批量记录条目03
+
+            - [x] 批量记录条目04
+
+            - [x] 批量记录条目05
+
+            - [x] 批量记录条目06
+
+            - [x] 批量记录条目07
+
+            - [x] 批量记录条目08
+
+            - [x] 批量记录条目09
+
+            - [x] 批量记录条目10
+
+            - [x] 批量记录条目11
+
+            - [x] 批量记录条目12
+
+            - [x] 批量记录条目13
+
+            - [x] 批量记录条目14
+
+            - [x] 批量记录条目15
+
+            - [x] 批量记录条目16
+
+            - [x] 批量记录条目17
+
+            - [x] 批量记录条目18
+
+            - [x] 批量记录条目19
+
+            - [x] 批量记录条目20
+
+            - [x] 批量记录条目21
+
+            - [x] 批量记录条目22
+
+            - [x] 批量记录条目23
+
+            - [x] 批量记录条目24
+
+            - [x] 批量记录条目25
+
+            - [x] 批量记录条目26
+
+            - [x] 批量记录条目27
+
+            - [x] 批量记录条目28
+
+            - [x] 批量记录条目29
+
+            - [x] 批量记录条目30
+
+            - [x] 批量记录条目31
+
+            - [x] 批量记录条目32
+
+            - [x] 批量记录条目33
+
+            - [x] 批量记录条目34
+
+            - [x] 批量记录条目35
+
+            - [x] 批量记录条目36
+
+            - [x] 批量记录条目37
+
+            - [x] 批量记录条目38
+
+            - [x] 批量记录条目39
+
+            - [x] 批量记录条目40
+
+            - [x] 批量记录条目41
+
+            - [x] 批量记录条目42
+
+            - [x] 批量记录条目43
+
+            - [x] 批量记录条目44
+
+            - [x] 批量记录条目45
+
+            - [x] 批量记录条目46
+
+            - [x] 批量记录条目47
+
+            - [x] 批量记录条目48
+
+            - [x] 批量记录条目49
+
+            - [x] 批量记录条目50\n"
+        - path: input/commits.txt
+          content: "# 日期 | 提交说明 | +新增 -删除 | 文件
+
+            2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py
+
+            2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: "极端规模（feat: 超长提交说明）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 超长提交说明内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容 | +5 -5 | src/long.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: "极端规模（feat: 天文数字）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 天文数字 | +99999999 -99999999 | src/big.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: "极端规模（feat: 多模块01）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-21 | feat: 多模块01 | +5 -1 | mod1/a.py
+
+            2026-10-22 | feat: 多模块02 | +10 -2 | mod2/a.py
+
+            2026-10-23 | feat: 多模块03 | +15 -3 | mod3/a.py
+
+            2026-10-24 | feat: 多模块04 | +20 -4 | mod4/a.py
+
+            2026-10-25 | feat: 多模块05 | +25 -5 | mod5/a.py
+
+            2026-10-26 | feat: 多模块06 | +30 -6 | mod6/a.py
+
+            2026-10-27 | feat: 多模块07 | +35 -7 | mod7/a.py
+
+            2026-10-28 | feat: 多模块08 | +40 -8 | mod8/a.py
+
+            2026-10-29 | feat: 多模块09 | +45 -9 | mod9/a.py
+
+            2026-10-20 | feat: 多模块10 | +50 -10 | mod10/a.py\n"
+      params:
+        report_type: weekly
+        days: "14"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: "极端规模（feat: 逐日提交01）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-15 | feat: 逐日提交01 | +10 -2 | src/daily.py
+
+            2026-10-16 | feat: 逐日提交02 | +10 -2 | src/daily.py
+
+            2026-10-17 | feat: 逐日提交03 | +10 -2 | src/daily.py
+
+            2026-10-18 | feat: 逐日提交04 | +10 -2 | src/daily.py
+
+            2026-10-19 | feat: 逐日提交05 | +10 -2 | src/daily.py
+
+            2026-10-20 | feat: 逐日提交06 | +10 -2 | src/daily.py
+
+            2026-10-21 | feat: 逐日提交07 | +10 -2 | src/daily.py
+
+            2026-10-22 | feat: 逐日提交08 | +10 -2 | src/daily.py
+
+            2026-10-23 | feat: 逐日提交09 | +10 -2 | src/daily.py
+
+            2026-10-24 | feat: 逐日提交10 | +10 -2 | src/daily.py
+
+            2026-10-25 | feat: 逐日提交11 | +10 -2 | src/daily.py
+
+            2026-10-26 | feat: 逐日提交12 | +10 -2 | src/daily.py
+
+            2026-10-27 | feat: 逐日提交13 | +10 -2 | src/daily.py
+
+            2026-10-28 | feat: 逐日提交14 | +10 -2 | src/daily.py
+
+            2026-10-29 | feat: 逐日提交15 | +10 -2 | src/daily.py\n"
+      params:
+        report_type: weekly
+        days: "30"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: "极端规模（refactor: 丁）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-21 | feat: 甲 | +1 -1 | src/t.py
+
+            2026-10-22 | fix: 乙 | +2 -2 | src/t.py
+
+            2026-10-23 | docs: 丙 | +3 -3 | src/t.py
+
+            2026-10-24 | refactor: 丁 | +4 -4 | src/t.py
+
+            2026-10-25 | test: 戊 | +5 -5 | src/t.py
+
+            2026-10-26 | chore: 己 | +6 -6 | src/t.py
+
+            2026-10-27 | 其他说明 | +7 -7 | src/t.py
+
+            2026-10-28 | feat: 庚 | +8 -8 | src/t.py
+
+            2026-10-29 | fix: 辛 | +9 -9 | src/t.py
+
+            2026-10-20 | docs: 壬 | +10 -10 | src/t.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: "极端规模（feat: 重复说明）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: ""
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py
+
+            2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py
+
+            2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py
+
+            2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py
+
+            2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py
+
+            2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py
+
+            2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py
+
+            2026-10-28 | feat: 重复说明 | +1 -1 | src/r.py\n"
+      params:
+        report_type: daily
+        days: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: "极端规模（daily: 日报提交）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 记录
+
+            ## 2026-10-28
+
+            - [x] 日报记录条目
+
+            - [ ] 明日计划一\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | daily: 日报提交 | +30 -10 | src/x.py\n"
+      params:
+        report_type: daily
+        days: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: "极端规模（feat: 混合输入）"
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 超多条目与极端数值也要正常出报告
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 记录
+
+
+            ## 周一
+
+            - [x] 周一记录
+
+
+            ## 周二
+
+            - [ ] 周二计划\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 混合输入 | +20 -5 | src/x.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "## 数据附录"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

@@ -52,6 +52,24 @@ python3 agent.py ./my-project --dry-run
 
 看到的摘要如果明显不对（比如路由一条没抓到），先别生成，检查项目路径和 `--max-files`。
 
+### 离线骨架：`--offline`
+
+只想拿到确定性文档骨架（不调用模型、不需要 key、不联网）时用 `--offline`：
+它在静态扫描之后，直接用扫描摘要拼出固定小节结构的文档骨架并写入 `--output` 目标，
+适合离线评测、CI 校验结构或先占位再人工补写。
+
+```bash
+# macOS / Linux
+python3 agent.py ./my-project --type readme --output docs/README.md --offline
+```
+
+```powershell
+# Windows
+py -3 agent.py ./my-project --type readme --output docs\README.md --offline
+```
+
+`--offline` 与 `--dry-run` 的区别：`--dry-run` 只打印摘要、不写文件；`--offline` 会写出骨架文档。
+
 ### 第三步：真正生成
 
 `--type all --force` 表示四类全生成、已存在也覆盖。

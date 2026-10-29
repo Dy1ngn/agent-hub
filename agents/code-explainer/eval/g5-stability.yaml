@@ -1,0 +1,469 @@
+id: ts-b-code-explainer-g5-stability
+agentId: code-explainer
+group: g5-stability
+name: 代码讲解 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线骨架讲解），验证输出稳定、不崩溃、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "def moving_average(values, window):
+
+        \    out = []
+
+        \    for i in range(len(values) - window + 1):
+
+        \        out.append(sum(values[i:i + window]) / window)
+
+        \    return out\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "class Counter:
+
+        \    def __init__(self):
+
+        \        self.value = 0
+
+
+        \    def incr(self, step=1):
+
+        \        self.value += step
+
+        \        return self.value\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "function unique(items) {
+
+        \  const seen = new Set();
+
+        \  return items.filter(function (x) {
+
+        \    if (seen.has(x)) return false;
+
+        \    seen.add(x);
+
+        \    return true;
+
+        \  });
+
+        }\n"
+      files: []
+      params:
+        lang: javascript
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "package main
+
+
+        func Reverse(s string) string {
+
+        \trunes := []rune(s)
+
+        \tfor i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+
+        \t\trunes[i], runes[j] = runes[j], runes[i]
+
+        \t}
+
+        \treturn string(runes)
+
+        }\n"
+      files: []
+      params:
+        lang: go
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "public class Parse {
+
+        \    public static int parse(String s) {
+
+        \        try {
+
+        \            return Integer.parseInt(s.trim());
+
+        \        } catch (NumberFormatException e) {
+
+        \            return 0;
+
+        \        }
+
+        \    }
+
+        }\n"
+      files: []
+      params:
+        lang: java
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "def fib(n):
+
+        \    a, b = 0, 1
+
+        \    for _ in range(n):
+
+        \        a, b = b, a + b
+
+        \    return a
+
+
+
+        def fib_memo(n, memo=None):
+
+        \    memo = {} if memo is None else memo
+
+        \    if n in memo:
+
+        \        return memo[n]
+
+        \    if n < 2:
+
+        \        return n
+
+        \    memo[n] = fib_memo(n - 1, memo) + fib_memo(n - 2, memo)
+
+        \    return memo[n]\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "import json
+
+
+
+        def load_config(path):
+
+        \    with open(path, encoding=\"utf-8\") as handle:
+
+        \        return json.load(handle)
+
+
+
+        def get(data, dotted, default=None):
+
+        \    cur = data
+
+        \    for part in dotted.split('.'):
+
+        \        if not isinstance(cur, dict) or part not in cur:
+
+        \            return default
+
+        \        cur = cur[part]
+
+        \    return cur\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "function padLeft(text, width, ch) {
+
+        \  ch = ch || ' ';
+
+        \  let out = String(text);
+
+        \  while (out.length < width) {
+
+        \    out = ch + out;
+
+        \  }
+
+        \  return out;
+
+        }
+
+
+        module.exports = { padLeft };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 入门
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "def flatten(rows):
+
+        \    out = []
+
+        \    for row in rows:
+
+        \        if isinstance(row, list):
+
+        \            out.extend(flatten(row))
+
+        \        else:
+
+        \            out.append(row)
+
+        \    return out\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证讲解输出稳定
+      content: "def is_palindrome(text):
+
+        \    cleaned = ''.join(ch.lower() for ch in text if ch.isalnum())
+
+        \    return cleaned == cleaned[::-1]\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

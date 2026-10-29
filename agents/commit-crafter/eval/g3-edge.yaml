@@ -1,0 +1,2890 @@
+id: ts-b-commit-crafter-g3-edge
+agentId: commit-crafter
+group: g3-edge
+name: 提交信息生成 · 边界情况：空 / 超短 / 超长 / 极端参数
+description: 空 diff、单字符、超长单行、超多文件、截断参数等边界输入下的稳定产出（离线启发式模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空 diff（0 字节）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：空 diff（0 字节）
+      files:
+        - path: input/change.diff
+          content: ""
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：只有空白与换行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：只有空白与换行
+      files:
+        - path: input/change.diff
+          content: "\n\n\ \n\ \n\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：单字符 diff
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：单字符 diff
+      files:
+        - path: input/change.diff
+          content: x
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：超短合法 diff
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：超短合法 diff
+      files:
+        - path: input/change.diff
+          content: "diff --git a/a.py b/a.py
+
+            index 1111111..2222222 100644
+
+            --- a/a.py
+
+            +++ b/a.py
+
+            @@ -1,1 +1,1 @@
+
+            -A = 1
+
+            +A = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：超长单行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：超长单行
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/long.py b/src/long.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/long.py
+
+            +++ b/src/long.py
+
+            @@ -1,1 +1,1 @@
+
+            -X = 1
+
+            +X = 2  # 改动说明：这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长这一行非常长\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：超多文件（30 个）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：超多文件（30 个）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/m0.py b/src/m0.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m0.py
+
+            +++ b/src/m0.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 0
+
+            +V = 1
+
+            diff --git a/src/m1.py b/src/m1.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m1.py
+
+            +++ b/src/m1.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 1
+
+            +V = 2
+
+            diff --git a/src/m2.py b/src/m2.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m2.py
+
+            +++ b/src/m2.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 2
+
+            +V = 3
+
+            diff --git a/src/m3.py b/src/m3.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m3.py
+
+            +++ b/src/m3.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 3
+
+            +V = 4
+
+            diff --git a/src/m4.py b/src/m4.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m4.py
+
+            +++ b/src/m4.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 4
+
+            +V = 5
+
+            diff --git a/src/m5.py b/src/m5.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m5.py
+
+            +++ b/src/m5.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 5
+
+            +V = 6
+
+            diff --git a/src/m6.py b/src/m6.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m6.py
+
+            +++ b/src/m6.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 6
+
+            +V = 7
+
+            diff --git a/src/m7.py b/src/m7.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m7.py
+
+            +++ b/src/m7.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 7
+
+            +V = 8
+
+            diff --git a/src/m8.py b/src/m8.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m8.py
+
+            +++ b/src/m8.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 8
+
+            +V = 9
+
+            diff --git a/src/m9.py b/src/m9.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m9.py
+
+            +++ b/src/m9.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 9
+
+            +V = 10
+
+            diff --git a/src/m10.py b/src/m10.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m10.py
+
+            +++ b/src/m10.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 10
+
+            +V = 11
+
+            diff --git a/src/m11.py b/src/m11.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m11.py
+
+            +++ b/src/m11.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 11
+
+            +V = 12
+
+            diff --git a/src/m12.py b/src/m12.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m12.py
+
+            +++ b/src/m12.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 12
+
+            +V = 13
+
+            diff --git a/src/m13.py b/src/m13.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m13.py
+
+            +++ b/src/m13.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 13
+
+            +V = 14
+
+            diff --git a/src/m14.py b/src/m14.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m14.py
+
+            +++ b/src/m14.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 14
+
+            +V = 15
+
+            diff --git a/src/m15.py b/src/m15.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m15.py
+
+            +++ b/src/m15.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 15
+
+            +V = 16
+
+            diff --git a/src/m16.py b/src/m16.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m16.py
+
+            +++ b/src/m16.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 16
+
+            +V = 17
+
+            diff --git a/src/m17.py b/src/m17.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m17.py
+
+            +++ b/src/m17.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 17
+
+            +V = 18
+
+            diff --git a/src/m18.py b/src/m18.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m18.py
+
+            +++ b/src/m18.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 18
+
+            +V = 19
+
+            diff --git a/src/m19.py b/src/m19.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m19.py
+
+            +++ b/src/m19.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 19
+
+            +V = 20
+
+            diff --git a/src/m20.py b/src/m20.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m20.py
+
+            +++ b/src/m20.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 20
+
+            +V = 21
+
+            diff --git a/src/m21.py b/src/m21.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m21.py
+
+            +++ b/src/m21.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 21
+
+            +V = 22
+
+            diff --git a/src/m22.py b/src/m22.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m22.py
+
+            +++ b/src/m22.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 22
+
+            +V = 23
+
+            diff --git a/src/m23.py b/src/m23.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m23.py
+
+            +++ b/src/m23.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 23
+
+            +V = 24
+
+            diff --git a/src/m24.py b/src/m24.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m24.py
+
+            +++ b/src/m24.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 24
+
+            +V = 25
+
+            diff --git a/src/m25.py b/src/m25.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m25.py
+
+            +++ b/src/m25.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 25
+
+            +V = 26
+
+            diff --git a/src/m26.py b/src/m26.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m26.py
+
+            +++ b/src/m26.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 26
+
+            +V = 27
+
+            diff --git a/src/m27.py b/src/m27.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m27.py
+
+            +++ b/src/m27.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 27
+
+            +V = 28
+
+            diff --git a/src/m28.py b/src/m28.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m28.py
+
+            +++ b/src/m28.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 28
+
+            +V = 29
+
+            diff --git a/src/m29.py b/src/m29.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/m29.py
+
+            +++ b/src/m29.py
+
+            @@ -1,1 +1,1 @@
+
+            -V = 29
+
+            +V = 30\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：超大 diff（触发截断）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：超大 diff（触发截断）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/big0.py b/src/big0.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big0.py
+
+            +++ b/src/big0.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f0(x):
+
+            -    return x
+
+            +def f0(x):
+
+            +    return x * 3
+
+            diff --git a/src/big1.py b/src/big1.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big1.py
+
+            +++ b/src/big1.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f1(x):
+
+            -    return x
+
+            +def f1(x):
+
+            +    return x * 3
+
+            diff --git a/src/big2.py b/src/big2.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big2.py
+
+            +++ b/src/big2.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f2(x):
+
+            -    return x
+
+            +def f2(x):
+
+            +    return x * 3
+
+            diff --git a/src/big3.py b/src/big3.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big3.py
+
+            +++ b/src/big3.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f3(x):
+
+            -    return x
+
+            +def f3(x):
+
+            +    return x * 3
+
+            diff --git a/src/big4.py b/src/big4.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big4.py
+
+            +++ b/src/big4.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f4(x):
+
+            -    return x
+
+            +def f4(x):
+
+            +    return x * 3
+
+            diff --git a/src/big5.py b/src/big5.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big5.py
+
+            +++ b/src/big5.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f5(x):
+
+            -    return x
+
+            +def f5(x):
+
+            +    return x * 3
+
+            diff --git a/src/big6.py b/src/big6.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big6.py
+
+            +++ b/src/big6.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f6(x):
+
+            -    return x
+
+            +def f6(x):
+
+            +    return x * 3
+
+            diff --git a/src/big7.py b/src/big7.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big7.py
+
+            +++ b/src/big7.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f7(x):
+
+            -    return x
+
+            +def f7(x):
+
+            +    return x * 3
+
+            diff --git a/src/big8.py b/src/big8.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big8.py
+
+            +++ b/src/big8.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f8(x):
+
+            -    return x
+
+            +def f8(x):
+
+            +    return x * 3
+
+            diff --git a/src/big9.py b/src/big9.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big9.py
+
+            +++ b/src/big9.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f9(x):
+
+            -    return x
+
+            +def f9(x):
+
+            +    return x * 3
+
+            diff --git a/src/big10.py b/src/big10.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big10.py
+
+            +++ b/src/big10.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f10(x):
+
+            -    return x
+
+            +def f10(x):
+
+            +    return x * 3
+
+            diff --git a/src/big11.py b/src/big11.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big11.py
+
+            +++ b/src/big11.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f11(x):
+
+            -    return x
+
+            +def f11(x):
+
+            +    return x * 3
+
+            diff --git a/src/big12.py b/src/big12.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big12.py
+
+            +++ b/src/big12.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f12(x):
+
+            -    return x
+
+            +def f12(x):
+
+            +    return x * 3
+
+            diff --git a/src/big13.py b/src/big13.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big13.py
+
+            +++ b/src/big13.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f13(x):
+
+            -    return x
+
+            +def f13(x):
+
+            +    return x * 3
+
+            diff --git a/src/big14.py b/src/big14.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big14.py
+
+            +++ b/src/big14.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f14(x):
+
+            -    return x
+
+            +def f14(x):
+
+            +    return x * 3
+
+            diff --git a/src/big15.py b/src/big15.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big15.py
+
+            +++ b/src/big15.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f15(x):
+
+            -    return x
+
+            +def f15(x):
+
+            +    return x * 3
+
+            diff --git a/src/big16.py b/src/big16.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big16.py
+
+            +++ b/src/big16.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f16(x):
+
+            -    return x
+
+            +def f16(x):
+
+            +    return x * 3
+
+            diff --git a/src/big17.py b/src/big17.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big17.py
+
+            +++ b/src/big17.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f17(x):
+
+            -    return x
+
+            +def f17(x):
+
+            +    return x * 3
+
+            diff --git a/src/big18.py b/src/big18.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big18.py
+
+            +++ b/src/big18.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f18(x):
+
+            -    return x
+
+            +def f18(x):
+
+            +    return x * 3
+
+            diff --git a/src/big19.py b/src/big19.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big19.py
+
+            +++ b/src/big19.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f19(x):
+
+            -    return x
+
+            +def f19(x):
+
+            +    return x * 3
+
+            diff --git a/src/big20.py b/src/big20.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big20.py
+
+            +++ b/src/big20.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f20(x):
+
+            -    return x
+
+            +def f20(x):
+
+            +    return x * 3
+
+            diff --git a/src/big21.py b/src/big21.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big21.py
+
+            +++ b/src/big21.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f21(x):
+
+            -    return x
+
+            +def f21(x):
+
+            +    return x * 3
+
+            diff --git a/src/big22.py b/src/big22.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big22.py
+
+            +++ b/src/big22.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f22(x):
+
+            -    return x
+
+            +def f22(x):
+
+            +    return x * 3
+
+            diff --git a/src/big23.py b/src/big23.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big23.py
+
+            +++ b/src/big23.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f23(x):
+
+            -    return x
+
+            +def f23(x):
+
+            +    return x * 3
+
+            diff --git a/src/big24.py b/src/big24.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big24.py
+
+            +++ b/src/big24.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f24(x):
+
+            -    return x
+
+            +def f24(x):
+
+            +    return x * 3
+
+            diff --git a/src/big25.py b/src/big25.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big25.py
+
+            +++ b/src/big25.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f25(x):
+
+            -    return x
+
+            +def f25(x):
+
+            +    return x * 3
+
+            diff --git a/src/big26.py b/src/big26.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big26.py
+
+            +++ b/src/big26.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f26(x):
+
+            -    return x
+
+            +def f26(x):
+
+            +    return x * 3
+
+            diff --git a/src/big27.py b/src/big27.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big27.py
+
+            +++ b/src/big27.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f27(x):
+
+            -    return x
+
+            +def f27(x):
+
+            +    return x * 3
+
+            diff --git a/src/big28.py b/src/big28.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big28.py
+
+            +++ b/src/big28.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f28(x):
+
+            -    return x
+
+            +def f28(x):
+
+            +    return x * 3
+
+            diff --git a/src/big29.py b/src/big29.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big29.py
+
+            +++ b/src/big29.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f29(x):
+
+            -    return x
+
+            +def f29(x):
+
+            +    return x * 3
+
+            diff --git a/src/big30.py b/src/big30.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big30.py
+
+            +++ b/src/big30.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f30(x):
+
+            -    return x
+
+            +def f30(x):
+
+            +    return x * 3
+
+            diff --git a/src/big31.py b/src/big31.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big31.py
+
+            +++ b/src/big31.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f31(x):
+
+            -    return x
+
+            +def f31(x):
+
+            +    return x * 3
+
+            diff --git a/src/big32.py b/src/big32.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big32.py
+
+            +++ b/src/big32.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f32(x):
+
+            -    return x
+
+            +def f32(x):
+
+            +    return x * 3
+
+            diff --git a/src/big33.py b/src/big33.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big33.py
+
+            +++ b/src/big33.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f33(x):
+
+            -    return x
+
+            +def f33(x):
+
+            +    return x * 3
+
+            diff --git a/src/big34.py b/src/big34.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big34.py
+
+            +++ b/src/big34.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f34(x):
+
+            -    return x
+
+            +def f34(x):
+
+            +    return x * 3
+
+            diff --git a/src/big35.py b/src/big35.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big35.py
+
+            +++ b/src/big35.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f35(x):
+
+            -    return x
+
+            +def f35(x):
+
+            +    return x * 3
+
+            diff --git a/src/big36.py b/src/big36.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big36.py
+
+            +++ b/src/big36.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f36(x):
+
+            -    return x
+
+            +def f36(x):
+
+            +    return x * 3
+
+            diff --git a/src/big37.py b/src/big37.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big37.py
+
+            +++ b/src/big37.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f37(x):
+
+            -    return x
+
+            +def f37(x):
+
+            +    return x * 3
+
+            diff --git a/src/big38.py b/src/big38.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big38.py
+
+            +++ b/src/big38.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f38(x):
+
+            -    return x
+
+            +def f38(x):
+
+            +    return x * 3
+
+            diff --git a/src/big39.py b/src/big39.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/big39.py
+
+            +++ b/src/big39.py
+
+            @@ -1,2 +1,2 @@
+
+            -def f39(x):
+
+            -    return x
+
+            +def f39(x):
+
+            +    return x * 3\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：极端参数 maxchars=1
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：极端参数 maxchars=1
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/tiny.py b/src/tiny.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/tiny.py
+
+            +++ b/src/tiny.py
+
+            @@ -1,1 +1,1 @@
+
+            -T = 1
+
+            +T = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：极端参数 maxchars=100000000
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：极端参数 maxchars=100000000
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/huge.py b/src/huge.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/huge.py
+
+            +++ b/src/huge.py
+
+            @@ -1,1 +1,1 @@
+
+            -H = 1
+
+            +H = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "100000000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：只有简化 +++ 头
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：只有简化 +++ 头
+      files:
+        - path: input/change.diff
+          content: "--- a/x.py
+
+            +++ b/x.py
+
+            @@ -0,0 +1 @@
+
+            +hi\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-11
+    title: 边界输入：git 引号路径（非 ASCII）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：git 引号路径（非 ASCII）
+      files:
+        - path: input/change.diff
+          content: 'diff --git "a/\346\226\207\346\241\243.py" "b/\346\226\207\346\241\243.py"
+
+            index 1111111..2222222 100644
+
+            --- "a/\346\226\207\346\241\243.py"
+
+            +++ "b/\346\226\207\346\241\243.py"
+
+            @@ -1 +1 @@
+
+            -old
+
+            +new
+
+            '
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-12
+    title: 边界输入：只有删除文件
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：只有删除文件
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/gone.py b/src/gone.py
+
+            deleted file mode 100644
+
+            index 1111111..0000000
+
+            --- a/src/gone.py
+
+            +++ /dev/null
+
+            @@ -1,2 +0,0 @@
+
+            -def gone():
+
+            -    pass\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-13
+    title: 边界输入：只有重命名
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：只有重命名
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/old_name.py b/src/new_name.py
+
+            similarity index 100%
+
+            rename from src/old_name.py
+
+            rename to src/new_name.py\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-14
+    title: 边界输入：只有二进制文件
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：只有二进制文件
+      files:
+        - path: input/change.diff
+          content: "diff --git a/assets/a.bin b/assets/a.bin
+
+            index 1111111..2222222 100644
+
+            Binary files a/assets/a.bin and b/assets/a.bin differ\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-15
+    title: 边界输入：空 hunk 头
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：空 hunk 头
+      files:
+        - path: input/change.diff
+          content: "diff --git a/e.py b/e.py
+
+            index 1111111..2222222 100644
+
+            --- a/e.py
+
+            +++ b/e.py
+
+            @@ -0,0 +0,0 @@\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-16
+    title: 边界输入：巨型新增（200 行）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：巨型新增（200 行）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/big_add.py b/src/big_add.py
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/src/big_add.py
+
+            @@ -0,0 +1,200 @@
+
+            +def line0():
+
+            +def line1():
+
+            +def line2():
+
+            +def line3():
+
+            +def line4():
+
+            +def line5():
+
+            +def line6():
+
+            +def line7():
+
+            +def line8():
+
+            +def line9():
+
+            +def line10():
+
+            +def line11():
+
+            +def line12():
+
+            +def line13():
+
+            +def line14():
+
+            +def line15():
+
+            +def line16():
+
+            +def line17():
+
+            +def line18():
+
+            +def line19():
+
+            +def line20():
+
+            +def line21():
+
+            +def line22():
+
+            +def line23():
+
+            +def line24():
+
+            +def line25():
+
+            +def line26():
+
+            +def line27():
+
+            +def line28():
+
+            +def line29():
+
+            +def line30():
+
+            +def line31():
+
+            +def line32():
+
+            +def line33():
+
+            +def line34():
+
+            +def line35():
+
+            +def line36():
+
+            +def line37():
+
+            +def line38():
+
+            +def line39():
+
+            +def line40():
+
+            +def line41():
+
+            +def line42():
+
+            +def line43():
+
+            +def line44():
+
+            +def line45():
+
+            +def line46():
+
+            +def line47():
+
+            +def line48():
+
+            +def line49():
+
+            +def line50():
+
+            +def line51():
+
+            +def line52():
+
+            +def line53():
+
+            +def line54():
+
+            +def line55():
+
+            +def line56():
+
+            +def line57():
+
+            +def line58():
+
+            +def line59():
+
+            +def line60():
+
+            +def line61():
+
+            +def line62():
+
+            +def line63():
+
+            +def line64():
+
+            +def line65():
+
+            +def line66():
+
+            +def line67():
+
+            +def line68():
+
+            +def line69():
+
+            +def line70():
+
+            +def line71():
+
+            +def line72():
+
+            +def line73():
+
+            +def line74():
+
+            +def line75():
+
+            +def line76():
+
+            +def line77():
+
+            +def line78():
+
+            +def line79():
+
+            +def line80():
+
+            +def line81():
+
+            +def line82():
+
+            +def line83():
+
+            +def line84():
+
+            +def line85():
+
+            +def line86():
+
+            +def line87():
+
+            +def line88():
+
+            +def line89():
+
+            +def line90():
+
+            +def line91():
+
+            +def line92():
+
+            +def line93():
+
+            +def line94():
+
+            +def line95():
+
+            +def line96():
+
+            +def line97():
+
+            +def line98():
+
+            +def line99():
+
+            +    return 0
+
+            +    return 1
+
+            +    return 2
+
+            +    return 3
+
+            +    return 4
+
+            +    return 5
+
+            +    return 6
+
+            +    return 7
+
+            +    return 8
+
+            +    return 9
+
+            +    return 10
+
+            +    return 11
+
+            +    return 12
+
+            +    return 13
+
+            +    return 14
+
+            +    return 15
+
+            +    return 16
+
+            +    return 17
+
+            +    return 18
+
+            +    return 19
+
+            +    return 20
+
+            +    return 21
+
+            +    return 22
+
+            +    return 23
+
+            +    return 24
+
+            +    return 25
+
+            +    return 26
+
+            +    return 27
+
+            +    return 28
+
+            +    return 29
+
+            +    return 30
+
+            +    return 31
+
+            +    return 32
+
+            +    return 33
+
+            +    return 34
+
+            +    return 35
+
+            +    return 36
+
+            +    return 37
+
+            +    return 38
+
+            +    return 39
+
+            +    return 40
+
+            +    return 41
+
+            +    return 42
+
+            +    return 43
+
+            +    return 44
+
+            +    return 45
+
+            +    return 46
+
+            +    return 47
+
+            +    return 48
+
+            +    return 49
+
+            +    return 50
+
+            +    return 51
+
+            +    return 52
+
+            +    return 53
+
+            +    return 54
+
+            +    return 55
+
+            +    return 56
+
+            +    return 57
+
+            +    return 58
+
+            +    return 59
+
+            +    return 60
+
+            +    return 61
+
+            +    return 62
+
+            +    return 63
+
+            +    return 64
+
+            +    return 65
+
+            +    return 66
+
+            +    return 67
+
+            +    return 68
+
+            +    return 69
+
+            +    return 70
+
+            +    return 71
+
+            +    return 72
+
+            +    return 73
+
+            +    return 74
+
+            +    return 75
+
+            +    return 76
+
+            +    return 77
+
+            +    return 78
+
+            +    return 79
+
+            +    return 80
+
+            +    return 81
+
+            +    return 82
+
+            +    return 83
+
+            +    return 84
+
+            +    return 85
+
+            +    return 86
+
+            +    return 87
+
+            +    return 88
+
+            +    return 89
+
+            +    return 90
+
+            +    return 91
+
+            +    return 92
+
+            +    return 93
+
+            +    return 94
+
+            +    return 95
+
+            +    return 96
+
+            +    return 97
+
+            +    return 98
+
+            +    return 99\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-17
+    title: 边界输入：巨型删除（200 行）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：巨型删除（200 行）
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/big_del.py b/src/big_del.py
+
+            deleted file mode 100644
+
+            index 1111111..0000000
+
+            --- a/src/big_del.py
+
+            +++ /dev/null
+
+            @@ -1,200 +0,0 @@
+
+            -def line0():
+
+            -def line1():
+
+            -def line2():
+
+            -def line3():
+
+            -def line4():
+
+            -def line5():
+
+            -def line6():
+
+            -def line7():
+
+            -def line8():
+
+            -def line9():
+
+            -def line10():
+
+            -def line11():
+
+            -def line12():
+
+            -def line13():
+
+            -def line14():
+
+            -def line15():
+
+            -def line16():
+
+            -def line17():
+
+            -def line18():
+
+            -def line19():
+
+            -def line20():
+
+            -def line21():
+
+            -def line22():
+
+            -def line23():
+
+            -def line24():
+
+            -def line25():
+
+            -def line26():
+
+            -def line27():
+
+            -def line28():
+
+            -def line29():
+
+            -def line30():
+
+            -def line31():
+
+            -def line32():
+
+            -def line33():
+
+            -def line34():
+
+            -def line35():
+
+            -def line36():
+
+            -def line37():
+
+            -def line38():
+
+            -def line39():
+
+            -def line40():
+
+            -def line41():
+
+            -def line42():
+
+            -def line43():
+
+            -def line44():
+
+            -def line45():
+
+            -def line46():
+
+            -def line47():
+
+            -def line48():
+
+            -def line49():
+
+            -def line50():
+
+            -def line51():
+
+            -def line52():
+
+            -def line53():
+
+            -def line54():
+
+            -def line55():
+
+            -def line56():
+
+            -def line57():
+
+            -def line58():
+
+            -def line59():
+
+            -def line60():
+
+            -def line61():
+
+            -def line62():
+
+            -def line63():
+
+            -def line64():
+
+            -def line65():
+
+            -def line66():
+
+            -def line67():
+
+            -def line68():
+
+            -def line69():
+
+            -def line70():
+
+            -def line71():
+
+            -def line72():
+
+            -def line73():
+
+            -def line74():
+
+            -def line75():
+
+            -def line76():
+
+            -def line77():
+
+            -def line78():
+
+            -def line79():
+
+            -def line80():
+
+            -def line81():
+
+            -def line82():
+
+            -def line83():
+
+            -def line84():
+
+            -def line85():
+
+            -def line86():
+
+            -def line87():
+
+            -def line88():
+
+            -def line89():
+
+            -def line90():
+
+            -def line91():
+
+            -def line92():
+
+            -def line93():
+
+            -def line94():
+
+            -def line95():
+
+            -def line96():
+
+            -def line97():
+
+            -def line98():
+
+            -def line99():
+
+            -    return 0
+
+            -    return 1
+
+            -    return 2
+
+            -    return 3
+
+            -    return 4
+
+            -    return 5
+
+            -    return 6
+
+            -    return 7
+
+            -    return 8
+
+            -    return 9
+
+            -    return 10
+
+            -    return 11
+
+            -    return 12
+
+            -    return 13
+
+            -    return 14
+
+            -    return 15
+
+            -    return 16
+
+            -    return 17
+
+            -    return 18
+
+            -    return 19
+
+            -    return 20
+
+            -    return 21
+
+            -    return 22
+
+            -    return 23
+
+            -    return 24
+
+            -    return 25
+
+            -    return 26
+
+            -    return 27
+
+            -    return 28
+
+            -    return 29
+
+            -    return 30
+
+            -    return 31
+
+            -    return 32
+
+            -    return 33
+
+            -    return 34
+
+            -    return 35
+
+            -    return 36
+
+            -    return 37
+
+            -    return 38
+
+            -    return 39
+
+            -    return 40
+
+            -    return 41
+
+            -    return 42
+
+            -    return 43
+
+            -    return 44
+
+            -    return 45
+
+            -    return 46
+
+            -    return 47
+
+            -    return 48
+
+            -    return 49
+
+            -    return 50
+
+            -    return 51
+
+            -    return 52
+
+            -    return 53
+
+            -    return 54
+
+            -    return 55
+
+            -    return 56
+
+            -    return 57
+
+            -    return 58
+
+            -    return 59
+
+            -    return 60
+
+            -    return 61
+
+            -    return 62
+
+            -    return 63
+
+            -    return 64
+
+            -    return 65
+
+            -    return 66
+
+            -    return 67
+
+            -    return 68
+
+            -    return 69
+
+            -    return 70
+
+            -    return 71
+
+            -    return 72
+
+            -    return 73
+
+            -    return 74
+
+            -    return 75
+
+            -    return 76
+
+            -    return 77
+
+            -    return 78
+
+            -    return 79
+
+            -    return 80
+
+            -    return 81
+
+            -    return 82
+
+            -    return 83
+
+            -    return 84
+
+            -    return 85
+
+            -    return 86
+
+            -    return 87
+
+            -    return 88
+
+            -    return 89
+
+            -    return 90
+
+            -    return 91
+
+            -    return 92
+
+            -    return 93
+
+            -    return 94
+
+            -    return 95
+
+            -    return 96
+
+            -    return 97
+
+            -    return 98
+
+            -    return 99\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-18
+    title: 边界输入：中文与空格路径
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：中文与空格路径
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/我的 模块.py b/src/我的 模块.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/我的 模块.py
+
+            +++ b/src/我的 模块.py
+
+            @@ -1,1 +1,1 @@
+
+            -值 = 1
+
+            +值 = 2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-19
+    title: 边界输入：空 diff + 极端参数
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：空 diff + 极端参数
+      files:
+        - path: input/change.diff
+          content: ""
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-20
+    title: 边界输入：CRLF 换行 diff
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的提交信息预览
+      content: 边界用例：CRLF 换行 diff
+      files:
+        - path: input/change.diff
+          content: "diff --git a/crlf.py b/crlf.py\r
+
+            index 1111111..2222222 100644\r
+
+            --- a/crlf.py\r
+
+            +++ b/crlf.py\r
+
+            @@ -1 +1 @@\r
+
+            -A = 1\r
+
+            +A = 2\r\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 2
+          note: 边界输入仍产出预览
+        - type: contains
+          text: 候选类型
+          weight: 1
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 兜底 subject 仍带 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 120
+          weight: 1
+      requiredSuggestions: []

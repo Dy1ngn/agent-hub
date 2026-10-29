@@ -1,0 +1,46 @@
+{
+  "id": "writing-assistant",
+  "name": "写作润色",
+  "description": "写作润色助手，先做文本体检评分，再按润色/重写/扩写/缩写/正式/口语改写并给出逐句对照报告。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/draft.txt",
+    "args": [
+      "input/draft.txt",
+      "--mode",
+      "{{params.mode}}",
+      "--tone",
+      "{{params.tone}}",
+      "--audience",
+      "{{params.audience}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "auto",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown"
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

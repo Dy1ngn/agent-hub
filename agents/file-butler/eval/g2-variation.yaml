@@ -1,0 +1,1416 @@
+id: ts-b-file-butler-g2-variation
+agentId: file-butler
+group: g2-variation
+name: 本地文件管家 · 输入变体：文件夹形态 / 大小 / 语言 / 命令措辞
+description: 不同文件夹形态、文件大小、内容语言与命令措辞下的稳定执行（function-call 链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-layout-1
+    title: 文件夹形态变体（单文件）
+    tags:
+      - variation
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文件夹形态都能生成文件清单
+      content: 把文件夹里的文件整理成清单写入 report.md，每个文件注明文件名与所在目录。
+      files:
+        - path: files/说明.md
+          content: "# 项目说明
+
+
+            这是一个示例项目。
+
+
+            ## 安装
+
+
+            - pip install demo\n"
+        - path: files/.pad2
+          content: ""
+        - path: files/.pad3
+          content: ""
+        - path: files/.pad4
+          content: ""
+        - path: files/.pad5
+          content: ""
+        - path: files/.pad6
+          content: ""
+        - path: files/.pad7
+          content: ""
+        - path: files/.pad8
+          content: ""
+      params:
+        cmd: 把文件夹里的文件整理成清单写入 report.md，每个文件注明文件名与所在目录。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 说明.md
+          weight: 1
+          note: 清单覆盖真实文件
+        - type: regex
+          pattern: (?i)(report|清单|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-layout-2
+    title: 文件夹形态变体（三个文件）
+    tags:
+      - variation
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文件夹形态都能生成文件清单
+      content: 把文件夹里的文件整理成清单写入 report.md，每个文件注明文件名与所在目录。
+      files:
+        - path: files/会议纪要.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+        - path: files/备忘.txt
+          content: "备忘：周五前提交报销单。\n"
+        - path: files/.pad4
+          content: ""
+        - path: files/.pad5
+          content: ""
+        - path: files/.pad6
+          content: ""
+        - path: files/.pad7
+          content: ""
+        - path: files/.pad8
+          content: ""
+      params:
+        cmd: 把文件夹里的文件整理成清单写入 report.md，每个文件注明文件名与所在目录。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 会议纪要.md
+          weight: 1
+          note: 清单覆盖真实文件
+        - type: regex
+          pattern: (?i)(report|清单|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-layout-3
+    title: 文件夹形态变体（八个文件）
+    tags:
+      - variation
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文件夹形态都能生成文件清单
+      content: 把文件夹里的文件整理成清单写入 report.md，每个文件注明文件名与所在目录。
+      files:
+        - path: files/a.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/b.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+        - path: files/c.md
+          content: "# 流程说明\n\n- 需求评审流程\n- 发布审批流程\n"
+        - path: files/d.txt
+          content: "备忘：周五前提交报销单。\n"
+        - path: files/e.txt
+          content: "TODO：补单元测试。\n"
+        - path: files/f.md
+          content: "# 学习计划\n\n- 每天两小时\n- 周末做练习\n"
+        - path: files/g.md
+          content: "# 课程笔记\n\n- 第一讲：统计学基础\n- 第二讲：回归分析\n"
+        - path: files/h.txt
+          content: "书单：\n- 深度学习\n- 统计学习方法\n"
+      params:
+        cmd: 把文件夹里的文件整理成清单写入 report.md，每个文件注明文件名与所在目录。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: a.md
+          weight: 1
+          note: 清单覆盖真实文件
+        - type: regex
+          pattern: (?i)(report|清单|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-layout-4
+    title: 文件夹形态变体（两层嵌套）
+    tags:
+      - variation
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文件夹形态都能生成文件清单
+      content: 把文件夹里的文件（含子目录）整理成清单写入 report.md，注明文件名与所在目录。
+      files:
+        - path: files/notes/说明.md
+          content: "# 项目说明
+
+
+            这是一个示例项目。
+
+
+            ## 安装
+
+
+            - pip install demo\n"
+        - path: files/notes/摘录.md
+          content: "# 课程笔记\n\n- 第一讲：统计学基础\n- 第二讲：回归分析\n"
+        - path: files/.pad3
+          content: ""
+        - path: files/.pad4
+          content: ""
+        - path: files/.pad5
+          content: ""
+        - path: files/.pad6
+          content: ""
+        - path: files/.pad7
+          content: ""
+        - path: files/.pad8
+          content: ""
+      params:
+        cmd: 把文件夹里的文件（含子目录）整理成清单写入 report.md，注明文件名与所在目录。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: notes/说明.md
+          weight: 1
+          note: 清单覆盖真实文件
+        - type: regex
+          pattern: (?i)(report|清单|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-layout-5
+    title: 文件夹形态变体（混合类型）
+    tags:
+      - variation
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文件夹形态都能生成文件清单
+      content: 把文件夹里的文件整理成清单写入 report.md，每个文件注明文件名与所在目录。
+      files:
+        - path: files/数据表.md
+          content: "| 指标 | 数值 |
+
+            | --- | --- |
+
+            | DAU | 1000 |
+
+            | GMV | 50000 |\n"
+        - path: files/英文笔记.md
+          content: "# Meeting Notes
+
+
+            - Ship the beta by Friday
+
+            - Fix login bug\n"
+        - path: files/杂记.txt
+          content: "# 混合内容 Mixed
+
+
+            - 支付模块 payment module
+
+            - 对账 reconciliation\n"
+        - path: files/.pad4
+          content: ""
+        - path: files/.pad5
+          content: ""
+        - path: files/.pad6
+          content: ""
+        - path: files/.pad7
+          content: ""
+        - path: files/.pad8
+          content: ""
+      params:
+        cmd: 把文件夹里的文件整理成清单写入 report.md，每个文件注明文件名与所在目录。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 数据表.md
+          weight: 1
+          note: 清单覆盖真实文件
+        - type: regex
+          pattern: (?i)(report|清单|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-1
+    title: 文件大小变体（极小文件）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同大小文件都能读取并总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/tiny.txt
+          content: "好\n"
+        - path: files/.pad2
+          content: ""
+        - path: files/.pad3
+          content: ""
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: tiny.txt
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-2
+    title: 文件大小变体（空文件）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同大小文件都能读取并总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/empty.txt
+          content: ""
+        - path: files/补充.md
+          content: "备忘：周五前提交报销单。\n"
+        - path: files/.pad3
+          content: ""
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: empty.txt
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-3
+    title: 文件大小变体（300 行长文件）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同大小文件都能读取并总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/long.md
+          content: "第 0 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 1 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 2 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 3 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 4 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 5 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 6 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 7 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 8 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 9 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 10 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 11 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 12 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 13 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 14 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 15 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 16 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 17 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 18 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 19 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 20 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 21 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 22 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 23 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 24 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 25 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 26 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 27 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 28 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 29 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 30 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 31 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 32 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 33 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 34 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 35 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 36 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 37 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 38 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 39 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 40 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 41 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 42 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 43 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 44 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 45 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 46 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 47 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 48 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 49 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 50 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 51 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 52 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 53 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 54 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 55 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 56 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 57 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 58 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 59 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 60 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 61 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 62 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 63 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 64 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 65 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 66 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 67 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 68 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 69 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 70 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 71 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 72 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 73 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 74 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 75 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 76 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 77 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 78 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 79 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 80 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 81 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 82 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 83 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 84 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 85 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 86 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 87 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 88 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 89 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 90 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 91 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 92 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 93 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 94 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 95 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 96 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 97 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 98 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 99 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 100 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 101 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 102 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 103 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 104 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 105 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 106 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 107 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 108 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 109 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 110 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 111 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 112 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 113 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 114 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 115 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 116 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 117 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 118 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 119 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 120 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 121 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 122 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 123 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 124 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 125 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 126 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 127 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 128 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 129 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 130 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 131 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 132 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 133 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 134 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 135 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 136 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 137 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 138 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 139 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 140 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 141 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 142 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 143 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 144 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 145 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 146 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 147 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 148 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 149 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 150 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 151 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 152 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 153 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 154 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 155 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 156 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 157 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 158 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 159 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 160 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 161 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 162 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 163 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 164 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 165 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 166 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 167 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 168 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 169 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 170 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 171 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 172 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 173 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 174 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 175 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 176 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 177 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 178 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 179 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 180 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 181 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 182 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 183 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 184 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 185 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 186 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 187 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 188 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 189 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 190 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 191 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 192 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 193 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 194 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 195 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 196 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 197 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 198 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 199 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 200 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 201 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 202 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 203 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 204 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 205 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 206 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 207 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 208 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 209 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 210 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 211 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 212 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 213 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 214 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 215 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 216 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 217 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 218 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 219 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 220 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 221 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 222 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 223 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 224 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 225 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 226 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 227 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 228 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 229 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 230 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 231 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 232 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 233 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 234 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 235 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 236 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 237 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 238 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 239 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 240 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 241 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 242 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 243 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 244 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 245 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 246 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 247 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 248 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 249 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 250 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 251 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 252 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 253 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 254 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 255 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 256 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 257 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 258 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 259 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 260 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 261 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 262 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 263 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 264 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 265 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 266 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 267 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 268 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 269 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 270 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 271 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 272 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 273 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 274 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 275 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 276 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 277 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 278 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 279 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 280 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 281 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 282 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 283 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 284 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 285 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 286 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 287 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 288 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 289 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 290 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 291 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 292 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 293 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 294 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 295 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 296 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 297 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 298 行：这是一段较长的文件内容用于测试大小变体。
+
+            第 299 行：这是一段较长的文件内容用于测试大小变体。"
+        - path: files/短文.txt
+          content: "备忘：周五前提交报销单。\n"
+        - path: files/.pad3
+          content: ""
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: long.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-4
+    title: 文件大小变体（超长单行）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同大小文件都能读取并总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/oneline.txt
+          content: 单行超长内容：数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据数据
+        - path: files/.pad2
+          content: ""
+        - path: files/.pad3
+          content: ""
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: oneline.txt
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-5
+    title: 文件大小变体（多短文件）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同大小文件都能读取并总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/一.txt
+          content: "第一份\n"
+        - path: files/二.txt
+          content: "第二份\n"
+        - path: files/三.txt
+          content: "第三份\n"
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 一.txt
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-1
+    title: 内容语言变体（纯中文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言内容都能总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/笔记.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 笔记.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2
+    title: 内容语言变体（纯英文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言内容都能总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/notes.md
+          content: "# Meeting Notes
+
+
+            - Ship the beta by Friday
+
+            - Fix login bug\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: notes.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3
+    title: 内容语言变体（中英混合）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言内容都能总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/mixed.md
+          content: "# 混合内容 Mixed
+
+
+            - 支付模块 payment module
+
+            - 对账 reconciliation\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: mixed.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4
+    title: 内容语言变体（emoji 内容）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言内容都能总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/emoji.md
+          content: "# 📦 项目资料\n\n- 🚀 里程碑一\n- 🚀 里程碑二\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: emoji.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-5
+    title: 内容语言变体（表格数据）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言内容都能总结
+      content: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+      files:
+        - path: files/指标.md
+          content: "| 指标 | 数值 |
+
+            | --- | --- |
+
+            | DAU | 1000 |
+
+            | GMV | 50000 |\n"
+        - path: files/说明.md
+          content: "# 项目说明
+
+
+            这是一个示例项目。
+
+
+            ## 安装
+
+
+            - pip install demo\n"
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md，并列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 指标.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|总结|要点|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-cmd-1
+    title: 命令措辞变体（祈使句）
+    tags:
+      - variation
+      - command
+    repeat: 5
+    input:
+      kind: text
+      goal: 同一任务的不同自然语言措辞都能完成
+      content: 列出所有文件并统计数量，写入 report.md。
+      files:
+        - path: files/会议纪要.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+      params:
+        cmd: 列出所有文件并统计数量，写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 会议纪要.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|清单|汇总|统计|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-cmd-2
+    title: 命令措辞变体（礼貌请求）
+    tags:
+      - variation
+      - command
+    repeat: 5
+    input:
+      kind: text
+      goal: 同一任务的不同自然语言措辞都能完成
+      content: 麻烦帮我把这个文件夹的文件清单整理一下，保存成 report.md，谢谢。
+      files:
+        - path: files/合同清单.md
+          content: "# 合同清单
+
+
+            - 供应商 A：服务器租赁合同
+
+            - 供应商 B：云服务合同\n"
+        - path: files/报价单.txt
+          content: "报价单：云主机每年 8 万元。\n"
+      params:
+        cmd: 麻烦帮我把这个文件夹的文件清单整理一下，保存成 report.md，谢谢。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 合同清单.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|清单|汇总|统计|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-cmd-3
+    title: 命令措辞变体（口语化）
+    tags:
+      - variation
+      - command
+    repeat: 5
+    input:
+      kind: text
+      goal: 同一任务的不同自然语言措辞都能完成
+      content: 帮我看看这里面都有啥文件，列个清单扔到 report.md 里。
+      files:
+        - path: files/README.md
+          content: "# 项目说明
+
+
+            这是一个示例项目。
+
+
+            ## 安装
+
+
+            - pip install demo\n"
+        - path: files/TODO.txt
+          content: "TODO：补单元测试。\n"
+      params:
+        cmd: 帮我看看这里面都有啥文件，列个清单扔到 report.md 里。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: README.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|清单|汇总|统计|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-cmd-4
+    title: 命令措辞变体（详细指令）
+    tags:
+      - variation
+      - command
+    repeat: 5
+    input:
+      kind: text
+      goal: 同一任务的不同自然语言措辞都能完成
+      content: 请执行以下任务：先用 list_files 看文件夹结构，然后生成 report.md，内容是全部文件的清单，每行一个文件名加大小。
+      files:
+        - path: files/课程笔记.md
+          content: "# 课程笔记\n\n- 第一讲：统计学基础\n- 第二讲：回归分析\n"
+        - path: files/书单.txt
+          content: "书单：\n- 深度学习\n- 统计学习方法\n"
+      params:
+        cmd: 请执行以下任务：先用 list_files 看文件夹结构，然后生成 report.md，内容是全部文件的清单，每行一个文件名加大小。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 课程笔记.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|清单|汇总|统计|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-cmd-5
+    title: 命令措辞变体（简短指令）
+    tags:
+      - variation
+      - command
+    repeat: 5
+    input:
+      kind: text
+      goal: 同一任务的不同自然语言措辞都能完成
+      content: 文件清单 → report.md
+      files:
+        - path: files/计划.md
+          content: "# 学习计划\n\n- 每天两小时\n- 周末做练习\n"
+        - path: files/备忘.txt
+          content: "备忘：周五前提交报销单。\n"
+      params:
+        cmd: 文件清单 → report.md
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 计划.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(report|清单|汇总|统计|文件)
+          weight: 1
+      requiredSuggestions: []

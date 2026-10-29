@@ -991,6 +991,7 @@ def build_parser():
             "  python3 agent.py report --month 2026-10 --budget 预算.csv\n"
             "  python3 agent.py list --category 餐饮\n"
             "  python3 agent.py add --file 记账文本.txt\n"
+            "  python3 agent.py report --file 记账文本.txt --month 2026-10\n"
         ),
     )
     parser.add_argument(
@@ -1004,7 +1005,7 @@ def build_parser():
     parser.add_argument("--book", default=DEFAULT_BOOK,
                         help="账本 JSON 路径（默认 %s）" % DEFAULT_BOOK)
     parser.add_argument("--file", dest="file_path", metavar="文本文件",
-                        help="批量导入：每行一条记账原文")
+                        help="批量导入：每行一条记账原文（add 时写入账本；report 时先导入账本再出报告）")
     parser.add_argument("--month", default=None,
                         help="统计月份，格式 YYYY-MM（默认当月）")
     parser.add_argument("--budget", metavar="预算CSV",
@@ -1101,6 +1102,20 @@ def cmd_report(args, parser):
     month = args.month or date.today().strftime("%Y-%m")
     if not re.match(r"^\d{4}-\d{2}$", month):
         parser.error("--month 格式应为 YYYY-MM，例如 2026-10")
+    if not 1 <= int(month[5:7]) <= 12:
+        parser.error("--month 月份必须在 01-12 之间，例如 2026-10")
+    if args.file_path:
+        # 批量导入：先把自然语言记账行解析进账本（与 add --file 同一套解析），再出报告
+        try:
+            texts = _read_lines(args.file_path)
+        except OSError as exc:
+            print("错误：读取记账文本失败：%s" % exc, file=sys.stderr)
+            sys.exit(1)
+        today = date.today()
+        parsed_list = [parse_entry(text, today) for text in texts]
+        added, skipped, no_amount = add_entries(args.book, parsed_list, today)
+        print("[记账] 从 %s 导入 %d 条到 %s（重复跳过 %d 条、缺少金额跳过 %d 条）"
+              % (args.file_path, len(added), args.book, skipped, no_amount))
     entries = load_book(args.book)
     month_entries = filter_month(entries, month)
     if not entries:

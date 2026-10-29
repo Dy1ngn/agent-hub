@@ -1,0 +1,576 @@
+id: ts-b-weekly-report-g5-stability
+agentId: weekly-report
+group: g5-stability
+name: 周报日报 · 稳定性：10 样本 × 重复 10 次
+description: 10 个确定性样本各重复 10 次，离线输出必须完全一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: "稳定性样本（feat: 新增支付回调接口）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-27
+
+            - [x] 完成支付模块联调
+
+            - [ ] 继续补齐单元测试
+
+
+            ## 2026-10-28
+
+            - [x] 排查线上慢查询问题
+
+            - [ ] 输出对接文档\n"
+        - path: input/commits.txt
+          content: "# 日期 | 提交说明 | +新增 -删除 | 文件
+
+            2026-10-27 | feat: 新增支付回调接口 | +156 -24 | src/pay/callback.py,src/pay/api.py
+
+            2026-10-28 | fix: 修复金额计算精度 | +38 -12 | src/pay/calc.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "feat: 新增支付回调接口"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 完成支付模块联调
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: "稳定性样本（fix: 修复登录跳转）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-26
+
+            - [x] 对齐鉴权接口字段
+
+            - [ ] 补充鉴权单测
+
+
+            ## 2026-10-28
+
+            - [x] 联调登录流程
+
+            - [ ] 整理发版清单\n"
+        - path: input/commits.txt
+          content: "2026-10-26 | feat: 新增登录鉴权 | +220 -40 | src/auth/login.py,src/auth/token.py
+
+            2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py
+
+            2026-10-28 | docs: 补充鉴权文档 | +80 -0 | docs/auth.md\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "fix: 修复登录跳转"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 对齐鉴权接口字段
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: "稳定性样本（refactor: 拆分订单服务）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-27
+
+            - [x] 参加架构评审会
+
+            - [x] 整理网关压测数据
+
+            - [ ] 跟进容量评估结论\n"
+        - path: input/commits.txt
+          content: "2026-10-26 | feat: 新增订单导出 | +120 -20 | src/order/export.py
+
+            2026-10-26 | fix: 修复订单分页 | +30 -10 | src/order/list.py
+
+            2026-10-27 | docs: 更新订单文档 | +40 -0 | docs/order.md
+
+            2026-10-27 | refactor: 拆分订单服务 | +200 -180 | src/order/service.py
+
+            2026-10-28 | test: 补充订单单测 | +150 -0 | tests/test_order.py
+
+            2026-10-28 | chore: 升级构建脚本 | +15 -5 | build.py
+
+            2026-10-28 | 调整订单超时时间 | +4 -4 | src/order/conf.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "refactor: 拆分订单服务"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 参加架构评审会
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: "稳定性样本（feat: 新增网关路由）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-27
+
+            - [x] 参加架构评审会
+
+            - [x] 整理网关压测数据
+
+            - [ ] 跟进容量评估结论\n"
+        - path: input/commits.txt
+          content: "2026-10-26 | feat: 新增网关路由 | +90 -10 | src/gateway/router.py
+
+            2026-10-27 | feat: 新增前端页面 | +300 -20 | web/src/page.js
+
+            2026-10-27 | fix: 修复脚本参数 | +12 -3 | scripts/run.py
+
+            2026-10-28 | docs: 更新部署文档 | +60 -0 | docs/deploy.md\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "feat: 新增网关路由"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 整理网关压测数据
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性样本（新增用户画像接口）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-27
+
+            - [x] 完成支付模块联调
+
+            - [ ] 继续补齐单元测试
+
+
+            ## 2026-10-28
+
+            - [x] 排查线上慢查询问题
+
+            - [ ] 输出对接文档\n"
+        - path: input/commits.txt
+          content: "2026-10-26 | 新增用户画像接口 | +180 -30 | src/user/profile.py
+
+            2026-10-27 | 修复头像上传失败 | +42 -16 | src/user/avatar.py
+
+            2026-10-28 | 更新接口文档 | +55 -0 | docs/user.md\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: 新增用户画像接口
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 排查线上慢查询问题
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: "稳定性样本（feat: 新增模块功能01）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-27
+
+            - [x] 完成支付模块联调
+
+            - [ ] 继续补齐单元测试
+
+
+            ## 2026-10-28
+
+            - [x] 排查线上慢查询问题
+
+            - [ ] 输出对接文档\n"
+        - path: input/commits.txt
+          content: "2026-10-16 | feat: 新增模块功能01 | +57 -3 | src/mod2/service.py
+
+            2026-10-17 | feat: 新增模块功能02 | +64 -6 | src/mod3/service.py
+
+            2026-10-18 | feat: 新增模块功能03 | +71 -9 | src/mod4/service.py
+
+            2026-10-19 | feat: 新增模块功能04 | +78 -12 | src/mod1/service.py
+
+            2026-10-20 | feat: 新增模块功能05 | +85 -15 | src/mod2/service.py
+
+            2026-10-21 | feat: 新增模块功能06 | +92 -18 | src/mod3/service.py
+
+            2026-10-22 | feat: 新增模块功能07 | +99 -21 | src/mod4/service.py
+
+            2026-10-23 | feat: 新增模块功能08 | +106 -24 | src/mod1/service.py
+
+            2026-10-24 | feat: 新增模块功能09 | +113 -27 | src/mod2/service.py
+
+            2026-10-25 | feat: 新增模块功能10 | +120 -30 | src/mod3/service.py\n"
+      params:
+        report_type: weekly
+        days: "14"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "feat: 新增模块功能01"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 输出对接文档
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: "稳定性样本（fix: 修复登录跳转）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-27
+
+            - [x] fix: 修复登录跳转
+
+            - [x] 联调报表导出接口
+
+
+            ## 2026-10-28
+
+            - [ ] 补充报表单测\n"
+        - path: input/commits.txt
+          content: "2026-10-27 | fix: 修复登录跳转 | +25 -8 | src/auth/redirect.py
+
+            2026-10-28 | feat: 新增报表导出 | +140 -30 | src/report/export.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "fix: 修复登录跳转"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 补充报表单测
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: "稳定性样本（feat: 新增二维码登录）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "## 2026-10-28\n- [x] 调研二维码登录方案\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 新增二维码登录 | +40 -0 | src/auth/qr.py\n"
+      params:
+        report_type: daily
+        days: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "feat: 新增二维码登录"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 调研二维码登录方案
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: "稳定性样本（fix: 修复验证码过期）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "## 2026-10-28\n- [x] 复现验证码过期问题\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | fix: 修复验证码过期 | +12 -4 | src/auth/captcha.py\n"
+      params:
+        report_type: daily
+        days: "1"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "fix: 修复验证码过期"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 复现验证码过期问题
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: "稳定性样本（docs: 更新部署文档）"
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "## 2026-10-28\n- [x] 梳理部署文档结构\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | docs: 更新部署文档 | +60 -0 | docs/deploy.md\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 1
+        - type: contains
+          text: "docs: 更新部署文档"
+          weight: 2
+          note: commit 说明回显
+        - type: contains
+          text: 梳理部署文档结构
+          weight: 1
+          note: 工作记录回显
+        - type: contains
+          text: "### 数量汇总"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

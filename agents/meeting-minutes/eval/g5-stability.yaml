@@ -1,0 +1,502 @@
+id: ts-b-meeting-minutes-g5-stability
+agentId: meeting-minutes
+group: g5-stability
+name: 会议纪要 · 稳定性：10 样本 × 重复 10 次
+description: 10 个确定性逐字稿样本各重复 10 次，离线输出必须完全一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性样本（支付模块上线评审）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[09:30] 张三：各位好，今天讨论支付模块上线安排。
+
+            [09:31] 李四：目前接口已经全部联调完成，测试覆盖率 82%。
+
+            [09:35] 王五：灰度方案我建议先放 10% 流量，观察两天。
+
+            [09:40] 张三：决定下周一开始灰度发布，李四负责监控。
+
+            [09:45] 李四：我负责监控告警，周五前给出观察报告。
+
+            [09:50] 王五：遗留问题是回滚预案还没有评审。\n"
+      params:
+        title: 支付模块上线评审
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：支付模块上线评审"
+          weight: 1
+        - type: contains
+          text: 张三
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性样本（研发站会）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[10:00] 陈晨：昨天完成登录模块，今天做权限校验。
+
+            [10:01] 刘洋：昨天修复了三个 bug，今天继续排查内存问题。
+
+            [10:02] 赵敏：昨天写接口文档，今天对齐字段命名。
+
+            [10:03] 陈晨：没有阻塞。\n"
+      params:
+        title: 研发站会
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：研发站会"
+          weight: 1
+        - type: contains
+          text: 陈晨
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性样本（线上事故复盘）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "议题：10-27 线上事故复盘
+
+            孙工：事故原因是缓存击穿，导致数据库连接被打满。
+
+            周工：监控在 14:03 告警，14:20 恢复。
+
+            孙工：决定本周内上线缓存预热与限流。
+
+            周工：我负责补一份故障演练方案，截止时间 2026-11-03。
+
+            孙工：风险是旧版本客户端可能不兼容新限流策略。\n"
+      params:
+        title: 线上事故复盘
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：线上事故复盘"
+          weight: 1
+        - type: contains
+          text: 孙工
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性样本（结算流程评审）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三> 今天评审新版结算流程
+
+            李四> 结算对账有两处不一致需要确认
+
+            张三> 决定先冻结上线，对账问题查清后再发
+
+            李四> 我周五前给出对账报告\n"
+      params:
+        title: 结算流程评审
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：结算流程评审"
+          weight: 1
+        - type: contains
+          text: 李四
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性样本（Release Plan Sync）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "Alice: Let's review the release plan for version 2.0.
+
+            Bob: The API migration is done, but load testing is pending.
+
+            Alice: Decision: ship the beta next Monday.
+
+            Bob: I will finish the load test report by Friday.\n"
+      params:
+        title: Release Plan Sync
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：Release Plan Sync"
+          weight: 1
+        - type: contains
+          text: Alice
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性样本（周例会）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三：第 1 项进度汇报，本周推进顺利。
+
+            李四：第 2 项进度汇报，本周推进顺利。
+
+            王五：第 3 项进度汇报，本周推进顺利。
+
+            赵敏：第 4 项进度汇报，本周推进顺利。
+
+            陈晨：第 5 项进度汇报，本周推进顺利。
+
+            刘洋：第 6 项进度汇报，本周推进顺利。
+
+            孙工：第 7 项进度汇报，本周推进顺利。
+
+            周工：第 8 项进度汇报，本周推进顺利。"
+      params:
+        title: 周例会
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：周例会"
+          weight: 1
+        - type: contains
+          text: 张三
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性样本（三议题规划会）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "议题一：登录改造
+
+            张三：登录接口需要支持双因素认证。
+
+            议题二：数据合规
+
+            李四：日志脱敏方案要落地。
+
+            议题三：性能优化
+
+            王五：列表接口慢查询需要加索引。
+
+            张三：决定三个议题本周内出方案。\n"
+      params:
+        title: 三议题规划会
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：三议题规划会"
+          weight: 1
+        - type: contains
+          text: 王五
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性样本（任务分工会）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "主持人：本次会议要定下三件事。
+
+            张三：我负责输出接口文档，2026-11-05 前完成。
+
+            李四：我负责补单元测试，截止周五。
+
+            王五：我负责联系运维扩容，下周三前搞定。
+
+            主持人：决定按以上分工执行。\n"
+      params:
+        title: 任务分工会
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：任务分工会"
+          weight: 1
+        - type: contains
+          text: 李四
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性样本（发布准备会）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "王五: 走一遍发布 checklist
+
+            赵敏> 回滚脚本已经验证过
+
+            [15:20] 陈晨：监控面板已配置完成
+
+            15:22 刘洋: 发布窗口定在周四晚上\n"
+      params:
+        title: 发布准备会
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：发布准备会"
+          weight: 1
+        - type: contains
+          text: 赵敏
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性样本（年度预算讨论）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同输入重复运行，输出应完全一致
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三：今天讨论年度预算。
+
+            李四：研发线预算增加 20%。
+
+            张三：决定预算方案下周提交财务。\n"
+      params:
+        title: 年度预算讨论
+        date: 2026-10-28
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "# 会议纪要：年度预算讨论"
+          weight: 1
+        - type: contains
+          text: 李四
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: contains
+          text: 2026-10-28
+          weight: 1
+          note: 会议日期回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

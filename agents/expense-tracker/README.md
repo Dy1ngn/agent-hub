@@ -75,9 +75,12 @@ python3 agent.py report --month 2026-10 --budget 预算.csv --output 月报.md
 # 4. 查看某分类明细，或导出 CSV 给 Excel
 python3 agent.py list --category 餐饮
 python3 agent.py export --csv 账本.csv
+
+# 5. 一步到位：从记账文本批量导入并直接出月报（report 也认 --file）
+python3 agent.py report --file 记账文本.txt --month 2026-10 --output 月报.md
 ```
 
-第 1、2 条是日常记账入口；第 3 条的预算表格式是两列 CSV：`category,limit`（如 `餐饮,100`）；第 4 条用于核对明细和二次分析。走第三方兼容网关时加 `--model qwen3.8-max` 之类的模型名即可。
+第 1、2 条是日常记账入口；第 3 条的预算表格式是两列 CSV：`category,limit`（如 `餐饮,100`）；第 4 条用于核对明细和二次分析；第 5 条把「批量导入 + 出报告」合成一步（`report --file` 先按 `add` 同款规则解析入账，再生成报告）。走第三方兼容网关时加 `--model qwen3.8-max` 之类的模型名即可。
 
 ## 实现方式
 

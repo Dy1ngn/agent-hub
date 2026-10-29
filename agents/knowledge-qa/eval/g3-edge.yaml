@@ -1,0 +1,1127 @@
+id: ts-b-knowledge-qa-g3-edge
+agentId: knowledge-qa
+group: g3-edge
+name: 知识库问答 · 边界情况：空 / 单行 / 极值
+description: 空知识库、单字文档、超长段落、空格问题、繁体/英文问题等边界输入下的稳定产出（离线检索）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空知识库
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/empty.md
+          content: ""
+        - path: kb/.keep
+          content: ""
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 有问题吗？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有相关内容|片段
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：单字文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/one.md
+          content: "安装\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么做？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|没有相关内容
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：单行文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/line.md
+          content: "安装依赖使用 pip install 命令。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么做？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：超长单段落
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/huge.md
+          content: "# 超长段落
+
+
+            很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容很长的内容\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 小节讲了什么？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|检索得分表
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：全空行文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/blank.md
+          content: "\n\n\n\n"
+        - path: kb/.keep
+          content: ""
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么做？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有相关内容|片段
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：纯符号文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/symbols.md
+          content: "!!!@@@###$$$%%%\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 这是什么符号？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|没有相关内容
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：emoji 文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/emoji.md
+          content: "# 火箭 🚀\n\n火箭 🚀 发射需要倒计时。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 火箭怎么发射？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|检索得分表
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：重复内容多文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/dup1.md
+          content: "# 重复\n\n重复内容出现三次。\n"
+        - path: kb/dup2.md
+          content: "# 重复\n\n重复内容出现三次。\n"
+        - path: kb/dup3.md
+          content: "# 重复\n\n重复内容出现三次。\n"
+      params:
+        q: 重复内容在哪里？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|检索得分表
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：问题只有空格
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: " "
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 知识库问答报告|没有相关内容
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：超长问题
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题这是一个非常长的问题
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 知识库问答报告
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-11
+    title: 边界输入：正则特殊字符问题
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: a.b*c[d]? 正则特殊字符如何处理
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 知识库问答报告|片段
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-12
+    title: 边界输入：繁体问题
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 依賴安裝要怎麼做？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|没有相关内容
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-13
+    title: 边界输入：英文问题
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: How to install dependencies?
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|没有相关内容
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-14
+    title: 边界输入：md 与 txt 混合
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/a.md
+          content: "# 混合\n\n安装依赖用 pip。\n"
+        - path: kb/b.txt
+          content: "安装依赖用 pip。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么做？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|检索得分表
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-15
+    title: 边界输入：CSV 命中
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/org.csv
+          content: "城市,负责人\n北京,张三\n上海,李四\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 北京的负责人是谁？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|张三
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-16
+    title: 边界输入：JSON 命中
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/errors.json
+          content: '[{"code": 1, "message": "错误一"}]'
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 错误码是什么？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|错误一
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-17
+    title: 边界输入：BOM 文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/bom.md
+          content: "﻿# 带 BOM\n\n安装依赖用 pip。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么做？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-18
+    title: 边界输入：CRLF 文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/crlf.md
+          content: "# 带 CRLF\r\n\r\n安装依赖用 pip。\r\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么做？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-19
+    title: 边界输入：代码块文档
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/code.md
+          content: "# 代码
+
+
+            ```python
+
+            print('hello')
+
+            ```
+
+
+            调用 foo() 函数。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 代码怎么写？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段|检索得分表
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-20
+    title: 边界输入：阈值极高无命中
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读报告，不允许崩溃
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么做？
+        topk: "5"
+        minscore: "99"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有相关内容
+          weight: 2
+          note: 边界检索结果符合预期
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

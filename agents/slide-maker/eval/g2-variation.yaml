@@ -1,0 +1,1356 @@
+id: ts-b-slide-maker-g2-variation
+agentId: slide-maker
+group: g2-variation
+name: 幻灯片生成 · 输入变体：文档形态 / 长度 / 语言 / 参数
+description: 不同文档形态（段落/列表/表格/代码）、长度、语言与页数参数下的稳定排版（模型生成链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-doc-1
+    title: 文档形态变体（纯列表）
+    tags:
+      - variation
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态文档都能提炼出大纲并排版
+      content: 请把 input/doc.md（纯列表）生成「列表型文档」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "- 列表要点 0：说明一部分内容
+
+            - 列表要点 1：说明一部分内容
+
+            - 列表要点 2：说明一部分内容
+
+            - 列表要点 3：说明一部分内容
+
+            - 列表要点 4：说明一部分内容
+
+            - 列表要点 5：说明一部分内容
+
+            - 列表要点 6：说明一部分内容
+
+            - 列表要点 7：说明一部分内容
+
+            - 列表要点 8：说明一部分内容
+
+            - 列表要点 9：说明一部分内容
+
+            - 列表要点 10：说明一部分内容
+
+            - 列表要点 11：说明一部分内容
+
+            - 列表要点 12：说明一部分内容
+
+            - 列表要点 13：说明一部分内容
+
+            - 列表要点 14：说明一部分内容
+
+            - 列表要点 15：说明一部分内容
+
+            - 列表要点 16：说明一部分内容
+
+            - 列表要点 17：说明一部分内容
+
+            - 列表要点 18：说明一部分内容
+
+            - 列表要点 19：说明一部分内容
+
+            - 列表要点 20：说明一部分内容
+
+            - 列表要点 21：说明一部分内容
+
+            - 列表要点 22：说明一部分内容
+
+            - 列表要点 23：说明一部分内容
+
+            - 列表要点 24：说明一部分内容
+
+            - 列表要点 25：说明一部分内容
+
+            - 列表要点 26：说明一部分内容
+
+            - 列表要点 27：说明一部分内容
+
+            - 列表要点 28：说明一部分内容
+
+            - 列表要点 29：说明一部分内容
+
+            - 列表要点 30：说明一部分内容
+
+            - 列表要点 31：说明一部分内容
+
+            - 列表要点 32：说明一部分内容
+
+            - 列表要点 33：说明一部分内容
+
+            - 列表要点 34：说明一部分内容
+
+            - 列表要点 35：说明一部分内容
+
+            - 列表要点 36：说明一部分内容
+
+            - 列表要点 37：说明一部分内容
+
+            - 列表要点 38：说明一部分内容
+
+            - 列表要点 39：说明一部分内容
+
+            - 列表要点 40：说明一部分内容
+
+            - 列表要点 41：说明一部分内容
+
+            - 列表要点 42：说明一部分内容
+
+            - 列表要点 43：说明一部分内容
+
+            - 列表要点 44：说明一部分内容
+
+            - 列表要点 45：说明一部分内容
+
+            - 列表要点 46：说明一部分内容
+
+            - 列表要点 47：说明一部分内容
+
+            - 列表要点 48：说明一部分内容
+
+            - 列表要点 49：说明一部分内容\n"
+      params:
+        topic: 列表型文档
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 列表型文档
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-doc-2
+    title: 文档形态变体（长段落）
+    tags:
+      - variation
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态文档都能提炼出大纲并排版
+      content: 请把 input/doc.md（长段落）生成「段落型文档」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 城市数字化转型报告
+
+
+            ## 趋势
+
+
+            城市数字化转型正在从单点系统建设走向全域协同。数据要素的价值被重新定义，公共数据授权运营成为新的话题。治理能力成为决定成败的关键因素，需要在制度、技术和组织三个层面同步推进。
+
+
+            ## 挑战
+
+
+            部门墙导致数据共享困难，标准不统一让系统集成成本居高不下。市民感知度低，很多项目建成即闲置。需要以用促建，围绕高频场景打磨亮点。\n"
+      params:
+        topic: 段落型文档
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 段落型文档
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-doc-3
+    title: 文档形态变体（多级标题）
+    tags:
+      - variation
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态文档都能提炼出大纲并排版
+      content: 请把 input/doc.md（多级标题）生成「标题型文档」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# Kubernetes 上手教程
+
+
+            ## 安装准备
+
+
+            - 准备 3 台 4C8G 虚拟机
+
+            - 安装 containerd 与 kubeadm
+
+
+            ## 集群搭建
+
+
+            - kubeadm init 初始化控制面
+
+            - 加入 worker 节点
+
+            - 安装 Calico 网络插件
+
+
+            ## 应用部署
+
+
+            - 编写 Deployment 与 Service
+
+            - 配置探针与资源限额
+
+            - 用 Helm 管理发布\n"
+      params:
+        topic: 标题型文档
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 标题型文档
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-doc-4
+    title: 文档形态变体（表格文档）
+    tags:
+      - variation
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态文档都能提炼出大纲并排版
+      content: 请把 input/doc.md（表格文档）生成「表格型文档」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 数据平台建设方案
+
+
+            ## 指标体系
+
+
+            | 指标 | 口径 | 负责人 |
+
+            | --- | --- | --- |
+
+            | DAU | 去重登录用户 | 张三 |
+
+            | GMV | 支付成功金额 | 李四 |
+
+
+            ## 数据链路
+
+
+            - 采集：埋点 SDK + 服务端日志
+
+            - 清洗：Flink 实时任务
+
+            - 应用：指标平台 + 报表\n"
+      params:
+        topic: 表格型文档
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 表格型文档
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-doc-5
+    title: 文档形态变体（极短文档）
+    tags:
+      - variation
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态文档都能提炼出大纲并排版
+      content: 请把 input/doc.md（极短文档）生成「短文档」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 一句话\n\n- 只有一个要点\n"
+      params:
+        topic: 短文档
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 短文档
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-1
+    title: 文档长度变体（2 节）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度文档都能稳定排版
+      content: 请把 input/doc.md（2 节）生成「长度变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 主文档
+
+
+            ## 第 1 部分
+
+
+            - 要点 1 一
+
+            - 要点 1 二：完成 20 个模块
+
+
+            ## 第 2 部分
+
+
+            - 要点 2 一
+
+            - 要点 2 二：完成 20 个模块\n"
+      params:
+        topic: 长度变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 长度变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-2
+    title: 文档长度变体（4 节）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度文档都能稳定排版
+      content: 请把 input/doc.md（4 节）生成「长度变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 主文档
+
+
+            ## 第 1 部分
+
+
+            - 要点 1 一
+
+            - 要点 1 二：完成 20 个模块
+
+
+            ## 第 2 部分
+
+
+            - 要点 2 一
+
+            - 要点 2 二：完成 20 个模块
+
+
+            ## 第 3 部分
+
+
+            - 要点 3 一
+
+            - 要点 3 二：完成 20 个模块
+
+
+            ## 第 4 部分
+
+
+            - 要点 4 一
+
+            - 要点 4 二：完成 20 个模块\n"
+      params:
+        topic: 长度变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 长度变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-3
+    title: 文档长度变体（6 节）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度文档都能稳定排版
+      content: 请把 input/doc.md（6 节）生成「长度变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 主文档
+
+
+            ## 第 1 部分
+
+
+            - 要点 1 一
+
+            - 要点 1 二：完成 20 个模块
+
+
+            ## 第 2 部分
+
+
+            - 要点 2 一
+
+            - 要点 2 二：完成 20 个模块
+
+
+            ## 第 3 部分
+
+
+            - 要点 3 一
+
+            - 要点 3 二：完成 20 个模块
+
+
+            ## 第 4 部分
+
+
+            - 要点 4 一
+
+            - 要点 4 二：完成 20 个模块
+
+
+            ## 第 5 部分
+
+
+            - 要点 5 一
+
+            - 要点 5 二：完成 20 个模块
+
+
+            ## 第 6 部分
+
+
+            - 要点 6 一
+
+            - 要点 6 二：完成 20 个模块\n"
+      params:
+        topic: 长度变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 长度变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-4
+    title: 文档长度变体（8 节）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度文档都能稳定排版
+      content: 请把 input/doc.md（8 节）生成「长度变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 主文档
+
+
+            ## 第 1 部分
+
+
+            - 要点 1 一
+
+            - 要点 1 二：完成 20 个模块
+
+
+            ## 第 2 部分
+
+
+            - 要点 2 一
+
+            - 要点 2 二：完成 20 个模块
+
+
+            ## 第 3 部分
+
+
+            - 要点 3 一
+
+            - 要点 3 二：完成 20 个模块
+
+
+            ## 第 4 部分
+
+
+            - 要点 4 一
+
+            - 要点 4 二：完成 20 个模块
+
+
+            ## 第 5 部分
+
+
+            - 要点 5 一
+
+            - 要点 5 二：完成 20 个模块
+
+
+            ## 第 6 部分
+
+
+            - 要点 6 一
+
+            - 要点 6 二：完成 20 个模块
+
+
+            ## 第 7 部分
+
+
+            - 要点 7 一
+
+            - 要点 7 二：完成 20 个模块
+
+
+            ## 第 8 部分
+
+
+            - 要点 8 一
+
+            - 要点 8 二：完成 20 个模块\n"
+      params:
+        topic: 长度变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 长度变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-5
+    title: 文档长度变体（10 节）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度文档都能稳定排版
+      content: 请把 input/doc.md（10 节）生成「长度变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 主文档
+
+
+            ## 第 1 部分
+
+
+            - 要点 1 一
+
+            - 要点 1 二：完成 20 个模块
+
+
+            ## 第 2 部分
+
+
+            - 要点 2 一
+
+            - 要点 2 二：完成 20 个模块
+
+
+            ## 第 3 部分
+
+
+            - 要点 3 一
+
+            - 要点 3 二：完成 20 个模块
+
+
+            ## 第 4 部分
+
+
+            - 要点 4 一
+
+            - 要点 4 二：完成 20 个模块
+
+
+            ## 第 5 部分
+
+
+            - 要点 5 一
+
+            - 要点 5 二：完成 20 个模块
+
+
+            ## 第 6 部分
+
+
+            - 要点 6 一
+
+            - 要点 6 二：完成 20 个模块
+
+
+            ## 第 7 部分
+
+
+            - 要点 7 一
+
+            - 要点 7 二：完成 20 个模块
+
+
+            ## 第 8 部分
+
+
+            - 要点 8 一
+
+            - 要点 8 二：完成 20 个模块
+
+
+            ## 第 9 部分
+
+
+            - 要点 9 一
+
+            - 要点 9 二：完成 20 个模块
+
+
+            ## 第 10 部分
+
+
+            - 要点 10 一
+
+            - 要点 10 二：完成 20 个模块\n"
+      params:
+        topic: 长度变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 长度变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-1
+    title: 语言变体（纯中文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言文档都能排版
+      content: 请把 input/doc.md（纯中文）生成「语言变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 云平台迁移方案
+
+
+            ## 背景
+
+
+            - 机房租赁合同明年 3 月到期
+
+            - 现有集群运维成本高
+
+
+            ## 迁移方案
+
+
+            - 采用分批迁移策略，先无状态服务
+
+            - 数据库使用 DTS 双写校验
+
+            - 迁移窗口安排在凌晨低峰期
+
+
+            ## 风险与应对
+
+
+            - 回滚预案：保留旧集群两周
+
+            - 演练：正式迁移前全链路演练 2 次\n"
+      params:
+        topic: 语言变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 语言变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2
+    title: 语言变体（纯英文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言文档都能排版
+      content: 请把 input/doc.md（纯英文）生成「语言变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# Cloud Native Meetup
+
+
+            ## Agenda
+
+
+            - Keynote: Scaling Kubernetes to 10k nodes
+
+            - Lightning talks from community
+
+
+            ## Speakers
+
+
+            - Alice Chen, Platform Lead
+
+            - Bob Li, SRE
+
+
+            ## Takeaways
+
+
+            - Observability first
+
+            - Automate everything\n"
+      params:
+        topic: 语言变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 语言变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3
+    title: 语言变体（中英混合）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言文档都能排版
+      content: 请把 input/doc.md（中英混合）生成「语言变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 中英混合技术分享
+
+
+            ## Background
+
+
+            - 服务网格 Service Mesh 落地背景
+
+            - 采用 Istio 作为控制面
+
+
+            ## Practice
+
+
+            - 灰度发布：基于 header 路由
+
+            - 故障注入：注入 5xx 验证容错\n"
+      params:
+        topic: 语言变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 语言变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4
+    title: 语言变体（带代码）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言文档都能排版
+      content: 请把 input/doc.md（带代码）生成「语言变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 前端性能优化
+
+
+            ## 测量
+
+
+            - 用 Lighthouse 测量性能分
+
+            - 关注 LCP 与 CLS
+
+
+            ## 优化手段
+
+
+            - 代码分割：动态 import
+
+            - 图片：WebP + 懒加载
+
+
+            ## 示例
+
+
+            ```js
+
+            const page = await import('./page.js');
+
+            ```\n"
+      params:
+        topic: 语言变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 语言变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-5
+    title: 语言变体（带 emoji）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言文档都能排版
+      content: 请把 input/doc.md（带 emoji）生成「语言变体」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 🎨 设计系统分享
+
+
+            ## 组件库
+
+
+            - 🔧 基础组件 30 个
+
+            - 📦 业务组件 12 个
+
+
+            ## 落地
+
+
+            - 🚀 三个业务线接入\n"
+      params:
+        topic: 语言变体
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 语言变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-1
+    title: 参数变体（5 页 / 管理层）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端页数与听众参数下稳定排版
+      content: 请生成「参数变体」幻灯片，目标 5 页，听众：管理层。
+      files:
+        - path: input/doc.md
+          content: "# 云平台迁移方案
+
+
+            ## 背景
+
+
+            - 机房租赁合同明年 3 月到期
+
+            - 现有集群运维成本高
+
+
+            ## 迁移方案
+
+
+            - 采用分批迁移策略，先无状态服务
+
+            - 数据库使用 DTS 双写校验
+
+            - 迁移窗口安排在凌晨低峰期
+
+
+            ## 风险与应对
+
+
+            - 回滚预案：保留旧集群两周
+
+            - 演练：正式迁移前全链路演练 2 次\n"
+      params:
+        topic: 参数变体
+        slides: "5"
+        audience: 管理层
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 参数变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-2
+    title: 参数变体（6 页 / 开发者）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端页数与听众参数下稳定排版
+      content: 请生成「参数变体」幻灯片，目标 6 页，听众：开发者。
+      files:
+        - path: input/doc.md
+          content: "# Kubernetes 上手教程
+
+
+            ## 安装准备
+
+
+            - 准备 3 台 4C8G 虚拟机
+
+            - 安装 containerd 与 kubeadm
+
+
+            ## 集群搭建
+
+
+            - kubeadm init 初始化控制面
+
+            - 加入 worker 节点
+
+            - 安装 Calico 网络插件
+
+
+            ## 应用部署
+
+
+            - 编写 Deployment 与 Service
+
+            - 配置探针与资源限额
+
+            - 用 Helm 管理发布\n"
+      params:
+        topic: 参数变体
+        slides: "6"
+        audience: 开发者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 参数变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-3
+    title: 参数变体（15 页 / 学生）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端页数与听众参数下稳定排版
+      content: 请生成「参数变体」幻灯片，目标 15 页，听众：学生。
+      files:
+        - path: input/doc.md
+          content: "# 项目复盘：秒杀活动
+
+
+            ## 目标达成
+
+
+            - 目标 GMV 500 万，实际完成 620 万
+
+            - 订单峰值 8000 TPS
+
+
+            ## 做得好的
+
+
+            - 缓存预热提前 2 小时完成
+
+            - 限流策略保护了核心链路
+
+
+            ## 待改进
+
+
+            - 库存扣减出现 30 单超卖
+
+            - 监控告警阈值设置不合理
+
+
+            ## 行动项
+
+
+            - 下周完成库存扣减重构
+
+            - 补充压测用例 20 个\n"
+      params:
+        topic: 参数变体
+        slides: "15"
+        audience: 学生
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 参数变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-4
+    title: 参数变体（25 页 / 客户）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端页数与听众参数下稳定排版
+      content: 请生成「参数变体」幻灯片，目标 25 页，听众：客户。
+      files:
+        - path: input/doc.md
+          content: "# 数据平台建设方案
+
+
+            ## 指标体系
+
+
+            | 指标 | 口径 | 负责人 |
+
+            | --- | --- | --- |
+
+            | DAU | 去重登录用户 | 张三 |
+
+            | GMV | 支付成功金额 | 李四 |
+
+
+            ## 数据链路
+
+
+            - 采集：埋点 SDK + 服务端日志
+
+            - 清洗：Flink 实时任务
+
+            - 应用：指标平台 + 报表\n"
+      params:
+        topic: 参数变体
+        slides: "25"
+        audience: 客户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 参数变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-5
+    title: 参数变体（40 页 / 通用听众）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端页数与听众参数下稳定排版
+      content: 请生成「参数变体」幻灯片，目标 40 页，听众：通用听众。
+      files:
+        - path: input/doc.md
+          content: "# 城市数字化转型报告
+
+
+            ## 趋势
+
+
+            城市数字化转型正在从单点系统建设走向全域协同。数据要素的价值被重新定义，公共数据授权运营成为新的话题。治理能力成为决定成败的关键因素，需要在制度、技术和组织三个层面同步推进。
+
+
+            ## 挑战
+
+
+            部门墙导致数据共享困难，标准不统一让系统集成成本居高不下。市民感知度低，很多项目建成即闲置。需要以用促建，围绕高频场景打磨亮点。\n"
+      params:
+        topic: 参数变体
+        slides: "40"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 参数变体
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

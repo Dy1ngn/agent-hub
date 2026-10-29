@@ -1,0 +1,1046 @@
+id: ts-b-meeting-minutes-g1-basic
+agentId: meeting-minutes
+group: g1-basic
+name: 会议纪要 · 基础功能：典型会议逐字稿
+description: 评审会/站会/复盘会/多议题/分工等典型逐字稿，走完整「解析 + 模型整理」链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-review-1
+    title: 产品评审会（支付模块上线评审）
+    tags:
+      - basic
+      - review
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析产品评审逐字稿并生成纪要
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[09:30] 张三：各位好，今天讨论支付模块上线安排。
+
+            [09:31] 李四：目前接口已经全部联调完成，测试覆盖率 82%。
+
+            [09:35] 王五：灰度方案我建议先放 10% 流量，观察两天。
+
+            [09:40] 张三：决定下周一开始灰度发布，李四负责监控。
+
+            [09:45] 李四：我负责监控告警，周五前给出观察报告。
+
+            [09:50] 王五：遗留问题是回滚预案还没有评审。\n"
+      params:
+        title: 支付模块上线评审
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 张三
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 决议"
+          weight: 1
+        - type: regex
+          pattern: (灰度|发布|监控)
+          weight: 1
+          note: 讨论要点进入纪要
+        - type: contains
+          text: "# 会议纪要：支付模块上线评审"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-review-2
+    title: 产品评审会（结算模块上线评审）
+    tags:
+      - basic
+      - review
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析产品评审逐字稿并生成纪要
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[09:30] 周明：各位好，今天讨论结算模块上线安排。
+
+            [09:31] 李四：目前接口已经全部联调完成，测试覆盖率 82%。
+
+            [09:35] 王五：灰度方案我建议先放 10% 流量，观察两天。
+
+            [09:40] 周明：决定下周一开始灰度发布，李四负责监控。
+
+            [09:45] 李四：我负责监控告警，周五前给出观察报告。
+
+            [09:50] 王五：遗留问题是回滚预案还没有评审。\n"
+      params:
+        title: 结算模块上线评审
+        date: 2026-10-29
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 周明
+          weight: 2
+          note: 发言人回显
+        - type: contains
+          text: "## 决议"
+          weight: 1
+        - type: regex
+          pattern: (灰度|发布|监控)
+          weight: 1
+          note: 讨论要点进入纪要
+        - type: contains
+          text: "# 会议纪要：结算模块上线评审"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-standup-1
+    title: 每日站会（研发站会）
+    tags:
+      - basic
+      - standup
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析站会逐字稿并生成纪要
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[10:00] 陈晨：昨天完成登录模块，今天做权限校验。
+
+            [10:01] 刘洋：昨天修复了三个 bug，今天继续排查内存问题。
+
+            [10:02] 赵敏：昨天写接口文档，今天对齐字段命名。
+
+            [10:03] 陈晨：没有阻塞。\n"
+      params:
+        title: 研发站会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 陈晨
+          weight: 2
+        - type: regex
+          pattern: 会议时段
+          weight: 1
+          note: 时间戳解析出会议时段
+        - type: contains
+          text: "# 会议纪要：研发站会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-standup-2
+    title: 每日站会（平台组站会）
+    tags:
+      - basic
+      - standup
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析站会逐字稿并生成纪要
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "[10:00] 高翔：昨天完成登录模块，今天做权限校验。
+
+            [10:01] 林岚：昨天修复了三个 bug，今天继续排查内存问题。
+
+            [10:02] 钱进：昨天写接口文档，今天对齐字段命名。
+
+            [10:03] 高翔：没有阻塞。\n"
+      params:
+        title: 平台组站会
+        date: 2026-10-27
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 高翔
+          weight: 2
+        - type: regex
+          pattern: 会议时段
+          weight: 1
+          note: 时间戳解析出会议时段
+        - type: contains
+          text: "# 会议纪要：平台组站会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-incident-1
+    title: 事故复盘会（10-27 线上事故复盘）
+    tags:
+      - basic
+      - incident
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析事故复盘逐字稿并生成纪要
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "议题：10-27 线上事故复盘
+
+            孙工：事故原因是缓存击穿，导致数据库连接被打满。
+
+            周工：监控在 14:03 告警，14:20 恢复。
+
+            孙工：决定本周内上线缓存预热与限流。
+
+            周工：我负责补一份故障演练方案，截止时间 2026-11-03。
+
+            孙工：风险是旧版本客户端可能不兼容新限流策略。\n"
+      params:
+        title: 10-27 线上事故复盘
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 孙工
+          weight: 2
+        - type: regex
+          pattern: (风险|未决|待协调)
+          weight: 2
+          note: 风险与未决问题进纪要
+        - type: contains
+          text: "# 会议纪要：10-27 线上事故复盘"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-incident-2
+    title: 事故复盘会（10-20 配置事故复盘）
+    tags:
+      - basic
+      - incident
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析事故复盘逐字稿并生成纪要
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "议题：10-27 线上事故复盘
+
+            马工：事故原因是配置回滚，导致数据库连接被打满。
+
+            朱工：监控在 14:03 告警，14:20 恢复。
+
+            马工：决定本周内上线缓存预热与限流。
+
+            朱工：我负责补一份故障演练方案，截止时间 2026-11-03。
+
+            马工：风险是旧版本客户端可能不兼容新限流策略。\n"
+      params:
+        title: 10-20 配置事故复盘
+        date: 2026-10-21
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 马工
+          weight: 2
+        - type: regex
+          pattern: (风险|未决|待协调)
+          weight: 2
+          note: 风险与未决问题进纪要
+        - type: contains
+          text: "# 会议纪要：10-20 配置事故复盘"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-arrow-1
+    title: 箭头格式逐字稿（结算流程评审）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析“说话人> 内容”格式逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三> 今天评审新版结算流程
+
+            李四> 结算对账有两处不一致需要确认
+
+            张三> 决定先冻结上线，对账问题查清后再发
+
+            李四> 我周五前给出对账报告\n"
+      params:
+        title: 结算流程评审
+        date: 2026-10-26
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 李四
+          weight: 2
+        - type: contains
+          text: "## 待办事项"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：结算流程评审"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-arrow-2
+    title: 箭头格式逐字稿（退款流程评审）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析“说话人> 内容”格式逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "郑和> 今天评审新版退款流程
+
+            吴用> 结算对账有两处不一致需要确认
+
+            郑和> 决定先冻结上线，对账问题查清后再发
+
+            吴用> 我周五前给出对账报告\n"
+      params:
+        title: 退款流程评审
+        date: 2026-10-27
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 郑和
+          weight: 2
+        - type: contains
+          text: "## 待办事项"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：退款流程评审"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-english-1
+    title: 英文发言人逐字稿（Release Plan Sync）
+    tags:
+      - basic
+      - english
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析英文发言逐字稿并生成中文纪要
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "Alice: Let's review the release plan for version 2.0.
+
+            Bob: The API migration is done, but load testing is pending.
+
+            Alice: Decision: ship the beta next Monday.
+
+            Bob: I will finish the load test report by Friday.\n"
+      params:
+        title: Release Plan Sync
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Alice
+          weight: 2
+        - type: regex
+          pattern: (决议|决定|Decision)
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：Release Plan Sync"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-english-2
+    title: 英文发言人逐字稿（V3 Planning Sync）
+    tags:
+      - basic
+      - english
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析英文发言逐字稿并生成中文纪要
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "Carol: Let's review the release plan for version 3.0.
+
+            Dave: The API migration is done, but load testing is pending.
+
+            Carol: Decision: ship the beta next Monday.
+
+            Dave: I will finish the load test report by Friday.\n"
+      params:
+        title: V3 Planning Sync
+        date: 2026-10-29
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Carol
+          weight: 2
+        - type: regex
+          pattern: (决议|决定|Decision)
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：V3 Planning Sync"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-many-1
+    title: 多人进度会（周例会）
+    tags:
+      - basic
+      - multi-speaker
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析多人逐字稿并做发言人统计
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三：第 1 项进度汇报，本周推进顺利。
+
+            李四：第 2 项进度汇报，本周推进顺利。
+
+            王五：第 3 项进度汇报，本周推进顺利。
+
+            赵敏：第 4 项进度汇报，本周推进顺利。
+
+            陈晨：第 5 项进度汇报，本周推进顺利。
+
+            刘洋：第 6 项进度汇报，本周推进顺利。
+
+            孙工：第 7 项进度汇报，本周推进顺利。
+
+            周工：第 8 项进度汇报，本周推进顺利。"
+      params:
+        title: 周例会
+        date: 2026-10-26
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 张三
+          weight: 2
+        - type: regex
+          pattern: 发言条数 \| 8
+          weight: 2
+          note: 发言条数统计正确
+        - type: contains
+          text: "# 会议纪要：周例会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-many-2
+    title: 多人进度会（部门例会）
+    tags:
+      - basic
+      - multi-speaker
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析多人逐字稿并做发言人统计
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "韩梅：第 1 项进度汇报，本周推进顺利。
+
+            李四：第 2 项进度汇报，本周推进顺利。
+
+            王五：第 3 项进度汇报，本周推进顺利。
+
+            赵敏：第 4 项进度汇报，本周推进顺利。
+
+            陈晨：第 5 项进度汇报，本周推进顺利。
+
+            刘洋：第 6 项进度汇报，本周推进顺利。
+
+            孙工：第 7 项进度汇报，本周推进顺利。
+
+            周工：第 8 项进度汇报，本周推进顺利。"
+      params:
+        title: 部门例会
+        date: 2026-10-27
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 韩梅
+          weight: 2
+        - type: regex
+          pattern: 发言条数 \| 8
+          weight: 2
+          note: 发言条数统计正确
+        - type: contains
+          text: "# 会议纪要：部门例会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-topics-1
+    title: 多议题会议（三议题规划会）
+    tags:
+      - basic
+      - topics
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析多议题逐字稿并切分议题
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "议题一：登录改造
+
+            张三：登录接口需要支持双因素认证。
+
+            议题二：数据合规
+
+            李四：日志脱敏方案要落地。
+
+            议题三：性能优化
+
+            王五：列表接口慢查询需要加索引。
+
+            张三：决定三个议题本周内出方案。\n"
+      params:
+        title: 三议题规划会
+        date: 2026-10-26
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 张三
+          weight: 2
+        - type: contains
+          text: "## 议题与讨论"
+          weight: 2
+          note: 议题小节固定标题
+        - type: regex
+          pattern: (议题|讨论)
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：三议题规划会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-topics-2
+    title: 多议题会议（技术规划会）
+    tags:
+      - basic
+      - topics
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析多议题逐字稿并切分议题
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "议题一：登录改造
+
+            许飞：登录接口需要支持双因素认证。
+
+            议题二：数据合规
+
+            沈浪：日志脱敏方案要落地。
+
+            议题三：性能优化
+
+            白起：列表接口慢查询需要加索引。
+
+            许飞：决定三个议题本周内出方案。\n"
+      params:
+        title: 技术规划会
+        date: 2026-10-27
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 许飞
+          weight: 2
+        - type: contains
+          text: "## 议题与讨论"
+          weight: 2
+          note: 议题小节固定标题
+        - type: regex
+          pattern: (议题|讨论)
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：技术规划会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-todo-1
+    title: 待办分工会议（任务分工会）
+    tags:
+      - basic
+      - todo
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析分工逐字稿并抽取待办
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "主持人：本次会议要定下三件事。
+
+            张三：我负责输出接口文档，2026-11-05 前完成。
+
+            李四：我负责补单元测试，截止周五。
+
+            王五：我负责联系运维扩容，下周三前搞定。
+
+            主持人：决定按以上分工执行。\n"
+      params:
+        title: 任务分工会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 张三
+          weight: 2
+        - type: contains
+          text: "## 待办事项"
+          weight: 1
+        - type: regex
+          pattern: (截止|负责)
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：任务分工会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-todo-2
+    title: 待办分工会议（排期分工会）
+    tags:
+      - basic
+      - todo
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析分工逐字稿并抽取待办
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "主持人：本次会议要定下三件事。
+
+            郭靖：我负责输出接口文档，2026-11-05 前完成。
+
+            黄蓉：我负责补单元测试，截止周五。
+
+            洪七：我负责联系运维扩容，下周三前搞定。
+
+            主持人：决定按以上分工执行。\n"
+      params:
+        title: 排期分工会
+        date: 2026-10-29
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 郭靖
+          weight: 2
+        - type: contains
+          text: "## 待办事项"
+          weight: 1
+        - type: regex
+          pattern: (截止|负责)
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：排期分工会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-mixed-1
+    title: 混合格式逐字稿（发布准备会）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析混合书写格式的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "王五: 走一遍发布 checklist
+
+            赵敏> 回滚脚本已经验证过
+
+            [15:20] 陈晨：监控面板已配置完成
+
+            15:22 刘洋: 发布窗口定在周四晚上\n"
+      params:
+        title: 发布准备会
+        date: 2026-10-28
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 王五
+          weight: 2
+        - type: contains
+          text: "## 会议背景"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：发布准备会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-mixed-2
+    title: 混合格式逐字稿（上线准备会）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析混合书写格式的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "杨过: 走一遍发布 checklist
+
+            小龙女> 回滚脚本已经验证过
+
+            [15:20] 令狐冲：监控面板已配置完成
+
+            15:22 任盈盈: 发布窗口定在周四晚上\n"
+      params:
+        title: 上线准备会
+        date: 2026-10-29
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 杨过
+          weight: 2
+        - type: contains
+          text: "## 会议背景"
+          weight: 1
+        - type: contains
+          text: "# 会议纪要：上线准备会"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-nodate-1
+    title: 无时间戳逐字稿（年度预算讨论）
+    tags:
+      - basic
+      - no-timestamp
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析没有时间戳的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "张三：今天讨论年度预算。
+
+            李四：研发线预算增加 20%。
+
+            张三：决定预算方案下周提交财务。\n"
+      params:
+        title: 年度预算讨论
+        date: 2026-10-30
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 李四
+          weight: 2
+        - type: contains
+          text: （逐字稿没有时间戳）
+          weight: 2
+          note: 没有时间戳如实说明
+        - type: contains
+          text: "# 会议纪要：年度预算讨论"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-nodate-2
+    title: 无时间戳逐字稿（年度规划讨论）
+    tags:
+      - basic
+      - no-timestamp
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析没有时间戳的逐字稿
+      content: 请生成会议纪要。
+      files:
+        - path: input/transcript.txt
+          content: "刘备：今天讨论年度预算。
+
+            曹操：研发线预算增加 20%。
+
+            刘备：决定预算方案下周提交财务。\n"
+      params:
+        title: 年度规划讨论
+        date: 2026-10-31
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 刘备
+          weight: 2
+        - type: contains
+          text: （逐字稿没有时间戳）
+          weight: 2
+          note: 没有时间戳如实说明
+        - type: contains
+          text: "# 会议纪要：年度规划讨论"
+          weight: 2
+          note: 标题回显
+        - type: contains
+          text: "## 会议信息"
+          weight: 1
+        - type: contains
+          text: "## 发言统计"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

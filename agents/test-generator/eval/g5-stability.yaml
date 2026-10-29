@@ -1,0 +1,444 @@
+id: ts-b-test-generator-g5-stability
+agentId: test-generator
+group: g5-stability
+name: 单元测试生成 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线确定性模式），验证用例清单与骨架稳定一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 1
+      files:
+        - path: input/s1.py
+          content: "def checkout(cart):
+
+            \    return sum(cart)\n"
+      params:
+        src: input/s1.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: checkout
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 2
+      files:
+        - path: input/s2.py
+          content: "def login_user(name, pwd):
+
+            \    return bool(name and pwd)\n"
+      params:
+        src: input/s2.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: login_user
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 3
+      files:
+        - path: input/s3.py
+          content: "class Parser:
+
+            \    def parse(self, raw):
+
+            \        return raw.split()\n"
+      params:
+        src: input/s3.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: Parser
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 4
+      files:
+        - path: input/s4.py
+          content: "def retry_call(fn, times=3):
+
+            \    for _ in range(times):
+
+            \        try:
+
+            \            return fn()
+
+            \        except Exception:
+
+            \            continue
+
+            \    return None\n"
+      params:
+        src: input/s4.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: retry_call
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 5
+      files:
+        - path: input/s5.py
+          content: "def chunked(items, size):
+
+            \    for i in range(0, len(items), size):
+
+            \        yield items[i:i + size]\n"
+      params:
+        src: input/s5.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: chunked
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 6
+      files:
+        - path: input/s6.py
+          content: "def safe_div(a, b):
+
+            \    if b == 0:
+
+            \        raise ZeroDivisionError('b is zero')
+
+            \    return a / b\n"
+      params:
+        src: input/s6.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: safe_div
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 7
+      files:
+        - path: input/s7.py
+          content: "import json
+
+
+
+            def to_json(obj):
+
+            \    return json.dumps(obj, ensure_ascii=False)\n"
+      params:
+        src: input/s7.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: to_json
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 8
+      files:
+        - path: input/s8.py
+          content: "class Queue:
+
+            \    def __init__(self):
+
+            \        self.items = []
+
+
+            \    def push(self, x):
+
+            \        self.items.append(x)
+
+
+            \    def pop(self):
+
+            \        return self.items.pop(0)\n"
+      params:
+        src: input/s8.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: Queue
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 9
+      files:
+        - path: input/s9.py
+          content: "async def run_job(job):
+
+            \    return await job.execute()\n"
+      params:
+        src: input/s9.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: run_job
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证测试计划与骨架稳定
+      content: 稳定性样本 10
+      files:
+        - path: input/s10.py
+          content: "def normalize(text):
+
+            \    return text.strip().lower()\n"
+      params:
+        src: input/s10.py
+        framework: pytest
+        coverage: 公开函数
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: normalize
+          weight: 2
+          note: 确定性对象清单稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

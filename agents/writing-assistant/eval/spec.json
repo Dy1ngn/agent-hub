@@ -1,0 +1,628 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型写作润色",
+      "description": "典型中文/英文稿件的完整润色链路（文本体检 + 模型改写 + 逐句对照），产出润色报告",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-product",
+          "title": "产品文案润色（{title}）",
+          "tags": ["basic", "copywriting"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这段产品文案，让它更清晰有说服力",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "音箱文案", "tone": "热情", "audience": "消费者", "doc": "其实我觉得我们的音箱基本上音质还是挺好的，然后它的续航也比较长吧，反正就是你用了就知道了，真的是非常不错的一个产品。" },
+            { "title": "耳机文案", "tone": "热情", "audience": "消费者", "doc": "这款耳机我觉得降噪效果真的还行，然后戴久了耳朵也不疼，反正我觉得挺值的，大家可以试试看。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1, "note": "产出标准润色报告" },
+              { "type": "contains", "text": "评分卡", "weight": 1, "note": "体检评分章节存在" },
+              { "type": "contains", "text": "改写稿", "weight": 1, "note": "改写稿章节存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-email",
+          "title": "商务邮件润色（{title}）",
+          "tags": ["basic", "email"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这封邮件，让它更正式得体",
+            "content": "{doc}",
+            "params": { "mode": "formal", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "催办邮件", "tone": "坚定", "audience": "合作伙伴", "doc": "你们那个合同的事情麻烦快点弄一下吧，我们这边其实已经等了很久了，最好这周就搞定，不然大家都很麻烦。" },
+            { "title": "致歉邮件", "tone": "诚恳", "audience": "客户", "doc": "不好意思啊，我们的系统昨天出了点问题，然后可能影响到你们了，我们会尽快修好的，实在抱歉。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-weekly",
+          "title": "周报润色（{title}）",
+          "tags": ["basic", "report"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这篇周报，让表达更专业简洁",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "研发周报", "tone": "专业", "audience": "直属领导", "doc": "这周其实主要就是把接口联调了一下，然后还处理了几个线上问题，感觉进度还行吧，下周继续把剩下的做完。" },
+            { "title": "运营周报", "tone": "专业", "audience": "直属领导", "doc": "本周数据我觉得整体还可以，然后活动那边效果一般，基本上就是保持现状，下周打算试试新的渠道。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-notice",
+          "title": "公告润色（{title}）",
+          "tags": ["basic", "notice"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这则公告，让信息清晰明确",
+            "content": "{doc}",
+            "params": { "mode": "formal", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "停机公告", "tone": "正式", "audience": "全体用户", "doc": "那个系统要升级，所以本周六晚上可能会有点不稳定，大家最好提前保存一下东西，反正就是注意一下就行。" },
+            { "title": "搬迁公告", "tone": "正式", "audience": "全体员工", "doc": "办公室要搬了，下个月开始我们就要去新的地方上班了，具体的工位安排后面会通知大家。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-techdoc",
+          "title": "技术文档润色（{title}）",
+          "tags": ["basic", "tech"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这段技术说明，让表述准确流畅",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "部署说明", "tone": "专业", "audience": "开发者", "doc": "部署的时候你先要把镜像弄好，然后推上去，反正就是按照那个流程走就行了，出问题再看日志吧。" },
+            { "title": "接口说明", "tone": "专业", "audience": "开发者", "doc": "这个接口其实传的参数也不多，基本上就是把 id 传进来就行，然后返回的数据自己看着处理一下。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-social",
+          "title": "社交媒体润色（{title}）",
+          "tags": ["basic", "social"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这条社交媒体文案，让它更有感染力",
+            "content": "{doc}",
+            "params": { "mode": "casual", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "新品预告", "tone": "活泼", "audience": "年轻用户", "doc": "新东西要来了！其实憋了好久终于可以说了，然后这次是真的下了功夫的，大家到时候看就知道了。" },
+            { "title": "活动预告", "tone": "活泼", "audience": "粉丝", "doc": "周六有活动，反正就是挺好玩的，然后还有小礼物，来不来你们自己看吧哈哈。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-resume",
+          "title": "简历自述润色（{title}）",
+          "tags": ["basic", "resume"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这段简历自述，突出成果与能力",
+            "content": "{doc}",
+            "params": { "mode": "rewrite", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "五年经验", "tone": "自信", "audience": "招聘经理", "doc": "我做过很多项目吧，基本上后端的东西都搞过，然后带过几个人，反正就是经验还蛮多的，学东西也快。" },
+            { "title": "应届生", "tone": "自信", "audience": "招聘经理", "doc": "我在学校其实参加过一些比赛，然后实习的时候也做过一点开发，我觉得我还可以，愿意学习。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-support",
+          "title": "客服回复润色（{title}）",
+          "tags": ["basic", "support"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这条客服回复，让语气更耐心专业",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "退款回复", "tone": "耐心", "audience": "投诉客户", "doc": "这个退款的事情我看了一下，应该是可以退的，然后大概要几个工作日吧，你等等就好了。" },
+            { "title": "使用答疑", "tone": "耐心", "audience": "新用户", "doc": "你说的那个功能其实就在设置里面，然后点进去就能看到了，找不到的话再找我。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-speech",
+          "title": "演讲稿润色（{title}）",
+          "tags": ["basic", "speech"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这段演讲稿，让表达更有节奏和力量",
+            "content": "{doc}",
+            "params": { "mode": "expand", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "年会致辞", "tone": "鼓舞", "audience": "全体员工", "doc": "这一年大家都不容易，然后我们还是挺过来了，反正明年继续加油吧，就这样。" },
+            { "title": "发布会开场", "tone": "鼓舞", "audience": "媒体与嘉宾", "doc": "欢迎各位来参加今天的发布会，其实我们准备了很久，然后希望大家喜欢，接下来就开始吧。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-en",
+          "title": "英文短文润色（{title}）",
+          "tags": ["basic", "english"],
+          "input": {
+            "kind": "text",
+            "goal": "润色这段英文文字，让它更地道",
+            "content": "{doc}",
+            "params": { "mode": "{mode}", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "title": "英文邮件", "mode": "polish", "tone": "professional", "audience": "team", "doc": "Hi guys, I think maybe we should like move the meeting because something came up and yeah it is kind of important so let me know." },
+            { "title": "英文说明", "mode": "formal", "tone": "neutral", "audience": "customers", "doc": "So basically you just install it and then it kind of works, but if it doesnt you can just restart I guess." }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "改写稿", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：模式 / 语言 / 规模 / 参数组合",
+      "description": "不同改写模式、语言、文本规模与语气/读者参数组合下的润色表现（模型改写链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-mode-{n}",
+          "title": "改写模式变体（{mode}）",
+          "tags": ["variation", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "按指定改写模式润色文本",
+            "content": "{doc}",
+            "params": { "mode": "{mode}", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "mode": "polish", "tone": "自然", "audience": "读者", "doc": "其实这个方案我觉得还行，然后成本也不高，基本上可以先试一下看看效果。" },
+            { "n": "2", "mode": "rewrite", "tone": "自然", "audience": "读者", "doc": "其实这个方案我觉得还行，然后成本也不高，基本上可以先试一下看看效果。" },
+            { "n": "3", "mode": "expand", "tone": "自然", "audience": "读者", "doc": "其实这个方案我觉得还行，然后成本也不高，基本上可以先试一下看看效果。" },
+            { "n": "4", "mode": "shorten", "tone": "自然", "audience": "读者", "doc": "其实这个方案我觉得还行，然后成本也不高，基本上可以先试一下看看效果，我个人认为整体的风险其实是可控的，所以建议先小范围试点再看要不要全面推开。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "改写模式：{mode}", "weight": 2, "note": "报告元信息记录改写模式" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-lang-{n}",
+          "title": "语言变体（{title}）",
+          "tags": ["variation", "language"],
+          "input": {
+            "kind": "text",
+            "goal": "不同语言的文本都要正常润色",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "纯中文", "tone": "自然", "audience": "读者", "doc": "我觉得这个想法挺好的，然后我们可以上手做做看，反正试错的成本也不算高。" },
+            { "n": "2", "title": "纯英文", "tone": "natural", "audience": "readers", "doc": "I feel like this idea is pretty good and we should maybe just try it and see what happens." },
+            { "n": "3", "title": "中英混合", "tone": "自然", "audience": "读者", "doc": "我觉得这个 design 其实挺好的，然后我们可以先做个 prototype 看看效果再说。" },
+            { "n": "4", "title": "带 emoji 文案", "tone": "活泼", "audience": "粉丝", "doc": "新品来了！🎉 其实憋了好久，然后这次是真的下了功夫，大家快来试试看吧！✨" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "regex", "pattern": "\\| 字符数 \\| [0-9]+ \\|", "weight": 1, "note": "评分卡统计格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-scale-{n}",
+          "title": "文本规模变体（{title}）",
+          "tags": ["variation", "scale"],
+          "input": {
+            "kind": "text",
+            "goal": "不同规模的文本都要正常润色",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "单句", "tone": "自然", "audience": "读者", "doc": "今天天气不错。" },
+            { "n": "2", "title": "短段", "tone": "自然", "audience": "读者", "doc": "这个功能其实挺好用的，然后上手也不难，基本上看看说明就会了。" },
+            { "n": "3", "title": "中等文稿", "tone": "专业", "audience": "读者", "doc": "关于这次改版，我简单说几点想法。首先，我觉得整体的方向是没有问题的，然后交互上还可以再简化一下。其次，文案这块其实还有优化空间，有些表述我觉得偏口语化了。最后，时间安排上建议留出缓冲，反正宁可慢一点也别出问题。" },
+            { "n": "4", "title": "较长文稿", "tone": "专业", "audience": "读者", "doc": "季度复盘。这个季度我们其实做了很多事情，然后有些做得不错，有些也踩了坑，我简单总结一下。\n第一点，产品方面，新功能的上线节奏基本上是跟上了计划的，然后用户反馈也还行，但是留存数据我觉得还有提升空间。\n第二点，技术方面，我们完成了服务拆分，然后把历史的坏账清掉了一部分，反正技术债这个事情急不来，慢慢还吧。\n第三点，团队方面，新人的成长速度挺快的，然后老同学也都比较稳定，我觉得氛围不错。\n第四点，下季度的计划，主要是围绕增长来做，然后把体验再打磨一下，基本上就是这两个方向。\n总之，这个季度算是平稳落地，然后下季度继续加油。\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "regex", "pattern": "\\| 句数 \\| [0-9]+ \\|", "weight": 1, "note": "评分卡统计格式稳定" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-audience-{n}",
+          "title": "语气/读者参数变体（{tone} × {audience}）",
+          "tags": ["variation", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "按指定语气与目标读者润色文本",
+            "content": "{doc}",
+            "params": { "mode": "{mode}", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "mode": "polish", "tone": "温和", "audience": "产品经理", "doc": "这个需求我觉得可以再商量一下，然后排期上可能要挪一挪，反正大家看怎么平衡吧。" },
+            { "n": "2", "mode": "formal", "tone": "坚定", "audience": "高管", "doc": "这个事情我觉得不能再拖了，然后资源也要尽快到位，不然季度目标肯定完不成。" },
+            { "n": "3", "mode": "casual", "tone": "幽默", "audience": "开发者", "doc": "这个 bug 其实挺离谱的，然后修起来也简单，反正改一行就好了，笑死。" },
+            { "n": "4", "mode": "polish", "tone": "诚恳", "audience": "客户", "doc": "抱歉给您带来不便，其实这个问题我们已经定位了，然后今天就能修复，希望您再给我们一次机会。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "目标读者：{audience}", "weight": 2, "note": "报告元信息记录目标读者" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-format-{n}",
+          "title": "文稿格式变体（{title}）",
+          "tags": ["variation", "format"],
+          "input": {
+            "kind": "text",
+            "goal": "不同格式的文稿都要正常润色",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "{tone}", "audience": "{audience}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "markdown 标题", "tone": "专业", "audience": "读者", "doc": "# 计划\n\n其实这个季度的计划不多，然后重点就两件事。\n\n## 一\n\n把体验做上去。\n\n## 二\n\n把成本降下来。\n" },
+            { "n": "2", "title": "列表为主", "tone": "专业", "audience": "读者", "doc": "本周待办：\n\n- 其实先把方案写完\n- 然后再对齐一下排期\n- 最后把风险清单更新了\n" },
+            { "n": "3", "title": "编号段落", "tone": "专业", "audience": "读者", "doc": "1. 我觉得第一步先调研。\n2. 然后第二步做原型。\n3. 反正第三步再看数据决定要不要继续。\n" },
+            { "n": "4", "title": "纯文本口语", "tone": "自然", "audience": "朋友", "doc": "就是那个事啊，我觉得可以弄，然后弄完了再说呗，反正也不着急，慢慢来就好。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 1 },
+              { "type": "contains", "text": "修改对照", "weight": 1, "note": "逐句对照章节存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 超短 / 超长 / 极端参数",
+      "description": "空输入（优雅拒绝）、超短、超长与极端参数组合下的稳定表现（离线体检模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": ["edge", "offline"],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出体检报告",
+            "content": "{doc}",
+            "params": { "mode": "{mode}", "tone": "{tone}", "audience": "{audience}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "单字", "mode": "polish", "tone": "", "audience": "", "doc": "好" },
+            { "n": "2", "title": "纯标点", "mode": "polish", "tone": "", "audience": "", "doc": "……" },
+            { "n": "3", "title": "单句", "mode": "polish", "tone": "自然", "audience": "读者", "doc": "今天天气不错。" },
+            { "n": "4", "title": "纯英文单词", "mode": "polish", "tone": "", "audience": "", "doc": "Hello" },
+            { "n": "5", "title": "emoji 文本", "mode": "casual", "tone": "", "audience": "", "doc": "\ud83d\ude00\ud83d\ude80" },
+            { "n": "6", "title": "重复词", "mode": "shorten", "tone": "", "audience": "", "doc": "哈哈哈哈哈哈哈哈哈哈" },
+            { "n": "7", "title": "无标点长串", "mode": "polish", "tone": "", "audience": "", "doc": "这是一段完全没有标点的很长的文字这是一段完全没有标点的很长的文字这是一段完全没有标点的很长的文字" },
+            { "n": "8", "title": "超长单句", "mode": "polish", "tone": "", "audience": "", "doc": "这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句这是一句非常长的单句" },
+            { "n": "9", "title": "极短英文", "mode": "polish", "tone": "", "audience": "", "doc": "OK." }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 2, "note": "边界输入仍产出润色报告" },
+              { "type": "contains", "text": "评分卡", "weight": 1, "note": "体检章节仍存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g3-empty-{n}",
+          "title": "空输入：{title}",
+          "tags": ["edge", "offline", "empty"],
+          "input": {
+            "kind": "text",
+            "goal": "空输入应优雅拒绝而不是崩溃",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "", "audience": "", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "空文本（预期优雅报错退出，无 Traceback）", "doc": "" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "not_contains", "text": "Traceback", "weight": 1, "note": "空输入按设计以中文提示优雅退出（无报告、非零退出属预期），不允许 Python 崩栈" }
+            ]
+          }
+        },
+        {
+          "id": "g3-extreme-{n}",
+          "title": "极端参数：{title}",
+          "tags": ["edge", "offline", "params"],
+          "input": {
+            "kind": "text",
+            "goal": "极端参数组合下也要优雅产出",
+            "content": "{doc}",
+            "params": { "mode": "{mode}", "tone": "{tone}", "audience": "{audience}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "shorten + 超短文本", "mode": "shorten", "tone": "", "audience": "", "doc": "好" },
+            { "n": "2", "title": "expand + 超长文本", "mode": "expand", "tone": "", "audience": "", "doc": "这份文档的内容比较长，主要是为了测试扩写模式在长文本下的表现。文档包含多个段落，每个段落讨论一个主题。第一段讨论目标，第二段讨论计划，第三段讨论风险，第四段讨论总结。整体来看文档结构完整，用于测试的目的很明确。" },
+            { "n": "3", "title": "formal + 空语气空读者", "mode": "formal", "tone": "", "audience": "", "doc": "这个事情我觉得要认真对待，然后尽快给出结论。" },
+            { "n": "4", "title": "casual + 空语气空读者", "mode": "casual", "tone": "", "audience": "", "doc": "这个事情我觉得要认真对待，然后尽快给出结论。" },
+            { "n": "5", "title": "rewrite + 超长语气串", "mode": "rewrite", "tone": "非常非常正式且严肃稳重专业可靠值得信赖一丝不苟精益求精追求卓越注重细节", "audience": "评审委员会", "doc": "项目申请书。本项目旨在解决长期存在的效率问题。" },
+            { "n": "6", "title": "polish + 超长读者串", "mode": "polish", "tone": "专业", "audience": "对产品体验有极高要求的核心用户群体以及长期关注我们的行业观察者们", "doc": "新版本说明。本次更新主要优化了启动速度与稳定性。" },
+            { "n": "7", "title": "polish + 单句", "mode": "polish", "tone": "自然", "audience": "读者", "doc": "会议改到下周三。" },
+            { "n": "8", "title": "formal + emoji 文本", "mode": "formal", "tone": "正式", "audience": "客户", "doc": "感谢您的支持！🎉 我们会继续努力！✨" },
+            { "n": "9", "title": "casual + 纯标点", "mode": "casual", "tone": "幽默", "audience": "朋友", "doc": "！！！。。。？？？" },
+            { "n": "10", "title": "expand + 单字", "mode": "expand", "tone": "自然", "audience": "读者", "doc": "好" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 2, "note": "极端参数仍产出润色报告" },
+              { "type": "contains", "text": "评分卡", "weight": 1, "note": "体检章节仍存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形 / 乱码 / 编码异常输入",
+      "description": "乱码、控制字符、零宽字符、格式损坏等异常输入下不崩溃、优雅降级（离线体检模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": ["robust", "offline"],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "", "audience": "", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "mojibake 乱码", "doc": "鐑傛嵁鏂囨。閿欒緶銆傝繖鏄حاض涔辩爜銆傛嵁鏂囨。閿欒緶銆傛嵁鏂囨。\n" },
+            { "n": "2", "title": "控制字符", "doc": "a\u0007b\u0007c\u0007\n" },
+            { "n": "3", "title": "零宽字符", "doc": "a\u200bb\u200cc\u200dd\n" },
+            { "n": "4", "title": "emoji 与变体选择符", "doc": "❤️‍🔥😀👍🏽🚀✨\n" },
+            { "n": "5", "title": "RTL 文本", "doc": "\u05e9\u05dc\u05d5\u05dd \u05e2\u05d5\u05dc\u05dd \u0645\u062b\u0627\u0644 \u0639\u0644\u0649 \u0627\u0644\u0643\u0648\u062f\n" },
+            { "n": "6", "title": "未闭合引号括号", "doc": "他说：\"这是一段没有结束的引号。（(（[[[\n" },
+            { "n": "7", "title": "混合换行符", "doc": "第一行\r\n第二行\r第三行\n" },
+            { "n": "8", "title": "重复标点 50 次", "doc": "啊啊啊啊啊啊啊啊啊啊！！！！！！！！！！。。。。。。。。。。？？？？？？？？？？\n" },
+            { "n": "9", "title": "HTML 标签", "doc": "<div><p>hello &amp; world</p><script>var x = 1;</script></div>\n" },
+            { "n": "10", "title": "Markdown 代码块嵌套", "doc": "# 文档\n\n```python\nprint('```')\n```\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 2, "note": "异常输入仍产出润色报告" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g4-encoding-{n}",
+          "title": "编码/字符异常：{title}",
+          "tags": ["robust", "offline", "encoding"],
+          "input": {
+            "kind": "text",
+            "goal": "编码异常输入不能让工具崩溃",
+            "content": "{doc}",
+            "params": { "mode": "polish", "tone": "", "audience": "", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "BOM 开头", "doc": "\ufeff带 BOM 的文本内容。\n" },
+            { "n": "2", "title": "全角空格", "doc": "全角\u3000空格\u3000测试\n" },
+            { "n": "3", "title": "制表符混合", "doc": "列一\t列二\t\t列三\n值一  值二\t值三\n" },
+            { "n": "4", "title": "数学符号", "doc": "∑∫√∞≠≤≥±×÷π\n" },
+            { "n": "5", "title": "韩文/日文混合", "doc": "안녕하세요 こんにちは 你好\n" },
+            { "n": "6", "title": "零宽连接符与变体选择符", "doc": "a\u200db\ufe0fc\u200dd\n" },
+            { "n": "7", "title": "不成对括号", "doc": "（(（[[[{{{\n" },
+            { "n": "8", "title": "JSON 片段", "doc": "{\"name\": \"测试\", \"value\": 123,}\n" },
+            { "n": "9", "title": "超长单词", "doc": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" },
+            { "n": "10", "title": "重复单词垃圾", "doc": "foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 2, "note": "编码异常仍产出润色报告" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 150, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复调用 10 次（离线体检模式），验证输出稳定、不崩溃、结构一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：样本 {n}",
+          "tags": ["stability", "offline"],
+          "repeat": 10,
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证润色输出稳定",
+            "content": "{doc}",
+            "params": { "mode": "{mode}", "tone": "", "audience": "", "offline": true }
+          },
+          "rows": [
+            { "n": "1", "mode": "polish", "phrase": "音质还是挺好的", "doc": "其实我觉得这个音箱的音质还是挺好的，然后续航也不错。" },
+            { "n": "2", "mode": "polish", "phrase": "接口联调", "doc": "这周主要做了接口联调，然后处理了几个线上问题。" },
+            { "n": "3", "mode": "rewrite", "phrase": "move the meeting", "doc": "I think maybe we should move the meeting because something came up." },
+            { "n": "4", "mode": "formal", "phrase": "合同的事情", "doc": "你们那个合同的事情麻烦快点弄一下，我们已经等了很久。" },
+            { "n": "5", "mode": "casual", "phrase": "周六有活动", "doc": "周六有活动，反正就是挺好玩的，来不来你们自己看吧。" },
+            { "n": "6", "mode": "shorten", "phrase": "风险可控", "doc": "这个方案成本不高，我个人认为风险可控，建议先小范围试点再推开。" },
+            { "n": "7", "mode": "expand", "phrase": "年会致辞", "doc": "年会致辞。这一年大家都不容易，我们挺过来了。" },
+            { "n": "8", "mode": "polish", "phrase": "系统要升级", "doc": "那个系统要升级，本周六晚上可能会不稳定，大家注意保存。" },
+            { "n": "9", "mode": "polish", "phrase": "降噪效果", "doc": "这款耳机的降噪效果不错，戴久了耳朵也不疼。" },
+            { "n": "10", "mode": "rewrite", "phrase": "项目申请书", "doc": "项目申请书。本项目旨在解决长期存在的效率问题。" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "写作润色报告", "weight": 2 },
+              { "type": "contains", "text": "评分卡", "weight": 1 },
+              { "type": "contains", "text": "{phrase}", "weight": 2, "note": "离线模式改写稿=原文，原文特征句确定性出现在报告中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

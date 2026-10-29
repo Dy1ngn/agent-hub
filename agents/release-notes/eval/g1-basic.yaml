@@ -1,0 +1,450 @@
+id: ts-b-release-notes-g1-basic
+agentId: release-notes
+group: g1-basic
+name: 发布说明生成 · 基础功能：典型提交列表的发布说明
+description: 功能/修复/破坏性/文档/性能/重构/非常规/依赖等典型提交组合，走「解析分组 + semver 推断 + 模型润色」完整链路（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-basic-1
+    title: 发布说明样本 1
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "feat(auth): 增加登录失败重试限制
+
+            fix(auth): 修复空指针导致的登录崩溃
+
+            feat(ui): 新增深色模式开关
+
+            fix(pay): 修复重复扣款问题
+
+            docs: 更新部署文档\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-2
+    title: 发布说明样本 2
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "feat(api)!: 移除 v1 旧接口
+
+            feat(api): 新增 v2 接口
+
+            fix(api): 修复分页参数校验\n"
+      params:
+        from: v2.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: 破坏性变更
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-3
+    title: 发布说明样本 3
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "docs: 更新 README 快速开始
+
+            docs(api): 补充接口文档示例
+
+            docs: 修正错别字\n"
+      params:
+        from: v1.2.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 文档"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-4
+    title: 发布说明样本 4
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "perf(db): 优化列表查询索引
+
+            perf(cache): 增加热点数据缓存
+
+            fix(db): 修复慢查询\n"
+      params:
+        from: v1.2.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 性能"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-5
+    title: 发布说明样本 5
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "refactor(core): 拆分订单状态机
+
+            refactor(utils): 统一错误处理
+
+            feat(core): 新增状态机事件总线\n"
+      params:
+        from: v1.2.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 重构"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-6
+    title: 发布说明样本 6
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "fix(module0): 修复第 0 个历史问题
+
+            fix(module1): 修复第 1 个历史问题
+
+            fix(module2): 修复第 2 个历史问题
+
+            fix(module3): 修复第 3 个历史问题
+
+            fix(module4): 修复第 4 个历史问题
+
+            fix(module5): 修复第 5 个历史问题
+
+            fix(module6): 修复第 6 个历史问题
+
+            fix(module7): 修复第 7 个历史问题
+
+            fix(module8): 修复第 8 个历史问题
+
+            fix(module9): 修复第 9 个历史问题
+
+            fix(module10): 修复第 10 个历史问题
+
+            fix(module11): 修复第 11 个历史问题
+
+            fix(module12): 修复第 12 个历史问题
+
+            fix(module13): 修复第 13 个历史问题
+
+            fix(module14): 修复第 14 个历史问题
+
+            fix(module15): 修复第 15 个历史问题
+
+            fix(module16): 修复第 16 个历史问题
+
+            fix(module17): 修复第 17 个历史问题
+
+            fix(module18): 修复第 18 个历史问题
+
+            fix(module19): 修复第 19 个历史问题"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 问题修复"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-7
+    title: 发布说明样本 7
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "改了点东西\n更新了一下配置\nfix something\n随便提交\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-8
+    title: 发布说明样本 8
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "feat(i18n): 新增多语言支持
+
+            fix(locale): 修复时区换算错误
+
+            feat(i18n): add English translation files\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-9
+    title: 发布说明样本 9
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增二维码登录"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-10
+    title: 发布说明样本 10
+    tags:
+      - release
+    repeat: 10
+    input:
+      kind: text
+      goal: 解析提交列表并生成分组发布说明（可选模型润色）
+      content: 为这批提交生成发布说明。
+      files:
+        - path: input/commits.txt
+          content: "build(deps): 升级 requests 到 2.31.0
+
+            chore(lock): 同步依赖锁文件
+
+            ci: 调整流水线超时时间\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 构建"
+          weight: 2
+          note: 确定性分组正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

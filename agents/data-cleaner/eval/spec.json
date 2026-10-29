@@ -1,0 +1,2094 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型表格质量体检",
+      "description": "缺失/重复/异常值/格式等典型质量问题的常规输入，走完整「确定性体检 + 模型解读」链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-missing-{n}",
+          "title": "缺失值体检（{fmt}）",
+          "tags": [
+            "basic",
+            "missing"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "体检表格的缺失值情况",
+            "content": "请对这份表格做质量体检。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "data.csv",
+              "content": "id,name,city,amount\n1,张三,北京,100\n2,,上海,250\n3,李四,,\n4,,,\n5,王五,广州,120\n",
+              "n": "1"
+            },
+            {
+              "fmt": "JSON",
+              "file": "data.json",
+              "content": "[{\"id\": 1, \"email\": \"a@example.com\", \"age\": 30}, {\"id\": 2, \"email\": \"\", \"age\": null}, {\"id\": 3, \"email\": \"c@example.com\"}, {\"id\": 4, \"email\": null, \"age\": 28}]",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(缺失值|缺失|空值)",
+                "weight": 2,
+                "note": "识别缺失值问题"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-dup-{n}",
+          "title": "重复行与疑似重复（{fmt}）",
+          "tags": [
+            "basic",
+            "duplicate"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "找出完全重复行与疑似重复记录",
+            "content": "请检查这份表格的重复情况。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "orders.csv",
+              "content": "order_id,user,amount\nA001,张三,100\nA002,李四,250\nA001,张三,100\nA003,王五,80\nA002,李四,250\n",
+              "n": "1"
+            },
+            {
+              "fmt": "TSV",
+              "file": "orders.tsv",
+              "content": "order_id\tuser\tamount\nB001\t张三\t100\nB002\t李四\t250\nB001\t张三\t100\nB001\t张三\t300\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(重复行|疑似重复|去重|完全重复)",
+                "weight": 2,
+                "note": "识别重复记录"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-outlier-{n}",
+          "title": "数值异常值检测（{fmt}）",
+          "tags": [
+            "basic",
+            "outlier"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "找出数值列的异常值",
+            "content": "请检查数值列有没有异常值。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "sales.csv",
+              "content": "day,amount\n1,100\n2,110\n3,95\n4,105\n5,98\n6,102\n7,12000\n8,99\n",
+              "n": "1"
+            },
+            {
+              "fmt": "JSON",
+              "file": "sales.json",
+              "content": "[{\"day\": 1, \"amount\": 50}, {\"day\": 2, \"amount\": 55}, {\"day\": 3, \"amount\": 48}, {\"day\": 4, \"amount\": 52}, {\"day\": 5, \"amount\": -9999}, {\"day\": 6, \"amount\": 51}]",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(异常值|IQR|z-?score|极端值)",
+                "weight": 2,
+                "note": "识别数值异常值"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-format-{n}",
+          "title": "格式不一致检测（{fmt}）",
+          "tags": [
+            "basic",
+            "format"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "找出空白、全角半角、日期格式等格式问题",
+            "content": "请检查格式一致性。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "users.csv",
+              "content": "name,signup\n 张三 ,2024-01-05\n李四,2024年2月6日\n王五 ,20240307\n赵六,04/08/2024\n",
+              "n": "1"
+            },
+            {
+              "fmt": "JSON",
+              "file": "users.json",
+              "content": "[{\"name\": \" 张三 \", \"signup\": \"2024-01-05\"}, {\"name\": \"李四 \", \"signup\": \"2024年2月6日\"}, {\"name\": \"王五\", \"signup\": \"20240307\"}]",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(前后空白|全角|日期格式混用|格式不一致)",
+                "weight": 2,
+                "note": "识别格式不一致"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-types-{n}",
+          "title": "列类型推断与统计（{fmt}）",
+          "tags": [
+            "basic",
+            "types"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "推断列类型并给出统计摘要",
+            "content": "请给出列类型与统计摘要。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "mixed.csv",
+              "content": "id,score,active,day,note\n1,95.5,true,2024-01-01,ok\n2,88.0,false,2024-01-02,good\n3,76.5,true,2024-01-03,nice\n4,91.0,false,2024-01-04,fine\n",
+              "n": "1"
+            },
+            {
+              "fmt": "JSON",
+              "file": "mixed.json",
+              "content": "[{\"id\": 1, \"score\": 1.5, \"active\": true, \"day\": \"2024-02-01\"}, {\"id\": 2, \"score\": 2.5, \"active\": false, \"day\": \"2024-02-02\"}, {\"id\": 3, \"score\": 3.5, \"active\": true, \"day\": \"2024-02-03\"}]",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "列类型",
+                "weight": 1,
+                "note": "输出列类型小节"
+              },
+              {
+                "type": "regex",
+                "pattern": "(整数|浮点数|布尔|日期|文本)",
+                "weight": 1,
+                "note": "推断出列类型"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-const-{n}",
+          "title": "常量列与类别分布（{fmt}）",
+          "tags": [
+            "basic",
+            "distribution"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "找出常量列并给出类别分布",
+            "content": "请检查有没有常量列。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "const.csv",
+              "content": "region,level,qty\n华东,A,10\n华东,A,20\n华东,A,30\n华东,A,40\n",
+              "n": "1"
+            },
+            {
+              "fmt": "JSON",
+              "file": "const.json",
+              "content": "[{\"region\": \"华北\", \"level\": \"B\", \"qty\": 5}, {\"region\": \"华北\", \"level\": \"B\", \"qty\": 7}, {\"region\": \"华北\", \"level\": \"B\", \"qty\": 9}]",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(常量列|类别分布|高基数列)",
+                "weight": 2,
+                "note": "识别常量列/分布"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-units-{n}",
+          "title": "数字带单位/千分位（{fmt}）",
+          "tags": [
+            "basic",
+            "format"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "找出带货币符号/千分位的数字",
+            "content": "请检查数字格式问题。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "price.csv",
+              "content": "item,price\n苹果,\"1,200\"\n香蕉,¥300\n橙子,450元\n梨,99\n",
+              "n": "1"
+            },
+            {
+              "fmt": "JSON",
+              "file": "price.json",
+              "content": "[{\"item\": \"苹果\", \"price\": \"1,200\"}, {\"item\": \"香蕉\", \"price\": \"¥300\"}, {\"item\": \"橙子\", \"price\": \"450元\"}]",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(千分位|货币符号|数字带单位|还原成纯数字)",
+                "weight": 2,
+                "note": "识别数字格式问题"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-clean-{n}",
+          "title": "干净表格（{fmt}）",
+          "tags": [
+            "basic",
+            "clean"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "对干净数据给出确认结论",
+            "content": "这份表格看起来没问题，请确认。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "clean.csv",
+              "content": "id,name,score\n1,张三,90\n2,李四,85\n3,王五,78\n4,赵六,92\n5,钱七,88\n",
+              "n": "1"
+            },
+            {
+              "fmt": "JSON",
+              "file": "clean.json",
+              "content": "[{\"id\": 1, \"name\": \"张三\", \"score\": 90}, {\"id\": 2, \"name\": \"李四\", \"score\": 85}, {\"id\": 3, \"name\": \"王五\", \"score\": 78}]",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(数据整体干净|可以直接进入下一步|没有需要清洗)",
+                "weight": 2,
+                "note": "确认数据干净"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-jsoncols-{n}",
+          "title": "JSON 列式结构（{fmt}）",
+          "tags": [
+            "basic",
+            "json"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "体检列式 JSON 数据",
+            "content": "请体检这份 JSON 数据。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "列式",
+              "file": "cols.json",
+              "content": "{\"name\": [\"张三\", \"李四\", \"王五\", \"\"], \"score\": [90, 85, 78, 88]}",
+              "n": "1"
+            },
+            {
+              "fmt": "混合缺失",
+              "file": "cols2.json",
+              "content": "{\"a\": [\"x\", \"y\", \"\"], \"b\": [1, 2, 3], \"c\": [\"m\", null, \"o\"]}",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)json",
+                "weight": 1,
+                "note": "识别 JSON 数据源"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-mixed-{n}",
+          "title": "多问题混合表格（{fmt}）",
+          "tags": [
+            "basic",
+            "mixed"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "一次性找出缺失、重复、异常值等多种问题",
+            "content": "请做一次全面体检。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "fmt": "CSV",
+              "file": "messy.csv",
+              "content": "id,name,amount\n1,张三,100\n2,,250\n3,李四,80\n1,张三,100\n5,王五,30000\n6,,\n",
+              "n": "1"
+            },
+            {
+              "fmt": "TSV",
+              "file": "messy.tsv",
+              "content": "id\tname\tamount\n1\t张三\t100\n2\t\t250\n3\t李四\t\n1\t张三\t100\n5\t王五\t90000\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "缺失值",
+                "weight": 1,
+                "note": "识别出预期的质量问题"
+              },
+              {
+                "type": "regex",
+                "pattern": "(重复行|异常值)",
+                "weight": 1,
+                "note": "识别出预期的质量问题"
+              },
+              {
+                "type": "suggestions_at_least",
+                "value": 1,
+                "weight": 1,
+                "target": "suggestions",
+                "note": "建议小节至少给出 1 条建议"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：格式 / 规模 / 结构",
+      "description": "TSV、非逗号分隔、宽表、长表、中文列名、日期列、稀疏表、嵌套 JSON 等输入形态变体（模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-tsv-{n}",
+          "title": "TSV 制表符输入（{n}）",
+          "tags": [
+            "variation",
+            "tsv"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "体检 TSV 表格",
+            "content": "这是制表符分隔的表格。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "data.tsv",
+              "content": "id\tname\tscore\n1\t张三\t88\n2\t\t90\n3\t李四\t76\n4\t王五\t\n",
+              "n": "1"
+            },
+            {
+              "file": "data2.tsv",
+              "content": "id\tcity\tamount\n1\t北京\t100\n2\t上海\t250\n3\t北京\t80\n4\t北京\t100\n5\t广州\t120\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)tsv|制表",
+                "weight": 1,
+                "note": "识别 TSV 数据源"
+              },
+              {
+                "type": "regex",
+                "pattern": "(问题|清单|建议)",
+                "weight": 1,
+                "note": "给出问题与建议"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-delims-{n}",
+          "title": "非逗号分隔符（{n}）",
+          "tags": [
+            "variation",
+            "delimiter"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "体检分号/竖线分隔的表格",
+            "content": "分隔符不是逗号，请正确识别。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "semi.csv",
+              "content": "id;name;amount\n1;张三;100\n2;;250\n3;李四;80\n4;王五;120\n",
+              "n": "1"
+            },
+            {
+              "file": "pipe.csv",
+              "content": "id|name|amount\n1|张三|100\n2|李四|\n3|王五|80\n4||120\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(分隔符|;|\\|)",
+                "weight": 1,
+                "note": "识别非逗号分隔符"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-wide-{n}",
+          "title": "宽表多列（{n}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "体检 12 列宽表",
+            "content": "列比较多的表格。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "wide.csv",
+              "content": "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12\n7,14,21,28,35,42,49,56,63,70,77,84\n11,22,33,44,55,66,77,5,16,27,38,49\n13,26,39,52,65,78,12,25,38,51,64,77\n",
+              "n": "1"
+            },
+            {
+              "file": "wide2.csv",
+              "content": "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12\n11,22,33,44,55,66,77,5,16,27,38,49\n13,26,39,52,65,78,12,25,38,51,64,77\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "列类型",
+                "weight": 1,
+                "note": "逐列给出类型"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-tall-{n}",
+          "title": "长表 50 行（{n}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "体检 50 行表格",
+            "content": "行数比较多的表格。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "tall.csv",
+              "content": "id,name,amount,region\nr01,用户01,13,华东\nr02,用户02,26,华南\nr03,用户03,39,华东\nr04,用户04,52,华南\nr05,用户05,65,华东\nr06,用户06,78,华南\nr07,用户07,91,华东\nr08,用户08,104,华南\nr09,用户09,117,华东\nr10,用户10,130,华南\nr11,用户11,143,华东\nr12,用户12,156,华南\nr13,用户13,169,华东\nr14,用户14,182,华南\nr15,用户15,195,华东\nr16,用户16,208,华南\nr17,用户17,221,华东\nr18,用户18,234,华南\nr19,用户19,247,华东\nr20,用户20,260,华南\nr21,用户21,273,华东\nr22,用户22,286,华南\nr23,用户23,299,华东\nr24,用户24,312,华南\nr25,用户25,325,华东\nr26,用户26,338,华南\nr27,用户27,351,华东\nr28,用户28,364,华南\nr29,用户29,377,华东\nr30,用户30,390,华南\nr31,用户31,403,华东\nr32,用户32,416,华南\nr33,用户33,429,华东\nr34,用户34,442,华南\nr35,用户35,455,华东\nr36,用户36,468,华南\nr37,用户37,481,华东\nr38,用户38,494,华南\nr39,用户39,507,华东\nr40,用户40,520,华南\nr41,用户41,533,华东\nr42,用户42,546,华南\nr43,用户43,559,华东\nr44,用户44,572,华南\nr45,用户45,585,华东\nr46,用户46,598,华南\nr47,用户47,611,华东\nr48,用户48,624,华南\nr49,用户49,637,华东\nr50,用户50,650,华南\n",
+              "n": "1"
+            },
+            {
+              "file": "tall2.csv",
+              "content": "id,name,amount,region\nr01,用户01,13,华东\nr02,用户02,26,华南\nr03,用户03,39,华东\nr04,用户04,52,华南\nr05,用户05,65,华东\nr06,用户06,78,华南\nr07,用户07,91,华东\nr08,用户08,104,华南\nr09,用户09,117,华东\nr10,用户10,130,华南\nr11,用户11,143,华东\nr12,用户12,156,华南\nr13,用户13,169,华东\nr14,用户14,182,华南\nr15,用户15,195,华东\nr16,用户16,208,华南\nr17,用户17,221,华东\nr18,用户18,234,华南\nr19,用户19,247,华东\nr20,用户20,260,华南\nr21,用户21,273,华东\nr22,用户22,286,华南\nr23,用户23,299,华东\nr24,用户24,312,华南\nr25,用户25,325,华东\nr26,用户26,338,华南\nr27,用户27,351,华东\nr28,用户28,364,华南\nr29,用户29,377,华东\nr30,用户30,390,华南\nr31,用户31,403,华东\nr32,用户32,416,华南\nr33,用户33,429,华东\nr34,用户34,442,华南\nr35,用户35,455,华东\nr36,用户36,468,华南\nr37,用户37,481,华东\nr38,用户38,494,华南\nr39,用户39,507,华东\nr40,用户40,520,华南\nr41,用户41,533,华东\nr42,用户42,546,华南\nr43,用户43,559,华东\nr44,用户44,572,华南\nr45,用户45,585,华东\nr46,用户46,598,华南\nr47,用户47,611,华东\nr48,用户48,624,华南\nr49,用户49,637,华东\nr50,用户50,650,华南\n1,张三,10,华东\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "统计摘要",
+                "weight": 1,
+                "note": "输出统计摘要"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-cn-{n}",
+          "title": "中文列名与中文值（{n}）",
+          "tags": [
+            "variation",
+            "i18n"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "体检中文表头表格",
+            "content": "中文列名的表格。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "cn.csv",
+              "content": "姓名,城市,销售额\n张三,北京,1200\n李四,上海,\n王五,广州,800\n赵六,,950\n",
+              "n": "1"
+            },
+            {
+              "file": "cn2.csv",
+              "content": "订单号,客户名称,金额,下单日期\nD001,甲公司,\"1,200\",2024-01-01\nD002,乙公司,¥800,2024/02/01\nD003,,500,2024-03-01\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(姓名|城市|销售额|列类型)",
+                "weight": 1,
+                "note": "正确处理中文列名"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-num-{n}",
+          "title": "数值统计摘要（{n}）",
+          "tags": [
+            "variation",
+            "stats"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "给出数值列统计摘要",
+            "content": "关注数值列统计。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "num.csv",
+              "content": "x,y\n1,2.5\n2,3.5\n3,4.5\n4,5.5\n5,6.5\n6,7.5\n7,8.5\n8,9.5\n",
+              "n": "1"
+            },
+            {
+              "file": "num2.csv",
+              "content": "temp,humidity\n-5,30\n0,40\n5,50\n10,60\n15,70\n20,80\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "数值列",
+                "weight": 1,
+                "note": "输出数值列统计"
+              },
+              {
+                "type": "regex",
+                "pattern": "(最小值|最大值|均值|中位数)",
+                "weight": 1,
+                "note": "统计指标齐全"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-text-{n}",
+          "title": "文本与类别分布（{n}）",
+          "tags": [
+            "variation",
+            "stats"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "给出文本列分布",
+            "content": "关注文本列。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "text.csv",
+              "content": "title,category\n这是一个比较长的产品标题样本,电子\n短标题,服装\n另一个很长很长的产品标题用于测试长度分布,电子\n家居标题,家居\n电子标题,电子\n",
+              "n": "1"
+            },
+            {
+              "file": "text2.csv",
+              "content": "remark,level\n备注甲,A\n备注乙较长一些,B\n备注丙,A\n备注丁非常长的一段备注内容,C\n备注戊,B\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(文本长度分布|类别分布)",
+                "weight": 1,
+                "note": "输出文本/类别统计"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-date-{n}",
+          "title": "日期与日期时间列（{n}）",
+          "tags": [
+            "variation",
+            "date"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "识别日期列并统一日期格式",
+            "content": "表格里有日期列。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "dates.csv",
+              "content": "day,created\n2024-01-05,2024-01-05 08:30:00\n2024年2月6日,2024-02-06 09:15:00\n20240307,2024-03-07 18:45:00\n04/08/2024,2024-04-08 23:59:59\n",
+              "n": "1"
+            },
+            {
+              "file": "dates2.csv",
+              "content": "day,ts\n2024年5月1日,2024-05-01 00:00:00\n20240601,2024-06-01 12:00:00\n2024-07-01,2024-07-01 23:00:00\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(日期|日期时间)",
+                "weight": 1,
+                "note": "识别日期类列"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-sparse-{n}",
+          "title": "稀疏表大量缺失（{n}）",
+          "tags": [
+            "variation",
+            "missing"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "处理缺失率很高的表格",
+            "content": "缺失很严重。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "sparse.csv",
+              "content": "a,b,c\n1,,\n,,\n3,,\n,,\n5,,\n,,\n7,,\n,,\n9,,\n,,\n",
+              "n": "1"
+            },
+            {
+              "file": "sparse2.csv",
+              "content": "a,b,c,d\n1,x,,\n2,,y,\n3,,,z\n4,,,,\n5,x,,\n6,,y,\n7,,,z\n8,,,,\n",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "缺失值",
+                "weight": 2,
+                "note": "识别缺失值"
+              },
+              {
+                "type": "regex",
+                "pattern": "(严重|警告|提示)",
+                "weight": 1,
+                "note": "按严重度分级"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-jsonnest-{n}",
+          "title": "JSON 嵌套值（{n}）",
+          "tags": [
+            "variation",
+            "json"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "处理含嵌套结构的 JSON",
+            "content": "JSON 里有嵌套对象。",
+            "files": [
+              {
+                "path": "input/{file}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "file": "nest.json",
+              "content": "[{\"id\": 1, \"meta\": {\"tag\": \"a\"}, \"nums\": [1, 2], \"name\": \"甲\"}, {\"id\": 2, \"meta\": {\"tag\": \"b\"}, \"nums\": [3], \"name\": \"\"}]",
+              "n": "1"
+            },
+            {
+              "file": "nest2.json",
+              "content": "{\"id\": [1, 2, 3], \"meta\": [\"{\\\"tag\\\": \\\"a\\\"}\", \"\", \"{\\\"tag\\\": \\\"b\\\"}\"], \"name\": [\"甲\", \"乙\", \"丙\"]}",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 1,
+                "note": "产出标准质量报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 数据概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)json",
+                "weight": 1,
+                "note": "识别 JSON 数据源"
+              },
+              {
+                "type": "regex",
+                "pattern": "(问题|清单|概览)",
+                "weight": 1,
+                "note": "产出结构化报告"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 极小 / 极大 / 无数据",
+      "description": "空文件、仅表头、极大数值、超长单元格、BOM、emoji 等边界输入下的稳定产出（离线模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "边界输入也要产出可读报告，不允许崩溃",
+            "content": "样本：{title}",
+            "files": [
+              {
+                "path": "input/{fixfile}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "title": "空文件",
+              "file": "edge1.csv",
+              "fixfile": "edge1.csv",
+              "content": "",
+              "kw": "失败文件|空表|没有可体检",
+              "n": "1"
+            },
+            {
+              "title": "只有空行",
+              "file": "edge2.csv",
+              "fixfile": "edge2.csv",
+              "content": "\n\n\n",
+              "kw": "失败文件|空表",
+              "n": "2"
+            },
+            {
+              "title": "仅表头",
+              "file": "edge3.csv",
+              "fixfile": "edge3.csv",
+              "content": "a,b,c",
+              "kw": "列类型|数据概览",
+              "n": "3"
+            },
+            {
+              "title": "表头加单行",
+              "file": "edge4.csv",
+              "fixfile": "edge4.csv",
+              "content": "a,b\n1,2",
+              "kw": "数据概览|列类型",
+              "n": "4"
+            },
+            {
+              "title": "单列单值",
+              "file": "edge5.csv",
+              "fixfile": "edge5.csv",
+              "content": "x\n1",
+              "kw": "列类型|数据概览",
+              "n": "5"
+            },
+            {
+              "title": "无表头单行",
+              "file": "edge6.csv",
+              "fixfile": "edge6.csv",
+              "content": "1,2,3",
+              "kw": "列类型|数据概览",
+              "n": "6"
+            },
+            {
+              "title": "极大数值",
+              "file": "edge7.csv",
+              "fixfile": "edge7.csv",
+              "content": "v\n99999999999999999999\n100000000000000000000\n999999999999999999999\n",
+              "kw": "统计摘要|数值列",
+              "n": "7"
+            },
+            {
+              "title": "负数与零",
+              "file": "edge8.csv",
+              "fixfile": "edge8.csv",
+              "content": "v\n-99999\n0\n0.0001\n-1\n",
+              "kw": "统计摘要|数值列",
+              "n": "8"
+            },
+            {
+              "title": "超长单元格",
+              "file": "edge9.csv",
+              "fixfile": "edge9.csv",
+              "content": "note\n很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容很长的备注内容\n",
+              "kw": "文本长度分布|统计摘要",
+              "n": "9"
+            },
+            {
+              "title": "超多列",
+              "file": "edge10.csv",
+              "fixfile": "edge10.csv",
+              "content": "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25\n1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25\n",
+              "kw": "列类型",
+              "n": "10"
+            },
+            {
+              "title": "大面积缺失",
+              "file": "edge11.csv",
+              "fixfile": "edge11.csv",
+              "content": "a,b,c\nx,,\n\ny,,\n",
+              "kw": "缺失值|严重|警告",
+              "n": "11"
+            },
+            {
+              "title": "重复列名",
+              "file": "edge12.csv",
+              "fixfile": "edge12.csv",
+              "content": "a,a,a\n1,2,3\n4,5,6\n",
+              "kw": "列类型|数据概览",
+              "n": "12"
+            },
+            {
+              "title": "UTF-8 BOM 头",
+              "file": "edge13.csv",
+              "fixfile": "edge13.csv",
+              "content": "﻿id,name\n1,甲\n2,乙\n",
+              "kw": "数据概览|列类型",
+              "n": "13"
+            },
+            {
+              "title": "emoji 内容",
+              "file": "edge14.csv",
+              "fixfile": "edge14.csv",
+              "content": "name,face\n甲,😀\n乙,🚀\n",
+              "kw": "数据概览|文本",
+              "n": "14"
+            },
+            {
+              "title": "常量列",
+              "file": "edge15.csv",
+              "fixfile": "edge15.csv",
+              "content": "k,v\nsame,1\nsame,2\nsame,3\nsame,4\n",
+              "kw": "常量列",
+              "n": "15"
+            },
+            {
+              "title": "极端日期值",
+              "file": "edge16.csv",
+              "fixfile": "edge16.csv",
+              "content": "d\n9999-99-99\n0000-00-00\n2024-13-45\n",
+              "kw": "日期|文本|列类型",
+              "n": "16"
+            },
+            {
+              "title": "二值布尔列",
+              "file": "edge17.csv",
+              "fixfile": "edge17.csv",
+              "content": "flag\ntrue\nfalse\ntrue\nfalse\n",
+              "kw": "布尔|列类型",
+              "n": "17"
+            },
+            {
+              "title": "全重复行",
+              "file": "edge18.csv",
+              "fixfile": "edge18.csv",
+              "content": "a,b\n1,2\n1,2\n1,2\n1,2\n",
+              "kw": "重复行",
+              "n": "18"
+            },
+            {
+              "title": "无分隔符长文本",
+              "file": "edge19.csv",
+              "fixfile": "edge19.csv",
+              "content": "line\n这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容这是一段没有分隔符的很长的文本内容\n",
+              "kw": "文本长度分布|统计摘要",
+              "n": "19"
+            },
+            {
+              "title": "逗号引号单元格",
+              "file": "edge20.csv",
+              "fixfile": "edge20.csv",
+              "content": "a,b\n\"x,y\",2\n\"含引号\"\"的值\",3\n",
+              "kw": "数据概览|列类型",
+              "n": "20"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 2,
+                "note": "边界输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "边界输入的处理结果符合预期"
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形输入与坏 JSON",
+      "description": "列数不齐、未闭合引号、乱码、坏 JSON、NUL 字节、文件不存在等异常输入下优雅处理不崩溃（离线模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "异常输入不能让工具崩溃：要么正常分析，要么优雅报错并留下报告",
+            "content": "样本：{title}",
+            "files": [
+              {
+                "path": "input/{fixfile}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "title": "列数不齐",
+              "file": "bad1.csv",
+              "fixfile": "bad1.csv",
+              "content": "a,b\n1,2,3\n4\n5,6,7\n",
+              "kw": "数据概览|问题清单",
+              "n": "1"
+            },
+            {
+              "title": "引号未闭合",
+              "file": "bad2.csv",
+              "fixfile": "bad2.csv",
+              "content": "a,b\n\"x,2\ny,3\n",
+              "kw": "数据概览|列类型",
+              "n": "2"
+            },
+            {
+              "title": "分隔符混用",
+              "file": "bad3.csv",
+              "fixfile": "bad3.csv",
+              "content": "a;b\n1;2\nx,y\n3;4\n",
+              "kw": "数据概览|列类型",
+              "n": "3"
+            },
+            {
+              "title": "乱码字符",
+              "file": "bad4.csv",
+              "fixfile": "bad4.csv",
+              "content": "a,b\n鲤鲦鲪,2\n锟斤拷,3\n",
+              "kw": "数据概览|列类型",
+              "n": "4"
+            },
+            {
+              "title": "坏 JSON 截断",
+              "file": "bad5.json",
+              "fixfile": "bad5.json",
+              "content": "{\"a\": [1,2",
+              "kw": "失败文件|解析失败",
+              "n": "5"
+            },
+            {
+              "title": "坏 JSON 顶层标量数组",
+              "file": "bad6.json",
+              "fixfile": "bad6.json",
+              "content": "[1,2,3]",
+              "kw": "失败文件|空表",
+              "n": "6"
+            },
+            {
+              "title": "坏 JSON 顶层字符串",
+              "file": "bad7.json",
+              "fixfile": "bad7.json",
+              "content": "\"hello\"",
+              "kw": "失败文件|解析失败",
+              "n": "7"
+            },
+            {
+              "title": "空 JSON 对象",
+              "file": "bad8.json",
+              "fixfile": "bad8.json",
+              "content": "{}",
+              "kw": "失败文件|空表",
+              "n": "8"
+            },
+            {
+              "title": "NUL 字节",
+              "file": "bad9.csv",
+              "fixfile": "bad9.csv",
+              "content": "a,b\n1\u00001,2\n",
+              "kw": "失败文件|解析失败",
+              "n": "9"
+            },
+            {
+              "title": "文件不存在",
+              "file": "ghost.csv",
+              "fixfile": "unused.csv",
+              "content": "（这份夹具文件不应被读取：参数指向不存在的 ghost.csv）",
+              "expect_missing": true,
+              "kw": "失败文件|找不到文件",
+              "n": "10"
+            },
+            {
+              "title": "只有空白与制表符",
+              "file": "bad11.csv",
+              "fixfile": "bad11.csv",
+              "content": "   \t \n \t\n",
+              "kw": "失败文件|空表",
+              "n": "11"
+            },
+            {
+              "title": "控制字符 BEL",
+              "file": "bad12.csv",
+              "fixfile": "bad12.csv",
+              "content": "a,b\n1\u00071,2\nx\u0007y,3\n",
+              "kw": "数据概览|列类型",
+              "n": "12"
+            },
+            {
+              "title": "零宽字符",
+              "file": "bad13.csv",
+              "fixfile": "bad13.csv",
+              "content": "a,b\n1​,2\n3‌,4\n",
+              "kw": "数据概览|列类型",
+              "n": "13"
+            },
+            {
+              "title": "混合换行符",
+              "file": "bad14.csv",
+              "fixfile": "bad14.csv",
+              "content": "a,b\r1,2\r3,4\r\n5,6\n",
+              "kw": "数据概览|列类型",
+              "n": "14"
+            },
+            {
+              "title": "超长单行",
+              "file": "bad15.csv",
+              "fixfile": "bad15.csv",
+              "content": "note\n超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本\n",
+              "kw": "统计摘要|文本长度分布",
+              "n": "15"
+            },
+            {
+              "title": "整列缺失",
+              "file": "bad16.csv",
+              "fixfile": "bad16.csv",
+              "content": "a,b,c\n,,\nx,,\n,,\n",
+              "kw": "缺失值|严重|警告",
+              "n": "16"
+            },
+            {
+              "title": "公式注入样式内容",
+              "file": "bad17.csv",
+              "fixfile": "bad17.csv",
+              "content": "a,b\n=SUM(A1),2\n+1,3\n-1,4\n",
+              "kw": "数据概览|列类型",
+              "n": "17"
+            },
+            {
+              "title": "HTML 脚本片段",
+              "file": "bad18.csv",
+              "fixfile": "bad18.csv",
+              "content": "a,b\n\"<script>alert(1)</script>\",x\n\"<b>粗体</b>\",y\n",
+              "kw": "数据概览|列类型",
+              "n": "18"
+            },
+            {
+              "title": "重复列名加列数不齐",
+              "file": "bad19.csv",
+              "fixfile": "bad19.csv",
+              "content": "a,a\n1\n2,3,4\n",
+              "kw": "数据概览|列类型",
+              "n": "19"
+            },
+            {
+              "title": "emoji 与控制字符混合",
+              "file": "bad20.csv",
+              "fixfile": "bad20.csv",
+              "content": "a,b\n😀\u0007,2\n​🚀,3\n",
+              "kw": "数据概览|文本",
+              "n": "20"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 2,
+                "note": "异常输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "优雅处理结果符合预期"
+              },
+              {
+                "type": "min_length",
+                "value": 150,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个确定性样本各重复调用 10 次（离线模式），断言确定性结论稳定出现",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：{title}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "同一输入重复调用 10 次，输出应稳定一致",
+            "content": "样本：{title}",
+            "files": [
+              {
+                "path": "input/{fixfile}",
+                "content": "{content}"
+              }
+            ],
+            "params": {
+              "file": "input/{file}",
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "title": "缺失值表",
+              "file": "s1.csv",
+              "fixfile": "s1.csv",
+              "content": "id,remark\n1,ok\n2,\n3,\n4,fine\n5,good\n",
+              "kw": "缺失值",
+              "exact": "列「remark」有 2/5 个缺失",
+              "n": "1"
+            },
+            {
+              "title": "重复行表",
+              "file": "s2.csv",
+              "fixfile": "s2.csv",
+              "content": "a,b\n1,2\n1,2\n3,4\n5,6\n7,8\n",
+              "kw": "重复行",
+              "exact": "完全重复行",
+              "n": "2"
+            },
+            {
+              "title": "异常值表",
+              "file": "s3.csv",
+              "fixfile": "s3.csv",
+              "content": "v\n10\n11\n9\n10\n12\n11\n10\n500\n",
+              "kw": "异常值",
+              "exact": "列「v」按",
+              "n": "3"
+            },
+            {
+              "title": "常量列表",
+              "file": "s4.csv",
+              "fixfile": "s4.csv",
+              "content": "k,v\nsame,1\nsame,2\nsame,3\n",
+              "kw": "常量列",
+              "exact": "常量列",
+              "n": "4"
+            },
+            {
+              "title": "千分位表",
+              "file": "s5.csv",
+              "fixfile": "s5.csv",
+              "content": "price\n\"1,200\"\n¥300\n450元\n99\n",
+              "kw": "数字带单位|千分位",
+              "exact": "货币符号或千分位",
+              "n": "5"
+            },
+            {
+              "title": "日期混用表",
+              "file": "s6.csv",
+              "fixfile": "s6.csv",
+              "content": "day\n2024-01-05\n2024年2月6日\n20240307\n2024-04-08\n",
+              "kw": "日期格式混用",
+              "exact": "日期格式混用",
+              "n": "6"
+            },
+            {
+              "title": "空白全角表",
+              "file": "s7.csv",
+              "fixfile": "s7.csv",
+              "content": "name\n 张三 \n李四\nＡＢＣ\n赵六 \n",
+              "kw": "前后空白|全角",
+              "exact": "前后空白",
+              "n": "7"
+            },
+            {
+              "title": "干净表",
+              "file": "s8.csv",
+              "fixfile": "s8.csv",
+              "content": "id,name\n1,甲\n2,乙\n3,丙\n4,丁\n5,戊\n",
+              "kw": "数据整体干净|建议",
+              "exact": "数据整体干净",
+              "n": "8"
+            },
+            {
+              "title": "JSON 表",
+              "file": "s9.json",
+              "fixfile": "s9.json",
+              "content": "[{\"id\": 1, \"name\": \"甲\"}, {\"id\": 2, \"name\": \"\"}, {\"id\": 3, \"name\": \"丙\"}]",
+              "kw": "缺失值",
+              "exact": "列「name」有 1/3 个缺失",
+              "n": "9"
+            },
+            {
+              "title": "TSV 表",
+              "file": "s10.tsv",
+              "fixfile": "s10.tsv",
+              "content": "id\tname\n1\t甲\n2\t\t\n3\t丙\n",
+              "kw": "缺失值",
+              "exact": "列「name」有 1/3 个缺失",
+              "n": "10"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "数据质量报告",
+                "weight": 2,
+                "note": "重复调用仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "确定性结论稳定出现"
+              },
+              {
+                "type": "contains",
+                "text": "{exact}",
+                "weight": 2,
+                "note": "断言确定性细节，验证稳定性"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

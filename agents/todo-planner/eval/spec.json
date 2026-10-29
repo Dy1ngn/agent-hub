@@ -1,0 +1,1224 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：目标拆解出计划",
+      "description": "典型目标描述的完整链路：解析、WBS、依赖、工作日排程、甘特图与风险清单，走模型细化拆解链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-goal-{i}",
+          "title": "目标拆解（{kw}）",
+          "tags": [
+            "basic",
+            "goal"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "把目标描述拆成里程碑与任务并排出计划",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "goal": "{goal}",
+              "days": "30",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "kw": "Python",
+              "goal": "",
+              "doc": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时"
+            },
+            {
+              "i": "2",
+              "kw": "小程序商城",
+              "goal": "",
+              "doc": "三个月上线小程序商城\n第一阶段：需求与设计（2 周）\n- 输出 PRD\n- 完成原型评审\n第二阶段：开发（6 周）\n- 完成商品与订单模块\n- 完成支付对接\n第三阶段：上线（2 周）\n- 灰度发布\n- 正式上线\n约束：预算不超过 20 万元，团队 5 人"
+            },
+            {
+              "i": "3",
+              "kw": "团建",
+              "goal": "组织 200 人年度团建活动\n第一阶段：策划（1 周）\n- 确定主题与预算\n- 选定场地\n第二阶段：执行（2 周）\n- 发通知并统计报名\n- 现场组织与拍摄\n约束：一个月内完成，预算 5 万元",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "kw": "雅思",
+              "goal": "备考雅思 7 分\n- 每天背 100 个单词\n- 每周做 2 套真题\n- 报名口语陪练\n先做一次模考摸底，然后制定复习计划，完成 4 周冲刺后复盘\n约束：三个月内出分",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "目标拆解计划",
+                "weight": 1,
+                "note": "产出标准计划"
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 2,
+                "note": "目标关键词进入计划"
+              },
+              {
+                "type": "contains",
+                "text": "WBS",
+                "weight": 2,
+                "note": "输出 WBS 树"
+              },
+              {
+                "type": "contains",
+                "text": "风险清单",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-milestone-{i}",
+          "title": "阶段标记识别（{kw}）",
+          "tags": [
+            "basic",
+            "milestone"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "识别阶段/里程碑标记并生成计划",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "goal": "",
+              "days": "30",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "goal": "考证计划\n第一阶段：打基础（2 周）\n- 学完教材\n- 整理笔记\n第二阶段：刷题（3 周）\n- 刷 500 题",
+              "kw": "打基础",
+              "doc": ""
+            },
+            {
+              "i": "2",
+              "goal": "产品迭代\n阶段一：开发（1 周）\n- 完成核心功能\n阶段二：灰度上线（1 周）\n- 灰度 10% 用户",
+              "kw": "灰度上线",
+              "doc": ""
+            },
+            {
+              "i": "3",
+              "goal": "系统重构\nM1：调研（1 周）\n- 梳理现状\nM2：试点（2 周）\n- 试点两个服务",
+              "kw": "试点",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "goal": "团队建设\n里程碑：完成认证\n- 完成培训\n- 通过考试",
+              "kw": "完成认证",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "目标拆解计划",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "里程碑",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 2,
+                "note": "阶段标记进入计划"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 700,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-deps-{i}",
+          "title": "依赖与排程（{kw}）",
+          "tags": [
+            "basic",
+            "deps"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "按先后词推断依赖并排出工作日日程",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "goal": "",
+              "days": "45",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "goal": "搭建数据平台\n先完成数据采集，然后建设数据仓库，最后上线报表\n- 完成采集后启动仓库开发\n- 上线报表后做培训",
+              "kw": "数据仓库",
+              "doc": ""
+            },
+            {
+              "i": "2",
+              "goal": "发布新版本\n首先冻结需求，之后完成功能开发，基于开发完成再做回归测试\n- 回归后发版",
+              "kw": "冻结需求",
+              "doc": ""
+            },
+            {
+              "i": "3",
+              "goal": "迁移上云\n先做调研，然后搭建环境，完成环境搭建后迁移数据，之后切换流量\n- 切换后复盘",
+              "kw": "迁移数据",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "goal": "装修新房\n先量房，然后出设计图，完成设计后施工，之后软装进场\n- 软装后验收",
+              "kw": "设计图",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖关系",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "甘特图",
+                "weight": 2,
+                "note": "输出甘特图"
+              },
+              {
+                "type": "contains",
+                "text": "每日待办",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 700,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-constraint-{i}",
+          "title": "约束识别（{kw}）",
+          "tags": [
+            "basic",
+            "constraint"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "识别时间/预算/人力约束并放进计划",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "goal": "",
+              "days": "30",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "goal": "开发内部工具\n- 做需求梳理\n- 做开发与联调\n约束：一周内完成，预算不超过 1000 元",
+              "kw": "内部工具",
+              "doc": ""
+            },
+            {
+              "i": "2",
+              "goal": "举办技术沙龙\n- 定主题\n- 邀讲师\n约束：预算 2 万元，人力 3 人",
+              "kw": "技术沙龙",
+              "doc": ""
+            },
+            {
+              "i": "3",
+              "goal": "完成数据迁移\n- 现状摸底\n- 迁移演练\n约束：两周内完成，不能停服",
+              "kw": "数据迁移",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "goal": "学习一门新语言\n- 背单词\n- 练口语\n约束：每天 1 小时，半年内通过考试",
+              "kw": "背单词",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "目标与约束",
+                "weight": 2,
+                "note": "约束进入计划"
+              },
+              {
+                "type": "contains",
+                "text": "风险清单",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 700,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-param-{i}",
+          "title": "排期参数（{style} / {days} 天）",
+          "tags": [
+            "basic",
+            "params"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同排期风格与窗口都稳定出计划",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "goal": "",
+              "days": "{days}",
+              "start": "2026-11-02",
+              "style": "{style}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "style": "稳妥",
+              "days": "15",
+              "doc": ""
+            },
+            {
+              "i": "2",
+              "goal": "三个月上线小程序商城\n第一阶段：需求与设计（2 周）\n- 输出 PRD\n- 完成原型评审\n第二阶段：开发（6 周）\n- 完成商品与订单模块\n- 完成支付对接\n第三阶段：上线（2 周）\n- 灰度发布\n- 正式上线\n约束：预算不超过 20 万元，团队 5 人",
+              "kw": "小程序商城",
+              "style": "激进",
+              "days": "30",
+              "doc": ""
+            },
+            {
+              "i": "3",
+              "goal": "组织 200 人年度团建活动\n第一阶段：策划（1 周）\n- 确定主题与预算\n- 选定场地\n第二阶段：执行（2 周）\n- 发通知并统计报名\n- 现场组织与拍摄\n约束：一个月内完成，预算 5 万元",
+              "kw": "团建",
+              "style": "稳妥",
+              "days": "60",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "goal": "备考雅思 7 分\n- 每天背 100 个单词\n- 每周做 2 套真题\n- 报名口语陪练\n先做一次模考摸底，然后制定复习计划，完成 4 周冲刺后复盘\n约束：三个月内出分",
+              "kw": "雅思",
+              "style": "激进",
+              "days": "90",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "风格：{style}",
+                "weight": 2,
+                "note": "排期风格写进计划"
+              },
+              {
+                "type": "contains",
+                "text": "计划窗口：{days} 天",
+                "weight": 2,
+                "note": "计划窗口与参数一致"
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 700,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：领域 / 长度 / 风格 / 开始日期",
+      "description": "不同目标领域、长度、排期风格与开始日期下的稳定计划（模型细化拆解链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-domain-{i}",
+          "title": "目标领域变体（{kw}）",
+          "tags": [
+            "variation",
+            "domain"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同领域目标都能拆解出计划",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "goal": "",
+              "days": "30",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "kw": "数据分析",
+              "goal": "三个月入门数据分析\n- 学 SQL\n- 学 Python\n- 做 2 个实战项目",
+              "doc": ""
+            },
+            {
+              "i": "2",
+              "kw": "风控系统",
+              "goal": "两个月搭建风控系统\n- 梳理规则\n- 开发引擎\n- 联调上线",
+              "doc": ""
+            },
+            {
+              "i": "3",
+              "kw": "年会",
+              "goal": "组织公司年会\n- 确定节目\n- 预定场地\n- 现场执行",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "kw": "增长",
+              "goal": "下季度做用户增长\n- 拉新渠道测试\n- 转化漏斗优化\n- 复盘迭代",
+              "doc": ""
+            },
+            {
+              "i": "5",
+              "kw": "论文",
+              "goal": "半年内完成一篇论文\n- 选题调研\n- 实验与写作\n- 投稿修改",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "目标拆解计划",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 2,
+                "note": "领域关键词进入计划"
+              },
+              {
+                "type": "contains",
+                "text": "WBS",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 600,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-len-{i}",
+          "title": "目标长度变体（{label}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同长度的目标描述都稳定出计划",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "goal": "",
+              "days": "30",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "label": "一句话目标",
+              "kw": "剪辑",
+              "goal": "学会剪辑视频",
+              "doc": ""
+            },
+            {
+              "i": "2",
+              "label": "5 条任务",
+              "kw": "公众号",
+              "goal": "运营一个公众号\n- 定位\n- 选题\n- 写稿\n- 排版\n- 推广",
+              "doc": ""
+            },
+            {
+              "i": "3",
+              "label": "15 条任务",
+              "kw": "季度目标",
+              "goal": "推进季度目标\n- 任务 1：完成模块 1 的开发与测试\n- 任务 2：完成模块 2 的开发与测试\n- 任务 3：完成模块 3 的开发与测试\n- 任务 4：完成模块 4 的开发与测试\n- 任务 5：完成模块 5 的开发与测试\n- 任务 6：完成模块 6 的开发与测试\n- 任务 7：完成模块 7 的开发与测试\n- 任务 8：完成模块 8 的开发与测试\n- 任务 9：完成模块 9 的开发与测试\n- 任务 10：完成模块 10 的开发与测试\n- 任务 11：完成模块 11 的开发与测试\n- 任务 12：完成模块 12 的开发与测试\n- 任务 13：完成模块 13 的开发与测试\n- 任务 14：完成模块 14 的开发与测试\n- 任务 15：完成模块 15 的开发与测试",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "label": "多阶段 20 行",
+              "kw": "数字化",
+              "goal": "年度数字化规划\n第1阶段：推进方向 1\n- 调研方向 1\n- 落地方向 1\n第2阶段：推进方向 2\n- 调研方向 2\n- 落地方向 2\n第3阶段：推进方向 3\n- 调研方向 3\n- 落地方向 3\n第4阶段：推进方向 4\n- 调研方向 4\n- 落地方向 4\n第5阶段：推进方向 5\n- 调研方向 5\n- 落地方向 5",
+              "doc": ""
+            },
+            {
+              "i": "5",
+              "label": "只有约束行",
+              "kw": "预算",
+              "goal": "约束：一周内完成，预算 1000 元",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "目标拆解计划",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "WBS",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 600,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-style-{i}",
+          "title": "排期风格变体（{style} / {days} 天）",
+          "tags": [
+            "variation",
+            "style"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "稳妥与激进风格、不同窗口都稳定排程",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "goal": "",
+              "days": "{days}",
+              "start": "2026-11-02",
+              "style": "{style}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "style": "稳妥",
+              "days": "20",
+              "doc": ""
+            },
+            {
+              "i": "2",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "style": "激进",
+              "days": "20",
+              "doc": ""
+            },
+            {
+              "i": "3",
+              "goal": "三个月上线小程序商城\n第一阶段：需求与设计（2 周）\n- 输出 PRD\n- 完成原型评审\n第二阶段：开发（6 周）\n- 完成商品与订单模块\n- 完成支付对接\n第三阶段：上线（2 周）\n- 灰度发布\n- 正式上线\n约束：预算不超过 20 万元，团队 5 人",
+              "kw": "小程序商城",
+              "style": "稳妥",
+              "days": "60",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "goal": "三个月上线小程序商城\n第一阶段：需求与设计（2 周）\n- 输出 PRD\n- 完成原型评审\n第二阶段：开发（6 周）\n- 完成商品与订单模块\n- 完成支付对接\n第三阶段：上线（2 周）\n- 灰度发布\n- 正式上线\n约束：预算不超过 20 万元，团队 5 人",
+              "kw": "小程序商城",
+              "style": "激进",
+              "days": "60",
+              "doc": ""
+            },
+            {
+              "i": "5",
+              "goal": "组织 200 人年度团建活动\n第一阶段：策划（1 周）\n- 确定主题与预算\n- 选定场地\n第二阶段：执行（2 周）\n- 发通知并统计报名\n- 现场组织与拍摄\n约束：一个月内完成，预算 5 万元",
+              "kw": "团建",
+              "style": "稳妥",
+              "days": "10",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "风格：{style}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "计划窗口：{days} 天",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 600,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-start-{i}",
+          "title": "开始日期变体（{start}）",
+          "tags": [
+            "variation",
+            "date"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同开始日期（周末/月末/闰日/远期）都稳定排程",
+            "content": "请为下面的目标生成计划：{goal}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "goal": "",
+              "days": "30",
+              "start": "{start}",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "start": "2026-11-02",
+              "doc": ""
+            },
+            {
+              "i": "2",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "start": "2026-11-07",
+              "doc": ""
+            },
+            {
+              "i": "3",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "start": "2026-12-31",
+              "doc": ""
+            },
+            {
+              "i": "4",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "start": "2028-02-29",
+              "doc": ""
+            },
+            {
+              "i": "5",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "start": "2030-01-01",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "开始日期：{start}",
+                "weight": 2,
+                "note": "开始日期与参数一致"
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "甘特图",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 600,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 极短 / 极多 / 极端窗口",
+      "description": "空目标、极短目标、40 行任务、1 天/365 天窗口等边界输入下的稳定产出（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{i}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出计划，不允许崩溃",
+            "content": "边界用例：{title}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{doc}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "goal": "{goal}",
+              "days": "{days}",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "空目标（--goal 与文件都为空）",
+              "goal": "",
+              "doc": "",
+              "days": "30"
+            },
+            {
+              "n": "2",
+              "title": "极短目标",
+              "goal": "学 Python",
+              "doc": "",
+              "days": "30"
+            },
+            {
+              "n": "3",
+              "title": "目标只有一个标点",
+              "goal": "。",
+              "doc": "",
+              "days": "30"
+            },
+            {
+              "n": "4",
+              "title": "40 行任务列表",
+              "goal": "",
+              "doc": "推进大项目\n- 任务 1\n- 任务 2\n- 任务 3\n- 任务 4\n- 任务 5\n- 任务 6\n- 任务 7\n- 任务 8\n- 任务 9\n- 任务 10\n- 任务 11\n- 任务 12\n- 任务 13\n- 任务 14\n- 任务 15\n- 任务 16\n- 任务 17\n- 任务 18\n- 任务 19\n- 任务 20\n- 任务 21\n- 任务 22\n- 任务 23\n- 任务 24\n- 任务 25\n- 任务 26\n- 任务 27\n- 任务 28\n- 任务 29\n- 任务 30\n- 任务 31\n- 任务 32\n- 任务 33\n- 任务 34\n- 任务 35\n- 任务 36\n- 任务 37\n- 任务 38\n- 任务 39\n- 任务 40",
+              "days": "30"
+            },
+            {
+              "n": "5",
+              "title": "窗口只有 1 天",
+              "goal": "",
+              "doc": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "days": "1"
+            },
+            {
+              "n": "6",
+              "title": "窗口 365 天",
+              "goal": "",
+              "doc": "三个月上线小程序商城\n第一阶段：需求与设计（2 周）\n- 输出 PRD\n- 完成原型评审\n第二阶段：开发（6 周）\n- 完成商品与订单模块\n- 完成支付对接\n第三阶段：上线（2 周）\n- 灰度发布\n- 正式上线\n约束：预算不超过 20 万元，团队 5 人",
+              "days": "365"
+            },
+            {
+              "n": "7",
+              "title": "只有约束行",
+              "goal": "",
+              "doc": "约束：一周内完成，预算 1000 元",
+              "days": "30"
+            },
+            {
+              "n": "8",
+              "title": "全是顿号",
+              "goal": "、、、、",
+              "doc": "",
+              "days": "30"
+            },
+            {
+              "n": "9",
+              "title": "超长单行 500 字",
+              "goal": "",
+              "doc": "完成一个大项目\n- 推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展推进各项工作并同步进展",
+              "days": "30"
+            },
+            {
+              "n": "10",
+              "title": "目标只走 --goal 参数",
+              "goal": "一个月内上线官网首页\n- 定稿设计\n- 开发页面\n- 验收上线",
+              "doc": "",
+              "days": "30"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "目标拆解计划",
+                "weight": 2,
+                "note": "边界输入仍产出计划"
+              },
+              {
+                "type": "contains",
+                "text": "WBS",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "not_contains",
+                "text": "ValueError",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：乱码 / 控制字符 / 畸形目标文本",
+      "description": "乱码、控制字符、emoji、零宽字符、未闭合括号、重复与嵌套任务等异常输入下优雅处理不崩溃（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{i}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃，仍要产出计划",
+            "content": "异常用例：{title}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": ""
+              }
+            ],
+            "params": {
+              "offline": true,
+              "goal": "{goal}",
+              "days": "30",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "目标乱码",
+              "goal": "��目标��\n- ��任务�",
+              "doc": ""
+            },
+            {
+              "n": "2",
+              "title": "控制字符",
+              "goal": "控\u0007制目标\n- 任\u0002务一",
+              "doc": ""
+            },
+            {
+              "n": "3",
+              "title": "emoji 目标",
+              "goal": "🚀🚀 大目标 😀\n- 📦 任务一\n- 📦 任务二",
+              "doc": ""
+            },
+            {
+              "n": "4",
+              "title": "零宽字符",
+              "goal": "零​宽目‌标\n- 任‍务",
+              "doc": ""
+            },
+            {
+              "n": "5",
+              "title": "未闭合括号引号",
+              "goal": "目标「未闭合\n- 任务（未闭合\n- 任务 \"未闭合",
+              "doc": ""
+            },
+            {
+              "n": "6",
+              "title": "同一任务重复 30 行",
+              "goal": "重复目标\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务\n- 同一个任务",
+              "doc": ""
+            },
+            {
+              "n": "7",
+              "title": "五级嵌套列表",
+              "goal": "嵌套目标\n- 一级任务\n  - 二级任务\n    - 三级任务\n      - 四级任务\n        - 五级任务",
+              "doc": ""
+            },
+            {
+              "n": "8",
+              "title": "含代码围栏",
+              "goal": "带代码的目标\n```python\nprint('hi')\n```\n- 任务一",
+              "doc": ""
+            },
+            {
+              "n": "9",
+              "title": "日期格式混乱",
+              "goal": "赶在 2026/13/45 之前完成\n- 任务一 3 天\n- 任务二 2026年99月完成",
+              "doc": ""
+            },
+            {
+              "n": "10",
+              "title": "中英数乱序 + 超长单词",
+              "goal": "zzz 123 中文 abc xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 456 def\n- 任务一",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "目标拆解计划",
+                "weight": 2,
+                "note": "异常输入仍产出计划"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "风险清单",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复 10 次（离线确定性模式），验证 WBS/排程/甘特图输出稳定、结构一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{i}",
+          "title": "稳定性重复：{kw}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "repeat": 10,
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证计划输出稳定",
+            "content": "稳定性样本 {n}：{kw}",
+            "files": [
+              {
+                "path": "input/goal.md",
+                "content": "{goal}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "goal": "",
+              "days": "30",
+              "start": "2026-11-02",
+              "style": "稳妥"
+            }
+          },
+          "rows": [
+            {
+              "n": "1",
+              "goal": "一个月内学会 Python 并做两个小项目\n第一阶段：基础语法（3 天）\n- 学完变量与控制流\n- 完成 20 道练习题\n第二阶段：项目实战（2 周）\n- 做一个爬虫小项目\n- 做一个 Web 小项目\n约束：每天投入 2 小时",
+              "kw": "Python",
+              "doc": ""
+            },
+            {
+              "n": "2",
+              "goal": "三个月上线小程序商城\n第一阶段：需求与设计（2 周）\n- 输出 PRD\n- 完成原型评审\n第二阶段：开发（6 周）\n- 完成商品与订单模块\n- 完成支付对接\n第三阶段：上线（2 周）\n- 灰度发布\n- 正式上线\n约束：预算不超过 20 万元，团队 5 人",
+              "kw": "小程序商城",
+              "doc": ""
+            },
+            {
+              "n": "3",
+              "goal": "组织 200 人年度团建活动\n第一阶段：策划（1 周）\n- 确定主题与预算\n- 选定场地\n第二阶段：执行（2 周）\n- 发通知并统计报名\n- 现场组织与拍摄\n约束：一个月内完成，预算 5 万元",
+              "kw": "团建",
+              "doc": ""
+            },
+            {
+              "n": "4",
+              "goal": "备考雅思 7 分\n- 每天背 100 个单词\n- 每周做 2 套真题\n- 报名口语陪练\n先做一次模考摸底，然后制定复习计划，完成 4 周冲刺后复盘\n约束：三个月内出分",
+              "kw": "雅思",
+              "doc": ""
+            },
+            {
+              "n": "5",
+              "goal": "考证计划\n第一阶段：打基础（2 周）\n- 学完教材\n- 整理笔记\n第二阶段：刷题（3 周）\n- 刷 500 题",
+              "kw": "考证",
+              "doc": ""
+            },
+            {
+              "n": "6",
+              "goal": "搭建数据平台\n先完成数据采集，然后建设数据仓库，最后上线报表\n- 完成采集后启动仓库开发\n- 上线报表后做培训",
+              "kw": "数据平台",
+              "doc": ""
+            },
+            {
+              "n": "7",
+              "goal": "开发内部工具\n- 做需求梳理\n- 做开发与联调\n约束：一周内完成，预算不超过 1000 元",
+              "kw": "内部工具",
+              "doc": ""
+            },
+            {
+              "n": "8",
+              "goal": "推进季度目标\n- 任务 1：完成模块 1 的开发与测试\n- 任务 2：完成模块 2 的开发与测试\n- 任务 3：完成模块 3 的开发与测试\n- 任务 4：完成模块 4 的开发与测试\n- 任务 5：完成模块 5 的开发与测试\n- 任务 6：完成模块 6 的开发与测试\n- 任务 7：完成模块 7 的开发与测试\n- 任务 8：完成模块 8 的开发与测试\n- 任务 9：完成模块 9 的开发与测试\n- 任务 10：完成模块 10 的开发与测试\n- 任务 11：完成模块 11 的开发与测试\n- 任务 12：完成模块 12 的开发与测试\n- 任务 13：完成模块 13 的开发与测试\n- 任务 14：完成模块 14 的开发与测试\n- 任务 15：完成模块 15 的开发与测试",
+              "kw": "季度目标",
+              "doc": ""
+            },
+            {
+              "n": "9",
+              "goal": "年度数字化规划\n第1阶段：推进方向 1\n- 调研方向 1\n- 落地方向 1\n第2阶段：推进方向 2\n- 调研方向 2\n- 落地方向 2\n第3阶段：推进方向 3\n- 调研方向 3\n- 落地方向 3\n第4阶段：推进方向 4\n- 调研方向 4\n- 落地方向 4\n第5阶段：推进方向 5\n- 调研方向 5\n- 落地方向 5",
+              "kw": "数字化",
+              "doc": ""
+            },
+            {
+              "n": "10",
+              "goal": "官网改版项目\n- 定稿设计稿\n- 完成前端开发\n- 完成后端接口\n- 回归测试\n- 上线发布",
+              "kw": "官网改版",
+              "doc": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "目标拆解计划",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{kw}",
+                "weight": 2,
+                "note": "目标关键词确定性一致"
+              },
+              {
+                "type": "contains",
+                "text": "甘特图",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

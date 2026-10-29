@@ -1,0 +1,550 @@
+id: ts-b-todo-planner-g5-stability
+agentId: todo-planner
+group: g5-stability
+name: 任务拆解 · 稳定性：同输入重复调用
+description: 10 个样本各重复 10 次（离线确定性模式），验证 WBS/排程/甘特图输出稳定、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：Python
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 1：Python
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: Python
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：小程序商城
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 2：小程序商城
+      files:
+        - path: input/goal.md
+          content: "三个月上线小程序商城
+
+            第一阶段：需求与设计（2 周）
+
+            - 输出 PRD
+
+            - 完成原型评审
+
+            第二阶段：开发（6 周）
+
+            - 完成商品与订单模块
+
+            - 完成支付对接
+
+            第三阶段：上线（2 周）
+
+            - 灰度发布
+
+            - 正式上线
+
+            约束：预算不超过 20 万元，团队 5 人"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 小程序商城
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：团建
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 3：团建
+      files:
+        - path: input/goal.md
+          content: "组织 200 人年度团建活动
+
+            第一阶段：策划（1 周）
+
+            - 确定主题与预算
+
+            - 选定场地
+
+            第二阶段：执行（2 周）
+
+            - 发通知并统计报名
+
+            - 现场组织与拍摄
+
+            约束：一个月内完成，预算 5 万元"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 团建
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：雅思
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 4：雅思
+      files:
+        - path: input/goal.md
+          content: "备考雅思 7 分
+
+            - 每天背 100 个单词
+
+            - 每周做 2 套真题
+
+            - 报名口语陪练
+
+            先做一次模考摸底，然后制定复习计划，完成 4 周冲刺后复盘
+
+            约束：三个月内出分"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 雅思
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：考证
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 5：考证
+      files:
+        - path: input/goal.md
+          content: "考证计划
+
+            第一阶段：打基础（2 周）
+
+            - 学完教材
+
+            - 整理笔记
+
+            第二阶段：刷题（3 周）
+
+            - 刷 500 题"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 考证
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：数据平台
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 6：数据平台
+      files:
+        - path: input/goal.md
+          content: "搭建数据平台
+
+            先完成数据采集，然后建设数据仓库，最后上线报表
+
+            - 完成采集后启动仓库开发
+
+            - 上线报表后做培训"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 数据平台
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：内部工具
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 7：内部工具
+      files:
+        - path: input/goal.md
+          content: "开发内部工具
+
+            - 做需求梳理
+
+            - 做开发与联调
+
+            约束：一周内完成，预算不超过 1000 元"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 内部工具
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：季度目标
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 8：季度目标
+      files:
+        - path: input/goal.md
+          content: "推进季度目标
+
+            - 任务 1：完成模块 1 的开发与测试
+
+            - 任务 2：完成模块 2 的开发与测试
+
+            - 任务 3：完成模块 3 的开发与测试
+
+            - 任务 4：完成模块 4 的开发与测试
+
+            - 任务 5：完成模块 5 的开发与测试
+
+            - 任务 6：完成模块 6 的开发与测试
+
+            - 任务 7：完成模块 7 的开发与测试
+
+            - 任务 8：完成模块 8 的开发与测试
+
+            - 任务 9：完成模块 9 的开发与测试
+
+            - 任务 10：完成模块 10 的开发与测试
+
+            - 任务 11：完成模块 11 的开发与测试
+
+            - 任务 12：完成模块 12 的开发与测试
+
+            - 任务 13：完成模块 13 的开发与测试
+
+            - 任务 14：完成模块 14 的开发与测试
+
+            - 任务 15：完成模块 15 的开发与测试"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 季度目标
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：数字化
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 9：数字化
+      files:
+        - path: input/goal.md
+          content: "年度数字化规划
+
+            第1阶段：推进方向 1
+
+            - 调研方向 1
+
+            - 落地方向 1
+
+            第2阶段：推进方向 2
+
+            - 调研方向 2
+
+            - 落地方向 2
+
+            第3阶段：推进方向 3
+
+            - 调研方向 3
+
+            - 落地方向 3
+
+            第4阶段：推进方向 4
+
+            - 调研方向 4
+
+            - 落地方向 4
+
+            第5阶段：推进方向 5
+
+            - 调研方向 5
+
+            - 落地方向 5"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 数字化
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：官网改版
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证计划输出稳定
+      content: 稳定性样本 10：官网改版
+      files:
+        - path: input/goal.md
+          content: "官网改版项目
+
+            - 定稿设计稿
+
+            - 完成前端开发
+
+            - 完成后端接口
+
+            - 回归测试
+
+            - 上线发布"
+      params:
+        offline: true
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 2
+        - type: contains
+          text: 官网改版
+          weight: 2
+          note: 目标关键词确定性一致
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

@@ -1,0 +1,1501 @@
+id: ts-b-knowledge-qa-g2-variation
+agentId: knowledge-qa
+group: g2-variation
+name: 知识库问答 · 输入变体：参数 / 文档形态 / 规模
+description: top-k、min-score、超长文档、标题层级、txt/json/csv 知识库、10 篇文档、同义词扩展等变体（模型链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-topk-1
+    title: 检索片段数（top-k=3）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 验证 top-k 参数
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么安装？
+        topk: "3"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (检索片段数|片段)
+          weight: 2
+          note: 按 top-k 返回片段
+      requiredSuggestions: []
+  - id: g2-topk-2
+    title: 检索片段数（top-k=8）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 验证 top-k 参数
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么安装？
+        topk: "8"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (检索片段数|片段)
+          weight: 2
+          note: 按 top-k 返回片段
+      requiredSuggestions: []
+  - id: g2-minscore-1
+    title: 命中阈值（min-score=0.01）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 验证 min-score 参数
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么安装？
+        topk: "5"
+        minscore: "0.01"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (片段|没有相关内容)
+          weight: 2
+          note: 阈值行为正确
+      requiredSuggestions: []
+  - id: g2-minscore-2
+    title: 命中阈值（min-score=99）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 验证 min-score 参数
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖怎么安装？
+        topk: "5"
+        minscore: "99"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (片段|没有相关内容)
+          weight: 2
+          note: 阈值行为正确
+      requiredSuggestions: []
+  - id: g2-longdoc-1
+    title: 超长文档分段（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理超长文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/long.md
+          content: "# 超长文档
+
+
+            ## 小节 1
+
+
+            这是第 1 个小节的内容，描述了模块 1 的使用方式与注意事项。
+
+
+            ## 小节 2
+
+
+            这是第 2 个小节的内容，描述了模块 2 的使用方式与注意事项。
+
+
+            ## 小节 3
+
+
+            这是第 3 个小节的内容，描述了模块 3 的使用方式与注意事项。
+
+
+            ## 小节 4
+
+
+            这是第 4 个小节的内容，描述了模块 4 的使用方式与注意事项。
+
+
+            ## 小节 5
+
+
+            这是第 5 个小节的内容，描述了模块 5 的使用方式与注意事项。
+
+
+            ## 小节 6
+
+
+            这是第 6 个小节的内容，描述了模块 6 的使用方式与注意事项。
+
+
+            ## 小节 7
+
+
+            这是第 7 个小节的内容，描述了模块 7 的使用方式与注意事项。
+
+
+            ## 小节 8
+
+
+            这是第 8 个小节的内容，描述了模块 8 的使用方式与注意事项。
+
+
+            ## 小节 9
+
+
+            这是第 9 个小节的内容，描述了模块 9 的使用方式与注意事项。
+
+
+            ## 小节 10
+
+
+            这是第 10 个小节的内容，描述了模块 10 的使用方式与注意事项。
+
+
+            ## 小节 11
+
+
+            这是第 11 个小节的内容，描述了模块 11 的使用方式与注意事项。
+
+
+            ## 小节 12
+
+
+            这是第 12 个小节的内容，描述了模块 12 的使用方式与注意事项。
+
+
+            ## 小节 13
+
+
+            这是第 13 个小节的内容，描述了模块 13 的使用方式与注意事项。
+
+
+            ## 小节 14
+
+
+            这是第 14 个小节的内容，描述了模块 14 的使用方式与注意事项。
+
+
+            ## 小节 15
+
+
+            这是第 15 个小节的内容，描述了模块 15 的使用方式与注意事项。
+
+
+            ## 小节 16
+
+
+            这是第 16 个小节的内容，描述了模块 16 的使用方式与注意事项。
+
+
+            ## 小节 17
+
+
+            这是第 17 个小节的内容，描述了模块 17 的使用方式与注意事项。
+
+
+            ## 小节 18
+
+
+            这是第 18 个小节的内容，描述了模块 18 的使用方式与注意事项。
+
+
+            ## 小节 19
+
+
+            这是第 19 个小节的内容，描述了模块 19 的使用方式与注意事项。
+
+
+            ## 小节 20
+
+
+            这是第 20 个小节的内容，描述了模块 20 的使用方式与注意事项。
+
+
+            ## 小节 21
+
+
+            这是第 21 个小节的内容，描述了模块 21 的使用方式与注意事项。
+
+
+            ## 小节 22
+
+
+            这是第 22 个小节的内容，描述了模块 22 的使用方式与注意事项。
+
+
+            ## 小节 23
+
+
+            这是第 23 个小节的内容，描述了模块 23 的使用方式与注意事项。
+
+
+            ## 小节 24
+
+
+            这是第 24 个小节的内容，描述了模块 24 的使用方式与注意事项。
+
+
+            ## 小节 25
+
+
+            这是第 25 个小节的内容，描述了模块 25 的使用方式与注意事项。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 小节 3 讲了什么？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (片段|检索得分表|小节)
+          weight: 2
+          note: 长文档分段检索
+      requiredSuggestions: []
+  - id: g2-longdoc-2
+    title: 超长文档分段（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理超长文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/long.md
+          content: "# 超长文档
+
+
+            ## 小节 1
+
+
+            这是第 1 个小节的内容，描述了模块 1 的使用方式与注意事项。
+
+
+            ## 小节 2
+
+
+            这是第 2 个小节的内容，描述了模块 2 的使用方式与注意事项。
+
+
+            ## 小节 3
+
+
+            这是第 3 个小节的内容，描述了模块 3 的使用方式与注意事项。
+
+
+            ## 小节 4
+
+
+            这是第 4 个小节的内容，描述了模块 4 的使用方式与注意事项。
+
+
+            ## 小节 5
+
+
+            这是第 5 个小节的内容，描述了模块 5 的使用方式与注意事项。
+
+
+            ## 小节 6
+
+
+            这是第 6 个小节的内容，描述了模块 6 的使用方式与注意事项。
+
+
+            ## 小节 7
+
+
+            这是第 7 个小节的内容，描述了模块 7 的使用方式与注意事项。
+
+
+            ## 小节 8
+
+
+            这是第 8 个小节的内容，描述了模块 8 的使用方式与注意事项。
+
+
+            ## 小节 9
+
+
+            这是第 9 个小节的内容，描述了模块 9 的使用方式与注意事项。
+
+
+            ## 小节 10
+
+
+            这是第 10 个小节的内容，描述了模块 10 的使用方式与注意事项。
+
+
+            ## 小节 11
+
+
+            这是第 11 个小节的内容，描述了模块 11 的使用方式与注意事项。
+
+
+            ## 小节 12
+
+
+            这是第 12 个小节的内容，描述了模块 12 的使用方式与注意事项。
+
+
+            ## 小节 13
+
+
+            这是第 13 个小节的内容，描述了模块 13 的使用方式与注意事项。
+
+
+            ## 小节 14
+
+
+            这是第 14 个小节的内容，描述了模块 14 的使用方式与注意事项。
+
+
+            ## 小节 15
+
+
+            这是第 15 个小节的内容，描述了模块 15 的使用方式与注意事项。
+
+
+            ## 小节 16
+
+
+            这是第 16 个小节的内容，描述了模块 16 的使用方式与注意事项。
+
+
+            ## 小节 17
+
+
+            这是第 17 个小节的内容，描述了模块 17 的使用方式与注意事项。
+
+
+            ## 小节 18
+
+
+            这是第 18 个小节的内容，描述了模块 18 的使用方式与注意事项。
+
+
+            ## 小节 19
+
+
+            这是第 19 个小节的内容，描述了模块 19 的使用方式与注意事项。
+
+
+            ## 小节 20
+
+
+            这是第 20 个小节的内容，描述了模块 20 的使用方式与注意事项。
+
+
+            ## 小节 21
+
+
+            这是第 21 个小节的内容，描述了模块 21 的使用方式与注意事项。
+
+
+            ## 小节 22
+
+
+            这是第 22 个小节的内容，描述了模块 22 的使用方式与注意事项。
+
+
+            ## 小节 23
+
+
+            这是第 23 个小节的内容，描述了模块 23 的使用方式与注意事项。
+
+
+            ## 小节 24
+
+
+            这是第 24 个小节的内容，描述了模块 24 的使用方式与注意事项。
+
+
+            ## 小节 25
+
+
+            这是第 25 个小节的内容，描述了模块 25 的使用方式与注意事项。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 模块使用方式有哪些？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (片段|检索得分表|小节)
+          weight: 2
+          note: 长文档分段检索
+      requiredSuggestions: []
+  - id: g2-md-1
+    title: Markdown 标题层级（1）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理多级标题文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/deep.md
+          content: "# 手册
+
+
+            ## 第一章
+
+
+            ### 依赖安装
+
+
+            用 pip 安装依赖。
+
+
+            ### 依赖升级
+
+
+            用 pip install -U 升级依赖。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 依赖安装怎么做？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (标题路径|片段)
+          weight: 2
+          note: 保留标题面包屑
+      requiredSuggestions: []
+  - id: g2-md-2
+    title: Markdown 标题层级（2）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 处理多级标题文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/deep.md
+          content: "# 手册
+
+
+            ## 第二章
+
+
+            ### 依赖升级
+
+
+            升级依赖前先跑测试。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 依赖升级怎么做？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (标题路径|片段)
+          weight: 2
+          note: 保留标题面包屑
+      requiredSuggestions: []
+  - id: g2-txt-1
+    title: 纯文本知识库（1）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 检索 .txt 文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/readme.txt
+          content: "备份说明
+
+
+            每天凌晨用 backup.sh 做全量备份，保留 7 天。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 备份怎么做？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (backup|备份|片段)
+          weight: 2
+          note: 命中 txt 文档
+      requiredSuggestions: []
+  - id: g2-txt-2
+    title: 纯文本知识库（2）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 检索 .txt 文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/readme.txt
+          content: "备份说明\n\n备份文件保留 7 天，过期自动删除。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 保留多少天？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (backup|备份|片段)
+          weight: 2
+          note: 命中 txt 文档
+      requiredSuggestions: []
+  - id: g2-json-1
+    title: JSON 知识库（1）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 检索 .json 文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/errors.json
+          content: '[{"code": 40001, "message": "签名过期"}, {"code": 40002, "message": "参数缺失"}]'
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 错误码 40001 是什么？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (40001|签名过期|片段)
+          weight: 2
+          note: 命中 JSON 文档
+      requiredSuggestions: []
+  - id: g2-json-2
+    title: JSON 知识库（2）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 检索 .json 文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/errors.json
+          content: '[{"code": 40001, "message": "签名过期"}, {"code": 40002, "message": "参数缺失"}]'
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 签名过期是哪个错误码？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (40001|签名过期|片段)
+          weight: 2
+          note: 命中 JSON 文档
+      requiredSuggestions: []
+  - id: g2-csv-1
+    title: CSV 知识库（1）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 检索 .csv 文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/org.csv
+          content: "城市,负责人,电话\n北京,张三,10086\n上海,李四,10010\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 北京的负责人是谁？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (张三|李四|10086|10010|片段)
+          weight: 2
+          note: 命中 CSV 文档
+      requiredSuggestions: []
+  - id: g2-csv-2
+    title: CSV 知识库（2）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 检索 .csv 文档
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/org.csv
+          content: "城市,负责人,电话\n北京,张三,10086\n上海,李四,10010\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 上海的电话是多少？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (张三|李四|10086|10010|片段)
+          weight: 2
+          note: 命中 CSV 文档
+      requiredSuggestions: []
+  - id: g2-many-1
+    title: 10 篇文档（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 多文档知识库检索
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/doc01.md
+          content: "# 文档 1\n\n第 1 篇文档讲的是主题 1 的相关内容。\n"
+        - path: kb/doc02.md
+          content: "# 文档 2\n\n第 2 篇文档讲的是主题 2 的相关内容。\n"
+        - path: kb/doc03.md
+          content: "# 文档 3\n\n第 3 篇文档讲的是主题 3 的相关内容。\n"
+      params:
+        q: 主题 3 的内容是什么？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (检索得分表|片段)
+          weight: 2
+          note: 多文档检索
+      requiredSuggestions: []
+  - id: g2-many-2
+    title: 10 篇文档（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 多文档知识库检索
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/doc02.md
+          content: "# 文档 2\n\n第 2 篇文档讲的是主题 2 的相关内容。\n"
+        - path: kb/doc04.md
+          content: "# 文档 4\n\n第 4 篇文档讲的是主题 4 的相关内容。\n"
+        - path: kb/doc05.md
+          content: "# 文档 5\n\n第 5 篇文档讲的是主题 5 的相关内容。\n"
+      params:
+        q: 文档 2 说了什么？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (检索得分表|片段)
+          weight: 2
+          note: 多文档检索
+      requiredSuggestions: []
+  - id: g2-synonym-1
+    title: 同义词查询扩展（1）
+    tags:
+      - variation
+      - retrieval
+    repeat: 5
+    input:
+      kind: text
+      goal: 验证同义词扩展
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/install2.md
+          content: "# 安装说明\n\n安装软件前先安装依赖，安装完成后验证版本。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 怎么安装软件？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (安装|配置|片段)
+          weight: 2
+          note: 同义词扩展命中
+      requiredSuggestions: []
+  - id: g2-synonym-2
+    title: 同义词查询扩展（2）
+    tags:
+      - variation
+      - retrieval
+    repeat: 5
+    input:
+      kind: text
+      goal: 验证同义词扩展
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/install2.md
+          content: "# 配置说明\n\n配置服务需要修改配置文件里的配置项。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何配置服务？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (安装|配置|片段)
+          weight: 2
+          note: 同义词扩展命中
+      requiredSuggestions: []
+  - id: g2-short-1
+    title: 一句话文档（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 极短文档检索
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/short.md
+          content: "最大并发是 500。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 最大并发是多少？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (500|30|片段|没有相关内容)
+          weight: 2
+          note: 短文档检索
+      requiredSuggestions: []
+  - id: g2-short-2
+    title: 一句话文档（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 极短文档检索
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/short2.md
+          content: "超时时间是 30 秒。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 超时时间多长？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (500|30|片段|没有相关内容)
+          weight: 2
+          note: 短文档检索
+      requiredSuggestions: []

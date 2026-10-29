@@ -1,0 +1,686 @@
+id: ts-b-writing-assistant-g2-variation
+agentId: writing-assistant
+group: g2-variation
+name: 写作润色 · 输入变体：模式 / 语言 / 规模 / 参数组合
+description: 不同改写模式、语言、文本规模与语气/读者参数组合下的润色表现（模型改写链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-mode-1
+    title: 改写模式变体（polish）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定改写模式润色文本
+      content: 其实这个方案我觉得还行，然后成本也不高，基本上可以先试一下看看效果。
+      files: []
+      params:
+        mode: polish
+        tone: 自然
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 改写模式：polish
+          weight: 2
+          note: 报告元信息记录改写模式
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-mode-2
+    title: 改写模式变体（rewrite）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定改写模式润色文本
+      content: 其实这个方案我觉得还行，然后成本也不高，基本上可以先试一下看看效果。
+      files: []
+      params:
+        mode: rewrite
+        tone: 自然
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 改写模式：rewrite
+          weight: 2
+          note: 报告元信息记录改写模式
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-mode-3
+    title: 改写模式变体（expand）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定改写模式润色文本
+      content: 其实这个方案我觉得还行，然后成本也不高，基本上可以先试一下看看效果。
+      files: []
+      params:
+        mode: expand
+        tone: 自然
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 改写模式：expand
+          weight: 2
+          note: 报告元信息记录改写模式
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-mode-4
+    title: 改写模式变体（shorten）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定改写模式润色文本
+      content: 其实这个方案我觉得还行，然后成本也不高，基本上可以先试一下看看效果，我个人认为整体的风险其实是可控的，所以建议先小范围试点再看要不要全面推开。
+      files: []
+      params:
+        mode: shorten
+        tone: 自然
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 改写模式：shorten
+          weight: 2
+          note: 报告元信息记录改写模式
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-1
+    title: 语言变体（纯中文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言的文本都要正常润色
+      content: 我觉得这个想法挺好的，然后我们可以上手做做看，反正试错的成本也不算高。
+      files: []
+      params:
+        mode: polish
+        tone: 自然
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: regex
+          pattern: \| 字符数 \| [0-9]+ \|
+          weight: 1
+          note: 评分卡统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2
+    title: 语言变体（纯英文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言的文本都要正常润色
+      content: I feel like this idea is pretty good and we should maybe just try it and see what happens.
+      files: []
+      params:
+        mode: polish
+        tone: natural
+        audience: readers
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: regex
+          pattern: \| 字符数 \| [0-9]+ \|
+          weight: 1
+          note: 评分卡统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3
+    title: 语言变体（中英混合）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言的文本都要正常润色
+      content: 我觉得这个 design 其实挺好的，然后我们可以先做个 prototype 看看效果再说。
+      files: []
+      params:
+        mode: polish
+        tone: 自然
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: regex
+          pattern: \| 字符数 \| [0-9]+ \|
+          weight: 1
+          note: 评分卡统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4
+    title: 语言变体（带 emoji 文案）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言的文本都要正常润色
+      content: 新品来了！🎉 其实憋了好久，然后这次是真的下了功夫，大家快来试试看吧！✨
+      files: []
+      params:
+        mode: polish
+        tone: 活泼
+        audience: 粉丝
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: regex
+          pattern: \| 字符数 \| [0-9]+ \|
+          weight: 1
+          note: 评分卡统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-1
+    title: 文本规模变体（单句）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文本都要正常润色
+      content: 今天天气不错。
+      files: []
+      params:
+        mode: polish
+        tone: 自然
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: regex
+          pattern: \| 句数 \| [0-9]+ \|
+          weight: 1
+          note: 评分卡统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-2
+    title: 文本规模变体（短段）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文本都要正常润色
+      content: 这个功能其实挺好用的，然后上手也不难，基本上看看说明就会了。
+      files: []
+      params:
+        mode: polish
+        tone: 自然
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: regex
+          pattern: \| 句数 \| [0-9]+ \|
+          weight: 1
+          note: 评分卡统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-3
+    title: 文本规模变体（中等文稿）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文本都要正常润色
+      content: 关于这次改版，我简单说几点想法。首先，我觉得整体的方向是没有问题的，然后交互上还可以再简化一下。其次，文案这块其实还有优化空间，有些表述我觉得偏口语化了。最后，时间安排上建议留出缓冲，反正宁可慢一点也别出问题。
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: regex
+          pattern: \| 句数 \| [0-9]+ \|
+          weight: 1
+          note: 评分卡统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-4
+    title: 文本规模变体（较长文稿）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文本都要正常润色
+      content: "季度复盘。这个季度我们其实做了很多事情，然后有些做得不错，有些也踩了坑，我简单总结一下。
+
+        第一点，产品方面，新功能的上线节奏基本上是跟上了计划的，然后用户反馈也还行，但是留存数据我觉得还有提升空间。
+
+        第二点，技术方面，我们完成了服务拆分，然后把历史的坏账清掉了一部分，反正技术债这个事情急不来，慢慢还吧。
+
+        第三点，团队方面，新人的成长速度挺快的，然后老同学也都比较稳定，我觉得氛围不错。
+
+        第四点，下季度的计划，主要是围绕增长来做，然后把体验再打磨一下，基本上就是这两个方向。
+
+        总之，这个季度算是平稳落地，然后下季度继续加油。\n"
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: regex
+          pattern: \| 句数 \| [0-9]+ \|
+          weight: 1
+          note: 评分卡统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-audience-1
+    title: 语气/读者参数变体（温和 × 产品经理）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定语气与目标读者润色文本
+      content: 这个需求我觉得可以再商量一下，然后排期上可能要挪一挪，反正大家看怎么平衡吧。
+      files: []
+      params:
+        mode: polish
+        tone: 温和
+        audience: 产品经理
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 目标读者：产品经理
+          weight: 2
+          note: 报告元信息记录目标读者
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-audience-2
+    title: 语气/读者参数变体（坚定 × 高管）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定语气与目标读者润色文本
+      content: 这个事情我觉得不能再拖了，然后资源也要尽快到位，不然季度目标肯定完不成。
+      files: []
+      params:
+        mode: formal
+        tone: 坚定
+        audience: 高管
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 目标读者：高管
+          weight: 2
+          note: 报告元信息记录目标读者
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-audience-3
+    title: 语气/读者参数变体（幽默 × 开发者）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定语气与目标读者润色文本
+      content: 这个 bug 其实挺离谱的，然后修起来也简单，反正改一行就好了，笑死。
+      files: []
+      params:
+        mode: casual
+        tone: 幽默
+        audience: 开发者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 目标读者：开发者
+          weight: 2
+          note: 报告元信息记录目标读者
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-audience-4
+    title: 语气/读者参数变体（诚恳 × 客户）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定语气与目标读者润色文本
+      content: 抱歉给您带来不便，其实这个问题我们已经定位了，然后今天就能修复，希望您再给我们一次机会。
+      files: []
+      params:
+        mode: polish
+        tone: 诚恳
+        audience: 客户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 目标读者：客户
+          weight: 2
+          note: 报告元信息记录目标读者
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-1
+    title: 文稿格式变体（markdown 标题）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同格式的文稿都要正常润色
+      content: "# 计划
+
+
+        其实这个季度的计划不多，然后重点就两件事。
+
+
+        ## 一
+
+
+        把体验做上去。
+
+
+        ## 二
+
+
+        把成本降下来。\n"
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 修改对照
+          weight: 1
+          note: 逐句对照章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-2
+    title: 文稿格式变体（列表为主）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同格式的文稿都要正常润色
+      content: "本周待办：
+
+
+        - 其实先把方案写完
+
+        - 然后再对齐一下排期
+
+        - 最后把风险清单更新了\n"
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 修改对照
+          weight: 1
+          note: 逐句对照章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-3
+    title: 文稿格式变体（编号段落）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同格式的文稿都要正常润色
+      content: "1. 我觉得第一步先调研。
+
+        2. 然后第二步做原型。
+
+        3. 反正第三步再看数据决定要不要继续。\n"
+      files: []
+      params:
+        mode: polish
+        tone: 专业
+        audience: 读者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 修改对照
+          weight: 1
+          note: 逐句对照章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-4
+    title: 文稿格式变体（纯文本口语）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同格式的文稿都要正常润色
+      content: 就是那个事啊，我觉得可以弄，然后弄完了再说呗，反正也不着急，慢慢来就好。
+      files: []
+      params:
+        mode: polish
+        tone: 自然
+        audience: 朋友
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 写作润色报告
+          weight: 1
+        - type: contains
+          text: 修改对照
+          weight: 1
+          note: 逐句对照章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

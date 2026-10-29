@@ -1,0 +1,687 @@
+id: ts-b-prompt-optimizer-g4-robust
+agentId: prompt-optimizer
+group: g4-robust
+name: 提示词优化 · 鲁棒性：畸形 / 乱码 / 缺字段
+description: 乱码、控制字符、NUL、零宽、未闭合花括号/引号/围栏、RTL 控制符等异常输入下优雅处理不崩溃（离线确定性模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：乱码 mojibake
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: ä½ å¥½ä¸–ç•Œï¼Œè¯·å¸®å¿™
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "a\ab\ac\nd\ae"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：零宽字符混排
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: 提​示‌词﻿测​试
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：NUL 字节
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "x\0y = 1\nz\0"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合花括号
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: 变量是 {{var，另一个是 {x
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 结构化
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：三花括号
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "{{{name}}} 和 {{{{deep}}}}"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 结构化
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：反斜杠转义
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: 路径 C:\n\t\x41\u4e2d\q
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：不成对引号
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "他说：\"你好，世界\n还有 '未闭合"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：不成对代码围栏
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "```python\nprint(1)\n"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：emoji + 零宽混合
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: 😀​🚀‌💡
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 简洁
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：中英数 + 控制字符
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "mixed_文本_123\x01\x02 done"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：模糊词堆叠（10 个）
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: 尽量大概可能若干一些较好合适足够充分显著地完成
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：重复段落 ×20
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。
+
+
+        这段话重复出现，用于测试去重与结构分析。"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 简洁
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：深层嵌套括号
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: 嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（嵌套（核心））））））））））））））））））））））））））））））））））））））））
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：超长占位符名
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "{{aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa}}"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 结构化
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：RTL 与方向控制符
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: 正常文本 ‮反向文本‭ 正常文本
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：乱码 + 结构化风格
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: æ ½è¿æ æ¯ä¹±
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 结构化
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：控制字符 + 简洁风格
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: "a\0b\ac\e[31md"
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 简洁
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：零宽 + goal 乱码
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: 提​示词
+      files: []
+      params:
+        goal: ä½ å¥½ï¼Œgoal
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：全角符号堆砌
+    tags:
+      - prompt
+    repeat: 5
+    input:
+      kind: text
+      goal: 畸形/乱码输入不能让工具崩溃
+      content: ！？；：“”‘’【】（）《》
+      files: []
+      params:
+        goal: 鲁棒测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

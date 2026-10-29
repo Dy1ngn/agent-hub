@@ -1,0 +1,1182 @@
+id: ts-b-data-cleaner-g2-variation
+agentId: data-cleaner
+group: g2-variation
+name: 表格清洗 · 输入变体：格式 / 规模 / 结构
+description: TSV、非逗号分隔、宽表、长表、中文列名、日期列、稀疏表、嵌套 JSON 等输入形态变体（模型链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-tsv-1
+    title: TSV 制表符输入（1）
+    tags:
+      - variation
+      - tsv
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检 TSV 表格
+      content: 这是制表符分隔的表格。
+      files:
+        - path: input/data.tsv
+          content: "id\tname\tscore
+
+            1\t张三\t88
+
+            2\t\t90
+
+            3\t李四\t76
+
+            4\t王五\t\n"
+      params:
+        file: input/data.tsv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)tsv|制表
+          weight: 1
+          note: 识别 TSV 数据源
+        - type: regex
+          pattern: (问题|清单|建议)
+          weight: 1
+          note: 给出问题与建议
+      requiredSuggestions: []
+  - id: g2-tsv-2
+    title: TSV 制表符输入（2）
+    tags:
+      - variation
+      - tsv
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检 TSV 表格
+      content: 这是制表符分隔的表格。
+      files:
+        - path: input/data2.tsv
+          content: "id\tcity\tamount
+
+            1\t北京\t100
+
+            2\t上海\t250
+
+            3\t北京\t80
+
+            4\t北京\t100
+
+            5\t广州\t120\n"
+      params:
+        file: input/data2.tsv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)tsv|制表
+          weight: 1
+          note: 识别 TSV 数据源
+        - type: regex
+          pattern: (问题|清单|建议)
+          weight: 1
+          note: 给出问题与建议
+      requiredSuggestions: []
+  - id: g2-delims-1
+    title: 非逗号分隔符（1）
+    tags:
+      - variation
+      - delimiter
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检分号/竖线分隔的表格
+      content: 分隔符不是逗号，请正确识别。
+      files:
+        - path: input/semi.csv
+          content: "id;name;amount
+
+            1;张三;100
+
+            2;;250
+
+            3;李四;80
+
+            4;王五;120\n"
+      params:
+        file: input/semi.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (分隔符|;|\|)
+          weight: 1
+          note: 识别非逗号分隔符
+      requiredSuggestions: []
+  - id: g2-delims-2
+    title: 非逗号分隔符（2）
+    tags:
+      - variation
+      - delimiter
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检分号/竖线分隔的表格
+      content: 分隔符不是逗号，请正确识别。
+      files:
+        - path: input/pipe.csv
+          content: "id|name|amount
+
+            1|张三|100
+
+            2|李四|
+
+            3|王五|80
+
+            4||120\n"
+      params:
+        file: input/pipe.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (分隔符|;|\|)
+          weight: 1
+          note: 识别非逗号分隔符
+      requiredSuggestions: []
+  - id: g2-wide-1
+    title: 宽表多列（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检 12 列宽表
+      content: 列比较多的表格。
+      files:
+        - path: input/wide.csv
+          content: "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12
+
+            7,14,21,28,35,42,49,56,63,70,77,84
+
+            11,22,33,44,55,66,77,5,16,27,38,49
+
+            13,26,39,52,65,78,12,25,38,51,64,77\n"
+      params:
+        file: input/wide.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 列类型
+          weight: 1
+          note: 逐列给出类型
+      requiredSuggestions: []
+  - id: g2-wide-2
+    title: 宽表多列（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检 12 列宽表
+      content: 列比较多的表格。
+      files:
+        - path: input/wide2.csv
+          content: "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12
+
+            11,22,33,44,55,66,77,5,16,27,38,49
+
+            13,26,39,52,65,78,12,25,38,51,64,77\n"
+      params:
+        file: input/wide2.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 列类型
+          weight: 1
+          note: 逐列给出类型
+      requiredSuggestions: []
+  - id: g2-tall-1
+    title: 长表 50 行（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检 50 行表格
+      content: 行数比较多的表格。
+      files:
+        - path: input/tall.csv
+          content: "id,name,amount,region
+
+            r01,用户01,13,华东
+
+            r02,用户02,26,华南
+
+            r03,用户03,39,华东
+
+            r04,用户04,52,华南
+
+            r05,用户05,65,华东
+
+            r06,用户06,78,华南
+
+            r07,用户07,91,华东
+
+            r08,用户08,104,华南
+
+            r09,用户09,117,华东
+
+            r10,用户10,130,华南
+
+            r11,用户11,143,华东
+
+            r12,用户12,156,华南
+
+            r13,用户13,169,华东
+
+            r14,用户14,182,华南
+
+            r15,用户15,195,华东
+
+            r16,用户16,208,华南
+
+            r17,用户17,221,华东
+
+            r18,用户18,234,华南
+
+            r19,用户19,247,华东
+
+            r20,用户20,260,华南
+
+            r21,用户21,273,华东
+
+            r22,用户22,286,华南
+
+            r23,用户23,299,华东
+
+            r24,用户24,312,华南
+
+            r25,用户25,325,华东
+
+            r26,用户26,338,华南
+
+            r27,用户27,351,华东
+
+            r28,用户28,364,华南
+
+            r29,用户29,377,华东
+
+            r30,用户30,390,华南
+
+            r31,用户31,403,华东
+
+            r32,用户32,416,华南
+
+            r33,用户33,429,华东
+
+            r34,用户34,442,华南
+
+            r35,用户35,455,华东
+
+            r36,用户36,468,华南
+
+            r37,用户37,481,华东
+
+            r38,用户38,494,华南
+
+            r39,用户39,507,华东
+
+            r40,用户40,520,华南
+
+            r41,用户41,533,华东
+
+            r42,用户42,546,华南
+
+            r43,用户43,559,华东
+
+            r44,用户44,572,华南
+
+            r45,用户45,585,华东
+
+            r46,用户46,598,华南
+
+            r47,用户47,611,华东
+
+            r48,用户48,624,华南
+
+            r49,用户49,637,华东
+
+            r50,用户50,650,华南\n"
+      params:
+        file: input/tall.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 统计摘要
+          weight: 1
+          note: 输出统计摘要
+      requiredSuggestions: []
+  - id: g2-tall-2
+    title: 长表 50 行（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检 50 行表格
+      content: 行数比较多的表格。
+      files:
+        - path: input/tall2.csv
+          content: "id,name,amount,region
+
+            r01,用户01,13,华东
+
+            r02,用户02,26,华南
+
+            r03,用户03,39,华东
+
+            r04,用户04,52,华南
+
+            r05,用户05,65,华东
+
+            r06,用户06,78,华南
+
+            r07,用户07,91,华东
+
+            r08,用户08,104,华南
+
+            r09,用户09,117,华东
+
+            r10,用户10,130,华南
+
+            r11,用户11,143,华东
+
+            r12,用户12,156,华南
+
+            r13,用户13,169,华东
+
+            r14,用户14,182,华南
+
+            r15,用户15,195,华东
+
+            r16,用户16,208,华南
+
+            r17,用户17,221,华东
+
+            r18,用户18,234,华南
+
+            r19,用户19,247,华东
+
+            r20,用户20,260,华南
+
+            r21,用户21,273,华东
+
+            r22,用户22,286,华南
+
+            r23,用户23,299,华东
+
+            r24,用户24,312,华南
+
+            r25,用户25,325,华东
+
+            r26,用户26,338,华南
+
+            r27,用户27,351,华东
+
+            r28,用户28,364,华南
+
+            r29,用户29,377,华东
+
+            r30,用户30,390,华南
+
+            r31,用户31,403,华东
+
+            r32,用户32,416,华南
+
+            r33,用户33,429,华东
+
+            r34,用户34,442,华南
+
+            r35,用户35,455,华东
+
+            r36,用户36,468,华南
+
+            r37,用户37,481,华东
+
+            r38,用户38,494,华南
+
+            r39,用户39,507,华东
+
+            r40,用户40,520,华南
+
+            r41,用户41,533,华东
+
+            r42,用户42,546,华南
+
+            r43,用户43,559,华东
+
+            r44,用户44,572,华南
+
+            r45,用户45,585,华东
+
+            r46,用户46,598,华南
+
+            r47,用户47,611,华东
+
+            r48,用户48,624,华南
+
+            r49,用户49,637,华东
+
+            r50,用户50,650,华南
+
+            1,张三,10,华东\n"
+      params:
+        file: input/tall2.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 统计摘要
+          weight: 1
+          note: 输出统计摘要
+      requiredSuggestions: []
+  - id: g2-cn-1
+    title: 中文列名与中文值（1）
+    tags:
+      - variation
+      - i18n
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检中文表头表格
+      content: 中文列名的表格。
+      files:
+        - path: input/cn.csv
+          content: "姓名,城市,销售额
+
+            张三,北京,1200
+
+            李四,上海,
+
+            王五,广州,800
+
+            赵六,,950\n"
+      params:
+        file: input/cn.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (姓名|城市|销售额|列类型)
+          weight: 1
+          note: 正确处理中文列名
+      requiredSuggestions: []
+  - id: g2-cn-2
+    title: 中文列名与中文值（2）
+    tags:
+      - variation
+      - i18n
+    repeat: 5
+    input:
+      kind: table
+      goal: 体检中文表头表格
+      content: 中文列名的表格。
+      files:
+        - path: input/cn2.csv
+          content: '订单号,客户名称,金额,下单日期
+
+            D001,甲公司,"1,200",2024-01-01
+
+            D002,乙公司,¥800,2024/02/01
+
+            D003,,500,2024-03-01
+
+            '
+      params:
+        file: input/cn2.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (姓名|城市|销售额|列类型)
+          weight: 1
+          note: 正确处理中文列名
+      requiredSuggestions: []
+  - id: g2-num-1
+    title: 数值统计摘要（1）
+    tags:
+      - variation
+      - stats
+    repeat: 5
+    input:
+      kind: table
+      goal: 给出数值列统计摘要
+      content: 关注数值列统计。
+      files:
+        - path: input/num.csv
+          content: "x,y
+
+            1,2.5
+
+            2,3.5
+
+            3,4.5
+
+            4,5.5
+
+            5,6.5
+
+            6,7.5
+
+            7,8.5
+
+            8,9.5\n"
+      params:
+        file: input/num.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 数值列
+          weight: 1
+          note: 输出数值列统计
+        - type: regex
+          pattern: (最小值|最大值|均值|中位数)
+          weight: 1
+          note: 统计指标齐全
+      requiredSuggestions: []
+  - id: g2-num-2
+    title: 数值统计摘要（2）
+    tags:
+      - variation
+      - stats
+    repeat: 5
+    input:
+      kind: table
+      goal: 给出数值列统计摘要
+      content: 关注数值列统计。
+      files:
+        - path: input/num2.csv
+          content: "temp,humidity
+
+            -5,30
+
+            0,40
+
+            5,50
+
+            10,60
+
+            15,70
+
+            20,80\n"
+      params:
+        file: input/num2.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 数值列
+          weight: 1
+          note: 输出数值列统计
+        - type: regex
+          pattern: (最小值|最大值|均值|中位数)
+          weight: 1
+          note: 统计指标齐全
+      requiredSuggestions: []
+  - id: g2-text-1
+    title: 文本与类别分布（1）
+    tags:
+      - variation
+      - stats
+    repeat: 5
+    input:
+      kind: table
+      goal: 给出文本列分布
+      content: 关注文本列。
+      files:
+        - path: input/text.csv
+          content: "title,category
+
+            这是一个比较长的产品标题样本,电子
+
+            短标题,服装
+
+            另一个很长很长的产品标题用于测试长度分布,电子
+
+            家居标题,家居
+
+            电子标题,电子\n"
+      params:
+        file: input/text.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (文本长度分布|类别分布)
+          weight: 1
+          note: 输出文本/类别统计
+      requiredSuggestions: []
+  - id: g2-text-2
+    title: 文本与类别分布（2）
+    tags:
+      - variation
+      - stats
+    repeat: 5
+    input:
+      kind: table
+      goal: 给出文本列分布
+      content: 关注文本列。
+      files:
+        - path: input/text2.csv
+          content: "remark,level
+
+            备注甲,A
+
+            备注乙较长一些,B
+
+            备注丙,A
+
+            备注丁非常长的一段备注内容,C
+
+            备注戊,B\n"
+      params:
+        file: input/text2.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (文本长度分布|类别分布)
+          weight: 1
+          note: 输出文本/类别统计
+      requiredSuggestions: []
+  - id: g2-date-1
+    title: 日期与日期时间列（1）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: table
+      goal: 识别日期列并统一日期格式
+      content: 表格里有日期列。
+      files:
+        - path: input/dates.csv
+          content: "day,created
+
+            2024-01-05,2024-01-05 08:30:00
+
+            2024年2月6日,2024-02-06 09:15:00
+
+            20240307,2024-03-07 18:45:00
+
+            04/08/2024,2024-04-08 23:59:59\n"
+      params:
+        file: input/dates.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (日期|日期时间)
+          weight: 1
+          note: 识别日期类列
+      requiredSuggestions: []
+  - id: g2-date-2
+    title: 日期与日期时间列（2）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: table
+      goal: 识别日期列并统一日期格式
+      content: 表格里有日期列。
+      files:
+        - path: input/dates2.csv
+          content: "day,ts
+
+            2024年5月1日,2024-05-01 00:00:00
+
+            20240601,2024-06-01 12:00:00
+
+            2024-07-01,2024-07-01 23:00:00\n"
+      params:
+        file: input/dates2.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (日期|日期时间)
+          weight: 1
+          note: 识别日期类列
+      requiredSuggestions: []
+  - id: g2-sparse-1
+    title: 稀疏表大量缺失（1）
+    tags:
+      - variation
+      - missing
+    repeat: 5
+    input:
+      kind: table
+      goal: 处理缺失率很高的表格
+      content: 缺失很严重。
+      files:
+        - path: input/sparse.csv
+          content: "a,b,c
+
+            1,,
+
+            ,,
+
+            3,,
+
+            ,,
+
+            5,,
+
+            ,,
+
+            7,,
+
+            ,,
+
+            9,,
+
+            ,,\n"
+      params:
+        file: input/sparse.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: 缺失值
+          weight: 2
+          note: 识别缺失值
+        - type: regex
+          pattern: (严重|警告|提示)
+          weight: 1
+          note: 按严重度分级
+      requiredSuggestions: []
+  - id: g2-sparse-2
+    title: 稀疏表大量缺失（2）
+    tags:
+      - variation
+      - missing
+    repeat: 5
+    input:
+      kind: table
+      goal: 处理缺失率很高的表格
+      content: 缺失很严重。
+      files:
+        - path: input/sparse2.csv
+          content: "a,b,c,d
+
+            1,x,,
+
+            2,,y,
+
+            3,,,z
+
+            4,,,,
+
+            5,x,,
+
+            6,,y,
+
+            7,,,z
+
+            8,,,,\n"
+      params:
+        file: input/sparse2.csv
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: 缺失值
+          weight: 2
+          note: 识别缺失值
+        - type: regex
+          pattern: (严重|警告|提示)
+          weight: 1
+          note: 按严重度分级
+      requiredSuggestions: []
+  - id: g2-jsonnest-1
+    title: JSON 嵌套值（1）
+    tags:
+      - variation
+      - json
+    repeat: 5
+    input:
+      kind: table
+      goal: 处理含嵌套结构的 JSON
+      content: JSON 里有嵌套对象。
+      files:
+        - path: input/nest.json
+          content: '[{"id": 1, "meta": {"tag": "a"}, "nums": [1, 2], "name": "甲"}, {"id": 2, "meta": {"tag": "b"}, "nums": [3], "name": ""}]'
+      params:
+        file: input/nest.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)json
+          weight: 1
+          note: 识别 JSON 数据源
+        - type: regex
+          pattern: (问题|清单|概览)
+          weight: 1
+          note: 产出结构化报告
+      requiredSuggestions: []
+  - id: g2-jsonnest-2
+    title: JSON 嵌套值（2）
+    tags:
+      - variation
+      - json
+    repeat: 5
+    input:
+      kind: table
+      goal: 处理含嵌套结构的 JSON
+      content: JSON 里有嵌套对象。
+      files:
+        - path: input/nest2.json
+          content: '{"id": [1, 2, 3], "meta": ["{\"tag\": \"a\"}", "", "{\"tag\": \"b\"}"], "name": ["甲", "乙", "丙"]}'
+      params:
+        file: input/nest2.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 数据质量报告
+          weight: 1
+          note: 产出标准质量报告
+        - type: contains
+          text: "## 数据概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)json
+          weight: 1
+          note: 识别 JSON 数据源
+        - type: regex
+          pattern: (问题|清单|概览)
+          weight: 1
+          note: 产出结构化报告
+      requiredSuggestions: []

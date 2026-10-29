@@ -1,0 +1,1194 @@
+id: ts-b-release-notes-g3-edge
+agentId: release-notes
+group: g3-edge
+name: 发布说明生成 · 边界情况：空 / 超短 / 超长 / 极端参数
+description: 单条/超短/超长标题、150 条提交、版本全空、v999.999.999 等极端参数下的稳定产出（离线确定性模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：单条超短提交
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 单条超短提交
+      files:
+        - path: input/commits.txt
+          content: x
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：单字符类型
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 单字符类型
+      files:
+        - path: input/commits.txt
+          content: "a: b"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：只有类型没有描述
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 只有类型没有描述
+      files:
+        - path: input/commits.txt
+          content: "feat:"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：超长提交标题
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 超长提交标题
+      files:
+        - path: input/commits.txt
+          content: "feat: 很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：超多提交（150 条）
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 超多提交（150 条）
+      files:
+        - path: input/commits.txt
+          content: "fix(x0): 修复 0
+
+            fix(x1): 修复 1
+
+            fix(x2): 修复 2
+
+            fix(x3): 修复 3
+
+            fix(x4): 修复 4
+
+            fix(x5): 修复 5
+
+            fix(x6): 修复 6
+
+            fix(x7): 修复 7
+
+            fix(x8): 修复 8
+
+            fix(x9): 修复 9
+
+            fix(x10): 修复 10
+
+            fix(x11): 修复 11
+
+            fix(x12): 修复 12
+
+            fix(x13): 修复 13
+
+            fix(x14): 修复 14
+
+            fix(x15): 修复 15
+
+            fix(x16): 修复 16
+
+            fix(x17): 修复 17
+
+            fix(x18): 修复 18
+
+            fix(x19): 修复 19
+
+            fix(x20): 修复 20
+
+            fix(x21): 修复 21
+
+            fix(x22): 修复 22
+
+            fix(x23): 修复 23
+
+            fix(x24): 修复 24
+
+            fix(x25): 修复 25
+
+            fix(x26): 修复 26
+
+            fix(x27): 修复 27
+
+            fix(x28): 修复 28
+
+            fix(x29): 修复 29
+
+            fix(x30): 修复 30
+
+            fix(x31): 修复 31
+
+            fix(x32): 修复 32
+
+            fix(x33): 修复 33
+
+            fix(x34): 修复 34
+
+            fix(x35): 修复 35
+
+            fix(x36): 修复 36
+
+            fix(x37): 修复 37
+
+            fix(x38): 修复 38
+
+            fix(x39): 修复 39
+
+            fix(x40): 修复 40
+
+            fix(x41): 修复 41
+
+            fix(x42): 修复 42
+
+            fix(x43): 修复 43
+
+            fix(x44): 修复 44
+
+            fix(x45): 修复 45
+
+            fix(x46): 修复 46
+
+            fix(x47): 修复 47
+
+            fix(x48): 修复 48
+
+            fix(x49): 修复 49
+
+            fix(x50): 修复 50
+
+            fix(x51): 修复 51
+
+            fix(x52): 修复 52
+
+            fix(x53): 修复 53
+
+            fix(x54): 修复 54
+
+            fix(x55): 修复 55
+
+            fix(x56): 修复 56
+
+            fix(x57): 修复 57
+
+            fix(x58): 修复 58
+
+            fix(x59): 修复 59
+
+            fix(x60): 修复 60
+
+            fix(x61): 修复 61
+
+            fix(x62): 修复 62
+
+            fix(x63): 修复 63
+
+            fix(x64): 修复 64
+
+            fix(x65): 修复 65
+
+            fix(x66): 修复 66
+
+            fix(x67): 修复 67
+
+            fix(x68): 修复 68
+
+            fix(x69): 修复 69
+
+            fix(x70): 修复 70
+
+            fix(x71): 修复 71
+
+            fix(x72): 修复 72
+
+            fix(x73): 修复 73
+
+            fix(x74): 修复 74
+
+            fix(x75): 修复 75
+
+            fix(x76): 修复 76
+
+            fix(x77): 修复 77
+
+            fix(x78): 修复 78
+
+            fix(x79): 修复 79
+
+            fix(x80): 修复 80
+
+            fix(x81): 修复 81
+
+            fix(x82): 修复 82
+
+            fix(x83): 修复 83
+
+            fix(x84): 修复 84
+
+            fix(x85): 修复 85
+
+            fix(x86): 修复 86
+
+            fix(x87): 修复 87
+
+            fix(x88): 修复 88
+
+            fix(x89): 修复 89
+
+            fix(x90): 修复 90
+
+            fix(x91): 修复 91
+
+            fix(x92): 修复 92
+
+            fix(x93): 修复 93
+
+            fix(x94): 修复 94
+
+            fix(x95): 修复 95
+
+            fix(x96): 修复 96
+
+            fix(x97): 修复 97
+
+            fix(x98): 修复 98
+
+            fix(x99): 修复 99
+
+            fix(x100): 修复 100
+
+            fix(x101): 修复 101
+
+            fix(x102): 修复 102
+
+            fix(x103): 修复 103
+
+            fix(x104): 修复 104
+
+            fix(x105): 修复 105
+
+            fix(x106): 修复 106
+
+            fix(x107): 修复 107
+
+            fix(x108): 修复 108
+
+            fix(x109): 修复 109
+
+            fix(x110): 修复 110
+
+            fix(x111): 修复 111
+
+            fix(x112): 修复 112
+
+            fix(x113): 修复 113
+
+            fix(x114): 修复 114
+
+            fix(x115): 修复 115
+
+            fix(x116): 修复 116
+
+            fix(x117): 修复 117
+
+            fix(x118): 修复 118
+
+            fix(x119): 修复 119
+
+            fix(x120): 修复 120
+
+            fix(x121): 修复 121
+
+            fix(x122): 修复 122
+
+            fix(x123): 修复 123
+
+            fix(x124): 修复 124
+
+            fix(x125): 修复 125
+
+            fix(x126): 修复 126
+
+            fix(x127): 修复 127
+
+            fix(x128): 修复 128
+
+            fix(x129): 修复 129
+
+            fix(x130): 修复 130
+
+            fix(x131): 修复 131
+
+            fix(x132): 修复 132
+
+            fix(x133): 修复 133
+
+            fix(x134): 修复 134
+
+            fix(x135): 修复 135
+
+            fix(x136): 修复 136
+
+            fix(x137): 修复 137
+
+            fix(x138): 修复 138
+
+            fix(x139): 修复 139
+
+            fix(x140): 修复 140
+
+            fix(x141): 修复 141
+
+            fix(x142): 修复 142
+
+            fix(x143): 修复 143
+
+            fix(x144): 修复 144
+
+            fix(x145): 修复 145
+
+            fix(x146): 修复 146
+
+            fix(x147): 修复 147
+
+            fix(x148): 修复 148
+
+            fix(x149): 修复 149"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 问题修复"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：注释与空行夹一条
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 注释与空行夹一条
+      files:
+        - path: input/commits.txt
+          content: "# 这是注释\n\nfeat: 唯一的提交\n\n# 另一条注释"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：极端参数 from=v999.999.999
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 极端参数 from=v999.999.999
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增二维码登录"
+      params:
+        from: v999.999.999
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：无需升版本告警
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 无需升版本告警
+      files:
+        - path: input/commits.txt
+          content: "style: 统一代码缩进\nstyle: 格式化 import"
+      params:
+        from: v0.0.1
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 提示"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：版本不一致告警
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 版本不一致告警
+      files:
+        - path: input/commits.txt
+          content: "feat(auth): 增加登录失败重试限制
+
+            fix(auth): 修复空指针导致的登录崩溃
+
+            feat(ui): 新增深色模式开关
+
+            fix(pay): 修复重复扣款问题
+
+            docs: 更新部署文档\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: v2.5.0
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 提示"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：版本全空
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 版本全空
+      files:
+        - path: input/commits.txt
+          content: "feat(auth): 增加登录失败重试限制
+
+            fix(auth): 修复空指针导致的登录崩溃
+
+            feat(ui): 新增深色模式开关
+
+            fix(pay): 修复重复扣款问题
+
+            docs: 更新部署文档\n"
+      params:
+        from: ""
+        to: ""
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: （未指定版本）
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-11
+    title: 边界输入：只有标点
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 只有标点
+      files:
+        - path: input/commits.txt
+          content: 。。。
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-12
+    title: 边界输入：同一条重复 50 次
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 同一条重复 50 次
+      files:
+        - path: input/commits.txt
+          content: "feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交
+
+            feat: 重复提交"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-13
+    title: 边界输入：超长 scope
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 超长 scope
+      files:
+        - path: input/commits.txt
+          content: "feat(ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss): 带超长范围的提交"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-14
+    title: 边界输入：只有破坏性标记
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 只有破坏性标记
+      files:
+        - path: input/commits.txt
+          content: "feat!: 不兼容改动"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: 破坏性变更
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-15
+    title: 边界输入：中英混合描述
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 中英混合描述
+      files:
+        - path: input/commits.txt
+          content: "feat(i18n): support 多语言 and locale"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-16
+    title: 边界输入：大写类型
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 大写类型
+      files:
+        - path: input/commits.txt
+          content: "FEAT(x): 大写类型也识别"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-17
+    title: 边界输入：emoji 前缀
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: emoji 前缀
+      files:
+        - path: input/commits.txt
+          content: "✨ feat: 带 emoji 的提交"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-18
+    title: 边界输入：单个点号
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 单个点号
+      files:
+        - path: input/commits.txt
+          content: ·
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-19
+    title: 边界输入：极端参数 to 空
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 极端参数 to 空
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增导出功能
+
+            fix: 修复导出空文件
+
+            perf: 导出提速
+
+            docs: 导出说明
+
+            test: 导出用例\n"
+      params:
+        from: v3.1.4
+        to: ""
+        version: ""
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-20
+    title: 边界输入：版本一致无告警
+    tags:
+      - release
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出结构完整的发布说明
+      content: 版本一致无告警
+      files:
+        - path: input/commits.txt
+          content: "perf(db): 优化列表查询索引
+
+            perf(cache): 增加热点数据缓存
+
+            fix(db): 修复慢查询\n"
+      params:
+        from: v1.2.0
+        to: HEAD
+        version: v1.2.1
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 性能"
+          weight: 2
+          note: 边界输入下确定性结论正确
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []

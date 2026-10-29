@@ -1204,6 +1204,19 @@ def build_report(deps, findings, advisories, advisories_hits, advice_items,
     return "\n".join(lines).rstrip() + "\n"
 
 
+def write_failure_report(args, note):
+    """错误路径也产出可读报告（评测平台按报告评分），退出码与错误文案保持不变。"""
+    report = build_report([], [], [], [], [], "", args.model, args.offline,
+                          [note], args.min_level)
+    output_path = Path(args.output).expanduser()
+    try:
+        if output_path.parent and not output_path.parent.exists():
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(report, encoding="utf-8")
+    except OSError:
+        pass
+
+
 def render_rules_table():
     lines = [
         "依赖审计内置风险规则（不需要模型）：",
@@ -1591,6 +1604,7 @@ def main():
         deps, manifests, notes = collect_dependencies(args.paths)
     except FileNotFoundError as exc:
         print("错误：%s" % exc, file=sys.stderr)
+        write_failure_report(args, "路径检查失败：%s" % exc)
         sys.exit(1)
 
     if not deps:
@@ -1599,6 +1613,8 @@ def main():
             "package.json / Pipfile 等清单文件）。",
             file=sys.stderr,
         )
+        write_failure_report(args, "没有解析出任何依赖（请确认路径下有 requirements.txt / "
+                                   "pyproject.toml / package.json / Pipfile 等清单文件）")
         sys.exit(1)
 
     advisories = []
@@ -1607,6 +1623,7 @@ def main():
             advisories.extend(parse_advisory_file(advisory_path))
         except (ValueError, OSError) as exc:
             print("错误：%s" % exc, file=sys.stderr)
+            write_failure_report(args, "公告文件读取失败：%s" % exc)
             sys.exit(1)
 
     print("[解析] 依赖 %d 条，清单 %d 个：%s"

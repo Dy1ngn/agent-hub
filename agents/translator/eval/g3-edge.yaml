@@ -1,0 +1,832 @@
+id: ts-b-translator-g3-edge
+agentId: translator
+group: g3-edge
+name: 多语言翻译 · 边界情况：空 / 超短 / 超长 / 极端参数
+description: 空文件、极短文本与极端参数组合下的稳定产出（离线确定性模式：译文保留原文 + 术语表替换）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空文件
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: ""
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：单字
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: 好
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：纯标点
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: 。。。，？？！！
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：只有空格
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "  \ \n  "
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：只有换行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "\n\n\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：纯 emoji
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: 😀🚀
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：纯数字
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "1234567890"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：单个英文词
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 中文
+      files:
+        - path: input/doc.txt
+          content: hello
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 中文
+        from: 英文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：超长单行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: 这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：极短中英混合
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出翻译报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: 我like它
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 自动识别
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 边界输入仍产出翻译报告
+        - type: contains
+          text: 统计概览
+          weight: 1
+          note: 确定性章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: 极端参数：batch=200 + 较长文本（多批）
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "年度总结。营收稳步增长，成本持续优化，现金流健康。
+
+            团队规模保持稳定，人效提升明显。客户满意度创新高。
+
+            产品完成三次大版本迭代，技术债清理过半。
+
+            市场方面，新签客户数增长三成，老客户续约率保持九成。
+
+            风险方面，关注宏观环境与汇率波动带来的影响。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：英语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: 极端参数：batch=100000 + 较长文本（单批）
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "年度总结。营收稳步增长，成本持续优化，现金流健康。
+
+            团队规模保持稳定，人效提升明显。客户满意度创新高。
+
+            产品完成三次大版本迭代，技术债清理过半。
+
+            市场方面，新签客户数增长三成，老客户续约率保持九成。
+
+            风险方面，关注宏观环境与汇率波动带来的影响。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "100000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：英语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: 极端参数：源语言=目标语言（中→中）
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/doc.txt → 中文
+      files:
+        - path: input/doc.txt
+          content: "同一语言翻译：这段文本的源语言与目标语言相同。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 中文
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：中文
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: 极端参数：源语言=目标语言（英→英）
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "Same language translation request for this short text.\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 英语
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：英语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: 极端参数：生僻目标语言（世界语）
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/doc.txt → 世界语
+      files:
+        - path: input/doc.txt
+          content: "世界语翻译测试：这是一段用于测试生僻目标语言的文本。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 世界语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：世界语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: 极端参数：自动识别源语言
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/doc.txt → 日语
+      files:
+        - path: input/doc.txt
+          content: "自动识别测试：这段文本没有显式指定源语言。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 日语
+        from: 自动识别
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：日语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: 极端参数：JSON 文件 + 法语
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/data.json → 法语
+      files:
+        - path: input/data.json
+          content: "{
+
+            \  \"greeting\": \"你好\",
+
+            \  \"farewell\": \"再见\"
+
+            }\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/data.json
+        to: 法语
+        from: 中文
+        batch: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：法语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: 极端参数：CSV 文件 + 德语
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/table.csv → 德语
+      files:
+        - path: input/table.csv
+          content: "水果,颜色\n苹果,红色\n香蕉,黄色\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/table.csv
+        to: 德语
+        from: 中文
+        batch: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：德语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: 极端参数：batch=200 + 空文件
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: ""
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：英语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: 极端参数：markdown + 韩语
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: 翻译任务：input/doc.md → 韩语
+      files:
+        - path: input/doc.md
+          content: "# 标题\n\n带结构的 markdown 文档，用于验证结构化翻译。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 韩语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 极端参数仍产出翻译报告
+        - type: contains
+          text: 目标语言：韩语
+          weight: 1
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []

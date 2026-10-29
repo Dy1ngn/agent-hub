@@ -1,0 +1,1140 @@
+id: ts-b-todo-planner-g1-basic
+agentId: todo-planner
+group: g1-basic
+name: 任务拆解 · 基础功能：目标拆解出计划
+description: 典型目标描述的完整链路：解析、WBS、依赖、工作日排程、甘特图与风险清单，走模型细化拆解链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-goal-1
+    title: 目标拆解（Python）
+    tags:
+      - basic
+      - goal
+    repeat: 5
+    input:
+      kind: text
+      goal: 把目标描述拆成里程碑与任务并排出计划
+      content: 请为下面的目标生成计划：
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+          note: 产出标准计划
+        - type: contains
+          text: Python
+          weight: 2
+          note: 目标关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 2
+          note: 输出 WBS 树
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-goal-2
+    title: 目标拆解（小程序商城）
+    tags:
+      - basic
+      - goal
+    repeat: 5
+    input:
+      kind: text
+      goal: 把目标描述拆成里程碑与任务并排出计划
+      content: 请为下面的目标生成计划：
+      files:
+        - path: input/goal.md
+          content: "三个月上线小程序商城
+
+            第一阶段：需求与设计（2 周）
+
+            - 输出 PRD
+
+            - 完成原型评审
+
+            第二阶段：开发（6 周）
+
+            - 完成商品与订单模块
+
+            - 完成支付对接
+
+            第三阶段：上线（2 周）
+
+            - 灰度发布
+
+            - 正式上线
+
+            约束：预算不超过 20 万元，团队 5 人"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+          note: 产出标准计划
+        - type: contains
+          text: 小程序商城
+          weight: 2
+          note: 目标关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 2
+          note: 输出 WBS 树
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-goal-3
+    title: 目标拆解（团建）
+    tags:
+      - basic
+      - goal
+    repeat: 5
+    input:
+      kind: text
+      goal: 把目标描述拆成里程碑与任务并排出计划
+      content: "请为下面的目标生成计划：组织 200 人年度团建活动
+
+        第一阶段：策划（1 周）
+
+        - 确定主题与预算
+
+        - 选定场地
+
+        第二阶段：执行（2 周）
+
+        - 发通知并统计报名
+
+        - 现场组织与拍摄
+
+        约束：一个月内完成，预算 5 万元"
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        goal: "组织 200 人年度团建活动
+
+          第一阶段：策划（1 周）
+
+          - 确定主题与预算
+
+          - 选定场地
+
+          第二阶段：执行（2 周）
+
+          - 发通知并统计报名
+
+          - 现场组织与拍摄
+
+          约束：一个月内完成，预算 5 万元"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+          note: 产出标准计划
+        - type: contains
+          text: 团建
+          weight: 2
+          note: 目标关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 2
+          note: 输出 WBS 树
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-goal-4
+    title: 目标拆解（雅思）
+    tags:
+      - basic
+      - goal
+    repeat: 5
+    input:
+      kind: text
+      goal: 把目标描述拆成里程碑与任务并排出计划
+      content: "请为下面的目标生成计划：备考雅思 7 分
+
+        - 每天背 100 个单词
+
+        - 每周做 2 套真题
+
+        - 报名口语陪练
+
+        先做一次模考摸底，然后制定复习计划，完成 4 周冲刺后复盘
+
+        约束：三个月内出分"
+      files:
+        - path: input/goal.md
+          content: ""
+      params:
+        goal: "备考雅思 7 分
+
+          - 每天背 100 个单词
+
+          - 每周做 2 套真题
+
+          - 报名口语陪练
+
+          先做一次模考摸底，然后制定复习计划，完成 4 周冲刺后复盘
+
+          约束：三个月内出分"
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+          note: 产出标准计划
+        - type: contains
+          text: 雅思
+          weight: 2
+          note: 目标关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 2
+          note: 输出 WBS 树
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-milestone-1
+    title: 阶段标记识别（打基础）
+    tags:
+      - basic
+      - milestone
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别阶段/里程碑标记并生成计划
+      content: "请为下面的目标生成计划：考证计划
+
+        第一阶段：打基础（2 周）
+
+        - 学完教材
+
+        - 整理笔记
+
+        第二阶段：刷题（3 周）
+
+        - 刷 500 题"
+      files:
+        - path: input/goal.md
+          content: "考证计划
+
+            第一阶段：打基础（2 周）
+
+            - 学完教材
+
+            - 整理笔记
+
+            第二阶段：刷题（3 周）
+
+            - 刷 500 题"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 里程碑
+          weight: 1
+        - type: contains
+          text: 打基础
+          weight: 2
+          note: 阶段标记进入计划
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-milestone-2
+    title: 阶段标记识别（灰度上线）
+    tags:
+      - basic
+      - milestone
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别阶段/里程碑标记并生成计划
+      content: "请为下面的目标生成计划：产品迭代
+
+        阶段一：开发（1 周）
+
+        - 完成核心功能
+
+        阶段二：灰度上线（1 周）
+
+        - 灰度 10% 用户"
+      files:
+        - path: input/goal.md
+          content: "产品迭代
+
+            阶段一：开发（1 周）
+
+            - 完成核心功能
+
+            阶段二：灰度上线（1 周）
+
+            - 灰度 10% 用户"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 里程碑
+          weight: 1
+        - type: contains
+          text: 灰度上线
+          weight: 2
+          note: 阶段标记进入计划
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-milestone-3
+    title: 阶段标记识别（试点）
+    tags:
+      - basic
+      - milestone
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别阶段/里程碑标记并生成计划
+      content: "请为下面的目标生成计划：系统重构
+
+        M1：调研（1 周）
+
+        - 梳理现状
+
+        M2：试点（2 周）
+
+        - 试点两个服务"
+      files:
+        - path: input/goal.md
+          content: "系统重构
+
+            M1：调研（1 周）
+
+            - 梳理现状
+
+            M2：试点（2 周）
+
+            - 试点两个服务"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 里程碑
+          weight: 1
+        - type: contains
+          text: 试点
+          weight: 2
+          note: 阶段标记进入计划
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-milestone-4
+    title: 阶段标记识别（完成认证）
+    tags:
+      - basic
+      - milestone
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别阶段/里程碑标记并生成计划
+      content: "请为下面的目标生成计划：团队建设
+
+        里程碑：完成认证
+
+        - 完成培训
+
+        - 通过考试"
+      files:
+        - path: input/goal.md
+          content: "团队建设\n里程碑：完成认证\n- 完成培训\n- 通过考试"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 里程碑
+          weight: 1
+        - type: contains
+          text: 完成认证
+          weight: 2
+          note: 阶段标记进入计划
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-deps-1
+    title: 依赖与排程（数据仓库）
+    tags:
+      - basic
+      - deps
+    repeat: 5
+    input:
+      kind: text
+      goal: 按先后词推断依赖并排出工作日日程
+      content: "请为下面的目标生成计划：搭建数据平台
+
+        先完成数据采集，然后建设数据仓库，最后上线报表
+
+        - 完成采集后启动仓库开发
+
+        - 上线报表后做培训"
+      files:
+        - path: input/goal.md
+          content: "搭建数据平台
+
+            先完成数据采集，然后建设数据仓库，最后上线报表
+
+            - 完成采集后启动仓库开发
+
+            - 上线报表后做培训"
+      params:
+        goal: ""
+        days: "45"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖关系
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 2
+          note: 输出甘特图
+        - type: contains
+          text: 每日待办
+          weight: 1
+        - type: contains
+          text: 数据仓库
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-deps-2
+    title: 依赖与排程（冻结需求）
+    tags:
+      - basic
+      - deps
+    repeat: 5
+    input:
+      kind: text
+      goal: 按先后词推断依赖并排出工作日日程
+      content: "请为下面的目标生成计划：发布新版本
+
+        首先冻结需求，之后完成功能开发，基于开发完成再做回归测试
+
+        - 回归后发版"
+      files:
+        - path: input/goal.md
+          content: "发布新版本
+
+            首先冻结需求，之后完成功能开发，基于开发完成再做回归测试
+
+            - 回归后发版"
+      params:
+        goal: ""
+        days: "45"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖关系
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 2
+          note: 输出甘特图
+        - type: contains
+          text: 每日待办
+          weight: 1
+        - type: contains
+          text: 冻结需求
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-deps-3
+    title: 依赖与排程（迁移数据）
+    tags:
+      - basic
+      - deps
+    repeat: 5
+    input:
+      kind: text
+      goal: 按先后词推断依赖并排出工作日日程
+      content: "请为下面的目标生成计划：迁移上云
+
+        先做调研，然后搭建环境，完成环境搭建后迁移数据，之后切换流量
+
+        - 切换后复盘"
+      files:
+        - path: input/goal.md
+          content: "迁移上云
+
+            先做调研，然后搭建环境，完成环境搭建后迁移数据，之后切换流量
+
+            - 切换后复盘"
+      params:
+        goal: ""
+        days: "45"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖关系
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 2
+          note: 输出甘特图
+        - type: contains
+          text: 每日待办
+          weight: 1
+        - type: contains
+          text: 迁移数据
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-deps-4
+    title: 依赖与排程（设计图）
+    tags:
+      - basic
+      - deps
+    repeat: 5
+    input:
+      kind: text
+      goal: 按先后词推断依赖并排出工作日日程
+      content: "请为下面的目标生成计划：装修新房
+
+        先量房，然后出设计图，完成设计后施工，之后软装进场
+
+        - 软装后验收"
+      files:
+        - path: input/goal.md
+          content: "装修新房
+
+            先量房，然后出设计图，完成设计后施工，之后软装进场
+
+            - 软装后验收"
+      params:
+        goal: ""
+        days: "45"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖关系
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 2
+          note: 输出甘特图
+        - type: contains
+          text: 每日待办
+          weight: 1
+        - type: contains
+          text: 设计图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-constraint-1
+    title: 约束识别（内部工具）
+    tags:
+      - basic
+      - constraint
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别时间/预算/人力约束并放进计划
+      content: "请为下面的目标生成计划：开发内部工具
+
+        - 做需求梳理
+
+        - 做开发与联调
+
+        约束：一周内完成，预算不超过 1000 元"
+      files:
+        - path: input/goal.md
+          content: "开发内部工具
+
+            - 做需求梳理
+
+            - 做开发与联调
+
+            约束：一周内完成，预算不超过 1000 元"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标与约束
+          weight: 2
+          note: 约束进入计划
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: contains
+          text: 内部工具
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-constraint-2
+    title: 约束识别（技术沙龙）
+    tags:
+      - basic
+      - constraint
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别时间/预算/人力约束并放进计划
+      content: "请为下面的目标生成计划：举办技术沙龙
+
+        - 定主题
+
+        - 邀讲师
+
+        约束：预算 2 万元，人力 3 人"
+      files:
+        - path: input/goal.md
+          content: "举办技术沙龙
+
+            - 定主题
+
+            - 邀讲师
+
+            约束：预算 2 万元，人力 3 人"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标与约束
+          weight: 2
+          note: 约束进入计划
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: contains
+          text: 技术沙龙
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-constraint-3
+    title: 约束识别（数据迁移）
+    tags:
+      - basic
+      - constraint
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别时间/预算/人力约束并放进计划
+      content: "请为下面的目标生成计划：完成数据迁移
+
+        - 现状摸底
+
+        - 迁移演练
+
+        约束：两周内完成，不能停服"
+      files:
+        - path: input/goal.md
+          content: "完成数据迁移\n- 现状摸底\n- 迁移演练\n约束：两周内完成，不能停服"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标与约束
+          weight: 2
+          note: 约束进入计划
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: contains
+          text: 数据迁移
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-constraint-4
+    title: 约束识别（背单词）
+    tags:
+      - basic
+      - constraint
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别时间/预算/人力约束并放进计划
+      content: "请为下面的目标生成计划：学习一门新语言
+
+        - 背单词
+
+        - 练口语
+
+        约束：每天 1 小时，半年内通过考试"
+      files:
+        - path: input/goal.md
+          content: "学习一门新语言
+
+            - 背单词
+
+            - 练口语
+
+            约束：每天 1 小时，半年内通过考试"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标与约束
+          weight: 2
+          note: 约束进入计划
+        - type: contains
+          text: 风险清单
+          weight: 1
+        - type: contains
+          text: 背单词
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-param-1
+    title: 排期参数（稳妥 / 15 天）
+    tags:
+      - basic
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同排期风格与窗口都稳定出计划
+      content: "请为下面的目标生成计划：一个月内学会 Python 并做两个小项目
+
+        第一阶段：基础语法（3 天）
+
+        - 学完变量与控制流
+
+        - 完成 20 道练习题
+
+        第二阶段：项目实战（2 周）
+
+        - 做一个爬虫小项目
+
+        - 做一个 Web 小项目
+
+        约束：每天投入 2 小时"
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "15"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：稳妥
+          weight: 2
+          note: 排期风格写进计划
+        - type: contains
+          text: 计划窗口：15 天
+          weight: 2
+          note: 计划窗口与参数一致
+        - type: contains
+          text: Python
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-param-2
+    title: 排期参数（激进 / 30 天）
+    tags:
+      - basic
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同排期风格与窗口都稳定出计划
+      content: "请为下面的目标生成计划：三个月上线小程序商城
+
+        第一阶段：需求与设计（2 周）
+
+        - 输出 PRD
+
+        - 完成原型评审
+
+        第二阶段：开发（6 周）
+
+        - 完成商品与订单模块
+
+        - 完成支付对接
+
+        第三阶段：上线（2 周）
+
+        - 灰度发布
+
+        - 正式上线
+
+        约束：预算不超过 20 万元，团队 5 人"
+      files:
+        - path: input/goal.md
+          content: "三个月上线小程序商城
+
+            第一阶段：需求与设计（2 周）
+
+            - 输出 PRD
+
+            - 完成原型评审
+
+            第二阶段：开发（6 周）
+
+            - 完成商品与订单模块
+
+            - 完成支付对接
+
+            第三阶段：上线（2 周）
+
+            - 灰度发布
+
+            - 正式上线
+
+            约束：预算不超过 20 万元，团队 5 人"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 激进
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：激进
+          weight: 2
+          note: 排期风格写进计划
+        - type: contains
+          text: 计划窗口：30 天
+          weight: 2
+          note: 计划窗口与参数一致
+        - type: contains
+          text: 小程序商城
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-param-3
+    title: 排期参数（稳妥 / 60 天）
+    tags:
+      - basic
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同排期风格与窗口都稳定出计划
+      content: "请为下面的目标生成计划：组织 200 人年度团建活动
+
+        第一阶段：策划（1 周）
+
+        - 确定主题与预算
+
+        - 选定场地
+
+        第二阶段：执行（2 周）
+
+        - 发通知并统计报名
+
+        - 现场组织与拍摄
+
+        约束：一个月内完成，预算 5 万元"
+      files:
+        - path: input/goal.md
+          content: "组织 200 人年度团建活动
+
+            第一阶段：策划（1 周）
+
+            - 确定主题与预算
+
+            - 选定场地
+
+            第二阶段：执行（2 周）
+
+            - 发通知并统计报名
+
+            - 现场组织与拍摄
+
+            约束：一个月内完成，预算 5 万元"
+      params:
+        goal: ""
+        days: "60"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：稳妥
+          weight: 2
+          note: 排期风格写进计划
+        - type: contains
+          text: 计划窗口：60 天
+          weight: 2
+          note: 计划窗口与参数一致
+        - type: contains
+          text: 团建
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-param-4
+    title: 排期参数（激进 / 90 天）
+    tags:
+      - basic
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同排期风格与窗口都稳定出计划
+      content: "请为下面的目标生成计划：备考雅思 7 分
+
+        - 每天背 100 个单词
+
+        - 每周做 2 套真题
+
+        - 报名口语陪练
+
+        先做一次模考摸底，然后制定复习计划，完成 4 周冲刺后复盘
+
+        约束：三个月内出分"
+      files:
+        - path: input/goal.md
+          content: "备考雅思 7 分
+
+            - 每天背 100 个单词
+
+            - 每周做 2 套真题
+
+            - 报名口语陪练
+
+            先做一次模考摸底，然后制定复习计划，完成 4 周冲刺后复盘
+
+            约束：三个月内出分"
+      params:
+        goal: ""
+        days: "90"
+        start: 2026-11-02
+        style: 激进
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：激进
+          weight: 2
+          note: 排期风格写进计划
+        - type: contains
+          text: 计划窗口：90 天
+          weight: 2
+          note: 计划窗口与参数一致
+        - type: contains
+          text: 雅思
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 700
+          weight: 1
+      requiredSuggestions: []

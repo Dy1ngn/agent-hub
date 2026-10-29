@@ -1,0 +1,569 @@
+id: ts-b-code-reviewer-g2-variation
+agentId: code-reviewer
+group: g2-variation
+name: 代码审查 · 输入变体：语言 / 规模 / 内容形态
+description: 不同语言与文件规模下的表现：多文件、大文件、混合语言、注释密度等变体（模型语义审查链路）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-multi-1
+    title: 多文件混合审查（1）
+    tags:
+      - variation
+      - multi-file
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查这批文件里的高置信问题
+      content: 多文件审查样本 1
+      files:
+        - path: input/service1.py
+          content: "def load(path):
+
+            \    f = open(path)
+
+            \    return eval(f.read())\n"
+        - path: input/util1.js
+          content: "module.exports = { run: (cmd) => require('child_process').execSync('ls ' + cmd).toString() };\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|建议|严重|警告)
+          weight: 1
+          note: 报告包含问题类描述
+      requiredSuggestions: []
+  - id: g2-multi-2
+    title: 多文件混合审查（2）
+    tags:
+      - variation
+      - multi-file
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查这批文件里的高置信问题
+      content: 多文件审查样本 2
+      files:
+        - path: input/service2.py
+          content: "def transfer(a, b, amount):
+
+            \    a.balance -= amount
+
+            \    b.balance += amount
+
+            \    db.save(a)
+
+            \    db.save(b)\n"
+        - path: input/util2.js
+          content: "function pick(arr, i) {
+
+            \  return arr[i + 1];
+
+            }
+
+            module.exports = { pick };\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|建议|严重|警告)
+          weight: 1
+          note: 报告包含问题类描述
+      requiredSuggestions: []
+  - id: g2-multi-3
+    title: 多文件混合审查（3）
+    tags:
+      - variation
+      - multi-file
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查这批文件里的高置信问题
+      content: 多文件审查样本 3
+      files:
+        - path: input/service3.py
+          content: "TOKEN = 'hf_1a2b3c4d5e6f7g8h9i0j'
+
+
+            def call_api():
+
+            \    return requests.get(API, headers={'Authorization': TOKEN})\n"
+        - path: input/util3.js
+          content: "const cache = {};
+
+            function get(k) {
+
+            \  return cache[k].value;
+
+            }
+
+            module.exports = { get };\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|建议|严重|警告)
+          weight: 1
+          note: 报告包含问题类描述
+      requiredSuggestions: []
+  - id: g2-multi-4
+    title: 多文件混合审查（4）
+    tags:
+      - variation
+      - multi-file
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查这批文件里的高置信问题
+      content: 多文件审查样本 4
+      files:
+        - path: input/service4.py
+          content: "def parse_log(path):
+
+            \    out = []
+
+            \    for line in open(path):
+
+            \        out.append(line.split(','))
+
+            \    return out\n"
+        - path: input/util4.js
+          content: "function renderList(items) {
+
+            \  return items.map(i => '<li>' + i.name + '</li>').join('');
+
+            }
+
+            module.exports = { renderList };\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|建议|严重|警告)
+          weight: 1
+          note: 报告包含问题类描述
+      requiredSuggestions: []
+  - id: g2-multi-5
+    title: 多文件混合审查（5）
+    tags:
+      - variation
+      - multi-file
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查这批文件里的高置信问题
+      content: 多文件审查样本 5
+      files:
+        - path: input/service5.py
+          content: "import threading
+
+
+            balance = 0
+
+
+            def deposit(amount):
+
+            \    global balance
+
+            \    balance += amount\n"
+        - path: input/util5.js
+          content: "async function withdraw(acc, amount) {
+
+            \  if (acc.balance > amount) {
+
+            \    await sleep(10);
+
+            \    acc.balance -= amount;
+
+            \  }
+
+            }
+
+            module.exports = { withdraw };\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+        - type: regex
+          pattern: (问题|风险|建议|严重|警告)
+          weight: 1
+          note: 报告包含问题类描述
+      requiredSuggestions: []
+  - id: g2-big-1
+    title: 较大文件审查（1）
+    tags:
+      - variation
+      - scale
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查较长文件里的问题
+      content: 文件较长，关注高置信问题。
+      files:
+        - path: input/big1.py
+          content: "import os
+
+
+            CONFIG = {}
+
+
+            def init_config():
+
+            \    for line in open('config.ini'):
+
+            \        k, v = line.split('=')
+
+            \        CONFIG[k] = v
+
+
+            def get(key):
+
+            \    return CONFIG[key]
+
+
+            def dump():
+
+            \    return eval(open('state.txt').read())
+
+
+            def save_state(state):
+
+            \    f = open('state.txt', 'w')
+
+            \    f.write(repr(state))
+
+
+            def run_cmd(cmd):
+
+            \    os.system('tool ' + cmd)
+
+
+            def batch_run(cmds):
+
+            \    for c in cmds:
+
+            \        run_cmd(c)
+
+
+            def report(items):
+
+            \    out = []
+
+            \    for i in items:
+
+            \        out.append(str(i))
+
+            \    return '\\n'.join(out)\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-big-2
+    title: 较大文件审查（2）
+    tags:
+      - variation
+      - scale
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查较长文件里的问题
+      content: 文件较长，关注高置信问题。
+      files:
+        - path: input/big2.py
+          content: "class Repo:
+
+            \    def __init__(self):
+
+            \        self.cache = {}
+
+            \    def get(self, key):
+
+            \        return self.cache[key].lower()
+
+            \    def put(self, key, value):
+
+            \        self.cache[key] = value
+
+            \    def bulk(self, pairs):
+
+            \        for p in pairs:
+
+            \            self.put(p[0], p[1])
+
+            \    def search(self, needle):
+
+            \        out = []
+
+            \        for k in self.cache:
+
+            \            if needle in self.cache[k]:
+
+            \                out.append(k)
+
+            \        return out
+
+            \    def export(self, path):
+
+            \        f = open(path, 'w')
+
+            \        f.write(str(self.cache))\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-big-3
+    title: 较大文件审查（3）
+    tags:
+      - variation
+      - scale
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查较长文件里的问题
+      content: 文件较长，关注高置信问题。
+      files:
+        - path: input/big3.py
+          content: "SECRET = 'sk-4f8a2b7c9d1e3f5g7h9j'
+
+            DEBUG = True
+
+
+            def fetch(url):
+
+            \    import urllib.request
+
+            \    return urllib.request.urlopen(url).read().decode()
+
+
+            def parse(html):
+
+            \    import re
+
+            \    return re.findall('<a href=\"(.*)\">', html)
+
+
+            def crawl(urls):
+
+            \    all_links = []
+
+            \    for u in urls:
+
+            \        all_links.extend(parse(fetch(u)))
+
+            \    return all_links
+
+
+            def save(links):
+
+            \    for i in range(len(links) + 1):
+
+            \        print(links[i])\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-big-4
+    title: 较大文件审查（4）
+    tags:
+      - variation
+      - scale
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查较长文件里的问题
+      content: 文件较长，关注高置信问题。
+      files:
+        - path: input/big4.py
+          content: "def divide(a, b):
+
+            \    try:
+
+            \        return a / b
+
+            \    except:
+
+            \        return 0
+
+
+            def average(values):
+
+            \    return sum(values) / len(values)
+
+
+            def normalize(values):
+
+            \    m = average(values)
+
+            \    return [v - m for v in values]
+
+
+            def pipeline(values):
+
+            \    return normalize(values)\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-big-5
+    title: 较大文件审查（5）
+    tags:
+      - variation
+      - scale
+    repeat: 10
+    input:
+      kind: code
+      goal: 审查较长文件里的问题
+      content: 文件较长，关注高置信问题。
+      files:
+        - path: input/big5.py
+          content: "import json
+
+
+            HANDLERS = {}
+
+
+            def register(name):
+
+            \    def deco(fn):
+
+            \        HANDLERS[name] = fn
+
+            \        return fn
+
+            \    return deco
+
+
+            @register('ping')
+
+            def ping(payload):
+
+            \    return {'pong': payload}
+
+
+            def dispatch(raw):
+
+            \    data = json.loads(raw)
+
+            \    return HANDLERS[data['type']](data['payload'])
+
+
+            def handle_all(raws):
+
+            \    out = []
+
+            \    for raw in raws:
+
+            \        try:
+
+            \            out.append(dispatch(raw))
+
+            \        except Exception:
+
+            \            pass
+
+            \    return out\n"
+      params: {}
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

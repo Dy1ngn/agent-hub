@@ -1,0 +1,37 @@
+{
+  "id": "file-butler",
+  "name": "本地文件管家",
+  "description": "本地文件管家：授权一个文件夹后，用自然语言命令让它列出/读取/搜索/写入其中的文件，自动完成整理、汇总、生成报告等任务。基于 Claude function-call，不使用向量库。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "files",
+      "{{params.cmd}}"
+    ]
+  },
+  "output": {
+    "source": "auto",
+    "path": "{{workDir}}/files/report.md",
+    "format": "markdown"
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

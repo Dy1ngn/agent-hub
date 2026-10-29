@@ -1,0 +1,48 @@
+{
+  "id": "doc-summarizer",
+  "name": "长文摘要",
+  "description": "长文摘要助手：清洗解析 + 抽取式打分 + 模型生成，输出带关键词与结构树的中文摘要报告。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/doc.md",
+    "args": [
+      "input/doc.md",
+      "input/extra.md",
+      "--level",
+      "{{params.level}}",
+      "--keywords",
+      "{{params.keywords}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "auto",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "要点"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

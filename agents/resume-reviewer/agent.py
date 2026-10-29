@@ -1521,8 +1521,7 @@ def main():
         print("错误：读取简历失败：%s" % exc, file=sys.stderr)
         sys.exit(1)
     if not text.strip():
-        print("错误：简历文件内容为空。", file=sys.stderr)
-        sys.exit(1)
+        print("[警告] 简历文件内容为空，按空简历继续生成体检报告。", file=sys.stderr)
 
     jd_text = ""
     if args.jd:

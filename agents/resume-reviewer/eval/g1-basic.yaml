@@ -1,0 +1,1379 @@
+id: ts-b-resume-reviewer-g1-basic
+agentId: resume-reviewer
+group: g1-basic
+name: 简历诊断 · 基础功能：典型简历诊断
+description: 典型中英文简历 + JD 的完整体检：结构、量化、JD 匹配、日期与联系方式，走「确定性体检 + 模型改写」链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-full-1
+    title: 完整简历体检（数据分析师）
+    tags:
+      - basic
+    repeat: 5
+    input:
+      kind: text
+      goal: 对简历做全量体检并结合 JD 打分，产出中文 Markdown 诊断报告
+      content: 请对 resume-da.md 做简历体检（目标岗位：数据分析师），生成诊断报告。
+      files:
+        - path: input/resume-da.md
+          content: "# 张伟（数据分析师）
+
+
+            手机：13800001234 ｜ 邮箱：zhangwei@example.com
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常业务数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 我参与了用户增长分析项目
+
+
+            ### 星辰数据 · 数据实习生（2022.06 - 2022.12）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析，输出 3 份周报
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL、Excel、Tableau\n"
+        - path: input/jd.txt
+          content: "职位：数据分析师
+
+            职责：负责业务数据分析与指标体系建设，输出可视化分析报告。
+
+            要求：
+
+            - 熟练使用 SQL 完成复杂取数
+
+            - 熟悉 Python 数据分析（pandas）
+
+            - 掌握 Tableau 或同类 BI 工具
+
+            - 有 A/B 实验经验优先\n"
+      params:
+        role: 数据分析师
+        resume: input/resume-da.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 四维评分卡
+        - type: contains
+          text: 数据分析师
+          weight: 2
+          note: 目标岗位写进报告
+        - type: contains
+          text: SQL
+          weight: 2
+          note: JD 技能出现在匹配分析
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1500
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-full-2
+    title: 完整简历体检（Java 后端开发工程师）
+    tags:
+      - basic
+    repeat: 5
+    input:
+      kind: text
+      goal: 对简历做全量体检并结合 JD 打分，产出中文 Markdown 诊断报告
+      content: 请对 resume-java.md 做简历体检（目标岗位：Java 后端开发工程师），生成诊断报告。
+      files:
+        - path: input/resume-java.md
+          content: "# 李强
+
+            邮箱：liqiang@example.com
+
+
+            ## 工作经历
+
+
+            ### 蓝鲸科技 · Java 开发工程师（2021 年 7 月 - 至今）
+
+            - 负责订单中心接口开发
+
+            - 用 Spring Boot 重构结算服务，接口 P99 延迟从 800ms 降到 120ms
+
+            - 主导 Redis 缓存改造，数据库 QPS 下降 60%
+
+
+            ## 项目经历
+
+            ### 订单中台
+
+            - 设计订单状态机
+
+            - 完成 20 个接口联调
+
+
+            ## 教育背景
+
+            - 南京大学 · 软件工程 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - Java、Spring Boot、MySQL、Redis\n"
+        - path: input/jd.txt
+          content: "职位：Java 后端开发工程师
+
+            职责：负责核心交易系统的服务端研发与性能优化。
+
+            要求：
+
+            - 精通 Java 与 Spring Boot 框架
+
+            - 熟悉 MySQL 索引优化与 Redis 缓存设计
+
+            - 了解分布式事务与消息队列\n"
+      params:
+        role: Java 后端开发工程师
+        resume: input/resume-java.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 四维评分卡
+        - type: contains
+          text: Java 后端开发工程师
+          weight: 2
+          note: 目标岗位写进报告
+        - type: contains
+          text: Spring
+          weight: 2
+          note: JD 技能出现在匹配分析
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1500
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-full-3
+    title: 完整简历体检（前端开发工程师）
+    tags:
+      - basic
+    repeat: 5
+    input:
+      kind: text
+      goal: 对简历做全量体检并结合 JD 打分，产出中文 Markdown 诊断报告
+      content: 请对 resume-fe.md 做简历体检（目标岗位：前端开发工程师），生成诊断报告。
+      files:
+        - path: input/resume-fe.md
+          content: "# 王小美
+
+            手机：13900005678
+
+
+            ## 工作经历
+
+
+            ### 橙子互娱 · 前端开发工程师（2022.03 - 至今）
+
+            - 负责活动页开发
+
+            - 基于 React 搭建组件库，活动页开发效率提升 40%
+
+            - 我优化了首屏加载速度
+
+
+            ## 教育背景
+
+            - 浙江大学 · 计算机科学与技术 · 本科（2018-2022）
+
+
+            ## 技能
+
+            - React、TypeScript、Webpack\n"
+        - path: input/jd.txt
+          content: "职位：前端开发工程师
+
+            职责：负责 C 端活动页与组件库建设。
+
+            要求：
+
+            - 熟练使用 React 与 TypeScript
+
+            - 熟悉 Webpack 构建与前端性能优化\n"
+      params:
+        role: 前端开发工程师
+        resume: input/resume-fe.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 四维评分卡
+        - type: contains
+          text: 前端开发工程师
+          weight: 2
+          note: 目标岗位写进报告
+        - type: contains
+          text: React
+          weight: 2
+          note: JD 技能出现在匹配分析
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1500
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-full-4
+    title: 完整简历体检（产品经理）
+    tags:
+      - basic
+    repeat: 5
+    input:
+      kind: text
+      goal: 对简历做全量体检并结合 JD 打分，产出中文 Markdown 诊断报告
+      content: 请对 resume-pm.md 做简历体检（目标岗位：产品经理），生成诊断报告。
+      files:
+        - path: input/resume-pm.md
+          content: "# 陈晨
+
+            邮箱：chenchen@example.com ｜ 电话：13611112222
+
+
+            ## 工作经历
+
+
+            ### 星河产品部 · 产品经理（2020 年 3 月 - 至今）
+
+            - 负责支付产品需求梳理
+
+            - 主导收银台改版，支付成功率提升 12%
+
+            - 输出 30 份 PRD 并推动落地
+
+
+            ## 教育背景
+
+            - 武汉大学 · 信息管理 · 本科（2016-2020）
+
+
+            ## 技能
+
+            - Figma、Axure、SQL、数据分析\n"
+        - path: input/jd.txt
+          content: "职位：产品经理
+
+            职责：负责支付产品规划与体验优化。
+
+            要求：
+
+            - 熟练使用 Figma 输出原型
+
+            - 具备数据分析能力，能用 SQL 取数
+
+            - 有支付或交易类产品经验优先\n"
+      params:
+        role: 产品经理
+        resume: input/resume-pm.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: 评分卡
+          weight: 1
+          note: 四维评分卡
+        - type: contains
+          text: 产品经理
+          weight: 2
+          note: 目标岗位写进报告
+        - type: contains
+          text: Figma
+          weight: 2
+          note: JD 技能出现在匹配分析
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1500
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-quant-1
+    title: 量化成果体检（运营专员）
+    tags:
+      - basic
+      - quantification
+    repeat: 5
+    input:
+      kind: text
+      goal: 找出没有量化成果的要点并给出改写建议
+      content: 请体检 op-resume.md 的量化成果问题（目标岗位：运营专员）。
+      files:
+        - path: input/op-resume.md
+          content: "# 赵琳
+
+
+            ## 工作经历
+
+
+            ### 鲜橙文化 · 运营专员（2023.05 - 至今）
+
+            - 负责小红书账号运营
+
+            - 策划直播活动
+
+            - 我参与了品牌推广项目
+
+
+            ## 教育背景
+
+            - 暨南大学 · 新闻学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - 内容策划、数据分析\n"
+        - path: input/jd.txt
+          content: "职位：运营专员\n要求：负责内容运营与活动策划，熟悉小红书生态。\n"
+      params:
+        role: 运营专员
+        resume: input/op-resume.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: RR002
+          weight: 2
+          note: 量化成果规则命中
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: contains
+          text: op-resume.md
+          weight: 1
+          note: 报告标注被诊断的简历
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-quant-2
+    title: 量化成果体检（行政助理）
+    tags:
+      - basic
+      - quantification
+    repeat: 5
+    input:
+      kind: text
+      goal: 找出没有量化成果的要点并给出改写建议
+      content: 请体检 admin-resume.md 的量化成果问题（目标岗位：行政助理）。
+      files:
+        - path: input/admin-resume.md
+          content: "# 韩雪
+
+
+            ## 工作经历
+
+
+            ### 某公司 · 行政助理（2022.09 - 至今）
+
+            - 负责会议安排
+
+            - 负责办公用品采购
+
+            - 协助部门日常行政事务
+
+
+            ## 教育背景
+
+            - 郑州大学 · 行政管理 · 本科（2018-2022）
+
+
+            ## 技能
+
+            - Office、会务组织\n"
+        - path: input/jd.txt
+          content: "职位：行政助理\n要求：负责日常行政事务，细致耐心。\n"
+      params:
+        role: 行政助理
+        resume: input/admin-resume.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: RR002
+          weight: 2
+          note: 量化成果规则命中
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: contains
+          text: admin-resume.md
+          weight: 1
+          note: 报告标注被诊断的简历
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-quant-3
+    title: 量化成果体检（测试工程师）
+    tags:
+      - basic
+      - quantification
+    repeat: 5
+    input:
+      kind: text
+      goal: 找出没有量化成果的要点并给出改写建议
+      content: 请体检 qa-resume.md 的量化成果问题（目标岗位：测试工程师）。
+      files:
+        - path: input/qa-resume.md
+          content: "# 孙浩
+
+
+            ## 工作经历
+
+
+            ### 云测科技 · 测试工程师（2022.02 - 至今）
+
+            - 负责接口测试工作
+
+            - 负责测试用例评审
+
+            - 参与质量保障流程建设
+
+
+            ## 教育背景
+
+            - 电子科技大学 · 软件工程 · 本科（2018-2022）
+
+
+            ## 技能
+
+            - Selenium、Pytest\n"
+        - path: input/jd.txt
+          content: "职位：测试工程师\n要求：负责接口自动化测试与质量保障。\n"
+      params:
+        role: 测试工程师
+        resume: input/qa-resume.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: RR002
+          weight: 2
+          note: 量化成果规则命中
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: contains
+          text: qa-resume.md
+          weight: 1
+          note: 报告标注被诊断的简历
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-quant-4
+    title: 量化成果体检（客户成功经理）
+    tags:
+      - basic
+      - quantification
+    repeat: 5
+    input:
+      kind: text
+      goal: 找出没有量化成果的要点并给出改写建议
+      content: 请体检 cs-resume.md 的量化成果问题（目标岗位：客户成功经理）。
+      files:
+        - path: input/cs-resume.md
+          content: "# 吴迪
+
+
+            ## 工作经历
+
+
+            ### 云端 SaaS · 客户成功经理（2021.11 - 至今）
+
+            - 负责重点客户续约
+
+            - 负责客户培训与答疑
+
+            - 我协调产研解决客户问题
+
+
+            ## 教育背景
+
+            - 南开大学 · 市场营销 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - 客户运营、Excel\n"
+        - path: input/jd.txt
+          content: "职位：客户成功经理\n要求：负责客户续约与健康度管理。\n"
+      params:
+        role: 客户成功经理
+        resume: input/cs-resume.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: RR002
+          weight: 2
+          note: 量化成果规则命中
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: contains
+          text: cs-resume.md
+          weight: 1
+          note: 报告标注被诊断的简历
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-structure-1
+    title: 章节结构体检（缺教育背景）
+    tags:
+      - basic
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别缺失的关键章节并给出结构完整度评分
+      content: 请体检 no-edu.md 的章节结构（缺 教育背景）。
+      files:
+        - path: input/no-edu.md
+          content: "# 何鑫
+
+
+            ## 工作经历
+
+
+            ### 某公司 · 实习生（2024.03 - 至今）
+
+            - 负责数据整理
+
+            - 协助报表制作
+
+            - 参与需求沟通
+
+
+            ## 技能
+
+            - Excel、SQL\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 软件工程师
+        resume: input/no-edu.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 缺少关键章节
+          weight: 2
+          note: 缺关键章节给警告
+        - type: contains
+          text: 结构体检
+          weight: 1
+        - type: contains
+          text: no-edu.md
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-structure-2
+    title: 章节结构体检（缺工作经历）
+    tags:
+      - basic
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别缺失的关键章节并给出结构完整度评分
+      content: 请体检 no-exp.md 的章节结构（缺 工作经历）。
+      files:
+        - path: input/no-exp.md
+          content: "# 林小雨
+
+
+            ## 教育背景
+
+            - 华东师范大学 · 小学教育 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - 课堂教学、多媒体课件\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 软件工程师
+        resume: input/no-exp.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 缺少关键章节
+          weight: 2
+          note: 缺关键章节给警告
+        - type: contains
+          text: 结构体检
+          weight: 1
+        - type: contains
+          text: no-exp.md
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-structure-3
+    title: 章节结构体检（缺技能）
+    tags:
+      - basic
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别缺失的关键章节并给出结构完整度评分
+      content: 请体检 no-skill.md 的章节结构（缺 技能）。
+      files:
+        - path: input/no-skill.md
+          content: "# 郭涛
+
+
+            ## 工作经历
+
+
+            ### 恒通软件 · 销售经理（2019.03 - 至今）
+
+            - 负责华东区域大客户开拓
+
+            - 完成年度 800 万元销售目标
+
+            - 维护 30 家重点客户
+
+
+            ## 教育背景
+
+            - 上海大学 · 市场营销 · 本科（2015-2019）\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 软件工程师
+        resume: input/no-skill.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 缺少关键章节
+          weight: 2
+          note: 缺关键章节给警告
+        - type: contains
+          text: 结构体检
+          weight: 1
+        - type: contains
+          text: no-skill.md
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-structure-4
+    title: 章节结构体检（缺教育与技能）
+    tags:
+      - basic
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别缺失的关键章节并给出结构完整度评分
+      content: 请体检 only-exp.md 的章节结构（缺 教育与技能）。
+      files:
+        - path: input/only-exp.md
+          content: "# 蒋雯
+
+
+            ## 工作经历
+
+
+            ### 星辰集团 · HRBP（2022.04 - 至今）
+
+            - 负责研发团队 HRBP 工作
+
+            - 搭建胜任力模型
+
+            - 推动绩效改革落地\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 软件工程师
+        resume: input/only-exp.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 缺少关键章节
+          weight: 2
+          note: 缺关键章节给警告
+        - type: contains
+          text: 结构体检
+          weight: 1
+        - type: contains
+          text: only-exp.md
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-jd-1
+    title: JD 匹配打分（数据分析）
+    tags:
+      - basic
+      - jd-match
+    repeat: 5
+    input:
+      kind: text
+      goal: 按 JD 做技能关键词匹配打分，输出命中与缺失技能表
+      content: 请把 jd-da.md 与 JD（数据分析）做技能匹配分析。
+      files:
+        - path: input/jd-da.md
+          content: "# 张伟（数据分析师）
+
+
+            手机：13800001234 ｜ 邮箱：zhangwei@example.com
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常业务数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 我参与了用户增长分析项目
+
+
+            ### 星辰数据 · 数据实习生（2022.06 - 2022.12）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析，输出 3 份周报
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL、Excel、Tableau\n"
+        - path: input/jd.txt
+          content: "职位：数据分析师
+
+            职责：负责业务数据分析与指标体系建设，输出可视化分析报告。
+
+            要求：
+
+            - 熟练使用 SQL 完成复杂取数
+
+            - 熟悉 Python 数据分析（pandas）
+
+            - 掌握 Tableau 或同类 BI 工具
+
+            - 有 A/B 实验经验优先\n"
+      params:
+        role: 软件工程师
+        resume: input/jd-da.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 命中技能
+          weight: 2
+        - type: contains
+          text: 缺失技能
+          weight: 2
+        - type: contains
+          text: 匹配度
+          weight: 1
+        - type: contains
+          text: Tableau
+          weight: 1
+          note: JD 技能词出现在匹配表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-jd-2
+    title: JD 匹配打分（Java 后端）
+    tags:
+      - basic
+      - jd-match
+    repeat: 5
+    input:
+      kind: text
+      goal: 按 JD 做技能关键词匹配打分，输出命中与缺失技能表
+      content: 请把 jd-java.md 与 JD（Java 后端）做技能匹配分析。
+      files:
+        - path: input/jd-java.md
+          content: "# 李强
+
+            邮箱：liqiang@example.com
+
+
+            ## 工作经历
+
+
+            ### 蓝鲸科技 · Java 开发工程师（2021 年 7 月 - 至今）
+
+            - 负责订单中心接口开发
+
+            - 用 Spring Boot 重构结算服务，接口 P99 延迟从 800ms 降到 120ms
+
+            - 主导 Redis 缓存改造，数据库 QPS 下降 60%
+
+
+            ## 项目经历
+
+            ### 订单中台
+
+            - 设计订单状态机
+
+            - 完成 20 个接口联调
+
+
+            ## 教育背景
+
+            - 南京大学 · 软件工程 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - Java、Spring Boot、MySQL、Redis\n"
+        - path: input/jd.txt
+          content: "职位：Java 后端开发工程师
+
+            职责：负责核心交易系统的服务端研发与性能优化。
+
+            要求：
+
+            - 精通 Java 与 Spring Boot 框架
+
+            - 熟悉 MySQL 索引优化与 Redis 缓存设计
+
+            - 了解分布式事务与消息队列\n"
+      params:
+        role: 软件工程师
+        resume: input/jd-java.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 命中技能
+          weight: 2
+        - type: contains
+          text: 缺失技能
+          weight: 2
+        - type: contains
+          text: 匹配度
+          weight: 1
+        - type: contains
+          text: Redis
+          weight: 1
+          note: JD 技能词出现在匹配表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-jd-3
+    title: JD 匹配打分（前端）
+    tags:
+      - basic
+      - jd-match
+    repeat: 5
+    input:
+      kind: text
+      goal: 按 JD 做技能关键词匹配打分，输出命中与缺失技能表
+      content: 请把 jd-fe.md 与 JD（前端）做技能匹配分析。
+      files:
+        - path: input/jd-fe.md
+          content: "# 王小美
+
+            手机：13900005678
+
+
+            ## 工作经历
+
+
+            ### 橙子互娱 · 前端开发工程师（2022.03 - 至今）
+
+            - 负责活动页开发
+
+            - 基于 React 搭建组件库，活动页开发效率提升 40%
+
+            - 我优化了首屏加载速度
+
+
+            ## 教育背景
+
+            - 浙江大学 · 计算机科学与技术 · 本科（2018-2022）
+
+
+            ## 技能
+
+            - React、TypeScript、Webpack\n"
+        - path: input/jd.txt
+          content: "职位：前端开发工程师
+
+            职责：负责 C 端活动页与组件库建设。
+
+            要求：
+
+            - 熟练使用 React 与 TypeScript
+
+            - 熟悉 Webpack 构建与前端性能优化\n"
+      params:
+        role: 软件工程师
+        resume: input/jd-fe.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 命中技能
+          weight: 2
+        - type: contains
+          text: 缺失技能
+          weight: 2
+        - type: contains
+          text: 匹配度
+          weight: 1
+        - type: contains
+          text: TypeScript
+          weight: 1
+          note: JD 技能词出现在匹配表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-jd-4
+    title: JD 匹配打分（产品）
+    tags:
+      - basic
+      - jd-match
+    repeat: 5
+    input:
+      kind: text
+      goal: 按 JD 做技能关键词匹配打分，输出命中与缺失技能表
+      content: 请把 jd-pm.md 与 JD（产品）做技能匹配分析。
+      files:
+        - path: input/jd-pm.md
+          content: "# 陈晨
+
+            邮箱：chenchen@example.com ｜ 电话：13611112222
+
+
+            ## 工作经历
+
+
+            ### 星河产品部 · 产品经理（2020 年 3 月 - 至今）
+
+            - 负责支付产品需求梳理
+
+            - 主导收银台改版，支付成功率提升 12%
+
+            - 输出 30 份 PRD 并推动落地
+
+
+            ## 教育背景
+
+            - 武汉大学 · 信息管理 · 本科（2016-2020）
+
+
+            ## 技能
+
+            - Figma、Axure、SQL、数据分析\n"
+        - path: input/jd.txt
+          content: "职位：产品经理
+
+            职责：负责支付产品规划与体验优化。
+
+            要求：
+
+            - 熟练使用 Figma 输出原型
+
+            - 具备数据分析能力，能用 SQL 取数
+
+            - 有支付或交易类产品经验优先\n"
+      params:
+        role: 软件工程师
+        resume: input/jd-pm.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 命中技能
+          weight: 2
+        - type: contains
+          text: 缺失技能
+          weight: 2
+        - type: contains
+          text: 匹配度
+          weight: 1
+        - type: contains
+          text: SQL
+          weight: 1
+          note: JD 技能词出现在匹配表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-fix-1
+    title: 日期与联系方式体检（数据分析师）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 找出日期格式不一致、联系方式缺失等规范问题
+      content: 请体检 date1.md 的日期与联系方式规范（目标岗位：数据分析师）。
+      files:
+        - path: input/date1.md
+          content: "# 张伟
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 参与用户增长分析
+
+
+            ### 星辰数据（2022 年 6 月 - 2022 年 12 月）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 数据分析师
+        resume: input/date1.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 联系方式
+          weight: 2
+          note: 联系方式规范检查
+        - type: contains
+          text: 优化路线图
+          weight: 2
+          note: 输出优化路线图
+        - type: contains
+          text: 数据分析师
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-fix-2
+    title: 日期与联系方式体检（后端开发工程师）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 找出日期格式不一致、联系方式缺失等规范问题
+      content: 请体检 date2.md 的日期与联系方式规范（目标岗位：后端开发工程师）。
+      files:
+        - path: input/date2.md
+          content: "# 李强
+
+            手机：13800001234
+
+
+            ## 工作经历
+
+
+            ### 蓝鲸科技（2021/07 - 至今）
+
+            - 负责订单中心接口开发
+
+            - 重构结算服务，P99 从 800ms 降到 120ms
+
+            - 主导缓存改造
+
+
+            ## 教育背景
+
+            - 南京大学 · 软件工程 · 本科 2017.09-2021.06
+
+
+            ## 技能
+
+            - Java、Spring Boot\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 后端开发工程师
+        resume: input/date2.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 联系方式
+          weight: 2
+          note: 联系方式规范检查
+        - type: contains
+          text: 优化路线图
+          weight: 2
+          note: 输出优化路线图
+        - type: contains
+          text: 后端开发工程师
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-fix-3
+    title: 日期与联系方式体检（产品经理）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 找出日期格式不一致、联系方式缺失等规范问题
+      content: 请体检 date3.md 的日期与联系方式规范（目标岗位：产品经理）。
+      files:
+        - path: input/date3.md
+          content: "# 陈晨
+
+            邮箱：chenchen@example.com
+
+
+            ## 工作经历
+
+
+            ### 星河产品部（2020年3月—至今）
+
+            - 负责支付产品需求梳理
+
+            - 主导收银台改版，支付成功率提升 12%
+
+            - 输出 30 份 PRD
+
+
+            ## 教育背景
+
+            - 武汉大学 · 信息管理 · 本科
+
+
+            ## 技能
+
+            - Figma、SQL\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 产品经理
+        resume: input/date3.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 联系方式
+          weight: 2
+          note: 联系方式规范检查
+        - type: contains
+          text: 优化路线图
+          weight: 2
+          note: 输出优化路线图
+        - type: contains
+          text: 产品经理
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-fix-4
+    title: 日期与联系方式体检（测试开发工程师）
+    tags:
+      - basic
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 找出日期格式不一致、联系方式缺失等规范问题
+      content: 请体检 date4.md 的日期与联系方式规范（目标岗位：测试开发工程师）。
+      files:
+        - path: input/date4.md
+          content: "# 孙浩
+
+
+            ## 工作经历
+
+
+            ### 云测科技（2022-02 至今）
+
+            - 负责接口自动化测试
+
+            - 搭建 Python 自动化框架，回归时间缩短 80%
+
+            - 参与发布流程建设
+
+
+            ## 教育背景
+
+            - 电子科技大学 · 软件工程 · 本科（2018.09 - 2022.06）
+
+
+            ## 技能
+
+            - Python、Pytest\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 测试开发工程师
+        resume: input/date4.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 联系方式
+          weight: 2
+          note: 联系方式规范检查
+        - type: contains
+          text: 优化路线图
+          weight: 2
+          note: 输出优化路线图
+        - type: contains
+          text: 测试开发工程师
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 1200
+          weight: 1
+      requiredSuggestions: []

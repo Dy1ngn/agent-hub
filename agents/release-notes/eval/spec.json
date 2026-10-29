@@ -1,0 +1,1090 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型提交列表的发布说明",
+      "description": "功能/修复/破坏性/文档/性能/重构/非常规/依赖等典型提交组合，走「解析分组 + semver 推断 + 模型润色」完整链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-basic-{n}",
+          "title": "发布说明样本 {n}",
+          "tags": [
+            "release"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析提交列表并生成分组发布说明（可选模型润色）",
+            "content": "为这批提交生成发布说明。",
+            "files": [
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "from": "{from}",
+              "to": "{to}",
+              "version": "{version}"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "expect": "## 新功能",
+              "commits": "feat(auth): 增加登录失败重试限制\nfix(auth): 修复空指针导致的登录崩溃\nfeat(ui): 新增深色模式开关\nfix(pay): 修复重复扣款问题\ndocs: 更新部署文档\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "2",
+              "expect": "破坏性变更",
+              "commits": "feat(api)!: 移除 v1 旧接口\nfeat(api): 新增 v2 接口\nfix(api): 修复分页参数校验\n",
+              "from": "v2.0.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "3",
+              "expect": "## 文档",
+              "commits": "docs: 更新 README 快速开始\ndocs(api): 补充接口文档示例\ndocs: 修正错别字\n",
+              "from": "v1.2.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "4",
+              "expect": "## 性能",
+              "commits": "perf(db): 优化列表查询索引\nperf(cache): 增加热点数据缓存\nfix(db): 修复慢查询\n",
+              "from": "v1.2.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "5",
+              "expect": "## 重构",
+              "commits": "refactor(core): 拆分订单状态机\nrefactor(utils): 统一错误处理\nfeat(core): 新增状态机事件总线\n",
+              "from": "v1.2.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "6",
+              "expect": "## 问题修复",
+              "commits": "fix(module0): 修复第 0 个历史问题\nfix(module1): 修复第 1 个历史问题\nfix(module2): 修复第 2 个历史问题\nfix(module3): 修复第 3 个历史问题\nfix(module4): 修复第 4 个历史问题\nfix(module5): 修复第 5 个历史问题\nfix(module6): 修复第 6 个历史问题\nfix(module7): 修复第 7 个历史问题\nfix(module8): 修复第 8 个历史问题\nfix(module9): 修复第 9 个历史问题\nfix(module10): 修复第 10 个历史问题\nfix(module11): 修复第 11 个历史问题\nfix(module12): 修复第 12 个历史问题\nfix(module13): 修复第 13 个历史问题\nfix(module14): 修复第 14 个历史问题\nfix(module15): 修复第 15 个历史问题\nfix(module16): 修复第 16 个历史问题\nfix(module17): 修复第 17 个历史问题\nfix(module18): 修复第 18 个历史问题\nfix(module19): 修复第 19 个历史问题",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "7",
+              "expect": "## 其他",
+              "commits": "改了点东西\n更新了一下配置\nfix something\n随便提交\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "8",
+              "expect": "## 新功能",
+              "commits": "feat(i18n): 新增多语言支持\nfix(locale): 修复时区换算错误\nfeat(i18n): add English translation files\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "9",
+              "expect": "## 新功能",
+              "commits": "feat: 新增二维码登录",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": ""
+            },
+            {
+              "n": "10",
+              "expect": "## 构建",
+              "commits": "build(deps): 升级 requests 到 2.31.0\nchore(lock): 同步依赖锁文件\nci: 调整流水线超时时间\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "发布说明",
+                "weight": 2,
+                "note": "产出标准发布说明"
+              },
+              {
+                "type": "contains",
+                "text": "## 贡献者与统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{expect}",
+                "weight": 2,
+                "note": "确定性分组正确"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：规模 / 形态 / 版本参数",
+      "description": "1~50 条提交、多 scope、大小写类型、显式版本/版本告警/semver 级别等参数变体（模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-scale-{n}",
+          "title": "{shape} · 起点 {from}",
+          "tags": [
+            "release"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同规模/形态提交列表 × 不同起始版本",
+            "content": "{shape}（起始版本 {from}）",
+            "files": [
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "from": "{from}",
+              "to": "HEAD",
+              "version": "{version}"
+            }
+          },
+          "repeat": 2,
+          "rows": [
+            {
+              "n": "1",
+              "shape": "单条提交",
+              "commits": "feat: 新增导出功能",
+              "version": ""
+            },
+            {
+              "n": "2",
+              "shape": "五条提交",
+              "commits": "feat: 新增导出功能\nfix: 修复导出空文件\nperf: 导出提速\ndocs: 导出说明\ntest: 导出用例\n",
+              "version": ""
+            },
+            {
+              "n": "3",
+              "shape": "五十条提交",
+              "commits": "feat(item0): 新增第 0 项能力\nfeat(item1): 新增第 1 项能力\nfeat(item2): 新增第 2 项能力\nfeat(item3): 新增第 3 项能力\nfeat(item4): 新增第 4 项能力\nfeat(item5): 新增第 5 项能力\nfeat(item6): 新增第 6 项能力\nfeat(item7): 新增第 7 项能力\nfeat(item8): 新增第 8 项能力\nfeat(item9): 新增第 9 项能力\nfeat(item10): 新增第 10 项能力\nfeat(item11): 新增第 11 项能力\nfeat(item12): 新增第 12 项能力\nfeat(item13): 新增第 13 项能力\nfeat(item14): 新增第 14 项能力\nfeat(item15): 新增第 15 项能力\nfeat(item16): 新增第 16 项能力\nfeat(item17): 新增第 17 项能力\nfeat(item18): 新增第 18 项能力\nfeat(item19): 新增第 19 项能力\nfeat(item20): 新增第 20 项能力\nfeat(item21): 新增第 21 项能力\nfeat(item22): 新增第 22 项能力\nfeat(item23): 新增第 23 项能力\nfeat(item24): 新增第 24 项能力\nfeat(item25): 新增第 25 项能力\nfeat(item26): 新增第 26 项能力\nfeat(item27): 新增第 27 项能力\nfeat(item28): 新增第 28 项能力\nfeat(item29): 新增第 29 项能力\nfeat(item30): 新增第 30 项能力\nfeat(item31): 新增第 31 项能力\nfeat(item32): 新增第 32 项能力\nfeat(item33): 新增第 33 项能力\nfeat(item34): 新增第 34 项能力\nfeat(item35): 新增第 35 项能力\nfeat(item36): 新增第 36 项能力\nfeat(item37): 新增第 37 项能力\nfeat(item38): 新增第 38 项能力\nfeat(item39): 新增第 39 项能力\nfeat(item40): 新增第 40 项能力\nfeat(item41): 新增第 41 项能力\nfeat(item42): 新增第 42 项能力\nfeat(item43): 新增第 43 项能力\nfeat(item44): 新增第 44 项能力\nfeat(item45): 新增第 45 项能力\nfeat(item46): 新增第 46 项能力\nfeat(item47): 新增第 47 项能力\nfeat(item48): 新增第 48 项能力\nfeat(item49): 新增第 49 项能力",
+              "version": ""
+            },
+            {
+              "n": "4",
+              "shape": "多 scope",
+              "commits": "feat(a): A 模块能力\nfeat(b): B 模块能力\nfix(a): A 模块修复\nfix(c): C 模块修复\nrefactor(b): B 模块重构\n",
+              "version": ""
+            },
+            {
+              "n": "5",
+              "shape": "纯 style",
+              "commits": "style: 统一代码缩进\nstyle: 格式化 import",
+              "version": ""
+            },
+            {
+              "n": "6",
+              "shape": "大小写混合",
+              "commits": "FEAT: 大写类型\nFix(x): 首字母大写\nfeat: normal\n",
+              "version": ""
+            },
+            {
+              "n": "7",
+              "shape": "破坏性+功能",
+              "commits": "feat(api)!: 移除 v1 旧接口\nfeat(api): 新增 v2 接口\nfix(api): 修复分页参数校验\n",
+              "version": ""
+            },
+            {
+              "n": "8",
+              "shape": "非常规消息",
+              "commits": "改了点东西\n更新了一下配置\nfix something\n随便提交\n",
+              "version": ""
+            },
+            {
+              "n": "9",
+              "shape": "长列表修复",
+              "commits": "fix(module0): 修复第 0 个历史问题\nfix(module1): 修复第 1 个历史问题\nfix(module2): 修复第 2 个历史问题\nfix(module3): 修复第 3 个历史问题\nfix(module4): 修复第 4 个历史问题\nfix(module5): 修复第 5 个历史问题\nfix(module6): 修复第 6 个历史问题\nfix(module7): 修复第 7 个历史问题\nfix(module8): 修复第 8 个历史问题\nfix(module9): 修复第 9 个历史问题\nfix(module10): 修复第 10 个历史问题\nfix(module11): 修复第 11 个历史问题\nfix(module12): 修复第 12 个历史问题\nfix(module13): 修复第 13 个历史问题\nfix(module14): 修复第 14 个历史问题\nfix(module15): 修复第 15 个历史问题\nfix(module16): 修复第 16 个历史问题\nfix(module17): 修复第 17 个历史问题\nfix(module18): 修复第 18 个历史问题\nfix(module19): 修复第 19 个历史问题",
+              "version": ""
+            },
+            {
+              "n": "10",
+              "shape": "依赖与 CI",
+              "commits": "build(deps): 升级 requests 到 2.31.0\nchore(lock): 同步依赖锁文件\nci: 调整流水线超时时间\n",
+              "version": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "发布说明",
+                "weight": 2,
+                "note": "产出标准发布说明"
+              },
+              {
+                "type": "contains",
+                "text": "## 贡献者与统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "## 亮点",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "vars": {
+            "from": [
+              "v1.0.0",
+              "v0.9.0"
+            ]
+          }
+        },
+        {
+          "id": "g2-param-{n}",
+          "title": "{shape}",
+          "tags": [
+            "release"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同版本参数组合下的发布说明与告警",
+            "content": "{shape}",
+            "files": [
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "from": "{from}",
+              "to": "{to}",
+              "version": "{version}"
+            }
+          },
+          "repeat": 4,
+          "rows": [
+            {
+              "n": "1",
+              "shape": "显式版本号",
+              "commits": "feat(auth): 增加登录失败重试限制\nfix(auth): 修复空指针导致的登录崩溃\nfeat(ui): 新增深色模式开关\nfix(pay): 修复重复扣款问题\ndocs: 更新部署文档\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "v1.1.0",
+              "anchor": "## 亮点"
+            },
+            {
+              "n": "2",
+              "shape": "版本不一致告警",
+              "commits": "feat(auth): 增加登录失败重试限制\nfix(auth): 修复空指针导致的登录崩溃\nfeat(ui): 新增深色模式开关\nfix(pay): 修复重复扣款问题\ndocs: 更新部署文档\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "v9.9.9",
+              "anchor": "## 提示"
+            },
+            {
+              "n": "3",
+              "shape": "无 feat/fix 无需升版",
+              "commits": "docs: 更新 README 快速开始\ndocs(api): 补充接口文档示例\ndocs: 修正错别字\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 提示"
+            },
+            {
+              "n": "4",
+              "shape": "无起始版本告警",
+              "commits": "feat(auth): 增加登录失败重试限制\nfix(auth): 修复空指针导致的登录崩溃\nfeat(ui): 新增深色模式开关\nfix(pay): 修复重复扣款问题\ndocs: 更新部署文档\n",
+              "from": "",
+              "to": "",
+              "version": "",
+              "anchor": "## 提示"
+            },
+            {
+              "n": "5",
+              "shape": "破坏性 → 主版本",
+              "commits": "feat(api)!: 移除 v1 旧接口\nfeat(api): 新增 v2 接口\nfix(api): 修复分页参数校验\n",
+              "from": "v2.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "主版本（破坏性变更）"
+            },
+            {
+              "n": "6",
+              "shape": "新功能 → 次版本",
+              "commits": "feat: 新增二维码登录",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "次版本（新功能）"
+            },
+            {
+              "n": "7",
+              "shape": "修复 → 修订版本",
+              "commits": "fix: 修复崩溃\nfix(core): 修复超时",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "修订版本（修复/性能）"
+            },
+            {
+              "n": "8",
+              "shape": "非常规 → 其他",
+              "commits": "改了点东西\n更新了一下配置\nfix something\n随便提交\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 其他"
+            },
+            {
+              "n": "9",
+              "shape": "大版本号起点",
+              "commits": "feat: 新增导出功能\nfix: 修复导出空文件\nperf: 导出提速\ndocs: 导出说明\ntest: 导出用例\n",
+              "from": "v99.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 亮点"
+            },
+            {
+              "n": "10",
+              "shape": "多 scope 分组",
+              "commits": "feat(a): A 模块能力\nfeat(b): B 模块能力\nfix(a): A 模块修复\nfix(c): C 模块修复\nrefactor(b): B 模块重构\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 重构"
+            },
+            {
+              "n": "11",
+              "shape": "style 分组",
+              "commits": "style: 统一代码缩进\nstyle: 格式化 import",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 样式"
+            },
+            {
+              "n": "12",
+              "shape": "大小写类型",
+              "commits": "FEAT: 大写类型\nFix(x): 首字母大写\nfeat: normal\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 新功能"
+            },
+            {
+              "n": "13",
+              "shape": "长列表",
+              "commits": "fix(module0): 修复第 0 个历史问题\nfix(module1): 修复第 1 个历史问题\nfix(module2): 修复第 2 个历史问题\nfix(module3): 修复第 3 个历史问题\nfix(module4): 修复第 4 个历史问题\nfix(module5): 修复第 5 个历史问题\nfix(module6): 修复第 6 个历史问题\nfix(module7): 修复第 7 个历史问题\nfix(module8): 修复第 8 个历史问题\nfix(module9): 修复第 9 个历史问题\nfix(module10): 修复第 10 个历史问题\nfix(module11): 修复第 11 个历史问题\nfix(module12): 修复第 12 个历史问题\nfix(module13): 修复第 13 个历史问题\nfix(module14): 修复第 14 个历史问题\nfix(module15): 修复第 15 个历史问题\nfix(module16): 修复第 16 个历史问题\nfix(module17): 修复第 17 个历史问题\nfix(module18): 修复第 18 个历史问题\nfix(module19): 修复第 19 个历史问题",
+              "from": "v2.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 问题修复"
+            },
+            {
+              "n": "14",
+              "shape": "依赖构建",
+              "commits": "build(deps): 升级 requests 到 2.31.0\nchore(lock): 同步依赖锁文件\nci: 调整流水线超时时间\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 构建"
+            },
+            {
+              "n": "15",
+              "shape": "显式版本一致",
+              "commits": "perf(db): 优化列表查询索引\nperf(cache): 增加热点数据缓存\nfix(db): 修复慢查询\n",
+              "from": "v1.2.0",
+              "to": "HEAD",
+              "version": "v1.2.1",
+              "anchor": "## 性能"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "发布说明",
+                "weight": 2,
+                "note": "产出标准发布说明"
+              },
+              {
+                "type": "contains",
+                "text": "## 贡献者与统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{anchor}",
+                "weight": 2,
+                "note": "版本参数语义确定性生效"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 超短 / 超长 / 极端参数",
+      "description": "单条/超短/超长标题、150 条提交、版本全空、v999.999.999 等极端参数下的稳定产出（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "release"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出结构完整的发布说明",
+            "content": "{title}",
+            "files": [
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "from": "{from}",
+              "to": "{to}",
+              "version": "{version}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "title": "单条超短提交",
+              "commits": "x",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "发布说明"
+            },
+            {
+              "n": "2",
+              "title": "单字符类型",
+              "commits": "a: b",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 其他"
+            },
+            {
+              "n": "3",
+              "title": "只有类型没有描述",
+              "commits": "feat:",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 其他"
+            },
+            {
+              "n": "4",
+              "title": "超长提交标题",
+              "commits": "feat: 很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明很长的说明",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 新功能"
+            },
+            {
+              "n": "5",
+              "title": "超多提交（150 条）",
+              "commits": "fix(x0): 修复 0\nfix(x1): 修复 1\nfix(x2): 修复 2\nfix(x3): 修复 3\nfix(x4): 修复 4\nfix(x5): 修复 5\nfix(x6): 修复 6\nfix(x7): 修复 7\nfix(x8): 修复 8\nfix(x9): 修复 9\nfix(x10): 修复 10\nfix(x11): 修复 11\nfix(x12): 修复 12\nfix(x13): 修复 13\nfix(x14): 修复 14\nfix(x15): 修复 15\nfix(x16): 修复 16\nfix(x17): 修复 17\nfix(x18): 修复 18\nfix(x19): 修复 19\nfix(x20): 修复 20\nfix(x21): 修复 21\nfix(x22): 修复 22\nfix(x23): 修复 23\nfix(x24): 修复 24\nfix(x25): 修复 25\nfix(x26): 修复 26\nfix(x27): 修复 27\nfix(x28): 修复 28\nfix(x29): 修复 29\nfix(x30): 修复 30\nfix(x31): 修复 31\nfix(x32): 修复 32\nfix(x33): 修复 33\nfix(x34): 修复 34\nfix(x35): 修复 35\nfix(x36): 修复 36\nfix(x37): 修复 37\nfix(x38): 修复 38\nfix(x39): 修复 39\nfix(x40): 修复 40\nfix(x41): 修复 41\nfix(x42): 修复 42\nfix(x43): 修复 43\nfix(x44): 修复 44\nfix(x45): 修复 45\nfix(x46): 修复 46\nfix(x47): 修复 47\nfix(x48): 修复 48\nfix(x49): 修复 49\nfix(x50): 修复 50\nfix(x51): 修复 51\nfix(x52): 修复 52\nfix(x53): 修复 53\nfix(x54): 修复 54\nfix(x55): 修复 55\nfix(x56): 修复 56\nfix(x57): 修复 57\nfix(x58): 修复 58\nfix(x59): 修复 59\nfix(x60): 修复 60\nfix(x61): 修复 61\nfix(x62): 修复 62\nfix(x63): 修复 63\nfix(x64): 修复 64\nfix(x65): 修复 65\nfix(x66): 修复 66\nfix(x67): 修复 67\nfix(x68): 修复 68\nfix(x69): 修复 69\nfix(x70): 修复 70\nfix(x71): 修复 71\nfix(x72): 修复 72\nfix(x73): 修复 73\nfix(x74): 修复 74\nfix(x75): 修复 75\nfix(x76): 修复 76\nfix(x77): 修复 77\nfix(x78): 修复 78\nfix(x79): 修复 79\nfix(x80): 修复 80\nfix(x81): 修复 81\nfix(x82): 修复 82\nfix(x83): 修复 83\nfix(x84): 修复 84\nfix(x85): 修复 85\nfix(x86): 修复 86\nfix(x87): 修复 87\nfix(x88): 修复 88\nfix(x89): 修复 89\nfix(x90): 修复 90\nfix(x91): 修复 91\nfix(x92): 修复 92\nfix(x93): 修复 93\nfix(x94): 修复 94\nfix(x95): 修复 95\nfix(x96): 修复 96\nfix(x97): 修复 97\nfix(x98): 修复 98\nfix(x99): 修复 99\nfix(x100): 修复 100\nfix(x101): 修复 101\nfix(x102): 修复 102\nfix(x103): 修复 103\nfix(x104): 修复 104\nfix(x105): 修复 105\nfix(x106): 修复 106\nfix(x107): 修复 107\nfix(x108): 修复 108\nfix(x109): 修复 109\nfix(x110): 修复 110\nfix(x111): 修复 111\nfix(x112): 修复 112\nfix(x113): 修复 113\nfix(x114): 修复 114\nfix(x115): 修复 115\nfix(x116): 修复 116\nfix(x117): 修复 117\nfix(x118): 修复 118\nfix(x119): 修复 119\nfix(x120): 修复 120\nfix(x121): 修复 121\nfix(x122): 修复 122\nfix(x123): 修复 123\nfix(x124): 修复 124\nfix(x125): 修复 125\nfix(x126): 修复 126\nfix(x127): 修复 127\nfix(x128): 修复 128\nfix(x129): 修复 129\nfix(x130): 修复 130\nfix(x131): 修复 131\nfix(x132): 修复 132\nfix(x133): 修复 133\nfix(x134): 修复 134\nfix(x135): 修复 135\nfix(x136): 修复 136\nfix(x137): 修复 137\nfix(x138): 修复 138\nfix(x139): 修复 139\nfix(x140): 修复 140\nfix(x141): 修复 141\nfix(x142): 修复 142\nfix(x143): 修复 143\nfix(x144): 修复 144\nfix(x145): 修复 145\nfix(x146): 修复 146\nfix(x147): 修复 147\nfix(x148): 修复 148\nfix(x149): 修复 149",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 问题修复"
+            },
+            {
+              "n": "6",
+              "title": "注释与空行夹一条",
+              "commits": "# 这是注释\n\nfeat: 唯一的提交\n\n# 另一条注释",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 新功能"
+            },
+            {
+              "n": "7",
+              "title": "极端参数 from=v999.999.999",
+              "commits": "feat: 新增二维码登录",
+              "from": "v999.999.999",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 新功能"
+            },
+            {
+              "n": "8",
+              "title": "无需升版本告警",
+              "commits": "style: 统一代码缩进\nstyle: 格式化 import",
+              "from": "v0.0.1",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 提示"
+            },
+            {
+              "n": "9",
+              "title": "版本不一致告警",
+              "commits": "feat(auth): 增加登录失败重试限制\nfix(auth): 修复空指针导致的登录崩溃\nfeat(ui): 新增深色模式开关\nfix(pay): 修复重复扣款问题\ndocs: 更新部署文档\n",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "v2.5.0",
+              "anchor": "## 提示"
+            },
+            {
+              "n": "10",
+              "title": "版本全空",
+              "commits": "feat(auth): 增加登录失败重试限制\nfix(auth): 修复空指针导致的登录崩溃\nfeat(ui): 新增深色模式开关\nfix(pay): 修复重复扣款问题\ndocs: 更新部署文档\n",
+              "from": "",
+              "to": "",
+              "version": "",
+              "anchor": "（未指定版本）"
+            },
+            {
+              "n": "11",
+              "title": "只有标点",
+              "commits": "。。。",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 其他"
+            },
+            {
+              "n": "12",
+              "title": "同一条重复 50 次",
+              "commits": "feat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交\nfeat: 重复提交",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 新功能"
+            },
+            {
+              "n": "13",
+              "title": "超长 scope",
+              "commits": "feat(ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss): 带超长范围的提交",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 新功能"
+            },
+            {
+              "n": "14",
+              "title": "只有破坏性标记",
+              "commits": "feat!: 不兼容改动",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "破坏性变更"
+            },
+            {
+              "n": "15",
+              "title": "中英混合描述",
+              "commits": "feat(i18n): support 多语言 and locale",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 新功能"
+            },
+            {
+              "n": "16",
+              "title": "大写类型",
+              "commits": "FEAT(x): 大写类型也识别",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 新功能"
+            },
+            {
+              "n": "17",
+              "title": "emoji 前缀",
+              "commits": "✨ feat: 带 emoji 的提交",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 其他"
+            },
+            {
+              "n": "18",
+              "title": "单个点号",
+              "commits": "·",
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "anchor": "## 其他"
+            },
+            {
+              "n": "19",
+              "title": "极端参数 to 空",
+              "commits": "feat: 新增导出功能\nfix: 修复导出空文件\nperf: 导出提速\ndocs: 导出说明\ntest: 导出用例\n",
+              "from": "v3.1.4",
+              "to": "",
+              "version": "",
+              "anchor": "## 亮点"
+            },
+            {
+              "n": "20",
+              "title": "版本一致无告警",
+              "commits": "perf(db): 优化列表查询索引\nperf(cache): 增加热点数据缓存\nfix(db): 修复慢查询\n",
+              "from": "v1.2.0",
+              "to": "HEAD",
+              "version": "v1.2.1",
+              "anchor": "## 性能"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "发布说明",
+                "weight": 2,
+                "note": "产出标准发布说明"
+              },
+              {
+                "type": "contains",
+                "text": "## 贡献者与统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{anchor}",
+                "weight": 2,
+                "note": "边界输入下确定性结论正确"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 250,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形 / 乱码 / 缺字段",
+      "description": "乱码、控制字符、NUL、未闭合 scope、全角冒号、乱码版本参数等异常输入下优雅处理不崩溃（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "release"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "畸形/乱码/缺字段输入不能让工具崩溃",
+            "content": "{title}",
+            "files": [
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "from": "{from}",
+              "to": "{to}",
+              "version": "{version}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "n": "1",
+              "title": "乱码提交",
+              "commits": "ä½ å¥½ä¸–ç•Œ\næ ½è¿äº†é…ç½®",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 其他",
+              "to": "HEAD"
+            },
+            {
+              "n": "2",
+              "title": "控制字符",
+              "commits": "feat: 带\u0007控制字符\nfix: 另\u0007一条",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 新功能",
+              "to": "HEAD"
+            },
+            {
+              "n": "3",
+              "title": "零宽字符",
+              "commits": "feat: 零​宽‌字﻿符",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 新功能",
+              "to": "HEAD"
+            },
+            {
+              "n": "4",
+              "title": "纯 emoji",
+              "commits": "🚀🚀",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 其他",
+              "to": "HEAD"
+            },
+            {
+              "n": "5",
+              "title": "未闭合 scope",
+              "commits": "feat(unclosed: 描述一下",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 其他",
+              "to": "HEAD"
+            },
+            {
+              "n": "6",
+              "title": "畸形 BREAKING 行",
+              "commits": "BREAKING-CHANGE: 说明文字",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 其他",
+              "to": "HEAD"
+            },
+            {
+              "n": "7",
+              "title": "NUL 字节",
+              "commits": "feat: 带\u0000空字节\nfix: 另\u0000一条",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 新功能",
+              "to": "HEAD"
+            },
+            {
+              "n": "8",
+              "title": "多重 scope 符号",
+              "commits": "feat(a)(b)(c): 嵌套范围",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 其他",
+              "to": "HEAD"
+            },
+            {
+              "n": "9",
+              "title": "全角冒号",
+              "commits": "feat：全角冒号提交",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 其他",
+              "to": "HEAD"
+            },
+            {
+              "n": "10",
+              "title": "from 乱码参数",
+              "commits": "feat: 新增二维码登录",
+              "from": "banana",
+              "version": "",
+              "anchor": "banana",
+              "to": "HEAD"
+            },
+            {
+              "n": "11",
+              "title": "version 乱码参数",
+              "commits": "feat(auth): 增加登录失败重试限制\nfix(auth): 修复空指针导致的登录崩溃\nfeat(ui): 新增深色模式开关\nfix(pay): 修复重复扣款问题\ndocs: 更新部署文档\n",
+              "from": "",
+              "version": "!!!@@@",
+              "anchor": "!!!@@@",
+              "to": "HEAD"
+            },
+            {
+              "n": "12",
+              "title": "from 缺第三段",
+              "commits": "feat: 新增导出功能\nfix: 修复导出空文件\nperf: 导出提速\ndocs: 导出说明\ntest: 导出用例\n",
+              "from": "v1.0",
+              "version": "",
+              "anchor": "## 新功能",
+              "to": "HEAD"
+            },
+            {
+              "n": "13",
+              "title": "零宽 + 乱码混合",
+              "commits": "fix: ​ä½ å¥½‌",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 问题修复",
+              "to": "HEAD"
+            },
+            {
+              "n": "14",
+              "title": "超长 scope 与描述",
+              "commits": "feat(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx): 超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述超长描述",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 新功能",
+              "to": "HEAD"
+            },
+            {
+              "n": "15",
+              "title": "markdown 表格行",
+              "commits": "docs: 更新表格\n| a | b |\n| --- | --- |",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 其他",
+              "to": "HEAD"
+            },
+            {
+              "n": "16",
+              "title": "字面换行转义",
+              "commits": "fix: 修复\\n转义问题",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 问题修复",
+              "to": "HEAD"
+            },
+            {
+              "n": "17",
+              "title": "纯数字消息",
+              "commits": "12345\n67890",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 其他",
+              "to": "HEAD"
+            },
+            {
+              "n": "18",
+              "title": "控制字符 + from 乱码",
+              "commits": "feat: a\u0007b",
+              "from": "???v",
+              "version": "",
+              "anchor": "???v",
+              "to": "HEAD"
+            },
+            {
+              "n": "19",
+              "title": "中文 scope",
+              "commits": "feat(中文范围): 中文范围描述",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "## 新功能",
+              "to": "HEAD"
+            },
+            {
+              "n": "20",
+              "title": "空 BREAKING 内容",
+              "commits": "feat!: 改动 BREAKING CHANGE:",
+              "from": "v1.0.0",
+              "version": "",
+              "anchor": "破坏性变更",
+              "to": "HEAD"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "发布说明",
+                "weight": 2,
+                "note": "产出标准发布说明"
+              },
+              {
+                "type": "contains",
+                "text": "## 贡献者与统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{anchor}",
+                "weight": 2,
+                "note": "异常输入下确定性结论仍正确"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 250,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复调用 10 次（离线确定性模式），验证解析分组、semver 推断与统计稳定一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：样本 {n}",
+          "tags": [
+            "release"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证分组与统计稳定",
+            "content": "稳定性样本 {n}",
+            "files": [
+              {
+                "path": "input/commits.txt",
+                "content": "{commits}"
+              }
+            ],
+            "params": {
+              "from": "v1.0.0",
+              "to": "HEAD",
+              "version": "",
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "expect": "## 新功能",
+              "commits": "feat(auth): 增加登录失败重试限制\nfix(auth): 修复空指针导致的登录崩溃\nfeat(ui): 新增深色模式开关\nfix(pay): 修复重复扣款问题\ndocs: 更新部署文档\n"
+            },
+            {
+              "n": "2",
+              "expect": "## 文档",
+              "commits": "docs: 更新 README 快速开始\ndocs(api): 补充接口文档示例\ndocs: 修正错别字\n"
+            },
+            {
+              "n": "3",
+              "expect": "破坏性变更",
+              "commits": "feat(api)!: 移除 v1 旧接口\nfeat(api): 新增 v2 接口\nfix(api): 修复分页参数校验\n"
+            },
+            {
+              "n": "4",
+              "expect": "## 性能",
+              "commits": "perf(db): 优化列表查询索引\nperf(cache): 增加热点数据缓存\nfix(db): 修复慢查询\n"
+            },
+            {
+              "n": "5",
+              "expect": "## 重构",
+              "commits": "refactor(core): 拆分订单状态机\nrefactor(utils): 统一错误处理\nfeat(core): 新增状态机事件总线\n"
+            },
+            {
+              "n": "6",
+              "expect": "## 测试",
+              "commits": "test: 补充登录用例\ntest(auth): 补充注册用例"
+            },
+            {
+              "n": "7",
+              "expect": "## 构建",
+              "commits": "build(deps): 升级 requests 到 2.31.0\nchore(lock): 同步依赖锁文件\nci: 调整流水线超时时间\n"
+            },
+            {
+              "n": "8",
+              "expect": "## 杂务",
+              "commits": "chore: 更新脚本\nchore(config): 调整配置"
+            },
+            {
+              "n": "9",
+              "expect": "## 其他",
+              "commits": "改了点东西\n更新了一下配置\nfix something\n随便提交\n"
+            },
+            {
+              "n": "10",
+              "expect": "## 新功能",
+              "commits": "feat(i18n): 新增多语言支持\nfix(locale): 修复时区换算错误\nfeat(i18n): add English translation files\n"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "发布说明",
+                "weight": 2,
+                "note": "产出标准发布说明"
+              },
+              {
+                "type": "contains",
+                "text": "## 贡献者与统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{expect}",
+                "weight": 2,
+                "note": "确定性分组稳定"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 250,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

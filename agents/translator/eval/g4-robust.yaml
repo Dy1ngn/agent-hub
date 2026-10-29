@@ -1,0 +1,796 @@
+id: ts-b-translator-g4-robust
+agentId: translator
+group: g4-robust
+name: 多语言翻译 · 鲁棒性：畸形 / 乱码 / 编码异常输入
+description: 乱码、控制字符、畸形 JSON/CSV 等异常输入下不崩溃、优雅降级（离线确定性模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：mojibake 乱码
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "鐑傛嵁鏂囨。閿欒緶銆傝繖鏄حاض涔辩爜銆傛嵁鏂囨。閿欒緶銆傛嵁鏂囨。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "a\ab\ac\a\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "a​b‌c‍d\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：未闭合代码块
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "# 文档\n\n```bash\necho hello\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合占位符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "你好 {{name，验证码 {{code 未闭合。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：奇怪引号
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "他说：“这是一段带‘花式引号’的文字”。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：RTL 文本
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "שלום עולם مثال على الكود\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 自动识别
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：emoji 与 ZWJ
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "❤️‍🔥😀👍🏽🚀✨\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：混合换行符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "第一行\r\n第二行\r第三行\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：重复空白
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "字    字    字    字\n\n\n\n字\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 异常输入仍产出翻译报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-1
+    title: 结构损坏文件：畸形 JSON（应兜底按纯文本）
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/data.json → 英语
+      files:
+        - path: input/data.json
+          content: '{"name": "测试", "value": 123,}
+
+            '
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/data.json
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: JSON 解析失败
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-2
+    title: 结构损坏文件：JSON 数组
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/data.json → 英语
+      files:
+        - path: input/data.json
+          content: '["第一条", "第二条", "第三条"]
+
+            '
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/data.json
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-3
+    title: 结构损坏文件：JSON 空对象
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/data.json → 英语
+      files:
+        - path: input/data.json
+          content: "{}\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/data.json
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-4
+    title: 结构损坏文件：JSON 深嵌套
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/data.json → 英语
+      files:
+        - path: input/data.json
+          content: '{"a": {"b": {"c": {"d": "深层的值"}}}}
+
+            '
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/data.json
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-5
+    title: 结构损坏文件：JSON 值含逗号引号
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/data.json → 英语
+      files:
+        - path: input/data.json
+          content: '{"quote": "他说：\"你好，世界\""}
+
+            '
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/data.json
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-6
+    title: 结构损坏文件：CSV 行列不齐
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/table.csv → 英语
+      files:
+        - path: input/table.csv
+          content: "a,b,c\n1,2\n3,4,5,6\n7\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/table.csv
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-7
+    title: 结构损坏文件：CSV 引号内换行
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/table.csv → 英语
+      files:
+        - path: input/table.csv
+          content: '名称,备注
+
+            甲,"第一行
+
+            第二行"
+
+            '
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/table.csv
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-8
+    title: 结构损坏文件：TSV 文件
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/table.tsv → 英语
+      files:
+        - path: input/table.tsv
+          content: "列一\t列二\n值一\t值二\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/table.tsv
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-9
+    title: 结构损坏文件：CSV 空表头
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/table.csv → 英语
+      files:
+        - path: input/table.csv
+          content: ",,\n值一,值二,值三\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/table.csv
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-10
+    title: 结构损坏文件：CSV 超多列
+    tags:
+      - robust
+      - offline
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的 JSON/CSV 不能让工具崩溃
+      content: 翻译任务：input/table.csv → 英语
+      files:
+        - path: input/table.csv
+          content: "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10
+
+            一,二,三,四,五,六,七,八,九,十\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/table.csv
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+          note: 结构损坏仍产出翻译报告
+        - type: contains
+          text: 翻译报告
+          weight: 1
+          note: 畸形 JSON 兜底说明进报告，其余用例校验标题
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []

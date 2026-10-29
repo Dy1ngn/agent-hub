@@ -86,9 +86,25 @@ py -3 agent.py --range HEAD~3..HEAD --lang en
 
 # 4. 确认预览没问题后，直接提交并带上正文
 py -3 agent.py --apply --yes
+
+# 5. 没有 git 仓库时：直接读一份 diff 文本生成提交信息（只预览，不提交）
+py -3 agent.py --diff-file change.diff --output 预览.md
 ```
 
 补充：`--repo PATH` 可以在别的目录里操作指定仓库；`--amend` 会把信息追加到上一条提交（必须同时给 `--apply`）；`--max-diff-chars` 控制塞给模型的 diff 上限（默认 60000 字符，超出会截断并提示）。
+
+### 没有 git 仓库也能用：`--diff-file`
+
+`--diff-file <文件>` 直接读一份统一 diff 文本（`git diff > change.diff` 的产物；给 `-` 则从标准输入读），从 `diff --git a/... b/...` / `+++ b/...` 头里解析改动文件，**完全不依赖 git 仓库**，只生成预览、绝不提交：
+
+```bash
+python3 agent.py --diff-file change.diff --style conventional --lang zh
+```
+
+配套可选参数：
+
+- `--output <文件>`：把最终预览（Markdown：候选类型 / 最终提交信息 / 可复制命令）写入文件；不给就只打印到终端
+- `--offline`：纯确定性模式，只用启发式生成提交信息，不调用模型、不需要 API key（即使环境里有 key 也不调）
 
 ## 输出格式示例
 

@@ -1,0 +1,560 @@
+id: ts-b-sql-chat-g5-stability
+agentId: sql-chat
+group: g5-stability
+name: SQL 问答 · 稳定性：同 SQL 重复执行
+description: 10 条确定性 SQL 各重复执行 10 次（离线 --sql），断言结果值稳定一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：分组计数
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 各城市计数
+        sql: SELECT city, COUNT(*) AS cnt FROM data GROUP BY city
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 北京 | 2 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：分组求和
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 各城市合计
+        sql: SELECT city, SUM(amount) AS total FROM data GROUP BY city
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 上海 | 310 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：最大值
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 最大金额
+        sql: SELECT MAX(amount) AS m FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 250 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：最小值
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 最小金额
+        sql: SELECT MIN(amount) AS m FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 60 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：全表计数
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 总记录数
+        sql: SELECT COUNT(*) AS cnt FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 5 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：去重计数
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 城市数
+        sql: SELECT COUNT(DISTINCT city) AS c FROM data
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 3 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：条件计数
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 北京条数
+        sql: SELECT COUNT(*) AS cnt FROM data WHERE city = '北京'
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 2 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：排序取值
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 最高金额
+        sql: SELECT amount FROM data ORDER BY amount DESC LIMIT 1
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 250 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：空结果表头
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 无匹配查询
+        sql: SELECT * FROM data WHERE city = '火星'
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| id | city | amount |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：标量函数
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: table
+      goal: 同一 SQL 重复执行 10 次，结果表应稳定一致
+      content: 请用中文回答这个数据问题，并给出只读 SQL 与结果表。
+      files:
+        - path: input/data.csv
+          content: "id,city,amount
+
+            1,北京,100
+
+            2,上海,250
+
+            3,北京,80
+
+            4,广州,120
+
+            5,上海,60\n"
+        - path: input/extra.csv
+          content: "k,v\n1,2\n"
+      params:
+        src: input/data.csv
+        q: 字符长度
+        sql: SELECT city, LENGTH(city) AS len FROM data WHERE id = 1
+        limit: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: sql-chat 查询结果
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 查询结果
+          weight: 2
+          note: 查询结构稳定出现
+        - type: contains
+          text: "| 北京 | 2 |"
+          weight: 2
+          note: 断言确定性结果值
+        - type: min_length
+          value: 120
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

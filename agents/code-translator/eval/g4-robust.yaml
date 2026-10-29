@@ -1,0 +1,779 @@
+id: ts-b-code-translator-g4-robust
+agentId: code-translator
+group: g4-robust
+name: 代码翻译 · 鲁棒性：畸形 / 乱码 / 控制字符
+description: 语法损坏、乱码、控制字符、零宽字符、NUL、混缩进等异常输入下优雅处理不崩溃（离线确定性模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：语法损坏
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：语法损坏
+      files:
+        - path: input/broken.py
+          content: "def broken(:\n    pass\n@@@ ###\n"
+      params:
+        src: input/broken.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：非法转义
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：非法转义
+      files:
+        - path: input/escape.py
+          content: "s = '\\q\\z\\'\ \n"
+      params:
+        src: input/escape.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：控制字符
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：控制字符
+      files:
+        - path: input/ctrl.py
+          content: "a = 1\ab = 2\ac = 3\n"
+      params:
+        src: input/ctrl.py
+        target: go
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：混合中英数标识符
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：混合中英数标识符
+      files:
+        - path: input/mixed.py
+          content: "变量 = 1
+
+            mixed_变量_2 = '值'
+
+            # 注释 with English and 123\n"
+      params:
+        src: input/mixed.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合引号
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：未闭合引号
+      files:
+        - path: input/quote.py
+          content: "s = 'unterminated\nprint(s)\n"
+      params:
+        src: input/quote.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：未闭合括号
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：未闭合括号
+      files:
+        - path: input/bracket.py
+          content: "def f(a, b:\n    return a + b\n"
+      params:
+        src: input/bracket.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：零宽字符
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：零宽字符
+      files:
+        - path: input/zw.py
+          content: "a​ = 1\nb‌ = 2\n"
+      params:
+        src: input/zw.py
+        target: java
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：emoji 标识符
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：emoji 标识符
+      files:
+        - path: input/emo.py
+          content: "😀 = 1\n🚀🚀 = 2\n"
+      params:
+        src: input/emo.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：超多空行
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：超多空行
+      files:
+        - path: input/blank2.py
+          content: "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            \n"
+      params:
+        src: input/blank2.py
+        target: go
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：重复定义
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：重复定义
+      files:
+        - path: input/dup.py
+          content: "def f():
+
+            \    return 1
+
+            def f():
+
+            \    return 2
+
+            def f():
+
+            \    return 3\n"
+      params:
+        src: input/dup.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：乱码 mojibake
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：乱码 mojibake
+      files:
+        - path: input/mojibake.py
+          content: "ä½ å¥½ = ï¼šï¼šï¼š\n"
+      params:
+        src: input/mojibake.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：NUL 字节
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：NUL 字节
+      files:
+        - path: input/nul.py
+          content: "x\0 = 1\ny = 2\0\n"
+      params:
+        src: input/nul.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：控制字符流
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：控制字符流
+      files:
+        - path: input/bin.py
+          content: "\x01\x02\x03\x04\x05\n"
+      params:
+        src: input/bin.py
+        target: go
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：超深嵌套
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：超深嵌套
+      files:
+        - path: input/deep.py
+          content: "x = ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((1))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))\n"
+      params:
+        src: input/deep.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：Tab/空格混缩进
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：Tab/空格混缩进
+      files:
+        - path: input/indent.py
+          content: "def f():
+
+            \treturn 1
+
+            \        return 2\n"
+      params:
+        src: input/indent.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：未闭合三引号
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：未闭合三引号
+      files:
+        - path: input/doc.py
+          content: "def f():\n    '''没有结束\n    return 1\n"
+      params:
+        src: input/doc.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：乱码 + java 目标
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：乱码 + java 目标
+      files:
+        - path: input/garbage.py
+          content: "å¾®å·å«å«\n"
+      params:
+        src: input/garbage.py
+        target: java
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：控制字符 + go 目标
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：控制字符 + go 目标
+      files:
+        - path: input/bell.js
+          content: "let a = 1;\a let b = 2;\n"
+      params:
+        src: input/bell.js
+        target: go
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：纯标点
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：纯标点
+      files:
+        - path: input/punct.py
+          content: ";;;,,,:::\n"
+      params:
+        src: input/punct.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：零宽 + emoji 混合
+    tags:
+      - translate
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码/控制字符输入不能让工具崩溃
+      content: 异常用例：零宽 + emoji 混合
+      files:
+        - path: input/weird.py
+          content: "a​ = '😀'\nb = a‌ + 1\n"
+      params:
+        src: input/weird.py
+        target: typescript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

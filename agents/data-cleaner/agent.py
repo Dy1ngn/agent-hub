@@ -845,6 +845,24 @@ def build_report(results, model_summary, model_issues, model_suggestions, raw_ap
     return "\n".join(lines).rstrip() + "\n"
 
 
+def build_failure_report(failures):
+    """没有任何表格可体检时也要留下可读报告（评测平台按报告评分，避免只剩退出码）。"""
+    lines = ["# 数据质量报告", "",
+             "## 数据概览", "",
+             "（本次没有任何表格可以体检：所有输入文件都无法读取或没有数据列。）", "",
+             "## 失败文件", ""]
+    for path, reason in failures:
+        lines.append("- `%s`：%s" % (path, reason))
+    if not failures:
+        lines.append("- （未提供任何输入文件）")
+    lines.extend(["", "## 清洗操作日志", "",
+                  "（本次没有可清洗的数据，未执行任何清洗操作。）", "",
+                  "## 建议", "",
+                  "1. 按「失败文件」一节修复格式/编码问题后重新运行；本次没有对任何数据做体检与清洗。",
+                  ""])
+    return "\n".join(lines).rstrip() + "\n"
+
+
 # ---------- 模型解读（可选） ----------
 
 EXPLAIN_SYSTEM = """你是数据质量专家。用户会给出一份表格数据质量报告的要点，请用中文解读。
@@ -1212,17 +1230,21 @@ def main():
         parser.error("请至少提供一个 CSV / TSV / JSON 文件（或用 --self-test 自检）")
 
     results = []
+    failures = []
     for path in args.paths:
         try:
             table = load_table(path)
         except FileNotFoundError as exc:
             print("错误：%s" % exc, file=sys.stderr)
-            sys.exit(1)
-        except (ValueError, json.JSONDecodeError) as exc:
+            failures.append((path, str(exc)))
+            continue
+        except (ValueError, json.JSONDecodeError, csv.Error) as exc:
             print("错误：%s 解析失败：%s" % (path, exc), file=sys.stderr)
-            sys.exit(1)
+            failures.append((path, "解析失败：%s" % exc))
+            continue
         if not table.columns:
             print("[跳过] %s 是空表" % path)
+            failures.append((path, "空表：没有可体检的数据"))
             continue
         types = infer_types(table)
         issues = analyze_table(table, types)
@@ -1233,12 +1255,8 @@ def main():
         print("[体检] %s：%d 行 × %d 列，问题 %d 条，可清洗单元格 %d 个"
               % (path, len(table.rows), len(table.columns), len(issues), len(operations)))
 
-    if not results:
-        print("错误：没有可体检的表格。", file=sys.stderr)
-        sys.exit(1)
-
     model_summary, model_issues, model_suggestions, raw_appendix = "", [], [], None
-    if args.explain and not args.offline:
+    if results and args.explain and not args.offline:
         require_api_key()
         print("[模型解读] 模型：%s" % args.model)
         try:
@@ -1254,7 +1272,15 @@ def main():
         else:
             print("[提示] 模型输出不是合法 JSON，原文已放进报告附录。")
 
-    report = build_report(results, model_summary, model_issues, model_suggestions, raw_appendix)
+    if results:
+        report = build_report(results, model_summary, model_issues, model_suggestions, raw_appendix)
+        if failures:
+            report += "\n## 失败文件\n\n"
+            for failed_path, reason in failures:
+                report += "- `%s`：%s\n" % (failed_path, reason)
+            report += "\n"
+    else:
+        report = build_failure_report(failures)
     report_path = os.path.abspath(args.report)
     parent = os.path.dirname(report_path)
     if parent:
@@ -1262,6 +1288,10 @@ def main():
     with open(report_path, "w", encoding="utf-8") as handle:
         handle.write(report)
     print("[完成] 质量报告已写入：%s" % report_path)
+
+    if not results:
+        print("错误：没有可体检的表格。", file=sys.stderr)
+        sys.exit(1)
 
     if args.apply:
         os.makedirs(args.output_dir, exist_ok=True)
@@ -1284,6 +1314,9 @@ def main():
             log_path, sum(len(item["operations"]) for item in log_items)))
     else:
         print("[提示] 当前是 dry-run：只出报告、没改任何数据。确认无误后加 --apply 写出清洗结果。")
+
+    if failures:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

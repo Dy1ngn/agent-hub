@@ -1,0 +1,939 @@
+id: ts-b-test-generator-g4-robust
+agentId: test-generator
+group: g4-robust
+name: 单元测试生成 · 鲁棒性：畸形 / 乱码 / 缺字段
+description: 语法损坏、乱码、控制字符、NUL、混缩进等异常文件与正常文件混放：坏的跳过、好的照常分析，不崩溃（离线确定性模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：语法损坏
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：语法损坏
+      files:
+        - path: input/bad1.py
+          content: "def broken(:\n    pass\n@@@ ###\n"
+        - path: input/good1.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：非法转义
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：非法转义
+      files:
+        - path: input/bad2.py
+          content: "s = '\\q\\z\\'\ \n"
+        - path: input/good2.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：控制字符
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：控制字符
+      files:
+        - path: input/bad3.py
+          content: "a = 1\ab = 2\ac = 3\n"
+        - path: input/good3.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：混合中英标识符（可解析）
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：混合中英标识符（可解析）
+      files:
+        - path: input/bad4.py
+          content: "变量 = 1
+
+            mixed_变量_2 = '值'
+
+            def 函数(a):
+
+            \    return a\n"
+        - path: input/good4.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: keep_ok
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合引号
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：未闭合引号
+      files:
+        - path: input/bad5.py
+          content: "s = 'unterminated\nprint(s)\n"
+        - path: input/good5.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：未闭合括号
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：未闭合括号
+      files:
+        - path: input/bad6.py
+          content: "def f(a, b:\n    return a + b\n"
+        - path: input/good6.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：零宽字符（字符串内）
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：零宽字符（字符串内）
+      files:
+        - path: input/bad7.py
+          content: "s = 'a​b‌'\nt = 'x﻿y'\n"
+        - path: input/good7.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: keep_ok
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：emoji 字符串
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：emoji 字符串
+      files:
+        - path: input/bad8.py
+          content: "s = '😀🚀'
+
+            def show():
+
+            \    return s\n"
+        - path: input/good8.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: keep_ok
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：超多空行
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：超多空行
+      files:
+        - path: input/bad9.py
+          content: "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            def spacy():
+
+            \    return 1\n"
+        - path: input/good9.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: keep_ok
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：重复定义
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：重复定义
+      files:
+        - path: input/bad10.py
+          content: "def f():
+
+            \    return 1
+
+            def f():
+
+            \    return 2
+
+            def f():
+
+            \    return 3\n"
+        - path: input/good10.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: keep_ok
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-11
+    title: 异常输入：乱码字符串（可解析）
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：乱码字符串（可解析）
+      files:
+        - path: input/bad11.py
+          content: "s = 'ä½ å¥½ï¼Œä¸–ç•Œ'
+
+            def show2():
+
+            \    return s\n"
+        - path: input/good11.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: keep_ok
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-12
+    title: 异常输入：NUL 字节
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：NUL 字节
+      files:
+        - path: input/bad12.py
+          content: "x\0 = 1\ny = 2\0\n"
+        - path: input/good12.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-13
+    title: 异常输入：TabError 混缩进
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：TabError 混缩进
+      files:
+        - path: input/bad13.py
+          content: "def f():
+
+            \treturn 1
+
+            \        return 2\n"
+        - path: input/good13.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-14
+    title: 异常输入：未闭合三引号
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：未闭合三引号
+      files:
+        - path: input/bad14.py
+          content: "def f():\n    '''没有结束\n    return 1\n"
+        - path: input/good14.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-15
+    title: 异常输入：重复参数名
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：重复参数名
+      files:
+        - path: input/bad15.py
+          content: "def f(a, a):\n    return a\n"
+        - path: input/good15.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-16
+    title: 异常输入：顶层 return
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：顶层 return
+      files:
+        - path: input/bad16.py
+          content: "return 1\n"
+        - path: input/good16.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-17
+    title: 异常输入：超深嵌套（可解析）
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：超深嵌套（可解析）
+      files:
+        - path: input/bad17.py
+          content: "def deep(x):
+
+            \        if x > 1:
+
+            \        pass
+
+            \            if x > 2:
+
+            \        pass
+
+            \                if x > 3:
+
+            \        pass
+
+            \                    if x > 4:
+
+            \        pass
+
+            \                        if x > 5:
+
+            \        pass
+
+            \                            if x > 6:
+
+            \        pass
+
+            \                                if x > 7:
+
+            \        pass\n"
+        - path: input/good17.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: keep_ok
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-18
+    title: 异常输入：缺字段：只有 def 头
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：缺字段：只有 def 头
+      files:
+        - path: input/bad18.py
+          content: "def half(\n"
+        - path: input/good18.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-19
+    title: 异常输入：控制字符流
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：控制字符流
+      files:
+        - path: input/bad19.py
+          content: "\x01\x02\x03\x04\x05\n"
+        - path: input/good19.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-20
+    title: 异常输入：纯标点
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 畸形/乱码输入不能让工具崩溃；坏文件被跳过、好文件照常分析
+      content: 异常用例：纯标点
+      files:
+        - path: input/bad20.py
+          content: ";;;,,,:::\n"
+        - path: input/good20.py
+          content: "def keep_ok(x):\n    return x + 1\n"
+      params:
+        src: input
+        framework: pytest
+        coverage: 全部
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: contains
+          text: keep_ok
+          weight: 1
+          note: 好文件照常分析
+        - type: contains
+          text: 跳过
+          weight: 2
+          note: 坏文件被优雅跳过（或照常分析）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

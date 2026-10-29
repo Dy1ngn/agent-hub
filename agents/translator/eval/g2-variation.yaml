@@ -1,0 +1,830 @@
+id: ts-b-translator-g2-variation
+agentId: translator
+group: g2-variation
+name: 多语言翻译 · 输入变体：格式 / 语言对 / 规模 / 参数组合
+description: 不同文件格式（md/json/csv/txt）、语言对、文本规模与 batch-chars 参数下的翻译表现（模型链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-format-1
+    title: 文件格式变体（note.md）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同格式的文件都要正常翻译并记录在报告里
+      content: 翻译任务：input/note.md → 英语
+      files:
+        - path: input/note.md
+          content: "# 便签\n\n明天上午十点开会，讨论季度计划。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/note.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: "`note.md`"
+          weight: 2
+          note: 文件清单记录输入文件名
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-2
+    title: 文件格式变体（data.json）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同格式的文件都要正常翻译并记录在报告里
+      content: 翻译任务：input/data.json → 英语
+      files:
+        - path: input/data.json
+          content: "{
+
+            \  \"title\": \"季度报表\",
+
+            \  \"summary\": \"营收稳步增长\"
+
+            }\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/data.json
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: "`data.json`"
+          weight: 2
+          note: 文件清单记录输入文件名
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-3
+    title: 文件格式变体（table.csv）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同格式的文件都要正常翻译并记录在报告里
+      content: 翻译任务：input/table.csv → 英语
+      files:
+        - path: input/table.csv
+          content: "城市,人口\n北京,2189 万\n上海,2487 万\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/table.csv
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: "`table.csv`"
+          weight: 2
+          note: 文件清单记录输入文件名
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-format-4
+    title: 文件格式变体（plain.txt）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同格式的文件都要正常翻译并记录在报告里
+      content: 翻译任务：input/plain.txt → 英语
+      files:
+        - path: input/plain.txt
+          content: "这是一段普通文本，用于验证纯文本翻译流程。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/plain.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: "`plain.txt`"
+          weight: 2
+          note: 文件清单记录输入文件名
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-langpair-1
+    title: 语言对变体（中文 → 英语）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言对的翻译都要正常产出报告
+      content: 翻译任务：input/doc.txt → 英语
+      files:
+        - path: input/doc.txt
+          content: "公司简介：我们专注企业服务十年，服务客户超过五千家。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: 源语言：中文
+          weight: 1
+          note: 报告元信息记录源语言
+        - type: contains
+          text: 目标语言：英语
+          weight: 2
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-langpair-2
+    title: 语言对变体（英文 → 中文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言对的翻译都要正常产出报告
+      content: 翻译任务：input/doc.txt → 中文
+      files:
+        - path: input/doc.txt
+          content: "Company profile: we have focused on enterprise services for ten years.\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 中文
+        from: 英文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: 源语言：英文
+          weight: 1
+          note: 报告元信息记录源语言
+        - type: contains
+          text: 目标语言：中文
+          weight: 2
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-langpair-3
+    title: 语言对变体（中文 → 日语）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言对的翻译都要正常产出报告
+      content: 翻译任务：input/doc.txt → 日语
+      files:
+        - path: input/doc.txt
+          content: "公司简介：我们专注企业服务十年，服务客户超过五千家。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 日语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: 源语言：中文
+          weight: 1
+          note: 报告元信息记录源语言
+        - type: contains
+          text: 目标语言：日语
+          weight: 2
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-langpair-4
+    title: 语言对变体（中文 → 阿拉伯语）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言对的翻译都要正常产出报告
+      content: 翻译任务：input/doc.txt → 阿拉伯语
+      files:
+        - path: input/doc.txt
+          content: "公司简介：我们专注企业服务十年，服务客户超过五千家。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 阿拉伯语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: 源语言：中文
+          weight: 1
+          note: 报告元信息记录源语言
+        - type: contains
+          text: 目标语言：阿拉伯语
+          weight: 2
+          note: 报告元信息记录目标语言
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-1
+    title: 文本规模变体（超短一句）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文本都要正常翻译
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "你好。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: regex
+          pattern: 批次：[0-9]+ 个
+          weight: 1
+          note: 批次统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-2
+    title: 文本规模变体（短文）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文本都要正常翻译
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "今日安排：上午开会，下午写方案，晚上复盘。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: regex
+          pattern: 批次：[0-9]+ 个
+          weight: 1
+          note: 批次统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-3
+    title: 文本规模变体（中等文档）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文本都要正常翻译
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "# 项目方案
+
+
+            项目目标：搭建统一的数据平台，打通各业务线数据。
+
+
+            项目范围：数据接入、数据治理、数据服务三部分。
+
+
+            项目计划：第一季度完成接入，第二季度完成治理，第三季度对外提供数据服务。
+
+
+            项目风险：数据质量与跨团队协作是主要风险，需要专项跟进。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: regex
+          pattern: 批次：[0-9]+ 个
+          weight: 1
+          note: 批次统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-4
+    title: 文本规模变体（较长文档（分多批））
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文本都要正常翻译
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "产品年度总结。产品在这一年里完成了三次大版本迭代，用户规模稳步增长。
+
+            产品团队完善了需求评审流程，需求交付周期缩短了两成。
+
+            产品质量方面，线上缺陷数量同比下降三成，用户满意度稳步提升。
+
+            产品商业化方面，付费转化率提升到 4.5%，续费率保持在九成以上。
+
+            产品技术方面，完成了微服务拆分与灰度发布体系建设。
+
+            产品运营方面，社区活跃度提升，月活创作者突破十万。
+
+            产品安全方面，通过了第三方安全认证。
+
+            产品体验方面，首屏加载时间缩短到一秒以内。
+
+            产品数据方面，搭建了统一的指标体系。
+
+            产品下一步的重点是国际化与生态建设。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: regex
+          pattern: 批次：[0-9]+ 个
+          weight: 1
+          note: 批次统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-protect-1
+    title: 保护结构变体（代码块）
+    tags:
+      - variation
+      - protect
+    repeat: 5
+    input:
+      kind: text
+      goal: 代码块/占位符/链接等结构应被保护不译，流程不崩溃
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "安装方法：
+
+
+            ```bash
+
+            pip install demo
+
+            ```
+
+
+            安装完成后即可使用。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: 文件清单
+          weight: 1
+          note: 文件清单章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-protect-2
+    title: 保护结构变体（双花括号占位符）
+    tags:
+      - variation
+      - protect
+    repeat: 5
+    input:
+      kind: text
+      goal: 代码块/占位符/链接等结构应被保护不译，流程不崩溃
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "您好 {{用户名}}，您的验证码是 {{验证码}}，五分钟内有效。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: 文件清单
+          weight: 1
+          note: 文件清单章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-protect-3
+    title: 保护结构变体（HTML 标签与链接）
+    tags:
+      - variation
+      - protect
+    repeat: 5
+    input:
+      kind: text
+      goal: 代码块/占位符/链接等结构应被保护不译，流程不崩溃
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: '详见 <a href="https://example.com">帮助中心</a>，图片：![示意图](https://example.com/a.png)。
+
+            '
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: 文件清单
+          weight: 1
+          note: 文件清单章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-protect-4
+    title: 保护结构变体（行内代码与格式串）
+    tags:
+      - variation
+      - protect
+    repeat: 5
+    input:
+      kind: text
+      goal: 代码块/占位符/链接等结构应被保护不译，流程不崩溃
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "使用 `--verbose` 参数查看日志，格式串 %s 与时间戳需要保留。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: contains
+          text: 文件清单
+          weight: 1
+          note: 文件清单章节存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-batch-1
+    title: 批大小参数变体（batch=200）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同批大小参数下都要正常翻译并统计批次
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "章节一：背景介绍。行业进入存量竞争阶段，获客成本持续上升。
+
+            章节二：解决方案。通过内容运营与私域运营降低获客成本。
+
+            章节三：预期效果。预计半年内获客成本下降两成。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "200"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: regex
+          pattern: 批次：[0-9]+ 个
+          weight: 1
+          note: 批次统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-batch-2
+    title: 批大小参数变体（batch=600）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同批大小参数下都要正常翻译并统计批次
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "章节一：背景介绍。行业进入存量竞争阶段，获客成本持续上升。
+
+            章节二：解决方案。通过内容运营与私域运营降低获客成本。
+
+            章节三：预期效果。预计半年内获客成本下降两成。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "600"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: regex
+          pattern: 批次：[0-9]+ 个
+          weight: 1
+          note: 批次统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-batch-3
+    title: 批大小参数变体（batch=6000）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同批大小参数下都要正常翻译并统计批次
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "章节一：背景介绍。行业进入存量竞争阶段，获客成本持续上升。
+
+            章节二：解决方案。通过内容运营与私域运营降低获客成本。
+
+            章节三：预期效果。预计半年内获客成本下降两成。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: regex
+          pattern: 批次：[0-9]+ 个
+          weight: 1
+          note: 批次统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-batch-4
+    title: 批大小参数变体（batch=100000）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同批大小参数下都要正常翻译并统计批次
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "章节一：背景介绍。行业进入存量竞争阶段，获客成本持续上升。
+
+            章节二：解决方案。通过内容运营与私域运营降低获客成本。
+
+            章节三：预期效果。预计半年内获客成本下降两成。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "100000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 1
+        - type: regex
+          pattern: 批次：[0-9]+ 个
+          weight: 1
+          note: 批次统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

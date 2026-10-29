@@ -1,0 +1,1210 @@
+id: ts-b-commit-crafter-g1-basic
+agentId: commit-crafter
+group: g1-basic
+name: 提交信息生成 · 基础功能：典型改动的提交信息生成
+description: 新增/修复/文档/测试/CI/依赖/多文件/破坏性/性能/锁文件等典型改动，走「diff 直读 + 模型生成」完整链路（启发式候选类型为确定性金标）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-feat-1
+    title: 新增业务源文件（python）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为新增源文件的改动生成规范提交信息
+      content: 这批改动新增了一个业务源文件，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/checkout.py b/src/checkout.py
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/src/checkout.py
+
+            @@ -0,0 +1,3 @@
+
+            +def checkout(cart):
+
+            +    total = sum(item.price for item in cart)
+
+            +    return charge(total)\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：feat
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-feat-2
+    title: 新增业务源文件（go）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为新增源文件的改动生成规范提交信息
+      content: 这批改动新增了一个业务源文件，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/pkg/pricing.go b/pkg/pricing.go
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/pkg/pricing.go
+
+            @@ -0,0 +1,9 @@
+
+            +package pricing
+
+            +
+
+            +func Total(items []Item) int {
+
+            +\tsum := 0
+
+            +\tfor _, it := range items {
+
+            +\t\tsum += it.Price
+
+            +\t}
+
+            +\treturn sum
+
+            +}\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：feat
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-fix-1
+    title: 修复线上 bug（python）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为 bug 修复改动生成规范提交信息
+      content: 这批改动修复了一个线上问题，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/auth.py b/src/auth.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/auth.py
+
+            +++ b/src/auth.py
+
+            @@ -1,2 +1,4 @@
+
+            -def login(user, password):
+
+            -    return check(user, password)
+
+            +def login(user, password):
+
+            +    if user is None or password is None:
+
+            +        raise ValueError('missing credentials')
+
+            +    return check(user, password)\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：fix
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-fix-2
+    title: 修复线上 bug（javascript）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为 bug 修复改动生成规范提交信息
+      content: 这批改动修复了一个线上问题，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/router.js b/src/router.js
+
+            index 1111111..2222222 100644
+
+            --- a/src/router.js
+
+            +++ b/src/router.js
+
+            @@ -1,3 +1,4 @@
+
+            -function match(path) {
+
+            -  return routes[path].handler;
+
+            -}
+
+            +function match(path) {
+
+            +  const route = routes[path];
+
+            +  return route ? route.handler : notFound;
+
+            +}\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：fix
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-docs-1
+    title: 纯文档改动（README.md）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为文档改动生成规范提交信息
+      content: 这批改动只动了文档，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/README.md b/README.md
+
+            index 1111111..2222222 100644
+
+            --- a/README.md
+
+            +++ b/README.md
+
+            @@ -1,3 +1,3 @@
+
+            -# 项目
+
+            -
+
+            -简介待补充。
+
+            +# 项目
+
+            +
+
+            +本项目提供订单结算服务，支持优惠券与积分抵扣。\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：docs
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-docs-2
+    title: 纯文档改动（docs/guide.md）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为文档改动生成规范提交信息
+      content: 这批改动只动了文档，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/docs/guide.md b/docs/guide.md
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/docs/guide.md
+
+            @@ -0,0 +1,5 @@
+
+            +# 快速开始
+
+            +
+
+            +1. 安装依赖
+
+            +2. 启动服务
+
+            +3. 访问 /health\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：docs
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-test-1
+    title: 补充测试（tests/test_auth.py）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为测试改动生成规范提交信息
+      content: 这批改动只补充了测试，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/tests/test_auth.py b/tests/test_auth.py
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/tests/test_auth.py
+
+            @@ -0,0 +1,6 @@
+
+            +import pytest
+
+            +from src.auth import login
+
+            +
+
+            +def test_login_rejects_empty_password():
+
+            +    with pytest.raises(ValueError):
+
+            +        login('alice', '')\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：test
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-test-2
+    title: 补充测试（tests/test_cart_test.go）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为测试改动生成规范提交信息
+      content: 这批改动只补充了测试，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: 'diff --git a/tests/cart_test.go b/tests/cart_test.go
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/tests/cart_test.go
+
+            @@ -0,0 +1,9 @@
+
+            +package tests
+
+            +
+
+            +import "testing"
+
+            +
+
+            +func TestEmptyCart(t *testing.T) {
+
+            +	if Total(nil) != 0 {
+
+            +		t.Fatal("empty cart should be 0")
+
+            +	}
+
+            +}
+
+            '
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：test
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-ci-1
+    title: 调整 CI 配置（.github/workflows/ci.yml）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为 CI 配置改动生成规范提交信息
+      content: 这批改动只调整了 CI 配置，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/.github/workflows/ci.yml
+
+            @@ -0,0 +1,8 @@
+
+            +name: CI
+
+            +on: [push]
+
+            +jobs:
+
+            +  test:
+
+            +    runs-on: ubuntu-latest
+
+            +    steps:
+
+            +      - uses: actions/checkout@v4
+
+            +      - run: pytest\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：ci
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-ci-2
+    title: 调整 CI 配置（.gitlab-ci.yml）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为 CI 配置改动生成规范提交信息
+      content: 这批改动只调整了 CI 配置，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+
+            index 1111111..2222222 100644
+
+            --- a/.gitlab-ci.yml
+
+            +++ b/.gitlab-ci.yml
+
+            @@ -1,2 +1,3 @@
+
+            -test:
+
+            -  script: pytest -q
+
+            +test:
+
+            +  script: pytest -q --maxfail=1
+
+            +  timeout: 10m\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：ci
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-deps-1
+    title: 依赖版本升级（package.json）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为依赖升级改动生成规范提交信息
+      content: 这批改动只升级了依赖版本，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: 'diff --git a/package.json b/package.json
+
+            index 1111111..2222222 100644
+
+            --- a/package.json
+
+            +++ b/package.json
+
+            @@ -1,3 +1,3 @@
+
+            -  "dependencies": {
+
+            -    "lodash": "4.17.20"
+
+            -  }
+
+            +  "dependencies": {
+
+            +    "lodash": "4.17.21"
+
+            +  }
+
+            '
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：build
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-deps-2
+    title: 依赖版本升级（requirements.txt）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为依赖升级改动生成规范提交信息
+      content: 这批改动只升级了依赖版本，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/requirements.txt b/requirements.txt
+
+            index 1111111..2222222 100644
+
+            --- a/requirements.txt
+
+            +++ b/requirements.txt
+
+            @@ -1,2 +1,2 @@
+
+            -requests==2.28.1
+
+            -flask==2.2.2
+
+            +requests==2.31.0
+
+            +flask==2.3.2\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：build
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-multi-1
+    title: 多文件混合改动（新模块+文档）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为多文件混合改动生成规范提交信息
+      content: 这批改动同时涉及源码和文档，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/refund.py b/src/refund.py
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/src/refund.py
+
+            @@ -0,0 +1,2 @@
+
+            +def refund(order):
+
+            +    return gateway.refund(order.id)
+
+            diff --git a/README.md b/README.md
+
+            index 1111111..2222222 100644
+
+            --- a/README.md
+
+            +++ b/README.md
+
+            @@ -1,1 +1,1 @@
+
+            -支持下单。
+
+            +支持下单与退款。\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：feat
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-multi-2
+    title: 多文件混合改动（新功能+修复）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为多文件混合改动生成规范提交信息
+      content: 这批改动同时涉及源码和文档，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/notify.py b/src/notify.py
+
+            new file mode 100644
+
+            index 0000000..e69de29
+
+            --- /dev/null
+
+            +++ b/src/notify.py
+
+            @@ -0,0 +1,2 @@
+
+            +def notify(user):
+
+            +    return mailer.send(user.email)
+
+            diff --git a/src/b.py b/src/b.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/b.py
+
+            +++ b/src/b.py
+
+            @@ -1,2 +1,2 @@
+
+            -def g(y):
+
+            -    return y[0]
+
+            +def g(y):
+
+            +    return y[0] if y else None\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：feat
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-breaking-1
+    title: 删除公开接口（src/api.py）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为删除接口的破坏性改动生成规范提交信息
+      content: 这批改动删除了一个对外接口，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/api.py b/src/api.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/api.py
+
+            +++ b/src/api.py
+
+            @@ -1,2 +1,1 @@
+
+            -def legacy_report(user):
+
+            -    return build_report(user)
+
+            +# legacy_report 已下线\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：fix
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-breaking-2
+    title: 删除公开接口（src/legacy.go）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为删除接口的破坏性改动生成规范提交信息
+      content: 这批改动删除了一个对外接口，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/legacy.go b/src/legacy.go
+
+            deleted file mode 100644
+
+            index 1111111..0000000
+
+            --- a/src/legacy.go
+
+            +++ /dev/null
+
+            @@ -1,5 +0,0 @@
+
+            -package src
+
+            -
+
+            -func Legacy() {
+
+            -\t// deprecated
+
+            -}\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：fix
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-perf-1
+    title: 性能优化改动（src/report.py）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为性能优化改动生成规范提交信息
+      content: 这批改动优化了热点路径性能，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/report.py b/src/report.py
+
+            index 1111111..2222222 100644
+
+            --- a/src/report.py
+
+            +++ b/src/report.py
+
+            @@ -1,5 +1,2 @@
+
+            -def build_report(ids):
+
+            -    rows = []
+
+            -    for i in ids:
+
+            -        rows.append(db.get(i))
+
+            -    return rows
+
+            +def build_report(ids):
+
+            +    return db.get_many(ids)\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：fix
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-perf-2
+    title: 性能优化改动（src/cache.js）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为性能优化改动生成规范提交信息
+      content: 这批改动优化了热点路径性能，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: "diff --git a/src/cache.js b/src/cache.js
+
+            index 1111111..2222222 100644
+
+            --- a/src/cache.js
+
+            +++ b/src/cache.js
+
+            @@ -1,3 +1,7 @@
+
+            -function get(key) {
+
+            -  return db.query('SELECT v FROM kv WHERE k=?', key);
+
+            -}
+
+            +const memo = new Map();
+
+            +function get(key) {
+
+            +  if (memo.has(key)) return memo.get(key);
+
+            +  const v = db.query('SELECT v FROM kv WHERE k=?', key);
+
+            +  memo.set(key, v);
+
+            +  return v;
+
+            +}\n"
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：fix
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-lock-1
+    title: 锁文件同步（package-lock.json）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为锁文件同步改动生成规范提交信息
+      content: 这批改动只同步了依赖锁文件，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: 'diff --git a/package-lock.json b/package-lock.json
+
+            index 1111111..2222222 100644
+
+            --- a/package-lock.json
+
+            +++ b/package-lock.json
+
+            @@ -1,2 +1,2 @@
+
+            -  "lockfileVersion": 2,
+
+            -  "resolved": "https://registry/lodash/-/lodash-4.17.20.tgz",
+
+            +  "lockfileVersion": 2,
+
+            +  "resolved": "https://registry/lodash/-/lodash-4.17.21.tgz",
+
+            '
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：chore
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-lock-2
+    title: 锁文件同步（poetry.lock）
+    tags:
+      - commit
+    repeat: 5
+    input:
+      kind: code
+      goal: 为锁文件同步改动生成规范提交信息
+      content: 这批改动只同步了依赖锁文件，请生成提交信息预览。
+      files:
+        - path: input/change.diff
+          content: 'diff --git a/poetry.lock b/poetry.lock
+
+            index 1111111..2222222 100644
+
+            --- a/poetry.lock
+
+            +++ b/poetry.lock
+
+            @@ -1,2 +1,2 @@
+
+            -name = "requests"
+
+            -version = "2.28.1"
+
+            +name = "requests"
+
+            +version = "2.31.0"
+
+            '
+      params:
+        style: conventional
+        lang: zh
+        maxchars: "60000"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 最终提交信息
+          weight: 1
+          note: 产出标准预览报告
+        - type: contains
+          text: 候选类型：chore
+          weight: 2
+          note: 启发式类型判定确定性正确
+        - type: regex
+          pattern: "(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\\([^)]*\\))?!?: "
+          weight: 2
+          note: 最终 subject 带合规 type 前缀
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []

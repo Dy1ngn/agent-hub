@@ -1,0 +1,2312 @@
+id: ts-b-log-detective-g2-variation
+agentId: log-detective
+group: g2-variation
+name: 日志排查 · 输入变体：规模 / 参数 / 访问日志
+description: 300 行大日志、Top N、时间窗口、grep 过滤、慢请求、状态码、中文 emoji、超长行等变体（模型分析链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-scale-1
+    title: 300 行大日志（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: log
+      goal: 处理大体量日志
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 09:00:01 INFO bulk event 1
+
+            2026-10-28 09:00:02 INFO bulk event 2
+
+            2026-10-28 09:00:03 INFO bulk event 3
+
+            2026-10-28 09:00:04 INFO bulk event 4
+
+            2026-10-28 09:00:05 WARN bulk event 5
+
+            2026-10-28 09:00:06 INFO bulk event 6
+
+            2026-10-28 09:00:07 ERROR bulk event 7
+
+            2026-10-28 09:00:08 INFO bulk event 8
+
+            2026-10-28 09:00:09 INFO bulk event 9
+
+            2026-10-28 09:00:10 WARN bulk event 10
+
+            2026-10-28 09:00:11 INFO bulk event 11
+
+            2026-10-28 09:00:12 INFO bulk event 12
+
+            2026-10-28 09:00:13 INFO bulk event 13
+
+            2026-10-28 09:00:14 ERROR bulk event 14
+
+            2026-10-28 09:00:15 WARN bulk event 15
+
+            2026-10-28 09:00:16 INFO bulk event 16
+
+            2026-10-28 09:00:17 INFO bulk event 17
+
+            2026-10-28 09:00:18 INFO bulk event 18
+
+            2026-10-28 09:00:19 INFO bulk event 19
+
+            2026-10-28 09:00:20 WARN bulk event 20
+
+            2026-10-28 09:00:21 ERROR bulk event 21
+
+            2026-10-28 09:00:22 INFO bulk event 22
+
+            2026-10-28 09:00:23 INFO bulk event 23
+
+            2026-10-28 09:00:24 INFO bulk event 24
+
+            2026-10-28 09:00:25 WARN bulk event 25
+
+            2026-10-28 09:00:26 INFO bulk event 26
+
+            2026-10-28 09:00:27 INFO bulk event 27
+
+            2026-10-28 09:00:28 ERROR bulk event 28
+
+            2026-10-28 09:00:29 INFO bulk event 29
+
+            2026-10-28 09:00:30 WARN bulk event 30
+
+            2026-10-28 09:00:31 INFO bulk event 31
+
+            2026-10-28 09:00:32 INFO bulk event 32
+
+            2026-10-28 09:00:33 INFO bulk event 33
+
+            2026-10-28 09:00:34 INFO bulk event 34
+
+            2026-10-28 09:00:35 ERROR bulk event 35
+
+            2026-10-28 09:00:36 INFO bulk event 36
+
+            2026-10-28 09:00:37 INFO bulk event 37
+
+            2026-10-28 09:00:38 INFO bulk event 38
+
+            2026-10-28 09:00:39 INFO bulk event 39
+
+            2026-10-28 09:00:40 WARN bulk event 40
+
+            2026-10-28 09:00:41 INFO bulk event 41
+
+            2026-10-28 09:00:42 ERROR bulk event 42
+
+            2026-10-28 09:00:43 INFO bulk event 43
+
+            2026-10-28 09:00:44 INFO bulk event 44
+
+            2026-10-28 09:00:45 WARN bulk event 45
+
+            2026-10-28 09:00:46 INFO bulk event 46
+
+            2026-10-28 09:00:47 INFO bulk event 47
+
+            2026-10-28 09:00:48 INFO bulk event 48
+
+            2026-10-28 09:00:49 ERROR bulk event 49
+
+            2026-10-28 09:00:50 WARN bulk event 50
+
+            2026-10-28 09:00:51 INFO bulk event 51
+
+            2026-10-28 09:00:52 INFO bulk event 52
+
+            2026-10-28 09:00:53 INFO bulk event 53
+
+            2026-10-28 09:00:54 INFO bulk event 54
+
+            2026-10-28 09:00:55 WARN bulk event 55
+
+            2026-10-28 09:00:56 ERROR bulk event 56
+
+            2026-10-28 09:00:57 INFO bulk event 57
+
+            2026-10-28 09:00:58 INFO bulk event 58
+
+            2026-10-28 09:00:59 INFO bulk event 59
+
+            2026-10-28 09:01:00 WARN bulk event 60
+
+            2026-10-28 09:01:01 INFO bulk event 61
+
+            2026-10-28 09:01:02 INFO bulk event 62
+
+            2026-10-28 09:01:03 ERROR bulk event 63
+
+            2026-10-28 09:01:04 INFO bulk event 64
+
+            2026-10-28 09:01:05 WARN bulk event 65
+
+            2026-10-28 09:01:06 INFO bulk event 66
+
+            2026-10-28 09:01:07 INFO bulk event 67
+
+            2026-10-28 09:01:08 INFO bulk event 68
+
+            2026-10-28 09:01:09 INFO bulk event 69
+
+            2026-10-28 09:01:10 ERROR bulk event 70
+
+            2026-10-28 09:01:11 INFO bulk event 71
+
+            2026-10-28 09:01:12 INFO bulk event 72
+
+            2026-10-28 09:01:13 INFO bulk event 73
+
+            2026-10-28 09:01:14 INFO bulk event 74
+
+            2026-10-28 09:01:15 WARN bulk event 75
+
+            2026-10-28 09:01:16 INFO bulk event 76
+
+            2026-10-28 09:01:17 ERROR bulk event 77
+
+            2026-10-28 09:01:18 INFO bulk event 78
+
+            2026-10-28 09:01:19 INFO bulk event 79
+
+            2026-10-28 09:01:20 WARN bulk event 80
+
+            2026-10-28 09:01:21 INFO bulk event 81
+
+            2026-10-28 09:01:22 INFO bulk event 82
+
+            2026-10-28 09:01:23 INFO bulk event 83
+
+            2026-10-28 09:01:24 ERROR bulk event 84
+
+            2026-10-28 09:01:25 WARN bulk event 85
+
+            2026-10-28 09:01:26 INFO bulk event 86
+
+            2026-10-28 09:01:27 INFO bulk event 87
+
+            2026-10-28 09:01:28 INFO bulk event 88
+
+            2026-10-28 09:01:29 INFO bulk event 89
+
+            2026-10-28 09:01:30 WARN bulk event 90
+
+            2026-10-28 09:01:31 ERROR bulk event 91
+
+            2026-10-28 09:01:32 INFO bulk event 92
+
+            2026-10-28 09:01:33 INFO bulk event 93
+
+            2026-10-28 09:01:34 INFO bulk event 94
+
+            2026-10-28 09:01:35 WARN bulk event 95
+
+            2026-10-28 09:01:36 INFO bulk event 96
+
+            2026-10-28 09:01:37 INFO bulk event 97
+
+            2026-10-28 09:01:38 ERROR bulk event 98
+
+            2026-10-28 09:01:39 INFO bulk event 99
+
+            2026-10-28 09:01:40 WARN bulk event 100
+
+            2026-10-28 09:01:41 INFO bulk event 101
+
+            2026-10-28 09:01:42 INFO bulk event 102
+
+            2026-10-28 09:01:43 INFO bulk event 103
+
+            2026-10-28 09:01:44 INFO bulk event 104
+
+            2026-10-28 09:01:45 ERROR bulk event 105
+
+            2026-10-28 09:01:46 INFO bulk event 106
+
+            2026-10-28 09:01:47 INFO bulk event 107
+
+            2026-10-28 09:01:48 INFO bulk event 108
+
+            2026-10-28 09:01:49 INFO bulk event 109
+
+            2026-10-28 09:01:50 WARN bulk event 110
+
+            2026-10-28 09:01:51 INFO bulk event 111
+
+            2026-10-28 09:01:52 ERROR bulk event 112
+
+            2026-10-28 09:01:53 INFO bulk event 113
+
+            2026-10-28 09:01:54 INFO bulk event 114
+
+            2026-10-28 09:01:55 WARN bulk event 115
+
+            2026-10-28 09:01:56 INFO bulk event 116
+
+            2026-10-28 09:01:57 INFO bulk event 117
+
+            2026-10-28 09:01:58 INFO bulk event 118
+
+            2026-10-28 09:01:59 ERROR bulk event 119
+
+            2026-10-28 09:02:00 WARN bulk event 120
+
+            2026-10-28 09:02:01 INFO bulk event 121
+
+            2026-10-28 09:02:02 INFO bulk event 122
+
+            2026-10-28 09:02:03 INFO bulk event 123
+
+            2026-10-28 09:02:04 INFO bulk event 124
+
+            2026-10-28 09:02:05 WARN bulk event 125
+
+            2026-10-28 09:02:06 ERROR bulk event 126
+
+            2026-10-28 09:02:07 INFO bulk event 127
+
+            2026-10-28 09:02:08 INFO bulk event 128
+
+            2026-10-28 09:02:09 INFO bulk event 129
+
+            2026-10-28 09:02:10 WARN bulk event 130
+
+            2026-10-28 09:02:11 INFO bulk event 131
+
+            2026-10-28 09:02:12 INFO bulk event 132
+
+            2026-10-28 09:02:13 ERROR bulk event 133
+
+            2026-10-28 09:02:14 INFO bulk event 134
+
+            2026-10-28 09:02:15 WARN bulk event 135
+
+            2026-10-28 09:02:16 INFO bulk event 136
+
+            2026-10-28 09:02:17 INFO bulk event 137
+
+            2026-10-28 09:02:18 INFO bulk event 138
+
+            2026-10-28 09:02:19 INFO bulk event 139
+
+            2026-10-28 09:02:20 ERROR bulk event 140
+
+            2026-10-28 09:02:21 INFO bulk event 141
+
+            2026-10-28 09:02:22 INFO bulk event 142
+
+            2026-10-28 09:02:23 INFO bulk event 143
+
+            2026-10-28 09:02:24 INFO bulk event 144
+
+            2026-10-28 09:02:25 WARN bulk event 145
+
+            2026-10-28 09:02:26 INFO bulk event 146
+
+            2026-10-28 09:02:27 ERROR bulk event 147
+
+            2026-10-28 09:02:28 INFO bulk event 148
+
+            2026-10-28 09:02:29 INFO bulk event 149
+
+            2026-10-28 09:02:30 WARN bulk event 150
+
+            2026-10-28 09:02:31 INFO bulk event 151
+
+            2026-10-28 09:02:32 INFO bulk event 152
+
+            2026-10-28 09:02:33 INFO bulk event 153
+
+            2026-10-28 09:02:34 ERROR bulk event 154
+
+            2026-10-28 09:02:35 WARN bulk event 155
+
+            2026-10-28 09:02:36 INFO bulk event 156
+
+            2026-10-28 09:02:37 INFO bulk event 157
+
+            2026-10-28 09:02:38 INFO bulk event 158
+
+            2026-10-28 09:02:39 INFO bulk event 159
+
+            2026-10-28 09:02:40 WARN bulk event 160
+
+            2026-10-28 09:02:41 ERROR bulk event 161
+
+            2026-10-28 09:02:42 INFO bulk event 162
+
+            2026-10-28 09:02:43 INFO bulk event 163
+
+            2026-10-28 09:02:44 INFO bulk event 164
+
+            2026-10-28 09:02:45 WARN bulk event 165
+
+            2026-10-28 09:02:46 INFO bulk event 166
+
+            2026-10-28 09:02:47 INFO bulk event 167
+
+            2026-10-28 09:02:48 ERROR bulk event 168
+
+            2026-10-28 09:02:49 INFO bulk event 169
+
+            2026-10-28 09:02:50 WARN bulk event 170
+
+            2026-10-28 09:02:51 INFO bulk event 171
+
+            2026-10-28 09:02:52 INFO bulk event 172
+
+            2026-10-28 09:02:53 INFO bulk event 173
+
+            2026-10-28 09:02:54 INFO bulk event 174
+
+            2026-10-28 09:02:55 ERROR bulk event 175
+
+            2026-10-28 09:02:56 INFO bulk event 176
+
+            2026-10-28 09:02:57 INFO bulk event 177
+
+            2026-10-28 09:02:58 INFO bulk event 178
+
+            2026-10-28 09:02:59 INFO bulk event 179
+
+            2026-10-28 09:03:00 WARN bulk event 180
+
+            2026-10-28 09:03:01 INFO bulk event 181
+
+            2026-10-28 09:03:02 ERROR bulk event 182
+
+            2026-10-28 09:03:03 INFO bulk event 183
+
+            2026-10-28 09:03:04 INFO bulk event 184
+
+            2026-10-28 09:03:05 WARN bulk event 185
+
+            2026-10-28 09:03:06 INFO bulk event 186
+
+            2026-10-28 09:03:07 INFO bulk event 187
+
+            2026-10-28 09:03:08 INFO bulk event 188
+
+            2026-10-28 09:03:09 ERROR bulk event 189
+
+            2026-10-28 09:03:10 WARN bulk event 190
+
+            2026-10-28 09:03:11 INFO bulk event 191
+
+            2026-10-28 09:03:12 INFO bulk event 192
+
+            2026-10-28 09:03:13 INFO bulk event 193
+
+            2026-10-28 09:03:14 INFO bulk event 194
+
+            2026-10-28 09:03:15 WARN bulk event 195
+
+            2026-10-28 09:03:16 ERROR bulk event 196
+
+            2026-10-28 09:03:17 INFO bulk event 197
+
+            2026-10-28 09:03:18 INFO bulk event 198
+
+            2026-10-28 09:03:19 INFO bulk event 199
+
+            2026-10-28 09:03:20 WARN bulk event 200
+
+            2026-10-28 09:03:21 INFO bulk event 201
+
+            2026-10-28 09:03:22 INFO bulk event 202
+
+            2026-10-28 09:03:23 ERROR bulk event 203
+
+            2026-10-28 09:03:24 INFO bulk event 204
+
+            2026-10-28 09:03:25 WARN bulk event 205
+
+            2026-10-28 09:03:26 INFO bulk event 206
+
+            2026-10-28 09:03:27 INFO bulk event 207
+
+            2026-10-28 09:03:28 INFO bulk event 208
+
+            2026-10-28 09:03:29 INFO bulk event 209
+
+            2026-10-28 09:03:30 ERROR bulk event 210
+
+            2026-10-28 09:03:31 INFO bulk event 211
+
+            2026-10-28 09:03:32 INFO bulk event 212
+
+            2026-10-28 09:03:33 INFO bulk event 213
+
+            2026-10-28 09:03:34 INFO bulk event 214
+
+            2026-10-28 09:03:35 WARN bulk event 215
+
+            2026-10-28 09:03:36 INFO bulk event 216
+
+            2026-10-28 09:03:37 ERROR bulk event 217
+
+            2026-10-28 09:03:38 INFO bulk event 218
+
+            2026-10-28 09:03:39 INFO bulk event 219
+
+            2026-10-28 09:03:40 WARN bulk event 220
+
+            2026-10-28 09:03:41 INFO bulk event 221
+
+            2026-10-28 09:03:42 INFO bulk event 222
+
+            2026-10-28 09:03:43 INFO bulk event 223
+
+            2026-10-28 09:03:44 ERROR bulk event 224
+
+            2026-10-28 09:03:45 WARN bulk event 225
+
+            2026-10-28 09:03:46 INFO bulk event 226
+
+            2026-10-28 09:03:47 INFO bulk event 227
+
+            2026-10-28 09:03:48 INFO bulk event 228
+
+            2026-10-28 09:03:49 INFO bulk event 229
+
+            2026-10-28 09:03:50 WARN bulk event 230
+
+            2026-10-28 09:03:51 ERROR bulk event 231
+
+            2026-10-28 09:03:52 INFO bulk event 232
+
+            2026-10-28 09:03:53 INFO bulk event 233
+
+            2026-10-28 09:03:54 INFO bulk event 234
+
+            2026-10-28 09:03:55 WARN bulk event 235
+
+            2026-10-28 09:03:56 INFO bulk event 236
+
+            2026-10-28 09:03:57 INFO bulk event 237
+
+            2026-10-28 09:03:58 ERROR bulk event 238
+
+            2026-10-28 09:03:59 INFO bulk event 239
+
+            2026-10-28 09:04:00 WARN bulk event 240
+
+            2026-10-28 09:04:01 INFO bulk event 241
+
+            2026-10-28 09:04:02 INFO bulk event 242
+
+            2026-10-28 09:04:03 INFO bulk event 243
+
+            2026-10-28 09:04:04 INFO bulk event 244
+
+            2026-10-28 09:04:05 ERROR bulk event 245
+
+            2026-10-28 09:04:06 INFO bulk event 246
+
+            2026-10-28 09:04:07 INFO bulk event 247
+
+            2026-10-28 09:04:08 INFO bulk event 248
+
+            2026-10-28 09:04:09 INFO bulk event 249
+
+            2026-10-28 09:04:10 WARN bulk event 250
+
+            2026-10-28 09:04:11 INFO bulk event 251
+
+            2026-10-28 09:04:12 ERROR bulk event 252
+
+            2026-10-28 09:04:13 INFO bulk event 253
+
+            2026-10-28 09:04:14 INFO bulk event 254
+
+            2026-10-28 09:04:15 WARN bulk event 255
+
+            2026-10-28 09:04:16 INFO bulk event 256
+
+            2026-10-28 09:04:17 INFO bulk event 257
+
+            2026-10-28 09:04:18 INFO bulk event 258
+
+            2026-10-28 09:04:19 ERROR bulk event 259
+
+            2026-10-28 09:04:20 WARN bulk event 260
+
+            2026-10-28 09:04:21 INFO bulk event 261
+
+            2026-10-28 09:04:22 INFO bulk event 262
+
+            2026-10-28 09:04:23 INFO bulk event 263
+
+            2026-10-28 09:04:24 INFO bulk event 264
+
+            2026-10-28 09:04:25 WARN bulk event 265
+
+            2026-10-28 09:04:26 ERROR bulk event 266
+
+            2026-10-28 09:04:27 INFO bulk event 267
+
+            2026-10-28 09:04:28 INFO bulk event 268
+
+            2026-10-28 09:04:29 INFO bulk event 269
+
+            2026-10-28 09:04:30 WARN bulk event 270
+
+            2026-10-28 09:04:31 INFO bulk event 271
+
+            2026-10-28 09:04:32 INFO bulk event 272
+
+            2026-10-28 09:04:33 ERROR bulk event 273
+
+            2026-10-28 09:04:34 INFO bulk event 274
+
+            2026-10-28 09:04:35 WARN bulk event 275
+
+            2026-10-28 09:04:36 INFO bulk event 276
+
+            2026-10-28 09:04:37 INFO bulk event 277
+
+            2026-10-28 09:04:38 INFO bulk event 278
+
+            2026-10-28 09:04:39 INFO bulk event 279
+
+            2026-10-28 09:04:40 ERROR bulk event 280
+
+            2026-10-28 09:04:41 INFO bulk event 281
+
+            2026-10-28 09:04:42 INFO bulk event 282
+
+            2026-10-28 09:04:43 INFO bulk event 283
+
+            2026-10-28 09:04:44 INFO bulk event 284
+
+            2026-10-28 09:04:45 WARN bulk event 285
+
+            2026-10-28 09:04:46 INFO bulk event 286
+
+            2026-10-28 09:04:47 ERROR bulk event 287
+
+            2026-10-28 09:04:48 INFO bulk event 288
+
+            2026-10-28 09:04:49 INFO bulk event 289
+
+            2026-10-28 09:04:50 WARN bulk event 290
+
+            2026-10-28 09:04:51 INFO bulk event 291
+
+            2026-10-28 09:04:52 INFO bulk event 292
+
+            2026-10-28 09:04:53 INFO bulk event 293
+
+            2026-10-28 09:04:54 ERROR bulk event 294
+
+            2026-10-28 09:04:55 WARN bulk event 295
+
+            2026-10-28 09:04:56 INFO bulk event 296
+
+            2026-10-28 09:04:57 INFO bulk event 297
+
+            2026-10-28 09:04:58 INFO bulk event 298
+
+            2026-10-28 09:04:59 INFO bulk event 299
+
+            2026-10-28 09:05:00 WARN bulk event 300\n"
+        - path: input/worker.log
+          content: "2026-10-28 10:00:01 ERROR tail error\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 400
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (总行数|错误签名种类|输入文件)
+          weight: 2
+          note: 统计大日志
+      requiredSuggestions: []
+  - id: g2-scale-2
+    title: 300 行大日志（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: log
+      goal: 处理大体量日志
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 09:00:01 INFO bulk event 1
+
+            2026-10-28 09:00:02 INFO bulk event 2
+
+            2026-10-28 09:00:03 INFO bulk event 3
+
+            2026-10-28 09:00:04 INFO bulk event 4
+
+            2026-10-28 09:00:05 WARN bulk event 5
+
+            2026-10-28 09:00:06 INFO bulk event 6
+
+            2026-10-28 09:00:07 ERROR bulk event 7
+
+            2026-10-28 09:00:08 INFO bulk event 8
+
+            2026-10-28 09:00:09 INFO bulk event 9
+
+            2026-10-28 09:00:10 WARN bulk event 10
+
+            2026-10-28 09:00:11 INFO bulk event 11
+
+            2026-10-28 09:00:12 INFO bulk event 12
+
+            2026-10-28 09:00:13 INFO bulk event 13
+
+            2026-10-28 09:00:14 ERROR bulk event 14
+
+            2026-10-28 09:00:15 WARN bulk event 15
+
+            2026-10-28 09:00:16 INFO bulk event 16
+
+            2026-10-28 09:00:17 INFO bulk event 17
+
+            2026-10-28 09:00:18 INFO bulk event 18
+
+            2026-10-28 09:00:19 INFO bulk event 19
+
+            2026-10-28 09:00:20 WARN bulk event 20
+
+            2026-10-28 09:00:21 ERROR bulk event 21
+
+            2026-10-28 09:00:22 INFO bulk event 22
+
+            2026-10-28 09:00:23 INFO bulk event 23
+
+            2026-10-28 09:00:24 INFO bulk event 24
+
+            2026-10-28 09:00:25 WARN bulk event 25
+
+            2026-10-28 09:00:26 INFO bulk event 26
+
+            2026-10-28 09:00:27 INFO bulk event 27
+
+            2026-10-28 09:00:28 ERROR bulk event 28
+
+            2026-10-28 09:00:29 INFO bulk event 29
+
+            2026-10-28 09:00:30 WARN bulk event 30
+
+            2026-10-28 09:00:31 INFO bulk event 31
+
+            2026-10-28 09:00:32 INFO bulk event 32
+
+            2026-10-28 09:00:33 INFO bulk event 33
+
+            2026-10-28 09:00:34 INFO bulk event 34
+
+            2026-10-28 09:00:35 ERROR bulk event 35
+
+            2026-10-28 09:00:36 INFO bulk event 36
+
+            2026-10-28 09:00:37 INFO bulk event 37
+
+            2026-10-28 09:00:38 INFO bulk event 38
+
+            2026-10-28 09:00:39 INFO bulk event 39
+
+            2026-10-28 09:00:40 WARN bulk event 40
+
+            2026-10-28 09:00:41 INFO bulk event 41
+
+            2026-10-28 09:00:42 ERROR bulk event 42
+
+            2026-10-28 09:00:43 INFO bulk event 43
+
+            2026-10-28 09:00:44 INFO bulk event 44
+
+            2026-10-28 09:00:45 WARN bulk event 45
+
+            2026-10-28 09:00:46 INFO bulk event 46
+
+            2026-10-28 09:00:47 INFO bulk event 47
+
+            2026-10-28 09:00:48 INFO bulk event 48
+
+            2026-10-28 09:00:49 ERROR bulk event 49
+
+            2026-10-28 09:00:50 WARN bulk event 50
+
+            2026-10-28 09:00:51 INFO bulk event 51
+
+            2026-10-28 09:00:52 INFO bulk event 52
+
+            2026-10-28 09:00:53 INFO bulk event 53
+
+            2026-10-28 09:00:54 INFO bulk event 54
+
+            2026-10-28 09:00:55 WARN bulk event 55
+
+            2026-10-28 09:00:56 ERROR bulk event 56
+
+            2026-10-28 09:00:57 INFO bulk event 57
+
+            2026-10-28 09:00:58 INFO bulk event 58
+
+            2026-10-28 09:00:59 INFO bulk event 59
+
+            2026-10-28 09:01:00 WARN bulk event 60
+
+            2026-10-28 09:01:01 INFO bulk event 61
+
+            2026-10-28 09:01:02 INFO bulk event 62
+
+            2026-10-28 09:01:03 ERROR bulk event 63
+
+            2026-10-28 09:01:04 INFO bulk event 64
+
+            2026-10-28 09:01:05 WARN bulk event 65
+
+            2026-10-28 09:01:06 INFO bulk event 66
+
+            2026-10-28 09:01:07 INFO bulk event 67
+
+            2026-10-28 09:01:08 INFO bulk event 68
+
+            2026-10-28 09:01:09 INFO bulk event 69
+
+            2026-10-28 09:01:10 ERROR bulk event 70
+
+            2026-10-28 09:01:11 INFO bulk event 71
+
+            2026-10-28 09:01:12 INFO bulk event 72
+
+            2026-10-28 09:01:13 INFO bulk event 73
+
+            2026-10-28 09:01:14 INFO bulk event 74
+
+            2026-10-28 09:01:15 WARN bulk event 75
+
+            2026-10-28 09:01:16 INFO bulk event 76
+
+            2026-10-28 09:01:17 ERROR bulk event 77
+
+            2026-10-28 09:01:18 INFO bulk event 78
+
+            2026-10-28 09:01:19 INFO bulk event 79
+
+            2026-10-28 09:01:20 WARN bulk event 80
+
+            2026-10-28 09:01:21 INFO bulk event 81
+
+            2026-10-28 09:01:22 INFO bulk event 82
+
+            2026-10-28 09:01:23 INFO bulk event 83
+
+            2026-10-28 09:01:24 ERROR bulk event 84
+
+            2026-10-28 09:01:25 WARN bulk event 85
+
+            2026-10-28 09:01:26 INFO bulk event 86
+
+            2026-10-28 09:01:27 INFO bulk event 87
+
+            2026-10-28 09:01:28 INFO bulk event 88
+
+            2026-10-28 09:01:29 INFO bulk event 89
+
+            2026-10-28 09:01:30 WARN bulk event 90
+
+            2026-10-28 09:01:31 ERROR bulk event 91
+
+            2026-10-28 09:01:32 INFO bulk event 92
+
+            2026-10-28 09:01:33 INFO bulk event 93
+
+            2026-10-28 09:01:34 INFO bulk event 94
+
+            2026-10-28 09:01:35 WARN bulk event 95
+
+            2026-10-28 09:01:36 INFO bulk event 96
+
+            2026-10-28 09:01:37 INFO bulk event 97
+
+            2026-10-28 09:01:38 ERROR bulk event 98
+
+            2026-10-28 09:01:39 INFO bulk event 99
+
+            2026-10-28 09:01:40 WARN bulk event 100
+
+            2026-10-28 09:01:41 INFO bulk event 101
+
+            2026-10-28 09:01:42 INFO bulk event 102
+
+            2026-10-28 09:01:43 INFO bulk event 103
+
+            2026-10-28 09:01:44 INFO bulk event 104
+
+            2026-10-28 09:01:45 ERROR bulk event 105
+
+            2026-10-28 09:01:46 INFO bulk event 106
+
+            2026-10-28 09:01:47 INFO bulk event 107
+
+            2026-10-28 09:01:48 INFO bulk event 108
+
+            2026-10-28 09:01:49 INFO bulk event 109
+
+            2026-10-28 09:01:50 WARN bulk event 110
+
+            2026-10-28 09:01:51 INFO bulk event 111
+
+            2026-10-28 09:01:52 ERROR bulk event 112
+
+            2026-10-28 09:01:53 INFO bulk event 113
+
+            2026-10-28 09:01:54 INFO bulk event 114
+
+            2026-10-28 09:01:55 WARN bulk event 115
+
+            2026-10-28 09:01:56 INFO bulk event 116
+
+            2026-10-28 09:01:57 INFO bulk event 117
+
+            2026-10-28 09:01:58 INFO bulk event 118
+
+            2026-10-28 09:01:59 ERROR bulk event 119
+
+            2026-10-28 09:02:00 WARN bulk event 120
+
+            2026-10-28 09:02:01 INFO bulk event 121
+
+            2026-10-28 09:02:02 INFO bulk event 122
+
+            2026-10-28 09:02:03 INFO bulk event 123
+
+            2026-10-28 09:02:04 INFO bulk event 124
+
+            2026-10-28 09:02:05 WARN bulk event 125
+
+            2026-10-28 09:02:06 ERROR bulk event 126
+
+            2026-10-28 09:02:07 INFO bulk event 127
+
+            2026-10-28 09:02:08 INFO bulk event 128
+
+            2026-10-28 09:02:09 INFO bulk event 129
+
+            2026-10-28 09:02:10 WARN bulk event 130
+
+            2026-10-28 09:02:11 INFO bulk event 131
+
+            2026-10-28 09:02:12 INFO bulk event 132
+
+            2026-10-28 09:02:13 ERROR bulk event 133
+
+            2026-10-28 09:02:14 INFO bulk event 134
+
+            2026-10-28 09:02:15 WARN bulk event 135
+
+            2026-10-28 09:02:16 INFO bulk event 136
+
+            2026-10-28 09:02:17 INFO bulk event 137
+
+            2026-10-28 09:02:18 INFO bulk event 138
+
+            2026-10-28 09:02:19 INFO bulk event 139
+
+            2026-10-28 09:02:20 ERROR bulk event 140
+
+            2026-10-28 09:02:21 INFO bulk event 141
+
+            2026-10-28 09:02:22 INFO bulk event 142
+
+            2026-10-28 09:02:23 INFO bulk event 143
+
+            2026-10-28 09:02:24 INFO bulk event 144
+
+            2026-10-28 09:02:25 WARN bulk event 145
+
+            2026-10-28 09:02:26 INFO bulk event 146
+
+            2026-10-28 09:02:27 ERROR bulk event 147
+
+            2026-10-28 09:02:28 INFO bulk event 148
+
+            2026-10-28 09:02:29 INFO bulk event 149
+
+            2026-10-28 09:02:30 WARN bulk event 150
+
+            2026-10-28 09:02:31 INFO bulk event 151
+
+            2026-10-28 09:02:32 INFO bulk event 152
+
+            2026-10-28 09:02:33 INFO bulk event 153
+
+            2026-10-28 09:02:34 ERROR bulk event 154
+
+            2026-10-28 09:02:35 WARN bulk event 155
+
+            2026-10-28 09:02:36 INFO bulk event 156
+
+            2026-10-28 09:02:37 INFO bulk event 157
+
+            2026-10-28 09:02:38 INFO bulk event 158
+
+            2026-10-28 09:02:39 INFO bulk event 159
+
+            2026-10-28 09:02:40 WARN bulk event 160
+
+            2026-10-28 09:02:41 ERROR bulk event 161
+
+            2026-10-28 09:02:42 INFO bulk event 162
+
+            2026-10-28 09:02:43 INFO bulk event 163
+
+            2026-10-28 09:02:44 INFO bulk event 164
+
+            2026-10-28 09:02:45 WARN bulk event 165
+
+            2026-10-28 09:02:46 INFO bulk event 166
+
+            2026-10-28 09:02:47 INFO bulk event 167
+
+            2026-10-28 09:02:48 ERROR bulk event 168
+
+            2026-10-28 09:02:49 INFO bulk event 169
+
+            2026-10-28 09:02:50 WARN bulk event 170
+
+            2026-10-28 09:02:51 INFO bulk event 171
+
+            2026-10-28 09:02:52 INFO bulk event 172
+
+            2026-10-28 09:02:53 INFO bulk event 173
+
+            2026-10-28 09:02:54 INFO bulk event 174
+
+            2026-10-28 09:02:55 ERROR bulk event 175
+
+            2026-10-28 09:02:56 INFO bulk event 176
+
+            2026-10-28 09:02:57 INFO bulk event 177
+
+            2026-10-28 09:02:58 INFO bulk event 178
+
+            2026-10-28 09:02:59 INFO bulk event 179
+
+            2026-10-28 09:03:00 WARN bulk event 180
+
+            2026-10-28 09:03:01 INFO bulk event 181
+
+            2026-10-28 09:03:02 ERROR bulk event 182
+
+            2026-10-28 09:03:03 INFO bulk event 183
+
+            2026-10-28 09:03:04 INFO bulk event 184
+
+            2026-10-28 09:03:05 WARN bulk event 185
+
+            2026-10-28 09:03:06 INFO bulk event 186
+
+            2026-10-28 09:03:07 INFO bulk event 187
+
+            2026-10-28 09:03:08 INFO bulk event 188
+
+            2026-10-28 09:03:09 ERROR bulk event 189
+
+            2026-10-28 09:03:10 WARN bulk event 190
+
+            2026-10-28 09:03:11 INFO bulk event 191
+
+            2026-10-28 09:03:12 INFO bulk event 192
+
+            2026-10-28 09:03:13 INFO bulk event 193
+
+            2026-10-28 09:03:14 INFO bulk event 194
+
+            2026-10-28 09:03:15 WARN bulk event 195
+
+            2026-10-28 09:03:16 ERROR bulk event 196
+
+            2026-10-28 09:03:17 INFO bulk event 197
+
+            2026-10-28 09:03:18 INFO bulk event 198
+
+            2026-10-28 09:03:19 INFO bulk event 199
+
+            2026-10-28 09:03:20 WARN bulk event 200
+
+            2026-10-28 09:03:21 INFO bulk event 201
+
+            2026-10-28 09:03:22 INFO bulk event 202
+
+            2026-10-28 09:03:23 ERROR bulk event 203
+
+            2026-10-28 09:03:24 INFO bulk event 204
+
+            2026-10-28 09:03:25 WARN bulk event 205
+
+            2026-10-28 09:03:26 INFO bulk event 206
+
+            2026-10-28 09:03:27 INFO bulk event 207
+
+            2026-10-28 09:03:28 INFO bulk event 208
+
+            2026-10-28 09:03:29 INFO bulk event 209
+
+            2026-10-28 09:03:30 ERROR bulk event 210
+
+            2026-10-28 09:03:31 INFO bulk event 211
+
+            2026-10-28 09:03:32 INFO bulk event 212
+
+            2026-10-28 09:03:33 INFO bulk event 213
+
+            2026-10-28 09:03:34 INFO bulk event 214
+
+            2026-10-28 09:03:35 WARN bulk event 215
+
+            2026-10-28 09:03:36 INFO bulk event 216
+
+            2026-10-28 09:03:37 ERROR bulk event 217
+
+            2026-10-28 09:03:38 INFO bulk event 218
+
+            2026-10-28 09:03:39 INFO bulk event 219
+
+            2026-10-28 09:03:40 WARN bulk event 220
+
+            2026-10-28 09:03:41 INFO bulk event 221
+
+            2026-10-28 09:03:42 INFO bulk event 222
+
+            2026-10-28 09:03:43 INFO bulk event 223
+
+            2026-10-28 09:03:44 ERROR bulk event 224
+
+            2026-10-28 09:03:45 WARN bulk event 225
+
+            2026-10-28 09:03:46 INFO bulk event 226
+
+            2026-10-28 09:03:47 INFO bulk event 227
+
+            2026-10-28 09:03:48 INFO bulk event 228
+
+            2026-10-28 09:03:49 INFO bulk event 229
+
+            2026-10-28 09:03:50 WARN bulk event 230
+
+            2026-10-28 09:03:51 ERROR bulk event 231
+
+            2026-10-28 09:03:52 INFO bulk event 232
+
+            2026-10-28 09:03:53 INFO bulk event 233
+
+            2026-10-28 09:03:54 INFO bulk event 234
+
+            2026-10-28 09:03:55 WARN bulk event 235
+
+            2026-10-28 09:03:56 INFO bulk event 236
+
+            2026-10-28 09:03:57 INFO bulk event 237
+
+            2026-10-28 09:03:58 ERROR bulk event 238
+
+            2026-10-28 09:03:59 INFO bulk event 239
+
+            2026-10-28 09:04:00 WARN bulk event 240
+
+            2026-10-28 09:04:01 INFO bulk event 241
+
+            2026-10-28 09:04:02 INFO bulk event 242
+
+            2026-10-28 09:04:03 INFO bulk event 243
+
+            2026-10-28 09:04:04 INFO bulk event 244
+
+            2026-10-28 09:04:05 ERROR bulk event 245
+
+            2026-10-28 09:04:06 INFO bulk event 246
+
+            2026-10-28 09:04:07 INFO bulk event 247
+
+            2026-10-28 09:04:08 INFO bulk event 248
+
+            2026-10-28 09:04:09 INFO bulk event 249
+
+            2026-10-28 09:04:10 WARN bulk event 250
+
+            2026-10-28 09:04:11 INFO bulk event 251
+
+            2026-10-28 09:04:12 ERROR bulk event 252
+
+            2026-10-28 09:04:13 INFO bulk event 253
+
+            2026-10-28 09:04:14 INFO bulk event 254
+
+            2026-10-28 09:04:15 WARN bulk event 255
+
+            2026-10-28 09:04:16 INFO bulk event 256
+
+            2026-10-28 09:04:17 INFO bulk event 257
+
+            2026-10-28 09:04:18 INFO bulk event 258
+
+            2026-10-28 09:04:19 ERROR bulk event 259
+
+            2026-10-28 09:04:20 WARN bulk event 260
+
+            2026-10-28 09:04:21 INFO bulk event 261
+
+            2026-10-28 09:04:22 INFO bulk event 262
+
+            2026-10-28 09:04:23 INFO bulk event 263
+
+            2026-10-28 09:04:24 INFO bulk event 264
+
+            2026-10-28 09:04:25 WARN bulk event 265
+
+            2026-10-28 09:04:26 ERROR bulk event 266
+
+            2026-10-28 09:04:27 INFO bulk event 267
+
+            2026-10-28 09:04:28 INFO bulk event 268
+
+            2026-10-28 09:04:29 INFO bulk event 269
+
+            2026-10-28 09:04:30 WARN bulk event 270
+
+            2026-10-28 09:04:31 INFO bulk event 271
+
+            2026-10-28 09:04:32 INFO bulk event 272
+
+            2026-10-28 09:04:33 ERROR bulk event 273
+
+            2026-10-28 09:04:34 INFO bulk event 274
+
+            2026-10-28 09:04:35 WARN bulk event 275
+
+            2026-10-28 09:04:36 INFO bulk event 276
+
+            2026-10-28 09:04:37 INFO bulk event 277
+
+            2026-10-28 09:04:38 INFO bulk event 278
+
+            2026-10-28 09:04:39 INFO bulk event 279
+
+            2026-10-28 09:04:40 ERROR bulk event 280
+
+            2026-10-28 09:04:41 INFO bulk event 281
+
+            2026-10-28 09:04:42 INFO bulk event 282
+
+            2026-10-28 09:04:43 INFO bulk event 283
+
+            2026-10-28 09:04:44 INFO bulk event 284
+
+            2026-10-28 09:04:45 WARN bulk event 285
+
+            2026-10-28 09:04:46 INFO bulk event 286
+
+            2026-10-28 09:04:47 ERROR bulk event 287
+
+            2026-10-28 09:04:48 INFO bulk event 288
+
+            2026-10-28 09:04:49 INFO bulk event 289
+
+            2026-10-28 09:04:50 WARN bulk event 290
+
+            2026-10-28 09:04:51 INFO bulk event 291
+
+            2026-10-28 09:04:52 INFO bulk event 292
+
+            2026-10-28 09:04:53 INFO bulk event 293
+
+            2026-10-28 09:04:54 ERROR bulk event 294
+
+            2026-10-28 09:04:55 WARN bulk event 295
+
+            2026-10-28 09:04:56 INFO bulk event 296
+
+            2026-10-28 09:04:57 INFO bulk event 297
+
+            2026-10-28 09:04:58 INFO bulk event 298
+
+            2026-10-28 09:04:59 INFO bulk event 299
+
+            2026-10-28 09:05:00 WARN bulk event 300
+
+            2026-10-28 10:00:02 ERROR extra error\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 400
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (总行数|错误签名种类|输入文件)
+          weight: 2
+          note: 统计大日志
+      requiredSuggestions: []
+  - id: g2-top-1
+    title: 错误签名 Top N（top=5）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: log
+      goal: 验证 --top 截断行为
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 12:00:01 ERROR unique failure type 1
+
+            2026-10-28 12:00:02 ERROR unique failure type 2
+
+            2026-10-28 12:00:03 ERROR unique failure type 3
+
+            2026-10-28 12:00:04 ERROR unique failure type 4
+
+            2026-10-28 12:00:05 ERROR unique failure type 5
+
+            2026-10-28 12:00:06 ERROR unique failure type 6
+
+            2026-10-28 12:00:07 ERROR unique failure type 7
+
+            2026-10-28 12:00:08 ERROR unique failure type 8
+
+            2026-10-28 12:00:09 ERROR unique failure type 9
+
+            2026-10-28 12:00:10 ERROR unique failure type 10
+
+            2026-10-28 12:00:11 ERROR unique failure type 11
+
+            2026-10-28 12:00:12 ERROR unique failure type 12
+
+            2026-10-28 12:00:13 ERROR unique failure type 13
+
+            2026-10-28 12:00:14 ERROR unique failure type 14
+
+            2026-10-28 12:00:15 ERROR unique failure type 15
+
+            2026-10-28 12:00:16 ERROR unique failure type 16
+
+            2026-10-28 12:00:17 ERROR unique failure type 17
+
+            2026-10-28 12:00:18 ERROR unique failure type 18
+
+            2026-10-28 12:00:19 ERROR unique failure type 19
+
+            2026-10-28 12:00:20 ERROR unique failure type 20
+
+            2026-10-28 12:00:21 ERROR unique failure type 21
+
+            2026-10-28 12:00:22 ERROR unique failure type 22
+
+            2026-10-28 12:00:23 ERROR unique failure type 23
+
+            2026-10-28 12:00:24 ERROR unique failure type 24
+
+            2026-10-28 12:00:25 ERROR unique failure type 25\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "5"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: Top 错误签名
+          weight: 2
+          note: 给出签名排行
+      requiredSuggestions: []
+  - id: g2-top-2
+    title: 错误签名 Top N（top=20）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: log
+      goal: 验证 --top 截断行为
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 12:00:01 ERROR unique failure type 1
+
+            2026-10-28 12:00:02 ERROR unique failure type 2
+
+            2026-10-28 12:00:03 ERROR unique failure type 3
+
+            2026-10-28 12:00:04 ERROR unique failure type 4
+
+            2026-10-28 12:00:05 ERROR unique failure type 5
+
+            2026-10-28 12:00:06 ERROR unique failure type 6
+
+            2026-10-28 12:00:07 ERROR unique failure type 7
+
+            2026-10-28 12:00:08 ERROR unique failure type 8
+
+            2026-10-28 12:00:09 ERROR unique failure type 9
+
+            2026-10-28 12:00:10 ERROR unique failure type 10
+
+            2026-10-28 12:00:11 ERROR unique failure type 11
+
+            2026-10-28 12:00:12 ERROR unique failure type 12
+
+            2026-10-28 12:00:13 ERROR unique failure type 13
+
+            2026-10-28 12:00:14 ERROR unique failure type 14
+
+            2026-10-28 12:00:15 ERROR unique failure type 15
+
+            2026-10-28 12:00:16 ERROR unique failure type 16
+
+            2026-10-28 12:00:17 ERROR unique failure type 17
+
+            2026-10-28 12:00:18 ERROR unique failure type 18
+
+            2026-10-28 12:00:19 ERROR unique failure type 19
+
+            2026-10-28 12:00:20 ERROR unique failure type 20
+
+            2026-10-28 12:00:21 ERROR unique failure type 21
+
+            2026-10-28 12:00:22 ERROR unique failure type 22
+
+            2026-10-28 12:00:23 ERROR unique failure type 23
+
+            2026-10-28 12:00:24 ERROR unique failure type 24
+
+            2026-10-28 12:00:25 ERROR unique failure type 25\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "20"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: Top 错误签名
+          weight: 2
+          note: 给出签名排行
+      requiredSuggestions: []
+  - id: g2-since-1
+    title: 时间窗口过滤（2026-10-28 09:30:00 起）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: log
+      goal: 验证 --since/--until 过滤
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 09:00:01 ERROR early error
+
+            2026-10-28 10:00:01 ERROR window error
+
+            2026-10-28 11:00:01 ERROR late error\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: 2026-10-28 09:30:00
+        until: 2026-10-28 10:30:00
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (时间跨度|参与统计|概览)
+          weight: 2
+          note: 按窗口过滤后统计
+      requiredSuggestions: []
+  - id: g2-since-2
+    title: 时间窗口过滤（2026-10-28 07:00:00 起）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: log
+      goal: 验证 --since/--until 过滤
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 08:00:01 ERROR dawn error
+
+            2026-10-28 12:00:01 ERROR noon error\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: 2026-10-28 07:00:00
+        until: 2026-10-28 09:00:00
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (时间跨度|参与统计|概览)
+          weight: 2
+          note: 按窗口过滤后统计
+      requiredSuggestions: []
+  - id: g2-grep-1
+    title: 行过滤正则（ERROR）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: log
+      goal: 验证 --grep 过滤
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR db failure alpha
+
+            2026-10-28 10:00:02 WARN cache blip
+
+            2026-10-28 10:00:03 ERROR db failure beta\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ERROR
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (参与统计|概览|Top 错误签名)
+          weight: 2
+          note: 按正则过滤后统计
+      requiredSuggestions: []
+  - id: g2-grep-2
+    title: 行过滤正则（payment）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: log
+      goal: 验证 --grep 过滤
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR payment declined
+
+            2026-10-28 10:00:02 ERROR db failure
+
+            2026-10-28 10:00:03 WARN payment retry\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: payment
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (参与统计|概览|Top 错误签名)
+          weight: 2
+          note: 按正则过滤后统计
+      requiredSuggestions: []
+  - id: g2-slow-1
+    title: 最慢请求统计（1）
+    tags:
+      - variation
+      - access
+    repeat: 5
+    input:
+      kind: log
+      goal: 统计访问日志慢请求
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '10.0.0.5 - - [28/Oct/2026:10:00:01 +0800] "GET /slow HTTP/1.1" 200 123 "-" "curl/8.0" 3.250
+
+            10.0.0.6 - - [28/Oct/2026:10:00:02 +0800] "GET /fast HTTP/1.1" 200 45 "-" "curl/8.0" 0.020
+
+            10.0.0.7 - - [28/Oct/2026:10:00:03 +0800] "GET /slow2 HTTP/1.1" 200 80 "-" "curl/8.0" 2.100
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (最慢请求|请求总数|访问日志)
+          weight: 2
+          note: 给出慢请求统计
+      requiredSuggestions: []
+  - id: g2-slow-2
+    title: 最慢请求统计（2）
+    tags:
+      - variation
+      - access
+    repeat: 5
+    input:
+      kind: log
+      goal: 统计访问日志慢请求
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '10.0.0.8 - - [28/Oct/2026:11:00:01 +0800] "GET /a HTTP/1.1" 200 30 "-" "curl/8.0" 1.000
+
+            10.0.0.8 - - [28/Oct/2026:11:00:02 +0800] "GET /b HTTP/1.1" 200 20 "-" "curl/8.0" 0.500
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (最慢请求|请求总数|访问日志)
+          weight: 2
+          note: 给出慢请求统计
+      requiredSuggestions: []
+  - id: g2-status-1
+    title: 状态码分布（1）
+    tags:
+      - variation
+      - access
+    repeat: 5
+    input:
+      kind: log
+      goal: 统计状态码分布
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '1.1.1.1 - - [28/Oct/2026:10:00:01 +0800] "GET /a HTTP/1.1" 200 0.1 "-" "x"
+
+            1.1.1.2 - - [28/Oct/2026:10:00:02 +0800] "GET /b HTTP/1.1" 404 0.1 "-" "x"
+
+            1.1.1.3 - - [28/Oct/2026:10:00:03 +0800] "GET /c HTTP/1.1" 503 0.1 "-" "x"
+
+            1.1.1.4 - - [28/Oct/2026:10:00:04 +0800] "GET /d HTTP/1.1" 301 0.1 "-" "x"
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (状态码|错误率)
+          weight: 2
+          note: 给出状态码分布
+      requiredSuggestions: []
+  - id: g2-status-2
+    title: 状态码分布（2）
+    tags:
+      - variation
+      - access
+    repeat: 5
+    input:
+      kind: log
+      goal: 统计状态码分布
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '2.2.2.1 - - [28/Oct/2026:11:00:01 +0800] "GET /e HTTP/1.1" 500 0.1 "-" "x"
+
+            2.2.2.2 - - [28/Oct/2026:11:00:02 +0800] "GET /f HTTP/1.1" 500 0.1 "-" "x"
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (状态码|错误率)
+          weight: 2
+          note: 给出状态码分布
+      requiredSuggestions: []
+  - id: g2-codes-1
+    title: 错误率口径（1）
+    tags:
+      - variation
+      - access
+    repeat: 5
+    input:
+      kind: log
+      goal: 核对错误率口径
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '3.3.3.1 - - [28/Oct/2026:10:00:01 +0800] "GET /a HTTP/1.1" 404 0.1 "-" "x"
+
+            3.3.3.2 - - [28/Oct/2026:10:00:02 +0800] "GET /b HTTP/1.1" 404 0.1 "-" "x"
+
+            3.3.3.3 - - [28/Oct/2026:10:00:03 +0800] "GET /c HTTP/1.1" 200 0.1 "-" "x"
+
+            3.3.3.4 - - [28/Oct/2026:10:00:04 +0800] "GET /d HTTP/1.1" 200 0.1 "-" "x"
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (4xx|5xx|错误率|2xx)
+          weight: 2
+          note: 给出错误率分类
+      requiredSuggestions: []
+  - id: g2-codes-2
+    title: 错误率口径（2）
+    tags:
+      - variation
+      - access
+    repeat: 5
+    input:
+      kind: log
+      goal: 核对错误率口径
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: '4.4.4.1 - - [28/Oct/2026:11:00:01 +0800] "GET /e HTTP/1.1" 200 0.1 "-" "x"
+
+            4.4.4.2 - - [28/Oct/2026:11:00:02 +0800] "GET /f HTTP/1.1" 200 0.1 "-" "x"
+
+            '
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (4xx|5xx|错误率|2xx)
+          weight: 2
+          note: 给出错误率分类
+      requiredSuggestions: []
+  - id: g2-unicode-1
+    title: 中文与 emoji 日志（1）
+    tags:
+      - variation
+      - i18n
+    repeat: 5
+    input:
+      kind: log
+      goal: 处理中文/emoji 日志内容
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR 数据库连接失败：订单服务
+
+            2026-10-28 10:00:02 WARN 响应缓慢：查询超时\n"
+        - path: input/worker.log
+          content: "2026-10-28 10:00:03 ERROR 数据库连接失败：支付服务\n"
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (数据库连接失败|launch failed|样例原文)
+          weight: 2
+          note: 识别中文/emoji 错误
+      requiredSuggestions: []
+  - id: g2-unicode-2
+    title: 中文与 emoji 日志（2）
+    tags:
+      - variation
+      - i18n
+    repeat: 5
+    input:
+      kind: log
+      goal: 处理中文/emoji 日志内容
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR rocket 🚀 launch failed 😢
+
+            2026-10-28 10:00:02 ERROR rocket 🚀 launch failed 😢\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (数据库连接失败|launch failed|样例原文)
+          weight: 2
+          note: 识别中文/emoji 错误
+      requiredSuggestions: []
+  - id: g2-longline-1
+    title: 超长日志行（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: log
+      goal: 处理超长日志行
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR payload xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (Top 错误签名|样例原文)
+          weight: 2
+          note: 超长行仍被统计
+      requiredSuggestions: []
+  - id: g2-longline-2
+    title: 超长日志行（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: log
+      goal: 处理超长日志行
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR payload yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+
+            2026-10-28 10:00:02 ERROR payload zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (Top 错误签名|样例原文)
+          weight: 2
+          note: 超长行仍被统计
+      requiredSuggestions: []
+  - id: g2-repeat-1
+    title: 重复错误聚合（1）
+    tags:
+      - variation
+      - aggregate
+    repeat: 5
+    input:
+      kind: log
+      goal: 验证同类错误聚合
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR same failure 1
+
+            2026-10-28 10:00:02 ERROR same failure 2
+
+            2026-10-28 10:00:03 ERROR same failure 0
+
+            2026-10-28 10:00:04 ERROR same failure 1
+
+            2026-10-28 10:00:05 ERROR same failure 2
+
+            2026-10-28 10:00:06 ERROR same failure 0
+
+            2026-10-28 10:00:07 ERROR same failure 1
+
+            2026-10-28 10:00:08 ERROR same failure 2
+
+            2026-10-28 10:00:09 ERROR same failure 0
+
+            2026-10-28 10:00:10 ERROR same failure 1
+
+            2026-10-28 10:00:11 ERROR same failure 2
+
+            2026-10-28 10:00:12 ERROR same failure 0\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (Top 错误签名|次)
+          weight: 2
+          note: 聚合出重复次数
+      requiredSuggestions: []
+  - id: g2-repeat-2
+    title: 重复错误聚合（2）
+    tags:
+      - variation
+      - aggregate
+    repeat: 5
+    input:
+      kind: log
+      goal: 验证同类错误聚合
+      content: 请分析日志，给出错误聚合、时间分布与排查建议。
+      files:
+        - path: input/app.log
+          content: "2026-10-28 10:00:01 ERROR identical failure
+
+            2026-10-28 10:00:02 ERROR identical failure
+
+            2026-10-28 10:00:03 ERROR identical failure
+
+            2026-10-28 10:00:04 ERROR identical failure
+
+            2026-10-28 10:00:05 ERROR identical failure
+
+            2026-10-28 10:00:06 ERROR identical failure
+
+            2026-10-28 10:00:07 ERROR identical failure\n"
+        - path: input/worker.log
+          content: ""
+      params:
+        log1: input/app.log
+        log2: input/worker.log
+        top: "15"
+        since: ""
+        until: ""
+        grep: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 日志排查报告
+          weight: 1
+          note: 产出标准排查报告
+        - type: contains
+          text: "## 一、概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (Top 错误签名|次)
+          weight: 2
+          note: 聚合出重复次数
+      requiredSuggestions: []

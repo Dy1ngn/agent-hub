@@ -1,0 +1,930 @@
+id: ts-b-interview-prep-g1-basic
+agentId: interview-prep
+group: g1-basic
+name: 面试准备 · 基础功能：JD 画像 + 抽题 + 框架 + 模拟面试
+description: 典型 JD 与面试类型下的完整链路：岗位画像、可复现抽题、答题框架、复习计划与模型模拟面试（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-tech-1
+    title: 技术面出题（Java 后端开发工程师）
+    tags:
+      - basic
+      - tech
+    repeat: 5
+    input:
+      kind: text
+      goal: 按 JD 抽技术面题目并给答题框架
+      content: 请为 Java 后端开发工程师 岗位生成技术面准备文档，重点技能：Java。
+      files:
+        - path: input/jd.txt
+          content: "职位：后端开发工程师
+
+            职责：负责核心交易系统的服务端研发与性能优化。
+
+            要求：
+
+            - 精通 Java 与 Spring Boot 框架
+
+            - 熟悉 MySQL、Redis、Kafka
+
+            - 了解 Kubernetes 容器化部署\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: Java
+          weight: 2
+          note: JD 技能进入岗位画像
+        - type: contains
+          text: 题目数：6
+          weight: 1
+          note: 出题数量确定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-tech-2
+    title: 技术面出题（算法工程师）
+    tags:
+      - basic
+      - tech
+    repeat: 5
+    input:
+      kind: text
+      goal: 按 JD 抽技术面题目并给答题框架
+      content: 请为 算法工程师 岗位生成技术面准备文档，重点技能：Python。
+      files:
+        - path: input/jd.txt
+          content: "职位：算法工程师
+
+            职责：负责推荐排序算法研发与迭代。
+
+            要求：
+
+            - 熟练 Python 与 PyTorch
+
+            - 熟悉 TensorFlow 与 Pandas
+
+            - 掌握 SQL 取数分析\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: Python
+          weight: 2
+          note: JD 技能进入岗位画像
+        - type: contains
+          text: 题目数：6
+          weight: 1
+          note: 出题数量确定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-tech-3
+    title: 技术面出题（前端开发工程师）
+    tags:
+      - basic
+      - tech
+    repeat: 5
+    input:
+      kind: text
+      goal: 按 JD 抽技术面题目并给答题框架
+      content: 请为 前端开发工程师 岗位生成技术面准备文档，重点技能：React。
+      files:
+        - path: input/jd.txt
+          content: "职位：前端开发工程师
+
+            职责：负责 C 端活动页与组件库建设。
+
+            要求：
+
+            - 熟练 React 与 TypeScript
+
+            - 熟悉 Node.js 与 Webpack\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: React
+          weight: 2
+          note: JD 技能进入岗位画像
+        - type: contains
+          text: 题目数：6
+          weight: 1
+          note: 出题数量确定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-tech-4
+    title: 技术面出题（数据分析师）
+    tags:
+      - basic
+      - tech
+    repeat: 5
+    input:
+      kind: text
+      goal: 按 JD 抽技术面题目并给答题框架
+      content: 请为 数据分析师 岗位生成技术面准备文档，重点技能：SQL。
+      files:
+        - path: input/jd.txt
+          content: "职位：数据分析师
+
+            职责：负责业务数据分析与指标体系搭建。
+
+            要求：
+
+            - 熟练 SQL 与 Python
+
+            - 熟悉 Pandas 与 Tableau\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: SQL
+          weight: 2
+          note: JD 技能进入岗位画像
+        - type: contains
+          text: 题目数：6
+          weight: 1
+          note: 出题数量确定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-behavior-1
+    title: 行为面出题（项目经理）
+    tags:
+      - basic
+      - behavior
+    repeat: 5
+    input:
+      kind: text
+      goal: 抽行为面题目并渲染 STAR 答题框架
+      content: 请为 项目经理 生成行为面准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：项目经理
+
+            职责：负责跨团队项目管理与交付。
+
+            要求：3 年以上项目管理经验，跨团队协调能力强。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 行为
+        count: "2"
+        seed: "7"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: regex
+          pattern: (STAR|情境)
+          weight: 2
+          note: STAR 答题框架
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: contains
+          text: 随机种子：7
+          weight: 1
+          note: 种子可复现
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-behavior-2
+    title: 行为面出题（产品经理）
+    tags:
+      - basic
+      - behavior
+    repeat: 5
+    input:
+      kind: text
+      goal: 抽行为面题目并渲染 STAR 答题框架
+      content: 请为 产品经理 生成行为面准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：产品经理
+
+            职责：负责产品设计与需求分析。
+
+            要求：熟悉用户研究与产品设计。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 行为
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: regex
+          pattern: (STAR|情境)
+          weight: 2
+          note: STAR 答题框架
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: contains
+          text: 随机种子：42
+          weight: 1
+          note: 种子可复现
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-behavior-3
+    title: 行为面出题（团队负责人）
+    tags:
+      - basic
+      - behavior
+    repeat: 5
+    input:
+      kind: text
+      goal: 抽行为面题目并渲染 STAR 答题框架
+      content: 请为 团队负责人 生成行为面准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：技术团队负责人
+
+            职责：负责团队管理与技术规划。
+
+            要求：有团队管理与项目管理经验。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 行为
+        count: "2"
+        seed: "100"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: regex
+          pattern: (STAR|情境)
+          weight: 2
+          note: STAR 答题框架
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: contains
+          text: 随机种子：100
+          weight: 1
+          note: 种子可复现
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-behavior-4
+    title: 行为面出题（运营专员）
+    tags:
+      - basic
+      - behavior
+    repeat: 5
+    input:
+      kind: text
+      goal: 抽行为面题目并渲染 STAR 答题框架
+      content: 请为 运营专员 生成行为面准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：运营专员
+
+            职责：负责活动运营与复盘。
+
+            要求：有活动策划与复盘经验。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 行为
+        count: "2"
+        seed: "2026"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: regex
+          pattern: (STAR|情境)
+          weight: 2
+          note: STAR 答题框架
+        - type: contains
+          text: 回答框架
+          weight: 1
+        - type: contains
+          text: 随机种子：2026
+          weight: 1
+          note: 种子可复现
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-profile-1
+    title: JD 岗位画像（金融风控）
+    tags:
+      - basic
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析 JD 岗位画像并按权重抽综合题
+      content: 请解析 金融风控 岗位 JD 并生成综合面准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：风控算法工程师
+
+            职责：负责风控模型与策略研发。
+
+            要求：熟悉风控建模、机器学习与 SQL。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 风控
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 抽题权重
+          weight: 2
+          note: 输出抽题权重表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-profile-2
+    title: JD 岗位画像（支付）
+    tags:
+      - basic
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析 JD 岗位画像并按权重抽综合题
+      content: 请解析 支付 岗位 JD 并生成综合面准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：支付开发工程师
+
+            职责：负责支付网关与清结算系统。
+
+            要求：熟悉支付业务、Java 与 MySQL。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 支付
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 抽题权重
+          weight: 2
+          note: 输出抽题权重表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-profile-3
+    title: JD 岗位画像（电商推荐）
+    tags:
+      - basic
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析 JD 岗位画像并按权重抽综合题
+      content: 请解析 电商推荐 岗位 JD 并生成综合面准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：推荐算法工程师
+
+            职责：负责推荐系统排序与召回。
+
+            要求：熟悉推荐系统、Python 与 TensorFlow。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 推荐系统
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 抽题权重
+          weight: 2
+          note: 输出抽题权重表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-profile-4
+    title: JD 岗位画像（大数据）
+    tags:
+      - basic
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析 JD 岗位画像并按权重抽综合题
+      content: 请解析 大数据 岗位 JD 并生成综合面准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：大数据开发工程师
+
+            职责：负责数据仓库与实时计算。
+
+            要求：熟悉大数据技术栈、Spark、Flink 与 SQL。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 岗位画像
+          weight: 1
+        - type: contains
+          text: 大数据
+          weight: 2
+          note: 行业技能词进入画像
+        - type: contains
+          text: 抽题权重
+          weight: 2
+          note: 输出抽题权重表
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-record-1
+    title: 练习记录与复习计划（近期练习）
+    tags:
+      - basic
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 读入练习记录，排复习计划与进步曲线
+      content: 请结合练习记录生成准备文档（近期练习）。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: '[{"id": "Q001", "date": "2026-10-20", "score": 3, "note": "第一次练习，思路卡壳"}, {"id": "Q010", "date": "2026-10-22", "score": 4, "note": "结构更清楚了"}]'
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 复习间隔
+          weight: 1
+          note: 1/2/4/7/15 天间隔说明
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-record-2
+    title: 练习记录与复习计划（早前练习待复习）
+    tags:
+      - basic
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 读入练习记录，排复习计划与进步曲线
+      content: 请结合练习记录生成准备文档（早前练习待复习）。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: '[{"id": "Q002", "date": "2026-09-01", "score": 2, "note": "早前练习，待复习"}, {"id": "Q003", "date": "2026-09-02", "score": 3, "note": "早前练习"}, {"id": "Q002", "date": "2026-09-10", "score": 4, "note": "复习一次"}]'
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 复习间隔
+          weight: 1
+          note: 1/2/4/7/15 天间隔说明
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-record-3
+    title: 练习记录与复习计划（空记录表）
+    tags:
+      - basic
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 读入练习记录，排复习计划与进步曲线
+      content: 请结合练习记录生成准备文档（空记录表）。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: "[]"
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 复习间隔
+          weight: 1
+          note: 1/2/4/7/15 天间隔说明
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-record-4
+    title: 练习记录与复习计划（混合格式记录）
+    tags:
+      - basic
+      - record
+    repeat: 5
+    input:
+      kind: text
+      goal: 读入练习记录，排复习计划与进步曲线
+      content: 请结合练习记录生成准备文档（混合格式记录）。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: '[{"id": "Q005", "date": "2026-10-18", "score": 5, "note": "复习完成", "extra": "未知字段", "source": "manual"}, {"id": "Q006", "date": "2026-10-19", "note": "缺 score 字段"}, {"id": "Q999", "date": "2026-10-21", "score": 4, "note": "题库外的 id"}]'
+      params:
+        type: 综合
+        count: "2"
+        seed: "42"
+        record: input/record.json
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 复习计划
+          weight: 1
+        - type: contains
+          text: 复习间隔
+          weight: 1
+          note: 1/2/4/7/15 天间隔说明
+        - type: contains
+          text: 自评表
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-seed-1
+    title: 可复现抽题（seed 42）
+    tags:
+      - basic
+      - determinism
+    repeat: 5
+    input:
+      kind: text
+      goal: 固定随机种子抽题，验证可复现
+      content: 请用随机种子 42 抽题生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 随机种子：42
+          weight: 2
+          note: 种子写进报告，输出可复现
+        - type: contains
+          text: 题目 id
+          weight: 2
+          note: 题目带稳定 id
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-seed-2
+    title: 可复现抽题（seed 7）
+    tags:
+      - basic
+      - determinism
+    repeat: 5
+    input:
+      kind: text
+      goal: 固定随机种子抽题，验证可复现
+      content: 请用随机种子 7 抽题生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "7"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 随机种子：7
+          weight: 2
+          note: 种子写进报告，输出可复现
+        - type: contains
+          text: 题目 id
+          weight: 2
+          note: 题目带稳定 id
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-seed-3
+    title: 可复现抽题（seed 100）
+    tags:
+      - basic
+      - determinism
+    repeat: 5
+    input:
+      kind: text
+      goal: 固定随机种子抽题，验证可复现
+      content: 请用随机种子 100 抽题生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "100"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 随机种子：100
+          weight: 2
+          note: 种子写进报告，输出可复现
+        - type: contains
+          text: 题目 id
+          weight: 2
+          note: 题目带稳定 id
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-seed-4
+    title: 可复现抽题（seed 2026）
+    tags:
+      - basic
+      - determinism
+    repeat: 5
+    input:
+      kind: text
+      goal: 固定随机种子抽题，验证可复现
+      content: 请用随机种子 2026 抽题生成准备文档。
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        type: 技术
+        count: "2"
+        seed: "2026"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 1
+        - type: contains
+          text: 随机种子：2026
+          weight: 2
+          note: 种子写进报告，输出可复现
+        - type: contains
+          text: 题目 id
+          weight: 2
+          note: 题目带稳定 id
+        - type: not_contains
+          text: Traceback
+          weight: 1
+      requiredSuggestions: []

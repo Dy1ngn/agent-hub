@@ -1,0 +1,422 @@
+id: ts-b-translator-g5-stability
+agentId: translator
+group: g5-stability
+name: 多语言翻译 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线确定性模式），验证输出稳定、不崩溃、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "# 接入指南\n\n通过 接口 查询数据，数据库 连接串在配置文件中。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.md → 英语
+      files:
+        - path: input/doc.md
+          content: "# 负载均衡\n\n负载均衡 需要开启健康检查，数据库 只在内网开放。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.json → 日语
+      files:
+        - path: input/doc.json
+          content: "{
+
+            \  \"title\": \"说明书\",
+
+            \  \"body\": \"请按步骤操作\"
+
+            }\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.json
+        to: 日语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.csv → 英语
+      files:
+        - path: input/doc.csv
+          content: "名称,数量\n苹果,10\n香蕉,20\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.csv
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.txt → 法语
+      files:
+        - path: input/doc.txt
+          content: "这是一段用于稳定性测试的普通文本。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 法语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.txt → 中文
+      files:
+        - path: input/doc.txt
+          content: "This is a stability test sample in English.\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 中文
+        from: 英文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.md → 德语
+      files:
+        - path: input/doc.md
+          content: "短文本稳定性样本：今天天气不错，适合出门。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.md
+        to: 德语
+        from: 中文
+        batch: "200"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.txt → 韩语
+      files:
+        - path: input/doc.txt
+          content: "混合内容 sample 123，用于重复调用验证。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 韩语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.json → 英语
+      files:
+        - path: input/doc.json
+          content: "{
+
+            \  \"a\": \"甲\",
+
+            \  \"b\": \"乙\"
+
+            }\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.json
+        to: 英语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证翻译输出稳定
+      content: 翻译任务：input/doc.txt → 西班牙语
+      files:
+        - path: input/doc.txt
+          content: "稳定性样本：重复调用应得到一致的报告结构。\n"
+        - path: input/glossary.json
+          content: '{"数据库": "Database", "接口": "API", "负载均衡": "Load Balancer"}'
+      params:
+        file: input/doc.txt
+        to: 西班牙语
+        from: 中文
+        batch: "6000"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 翻译报告
+          weight: 2
+        - type: contains
+          text: 文件清单
+          weight: 1
+        - type: contains
+          text: 术语表：3 条
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

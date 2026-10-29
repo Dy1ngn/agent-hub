@@ -1,0 +1,354 @@
+id: ts-b-code-reviewer-g4-robust
+agentId: code-reviewer
+group: g4-robust
+name: 代码审查 · 鲁棒性：畸形 / 编码异常输入
+description: 乱码、控制字符、零宽字符、损坏语法等异常输入下不崩溃、优雅降级（离线静态模式）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：语法损坏
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：语法损坏
+      files:
+        - path: input/bad1.py
+          content: "def broken(:\n    pass\n@@@ ###\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：非法转义
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：非法转义
+      files:
+        - path: input/bad2.py
+          content: "s = '\\q\\z\\'\ \n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：控制字符
+      files:
+        - path: input/bad3.py
+          content: "a = 1\ab = 2\ac = 3\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：混合中英数字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：混合中英数字符
+      files:
+        - path: input/bad4.py
+          content: "变量 = 1
+
+            mixed_变量_2 = '值'
+
+            # 注释 with English and 123\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合引号
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：未闭合引号
+      files:
+        - path: input/bad5.py
+          content: "s = 'unterminated\nprint(s)\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：未闭合括号
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：未闭合括号
+      files:
+        - path: input/bad6.py
+          content: "def f(a, b:\n    return a + b\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：零宽字符
+      files:
+        - path: input/bad7.py
+          content: "a​ = 1\nb‌ = 2\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：emoji 标识符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：emoji 标识符
+      files:
+        - path: input/bad8.py
+          content: "😀 = 1\n🚀🚀 = 2\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：超多空行
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：超多空行
+      files:
+        - path: input/bad9.py
+          content: "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            \n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：重复定义
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: code
+      goal: 异常输入不能让工具崩溃
+      content: 异常用例：重复定义
+      files:
+        - path: input/bad10.py
+          content: "def f():
+
+            \    return 1
+
+            def f():
+
+            \    return 2
+
+            def f():
+
+            \    return 3\n"
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码审查报告
+          weight: 2
+          note: 异常输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+      requiredSuggestions: []

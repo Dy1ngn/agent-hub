@@ -128,9 +128,13 @@ class TextProtector:
 # ---------- 术语表 ----------
 
 def load_glossary(path):
-    """读取术语表 JSON：{"源词": "译法"}，也支持 {"terms": {...}} 写法"""
-    raw = Path(path).expanduser().read_text(encoding="utf-8")
-    data = json.loads(raw)
+    """读取术语表 JSON：{"源词": "译法"}，也支持 {"terms": {...}} 写法；文件缺失/损坏时按空表处理"""
+    try:
+        raw = Path(path).expanduser().read_text(encoding="utf-8")
+        data = json.loads(raw)
+    except (OSError, ValueError) as exc:
+        print("[提示] 术语表不可用（%s），按空术语表继续。" % exc)
+        return {}
     if isinstance(data, dict) and isinstance(data.get("terms"), dict):
         data = data["terms"]
     if not isinstance(data, dict):

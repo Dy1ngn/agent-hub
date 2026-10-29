@@ -1,0 +1,50 @@
+{
+  "id": "interview-prep",
+  "name": "面试准备",
+  "description": "面试准备助手：内置分类题库、JD 岗位画像、可复现抽题、复习计划与模拟面试。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "--jd",
+      "input/jd.txt",
+      "--type",
+      "{{params.type}}",
+      "--count",
+      "{{params.count}}",
+      "--seed",
+      "{{params.seed}}",
+      "--mock",
+      "--record",
+      "{{params.record}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown"
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

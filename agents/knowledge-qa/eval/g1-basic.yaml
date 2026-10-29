@@ -1,0 +1,1342 @@
+id: ts-b-knowledge-qa-g1-basic
+agentId: knowledge-qa
+group: g1-basic
+name: 知识库问答 · 基础功能：典型知识库问答
+description: 安装/配置/部署/排障/价格/接口/制度等典型问题与无命中兜底（检索 + 模型回答链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-install-1
+    title: 安装问题（标准问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答安装相关问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何安装依赖？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (安装|pip|requirements)
+          weight: 2
+          note: 命中安装指南
+      requiredSuggestions: []
+  - id: g1-install-2
+    title: 安装问题（变体问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答安装相关问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖的步骤是什么？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (安装|pip|requirements)
+          weight: 2
+          note: 命中安装指南
+      requiredSuggestions: []
+  - id: g1-config-1
+    title: 配置问题（标准问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答配置相关问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/config.md
+          content: "# 配置说明
+
+
+            ## 基础配置
+
+
+            配置文件是 config.yaml，包含端口、日志级别与缓存开关三个配置项。
+
+
+            ## 高级配置
+
+
+            可以用环境变量覆盖配置项。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 配置项有哪些？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (配置|config.yaml|端口)
+          weight: 2
+          note: 命中配置说明
+      requiredSuggestions: []
+  - id: g1-config-2
+    title: 配置问题（变体问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答配置相关问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/config.md
+          content: "# 配置说明
+
+
+            ## 基础配置
+
+
+            配置文件是 config.yaml，包含端口、日志级别与缓存开关三个配置项。
+
+
+            ## 高级配置
+
+
+            可以用环境变量覆盖配置项。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 怎么修改配置？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (配置|config.yaml|端口)
+          weight: 2
+          note: 命中配置说明
+      requiredSuggestions: []
+  - id: g1-deploy-1
+    title: 部署问题（标准问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答部署相关问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/deploy.md
+          content: "# 部署手册
+
+
+            ## 部署流程
+
+
+            先构建镜像，再用 kubectl apply 部署到集群。
+
+
+            ## 回滚
+
+
+            执行 kubectl rollout undo 回滚到上一版本。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何部署到集群？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (部署|kubectl|回滚)
+          weight: 2
+          note: 命中部署手册
+      requiredSuggestions: []
+  - id: g1-deploy-2
+    title: 部署问题（变体问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答部署相关问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/deploy.md
+          content: "# 部署手册
+
+
+            ## 部署流程
+
+
+            先构建镜像，再用 kubectl apply 部署到集群。
+
+
+            ## 回滚
+
+
+            执行 kubectl rollout undo 回滚到上一版本。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 部署失败怎么回滚？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (部署|kubectl|回滚)
+          weight: 2
+          note: 命中部署手册
+      requiredSuggestions: []
+  - id: g1-trouble-1
+    title: 故障排查问题（标准问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答故障排查问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 服务启动失败怎么办？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (启动失败|端口|error.log|排查)
+          weight: 2
+          note: 命中常见问题
+      requiredSuggestions: []
+  - id: g1-trouble-2
+    title: 故障排查问题（变体问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答故障排查问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 启动失败怎么排查？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (启动失败|端口|error.log|排查)
+          weight: 2
+          note: 命中常见问题
+      requiredSuggestions: []
+  - id: g1-price-1
+    title: 价格问题（标准问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答定价问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/price.md
+          content: "# 定价方案
+
+
+            标准版价格是每用户每月 99 元，企业版每用户每月 299 元，价格按年付费。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 标准版多少钱？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (99|299|价格|元|定价)
+          weight: 2
+          note: 命中定价方案
+      requiredSuggestions: []
+  - id: g1-price-2
+    title: 价格问题（变体问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答定价问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/price.md
+          content: "# 定价方案
+
+
+            标准版价格是每用户每月 99 元，企业版每用户每月 299 元，价格按年付费。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 定价是多少？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (99|299|价格|元|定价)
+          weight: 2
+          note: 命中定价方案
+      requiredSuggestions: []
+  - id: g1-api-1
+    title: 接口问题（标准问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答 API 接口问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/api.md
+          content: "# 接口文档
+
+
+            ## 查询接口
+
+
+            查询接口是 GET /api/users，返回用户列表。
+
+
+            ## 写入接口
+
+
+            写入接口是 POST /api/users。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 查询接口怎么调用？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (接口|GET|POST|/api/users)
+          weight: 2
+          note: 命中接口文档
+      requiredSuggestions: []
+  - id: g1-api-2
+    title: 接口问题（变体问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答 API 接口问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/api.md
+          content: "# 接口文档
+
+
+            ## 查询接口
+
+
+            查询接口是 GET /api/users，返回用户列表。
+
+
+            ## 写入接口
+
+
+            写入接口是 POST /api/users。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 有哪些接口？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (接口|GET|POST|/api/users)
+          weight: 2
+          note: 命中接口文档
+      requiredSuggestions: []
+  - id: g1-policy-1
+    title: 制度问题（标准问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答休假制度问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/policy.md
+          content: "# 休假制度
+
+
+            ## 年假
+
+
+            入职满一年后年假 10 天，满三年后年假 15 天。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 年假有多少天？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (年假|10 天|15 天|休假)
+          weight: 2
+          note: 命中休假制度
+      requiredSuggestions: []
+  - id: g1-policy-2
+    title: 制度问题（变体问法）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答休假制度问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/policy.md
+          content: "# 休假制度
+
+
+            ## 年假
+
+
+            入职满一年后年假 10 天，满三年后年假 15 天。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 入职一年后年假几天？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (年假|10 天|15 天|休假)
+          weight: 2
+          note: 命中休假制度
+      requiredSuggestions: []
+  - id: g1-multi-1
+    title: 多文档命中（双文档）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 跨文档检索回答
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 安装依赖和服务启动失败分别怎么处理？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (片段|引用清单|检索得分表)
+          weight: 2
+          note: 多文档命中
+      requiredSuggestions: []
+  - id: g1-multi-2
+    title: 多文档命中（双文档二）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 跨文档检索回答
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/deploy.md
+          content: "# 部署手册
+
+
+            ## 部署流程
+
+
+            先构建镜像，再用 kubectl apply 部署到集群。
+
+
+            ## 回滚
+
+
+            执行 kubectl rollout undo 回滚到上一版本。\n"
+        - path: kb/config.md
+          content: "# 配置说明
+
+
+            ## 基础配置
+
+
+            配置文件是 config.yaml，包含端口、日志级别与缓存开关三个配置项。
+
+
+            ## 高级配置
+
+
+            可以用环境变量覆盖配置项。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 部署和配置都要注意什么？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (片段|引用清单|检索得分表)
+          weight: 2
+          note: 多文档命中
+      requiredSuggestions: []
+  - id: g1-nohit-1
+    title: 知识库无命中（无关问题）
+    tags:
+      - basic
+      - no-hit
+    repeat: 5
+    input:
+      kind: text
+      goal: 知识库里没有的问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 火星上的天气怎么样？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (没有相关内容|无法回答|低于阈值)
+          weight: 2
+          note: 无命中兜底正确
+      requiredSuggestions: []
+  - id: g1-nohit-2
+    title: 知识库无命中（无关问题二）
+    tags:
+      - basic
+      - no-hit
+    repeat: 5
+    input:
+      kind: text
+      goal: 知识库里没有的问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 量子纠缠如何通信？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (没有相关内容|无法回答|低于阈值)
+          weight: 2
+          note: 无命中兜底正确
+      requiredSuggestions: []
+  - id: g1-mixed-1
+    title: 中英混合文档（混合文档）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答中英混合知识库的问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/mixed.md
+          content: "# Install Guide
+
+
+            安装依赖用 pip install，安装完成后运行 make test 验证。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 怎么安装 install 依赖？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (install|pip|make test|pytest|测试)
+          weight: 2
+          note: 命中混合文档
+      requiredSuggestions: []
+  - id: g1-mixed-2
+    title: 中英混合文档（英文文档）
+    tags:
+      - basic
+      - kb
+    repeat: 5
+    input:
+      kind: text
+      goal: 回答中英混合知识库的问题
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/mixed.md
+          content: "# Testing
+
+
+            运行 make test 执行单元测试，pytest 也可以。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何运行测试？
+        topk: "5"
+        minscore: "0.5"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 1
+          note: 产出标准问答报告
+        - type: contains
+          text: "## 引用清单"
+          weight: 1
+          note: 报告固定结构（引用清单）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (install|pip|make test|pytest|测试)
+          weight: 2
+          note: 命中混合文档
+      requiredSuggestions: []

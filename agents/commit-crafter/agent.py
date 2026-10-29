@@ -156,6 +156,97 @@ def parse_name_status(text):
     return items
 
 
+DIFF_GIT_RE = re.compile(r"^diff --git a/(.+) b/(.+)$")
+
+
+def parse_diff_files(diff_text):
+    """从统一 diff 文本里解析改动文件 [(状态字母, 路径), ...]，不依赖 git。
+
+    状态：A 新增 / D 删除 / R 重命名 / M 修改；认不出 `diff --git` 头时退回
+    解析 `+++ b/<path>` 行；再认不出就返回空列表（由调用方决定怎么兜底）。
+    """
+    files = []
+    current = None
+    for line in diff_text.splitlines():
+        match = DIFF_GIT_RE.match(line)
+        if match:
+            path = match.group(2).strip() or match.group(1).strip()
+            current = ["M", path]
+            files.append(current)
+            continue
+        if current is not None:
+            if line.startswith("new file mode"):
+                current[0] = "A"
+            elif line.startswith("deleted file mode"):
+                current[0] = "D"
+            elif line.startswith("rename from") or line.startswith("rename to"):
+                current[0] = "R"
+    if not files:
+        for line in diff_text.splitlines():
+            if line.startswith("+++ "):
+                path = line[4:].strip()
+                if path.startswith("b/"):
+                    path = path[2:]
+                if path and path != "/dev/null":
+                    files.append(["M", path])
+    seen = set()
+    result = []
+    for item in files:
+        key = (item[0], item[1])
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append((item[0], item[1]))
+    return result
+
+
+def synth_diff_stat(diff_text, files):
+    """没有 git 时用 diff 文本粗算 `--stat` 风格统计（只看 +/- 行数）。"""
+    adds = dels = 0
+    for line in diff_text.splitlines():
+        if line.startswith("+") and not line.startswith("+++"):
+            adds += 1
+        elif line.startswith("-") and not line.startswith("---"):
+            dels += 1
+    return "%d files changed, %d insertions(+), %d deletions(-)" % (len(files), adds, dels)
+
+
+def collect_changes_from_diff_file(path, max_diff_chars=DEFAULT_MAX_DIFF_CHARS):
+    """`--diff-file`：直接读 diff 文本（`-` 表示标准输入），完全不依赖 git 仓库。"""
+    if path == "-":
+        diff_text = sys.stdin.read()
+        label = "标准输入"
+    else:
+        file_path = Path(path).expanduser()
+        if not file_path.is_file():
+            raise GitError("找不到 diff 文件：%s" % path)
+        try:
+            diff_text = file_path.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            raise GitError("读取 diff 文件失败：%s" % exc)
+        label = str(file_path)
+    files = parse_diff_files(diff_text)
+    truncated = False
+    if len(diff_text) > max_diff_chars:
+        diff_text = diff_text[:max_diff_chars]
+        truncated = True
+        diff_text += "\n……（diff 过长，已截断，仅保留前 %d 字符）" % max_diff_chars
+    return {
+        "mode": "diff-file",
+        "range": label,
+        "branch": "（--diff-file 模式，不依赖 git 仓库）",
+        "status": "",
+        "diff": diff_text,
+        "diff_stat": synth_diff_stat(diff_text, files),
+        # 没有 git 就做不了「忽略空白对比」，用原文代替（不会误判成纯格式化）
+        "whitespace_ignored_diff": diff_text,
+        "files": files,
+        "untracked": [],
+        "recent_subjects": [],
+        "truncated": truncated,
+    }
+
+
 def collect_changes(repo, mode="staged", rev_range=None, max_diff_chars=DEFAULT_MAX_DIFF_CHARS):
     """只读收集：状态、diff、改动文件、分支、最近提交标题。"""
     if mode == "staged":
@@ -546,6 +637,7 @@ def build_user_prompt(info, classification, style, lang):
         "staged": "已暂存的改动（git diff --cached）",
         "all": "工作区全部改动（git diff HEAD + 未跟踪文件）",
         "range": "提交区间 %s" % info.get("range", ""),
+        "diff-file": "直接提供的 diff 文本（--diff-file %s，不依赖 git 仓库）" % info.get("range", ""),
     }.get(info.get("mode"), info.get("mode", ""))
 
     style_text = {
@@ -749,6 +841,37 @@ def build_copy_command(message):
     return 'git commit -m "%s"' % subject
 
 
+def build_preview_markdown(message, info, classification, style, lang):
+    """把最终预览写成 Markdown（--output 用），内容与终端预览一致。"""
+    mode = {
+        "staged": "已暂存改动（--staged）",
+        "all": "工作区全部改动（--all）",
+        "range": "提交区间（--range %s）" % (info.get("range") or ""),
+        "diff-file": "diff 文件直读（--diff-file %s）" % (info.get("range") or ""),
+    }.get(info.get("mode"), info.get("mode"))
+    lines = ["# 提交信息预览（commit-crafter）", ""]
+    lines.append("> 收集范围：%s ｜ 风格：%s ｜ 语言：%s"
+                 % (mode, style, "中文" if lang == "zh" else "英文"))
+    lines.append("")
+    lines.append("## 候选类型")
+    lines.append("")
+    lines.append("- %s" % format_candidate(classification))
+    lines.append("")
+    lines.append("## 最终提交信息")
+    lines.append("")
+    lines.append("```text")
+    lines.append(format_commit_message(message).rstrip())
+    lines.append("```")
+    lines.append("")
+    lines.append("## 可复制的命令")
+    lines.append("")
+    lines.append("```bash")
+    lines.append(build_copy_command(message))
+    lines.append("```")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
 # ---------- 展示与提交 ----------
 
 def print_box(text):
@@ -763,6 +886,7 @@ def print_collection_summary(info, classification):
         "staged": "已暂存改动（--staged）",
         "all": "工作区全部改动（--all）",
         "range": "提交区间（--range %s）" % (info.get("range") or ""),
+        "diff-file": "diff 文件直读（--diff-file %s）" % (info.get("range") or ""),
     }.get(info.get("mode"), info.get("mode")))
     print("🌿 当前分支：%s" % info.get("branch"))
     print("📝 改动文件：%d 个" % len(info.get("files") or []))
@@ -983,6 +1107,58 @@ def run_self_test():
         assert has_version_bump(dep_bump)
         assert guess_scope([("M", "src/app.py")]) is not None
 
+        # --- 8. --diff-file：不依赖 git 的 diff 直读 ---
+        diff_text = (
+            "diff --git a/src/app.py b/src/app.py\n"
+            "index 1111111..2222222 100644\n"
+            "--- a/src/app.py\n"
+            "+++ b/src/app.py\n"
+            "@@ -1,2 +1,2 @@\n"
+            "-def f():\n"
+            "-    return 1\n"
+            "+def f():\n"
+            "+    return 2\n"
+            "diff --git a/README.md b/README.md\n"
+            "new file mode 100644\n"
+            "--- /dev/null\n"
+            "+++ b/README.md\n"
+            "@@ -0,0 +1 @@\n"
+            "+# 新文档\n"
+        )
+        diff_path = root / "changes.diff"
+        _write(diff_path, diff_text)
+        diff_info = collect_changes_from_diff_file(str(diff_path), 10000)
+        assert diff_info["mode"] == "diff-file", diff_info["mode"]
+        assert ("M", "src/app.py") in diff_info["files"], diff_info["files"]
+        assert ("A", "README.md") in diff_info["files"], diff_info["files"]
+        assert "return 2" in diff_info["diff"]
+        assert "insertions" in diff_info["diff_stat"]
+        tiny_diff = collect_changes_from_diff_file(str(diff_path), 20)
+        assert tiny_diff["truncated"] is True, "diff 应被标记为截断"
+        empty_path = root / "empty.diff"
+        _write(empty_path, "")
+        empty_info = collect_changes_from_diff_file(str(empty_path), 1000)
+        assert empty_info["files"] == [], empty_info["files"]
+
+        # +++ b/ 兜底解析
+        simple = parse_diff_files("--- a/x.py\n+++ b/x.py\n@@ -0,0 +1 @@\n+hi\n")
+        assert simple == [("M", "x.py")], simple
+
+        # diff-file 模式下启发式与预览也要能走通
+        diff_cls = classify_changes(diff_info)
+        assert format_candidate(diff_cls).startswith("候选类型：")
+        diff_msg = heuristic_message(diff_info, diff_cls, "conventional", "zh")
+        assert SUBJECT_RE.match(diff_msg["subject"]), diff_msg["subject"]
+        preview = build_preview_markdown(diff_msg, diff_info, diff_cls, "conventional", "zh")
+        assert preview.startswith("# 提交信息预览"), preview[:40]
+        assert "## 最终提交信息" in preview and "## 可复制的命令" in preview
+        assert diff_msg["subject"] in preview
+
+        # 空 diff 也要能给出兜底预览，不崩溃
+        empty_cls = classify_changes(empty_info)
+        empty_msg = heuristic_message(empty_info, empty_cls, "conventional", "zh")
+        assert SUBJECT_RE.match(empty_msg["subject"]), empty_msg["subject"]
+
         print("SELF-TEST OK")
         return 0
     finally:
@@ -1001,6 +1177,10 @@ def build_parser():
     group.add_argument("--staged", action="store_true", help="只看已暂存改动（默认）")
     group.add_argument("--all", action="store_true", help="看工作区全部改动（含未跟踪文件名）")
     group.add_argument("--range", metavar="A..B", help="看指定提交区间，如 HEAD~3..HEAD")
+    group.add_argument(
+        "--diff-file", metavar="文件",
+        help="直接读 diff 文本文件生成提交信息（用 - 从标准输入读），不依赖 git 仓库",
+    )
     parser.add_argument(
         "--style", default="conventional",
         choices=["conventional", "gitmoji", "plain"], help="提交信息风格（默认 conventional）",
@@ -1008,6 +1188,10 @@ def build_parser():
     parser.add_argument(
         "--lang", default="zh", choices=["zh", "en"], help="正文语言（默认 zh）",
     )
+    parser.add_argument("--output", default="",
+                        help="把最终预览（Markdown）写入该文件；默认只打印到终端")
+    parser.add_argument("--offline", action="store_true",
+                        help="纯确定性模式：只用启发式生成，不调用模型、不需要 API key")
     parser.add_argument("--apply", action="store_true", help="确认后真正执行 git commit")
     parser.add_argument("--yes", action="store_true", help="跳过交互确认（配合 --apply）")
     parser.add_argument("--dry-run", action="store_true", help="只生成并预览，不提交")
@@ -1038,25 +1222,35 @@ def main(argv=None):
         print("错误：--max-diff-chars 必须是正整数", file=sys.stderr)
         return 2
 
-    try:
-        repo = ensure_repo(args.repo)
-    except GitError as e:
-        print("错误：%s" % e, file=sys.stderr)
-        return 1
+    if args.diff_file:
+        # --diff-file：直接读 diff 文本生成，完全不需要 git 仓库
+        try:
+            info = collect_changes_from_diff_file(args.diff_file, args.max_diff_chars)
+        except GitError as e:
+            print("错误：%s" % e, file=sys.stderr)
+            return 1
+        if not info["files"]:
+            print("提示：没有从 diff 里解析出改动文件名（diff 可能为空或格式特殊），仍会生成兜底预览。")
+    else:
+        try:
+            repo = ensure_repo(args.repo)
+        except GitError as e:
+            print("错误：%s" % e, file=sys.stderr)
+            return 1
 
-    mode = "range" if args.range else ("all" if args.all else "staged")
+        mode = "range" if args.range else ("all" if args.all else "staged")
 
-    try:
-        info = collect_changes(repo, mode, args.range, args.max_diff_chars)
-    except GitError as e:
-        print("错误：%s" % e, file=sys.stderr)
-        return 1
+        try:
+            info = collect_changes(repo, mode, args.range, args.max_diff_chars)
+        except GitError as e:
+            print("错误：%s" % e, file=sys.stderr)
+            return 1
 
-    if not info["files"]:
-        list_pending_work(repo)
-        if args.range:
-            print("提示：区间 %s 内没有文件改动。" % args.range)
-        return 0
+        if not info["files"]:
+            list_pending_work(repo)
+            if args.range:
+                print("提示：区间 %s 内没有文件改动。" % args.range)
+            return 0
 
     classification = classify_changes(info)
     print_collection_summary(info, classification)
@@ -1066,7 +1260,9 @@ def main(argv=None):
 
     has_key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")
     raw = ""
-    if has_key:
+    if args.offline:
+        print("🔧 离线模式（--offline）：跳过模型，只用确定性启发式生成提交信息。")
+    elif has_key:
         print("🤖 模型：%s" % args.model)
         try:
             raw = generate_with_model(
@@ -1097,6 +1293,26 @@ def main(argv=None):
     print("💡 可复制的命令：")
     print(build_copy_command(message))
     print("-" * BOX_WIDTH)
+
+    if args.output:
+        preview_path = Path(args.output).expanduser()
+        try:
+            if preview_path.parent and not preview_path.parent.exists():
+                preview_path.parent.mkdir(parents=True, exist_ok=True)
+            preview_path.write_text(
+                build_preview_markdown(message, info, classification, args.style, args.lang),
+                encoding="utf-8",
+            )
+            print("📄 预览已写入：%s" % preview_path)
+        except OSError as e:
+            print("错误：写入预览文件失败：%s" % e, file=sys.stderr)
+            return 1
+
+    if args.diff_file:
+        if args.apply or args.amend:
+            print("提示：--diff-file 模式没有 git 仓库上下文，只生成预览，不会执行提交。")
+        print("预览模式：--diff-file 只生成提交信息，不执行任何 git 操作。")
+        return 0
 
     if args.amend and not args.apply:
         print("已跳过提交（--amend 需要 --apply）。")

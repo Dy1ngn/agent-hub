@@ -1,0 +1,1299 @@
+id: ts-b-code-explainer-g1-basic
+agentId: code-explainer
+group: g1-basic
+name: 代码讲解 · 基础功能：典型代码讲解
+description: 典型 Python/JS/Go/Java 代码的完整讲解链路（确定性结构分析 + 模型分层讲解），产出讲解文档（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-pyfunc
+    title: Python 小工具函数讲解（moving_average）
+    tags:
+      - basic
+      - python
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段 Python 代码的作用、结构与复杂度
+      content: "def moving_average(values, window):
+
+        \    if window <= 0:
+
+        \        raise ValueError(\"window must be positive\")
+
+        \    out = []
+
+        \    for i in range(len(values) - window + 1):
+
+        \        chunk = values[i:i + window]
+
+        \        out.append(sum(chunk) / window)
+
+        \    return out
+
+
+
+        def smooth(values, window=3):
+
+        \    return moving_average(values, window)\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+          note: 产出标准讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构分析章节存在
+        - type: regex
+          pattern: (?i)\bmoving_average\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-pyfunc-2
+    title: Python 小工具函数讲解（parse_duration）
+    tags:
+      - basic
+      - python
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段 Python 代码的作用、结构与复杂度
+      content: "import re
+
+
+        UNIT_SECONDS = {\"s\": 1, \"m\": 60, \"h\": 3600}
+
+
+        def parse_duration(text):
+
+        \    match = re.fullmatch(r\"(\\d+)([smh])\", text.strip())
+
+        \    if not match:
+
+        \        raise ValueError(\"bad duration: %s\" % text)
+
+        \    value, unit = match.groups()
+
+        \    return int(value) * UNIT_SECONDS[unit]\n"
+      files: []
+      params:
+        lang: python
+        level: 入门
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+          note: 产出标准讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构分析章节存在
+        - type: regex
+          pattern: (?i)\bparse_duration\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-pyclass
+    title: Python 类与方法讲解（Cart）
+    tags:
+      - basic
+      - python
+      - class
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这个类的职责、方法结构与复杂度
+      content: "class Cart:
+
+        \    def __init__(self):
+
+        \        self.items = []
+
+
+        \    def add(self, sku, qty, price):
+
+        \        self.items.append({\"sku\": sku, \"qty\": qty, \"price\": price})
+
+
+        \    def total(self):
+
+        \        amount = 0
+
+        \        for item in self.items:
+
+        \            amount += item[\"qty\"] * item[\"price\"]
+
+        \        return amount
+
+
+        \    def discount(self, rate):
+
+        \        if not 0 <= rate <= 1:
+
+        \            raise ValueError(\"rate out of range\")
+
+        \        return self.total() * (1 - rate)\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 类与方法
+          weight: 1
+          note: 类结构章节存在
+        - type: regex
+          pattern: (?i)\bCart\b
+          weight: 2
+          note: 类名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-pyclass-4
+    title: Python 类与方法讲解（RingBuffer）
+    tags:
+      - basic
+      - python
+      - class
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这个类的职责、方法结构与复杂度
+      content: "class RingBuffer:
+
+        \    def __init__(self, capacity):
+
+        \        self.capacity = capacity
+
+        \        self.data = []
+
+
+        \    def push(self, value):
+
+        \        self.data.append(value)
+
+        \        if len(self.data) > self.capacity:
+
+        \            self.data.pop(0)
+
+
+        \    def last(self, n):
+
+        \        return self.data[-n:] if n > 0 else []\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 类与方法
+          weight: 1
+          note: 类结构章节存在
+        - type: regex
+          pattern: (?i)\bRingBuffer\b
+          weight: 2
+          note: 类名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-js
+    title: JavaScript 模块讲解（debounce）
+    tags:
+      - basic
+      - javascript
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段 JavaScript 代码
+      content: "function debounce(fn, wait) {
+
+        \  let timer = null;
+
+        \  return function () {
+
+        \    const args = arguments;
+
+        \    const ctx = this;
+
+        \    if (timer) clearTimeout(timer);
+
+        \    timer = setTimeout(function () {
+
+        \      fn.apply(ctx, args);
+
+        \    }, wait);
+
+        \  };
+
+        }
+
+
+        module.exports = { debounce };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bdebounce\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-js-6
+    title: JavaScript 模块讲解（groupBy）
+    tags:
+      - basic
+      - javascript
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段 JavaScript 代码
+      content: "function groupBy(items, keyFn) {
+
+        \  const groups = {};
+
+        \  for (const item of items) {
+
+        \    const key = keyFn(item);
+
+        \    if (!groups[key]) groups[key] = [];
+
+        \    groups[key].push(item);
+
+        \  }
+
+        \  return groups;
+
+        }
+
+
+        module.exports = { groupBy };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 入门
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bgroupBy\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-go
+    title: Go 函数讲解（ParseSize）
+    tags:
+      - basic
+      - go
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段 Go 代码
+      content: "package main
+
+
+        import (
+
+        \t\"fmt\"
+
+        \t\"strconv\"
+
+        \t\"strings\"
+
+        )
+
+
+        func ParseSize(s string) (int64, error) {
+
+        \ts = strings.TrimSpace(s)
+
+        \tif s == \"\" {
+
+        \t\treturn 0, fmt.Errorf(\"empty size\")
+
+        \t}
+
+        \tmult := int64(1)
+
+        \tlast := s[len(s)-1]
+
+        \tif last == 'K' || last == 'M' || last == 'G' {
+
+        \t\tmult = 1024
+
+        \t\ts = s[:len(s)-1]
+
+        \t}
+
+        \tn, err := strconv.ParseInt(s, 10, 64)
+
+        \tif err != nil {
+
+        \t\treturn 0, err
+
+        \t}
+
+        \treturn n * mult, nil
+
+        }\n"
+      files: []
+      params:
+        lang: go
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bParseSize\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-go-8
+    title: Go 函数讲解（Chunk）
+    tags:
+      - basic
+      - go
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段 Go 代码
+      content: "package util
+
+
+        func Chunk(items []string, size int) [][]string {
+
+        \tvar out [][]string
+
+        \tif size <= 0 {
+
+        \t\treturn out
+
+        \t}
+
+        \tfor i := 0; i < len(items); i += size {
+
+        \t\tend := i + size
+
+        \t\tif end > len(items) {
+
+        \t\t\tend = len(items)
+
+        \t\t}
+
+        \t\tout = append(out, items[i:end])
+
+        \t}
+
+        \treturn out
+
+        }\n"
+      files: []
+      params:
+        lang: go
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bChunk\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-java
+    title: Java 类讲解（Retry）
+    tags:
+      - basic
+      - java
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段 Java 代码
+      content: "public class Retry {
+
+        \    private final int maxAttempts;
+
+
+        \    public Retry(int maxAttempts) {
+
+        \        this.maxAttempts = maxAttempts;
+
+        \    }
+
+
+        \    public <T> T run(Task<T> task) throws Exception {
+
+        \        Exception last = null;
+
+        \        for (int i = 0; i < maxAttempts; i++) {
+
+        \            try {
+
+        \                return task.call();
+
+        \            } catch (Exception e) {
+
+        \                last = e;
+
+        \            }
+
+        \        }
+
+        \        throw last;
+
+        \    }
+
+        }\n"
+      files: []
+      params:
+        lang: java
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 类与方法
+          weight: 1
+        - type: regex
+          pattern: (?i)\bRetry\b
+          weight: 2
+          note: 类名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-java-10
+    title: Java 类讲解（RateLimiter）
+    tags:
+      - basic
+      - java
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段 Java 代码
+      content: "public class RateLimiter {
+
+        \    private final long capacity;
+
+        \    private long tokens;
+
+        \    private long lastRefill;
+
+
+        \    public RateLimiter(long capacity) {
+
+        \        this.capacity = capacity;
+
+        \        this.tokens = capacity;
+
+        \        this.lastRefill = System.currentTimeMillis();
+
+        \    }
+
+
+        \    public synchronized boolean tryAcquire() {
+
+        \        refill();
+
+        \        if (tokens > 0) {
+
+        \            tokens--;
+
+        \            return true;
+
+        \        }
+
+        \        return false;
+
+        \    }
+
+
+        \    private void refill() {
+
+        \        long now = System.currentTimeMillis();
+
+        \        long gained = (now - lastRefill) / 1000;
+
+        \        tokens = Math.min(capacity, tokens + gained);
+
+        \        lastRefill = now;
+
+        \    }
+
+        }\n"
+      files: []
+      params:
+        lang: java
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 类与方法
+          weight: 1
+        - type: regex
+          pattern: (?i)\bRateLimiter\b
+          weight: 2
+          note: 类名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-commented
+    title: 带注释代码讲解（calc_gpa）
+    tags:
+      - basic
+      - comments
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段带注释的代码，注释应被结构提取利用
+      content: "# 绩点计算工具：把百分制成绩换算成 4.0 绩点后求平均
+
+
+        def score_to_point(score):
+
+        \    # 分段映射：90+ 4.0，80+ 3.0，70+ 2.0，60+ 1.0，其余 0
+
+        \    if score >= 90:
+
+        \        return 4.0
+
+        \    if score >= 80:
+
+        \        return 3.0
+
+        \    if score >= 70:
+
+        \        return 2.0
+
+        \    if score >= 60:
+
+        \        return 1.0
+
+        \    return 0.0
+
+
+
+        def calc_gpa(scores):
+
+        \    # scores 是百分制成绩列表；空列表返回 0
+
+        \    if not scores:
+
+        \        return 0.0
+
+        \    total = sum(score_to_point(s) for s in scores)
+
+        \    return total / len(scores)\n"
+      files: []
+      params:
+        lang: python
+        level: 入门
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bcalc_gpa\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-commented-12
+    title: 带注释代码讲解（normalizeName）
+    tags:
+      - basic
+      - comments
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段带注释的代码，注释应被结构提取利用
+      content: "// 把用户输入的姓名规整成统一格式：去空白、首字母大写
+
+        function normalizeName(raw) {
+
+        \  // 去掉首尾空白并折叠中间连续空白
+
+        \  const cleaned = String(raw).trim().replace(/\\s+/g, ' ');
+
+        \  if (!cleaned) {
+
+        \    return '';
+
+        \  }
+
+        \  // 每个词首字母大写
+
+        \  return cleaned.split(' ').map(function (word) {
+
+        \    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+
+        \  }).join(' ');
+
+        }
+
+
+        module.exports = { normalizeName };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bnormalizeName\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-algo
+    title: 算法实现讲解（binary_search）
+    tags:
+      - basic
+      - algorithm
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段算法代码的思路与复杂度
+      content: "def binary_search(items, target):
+
+        \    lo, hi = 0, len(items) - 1
+
+        \    while lo <= hi:
+
+        \        mid = (lo + hi) // 2
+
+        \        if items[mid] == target:
+
+        \            return mid
+
+        \        if items[mid] < target:
+
+        \            lo = mid + 1
+
+        \        else:
+
+        \            hi = mid - 1
+
+        \    return -1\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 复杂度提示
+          weight: 1
+          note: 复杂度章节存在
+        - type: regex
+          pattern: (?i)\bbinary_search\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-algo-14
+    title: 算法实现讲解（quickSort）
+    tags:
+      - basic
+      - algorithm
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段算法代码的思路与复杂度
+      content: "function quickSort(arr) {
+
+        \  if (arr.length <= 1) return arr;
+
+        \  const pivot = arr[Math.floor(arr.length / 2)];
+
+        \  const left = [];
+
+        \  const mid = [];
+
+        \  const right = [];
+
+        \  for (const x of arr) {
+
+        \    if (x < pivot) left.push(x);
+
+        \    else if (x > pivot) right.push(x);
+
+        \    else mid.push(x);
+
+        \  }
+
+        \  return quickSort(left).concat(mid, quickSort(right));
+
+        }
+
+
+        module.exports = { quickSort };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 复杂度提示
+          weight: 1
+          note: 复杂度章节存在
+        - type: regex
+          pattern: (?i)\bquickSort\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-web
+    title: 前端/DOM 代码讲解（bindTabs）
+    tags:
+      - basic
+      - web
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段前端代码
+      content: "function bindTabs(root) {
+
+        \  const tabs = root.querySelectorAll('[data-tab]');
+
+        \  tabs.forEach(function (tab) {
+
+        \    tab.addEventListener('click', function () {
+
+        \      tabs.forEach(function (t) { t.classList.remove('active'); });
+
+        \      tab.classList.add('active');
+
+        \      const id = tab.getAttribute('data-tab');
+
+        \      showPanel(root, id);
+
+        \    });
+
+        \  });
+
+        }
+
+
+        function showPanel(root, id) {
+
+        \  const panels = root.querySelectorAll('[data-panel]');
+
+        \  panels.forEach(function (p) {
+
+        \    p.hidden = p.getAttribute('data-panel') !== id;
+
+        \  });
+
+        }\n"
+      files: []
+      params:
+        lang: javascript
+        level: 入门
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bbindTabs\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-web-16
+    title: 前端/DOM 代码讲解（serializeForm）
+    tags:
+      - basic
+      - web
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段前端代码
+      content: "function serializeForm(form) {
+
+        \  const data = {};
+
+        \  const fields = form.querySelectorAll('input, select, textarea');
+
+        \  fields.forEach(function (field) {
+
+        \    if (!field.name) return;
+
+        \    if (field.type === 'checkbox') {
+
+        \      data[field.name] = field.checked;
+
+        \    } else {
+
+        \      data[field.name] = field.value;
+
+        \    }
+
+        \  });
+
+        \  return data;
+
+        }
+
+
+        module.exports = { serializeForm };\n"
+      files: []
+      params:
+        lang: javascript
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bserializeForm\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-data
+    title: 数据处理脚本讲解（fill_missing）
+    tags:
+      - basic
+      - data
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段数据处理代码
+      content: "def fill_missing(rows, column, default=0):
+
+        \    for row in rows:
+
+        \        if row.get(column) is None:
+
+        \            row[column] = default
+
+        \    return rows
+
+
+
+        def summarize(rows, column):
+
+        \    values = [r[column] for r in rows if r.get(column) is not None]
+
+        \    if not values:
+
+        \        return {\"count\": 0, \"avg\": None, \"max\": None}
+
+        \    return {
+
+        \        \"count\": len(values),
+
+        \        \"avg\": sum(values) / len(values),
+
+        \        \"max\": max(values),
+
+        \    }\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bfill_missing\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-data-18
+    title: 数据处理脚本讲解（toCsv）
+    tags:
+      - basic
+      - data
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段数据处理代码
+      content: "package export
+
+
+        import \"strings\"
+
+
+        func ToCsv(rows [][]string) string {
+
+        \tvar b strings.Builder
+
+        \tfor _, row := range rows {
+
+        \t\tcells := make([]string, 0, len(row))
+
+        \t\tfor _, cell := range row {
+
+        \t\t\tif strings.ContainsAny(cell, \",\\\"\\n\") {
+
+        \t\t\t\tcell = \"\\\"\" + strings.ReplaceAll(cell, \"\\\"\", \"\\\"\\\"\") + \"\\\"\"
+
+        \t\t\t}
+
+        \t\t\tcells = append(cells, cell)
+
+        \t\t}
+
+        \t\tb.WriteString(strings.Join(cells, \",\"))
+
+        \t\tb.WriteString(\"\\n\")
+
+        \t}
+
+        \treturn b.String()
+
+        }\n"
+      files: []
+      params:
+        lang: go
+        level: 深入
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\btoCsv\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-cli
+    title: CLI 工具代码讲解（main）
+    tags:
+      - basic
+      - cli
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段命令行工具代码
+      content: "import argparse
+
+        import json
+
+        import sys
+
+
+
+        def load_config(path):
+
+        \    with open(path, encoding=\"utf-8\") as handle:
+
+        \        return json.load(handle)
+
+
+
+        def main(argv=None):
+
+        \    parser = argparse.ArgumentParser(description=\"dump config keys\")
+
+        \    parser.add_argument(\"config\")
+
+        \    parser.add_argument(\"--prefix\", default=\"\")
+
+        \    args = parser.parse_args(argv)
+
+        \    data = load_config(args.config)
+
+        \    for key in sorted(data):
+
+        \        if key.startswith(args.prefix):
+
+        \            print(key, \"=\", data[key])
+
+        \    return 0
+
+
+
+        if __name__ == \"__main__\":
+
+        \    sys.exit(main())\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\bmain\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-cli-20
+    title: CLI 工具代码讲解（run）
+    tags:
+      - basic
+      - cli
+    repeat: 5
+    input:
+      kind: code
+      goal: 讲解这段命令行工具代码
+      content: "package main
+
+
+        import (
+
+        \t\"fmt\"
+
+        \t\"os\"
+
+        )
+
+
+        func run(args []string) int {
+
+        \tif len(args) == 0 {
+
+        \t\tfmt.Fprintln(os.Stderr, \"usage: tool <file>\")
+
+        \t\treturn 2
+
+        \t}
+
+        \tdata, err := os.ReadFile(args[0])
+
+        \tif err != nil {
+
+        \t\tfmt.Fprintln(os.Stderr, \"read failed:\", err)
+
+        \t\treturn 1
+
+        \t}
+
+        \tfmt.Printf(\"%d bytes\\n\", len(data))
+
+        \treturn 0
+
+        }
+
+
+        func main() {
+
+        \tos.Exit(run(os.Args[1:]))
+
+        }\n"
+      files: []
+      params:
+        lang: go
+        level: 入门
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 1
+        - type: contains
+          text: 结构表
+          weight: 1
+        - type: regex
+          pattern: (?i)\brun\b
+          weight: 2
+          note: 函数名被结构提取命中
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

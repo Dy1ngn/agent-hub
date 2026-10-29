@@ -1,0 +1,1230 @@
+id: ts-b-todo-planner-g2-variation
+agentId: todo-planner
+group: g2-variation
+name: 任务拆解 · 输入变体：领域 / 长度 / 风格 / 开始日期
+description: 不同目标领域、长度、排期风格与开始日期下的稳定计划（模型细化拆解链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-domain-1
+    title: 目标领域变体（数据分析）
+    tags:
+      - variation
+      - domain
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同领域目标都能拆解出计划
+      content: "请为下面的目标生成计划：三个月入门数据分析
+
+        - 学 SQL
+
+        - 学 Python
+
+        - 做 2 个实战项目"
+      files:
+        - path: input/goal.md
+          content: "三个月入门数据分析
+
+            - 学 SQL
+
+            - 学 Python
+
+            - 做 2 个实战项目"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 数据分析
+          weight: 2
+          note: 领域关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-domain-2
+    title: 目标领域变体（风控系统）
+    tags:
+      - variation
+      - domain
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同领域目标都能拆解出计划
+      content: "请为下面的目标生成计划：两个月搭建风控系统
+
+        - 梳理规则
+
+        - 开发引擎
+
+        - 联调上线"
+      files:
+        - path: input/goal.md
+          content: "两个月搭建风控系统\n- 梳理规则\n- 开发引擎\n- 联调上线"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 风控系统
+          weight: 2
+          note: 领域关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-domain-3
+    title: 目标领域变体（年会）
+    tags:
+      - variation
+      - domain
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同领域目标都能拆解出计划
+      content: "请为下面的目标生成计划：组织公司年会
+
+        - 确定节目
+
+        - 预定场地
+
+        - 现场执行"
+      files:
+        - path: input/goal.md
+          content: "组织公司年会\n- 确定节目\n- 预定场地\n- 现场执行"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 年会
+          weight: 2
+          note: 领域关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-domain-4
+    title: 目标领域变体（增长）
+    tags:
+      - variation
+      - domain
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同领域目标都能拆解出计划
+      content: "请为下面的目标生成计划：下季度做用户增长
+
+        - 拉新渠道测试
+
+        - 转化漏斗优化
+
+        - 复盘迭代"
+      files:
+        - path: input/goal.md
+          content: "下季度做用户增长\n- 拉新渠道测试\n- 转化漏斗优化\n- 复盘迭代"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 增长
+          weight: 2
+          note: 领域关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-domain-5
+    title: 目标领域变体（论文）
+    tags:
+      - variation
+      - domain
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同领域目标都能拆解出计划
+      content: "请为下面的目标生成计划：半年内完成一篇论文
+
+        - 选题调研
+
+        - 实验与写作
+
+        - 投稿修改"
+      files:
+        - path: input/goal.md
+          content: "半年内完成一篇论文\n- 选题调研\n- 实验与写作\n- 投稿修改"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 论文
+          weight: 2
+          note: 领域关键词进入计划
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-1
+    title: 目标长度变体（一句话目标）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的目标描述都稳定出计划
+      content: 请为下面的目标生成计划：学会剪辑视频
+      files:
+        - path: input/goal.md
+          content: 学会剪辑视频
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 剪辑
+          weight: 2
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-2
+    title: 目标长度变体（5 条任务）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的目标描述都稳定出计划
+      content: "请为下面的目标生成计划：运营一个公众号
+
+        - 定位
+
+        - 选题
+
+        - 写稿
+
+        - 排版
+
+        - 推广"
+      files:
+        - path: input/goal.md
+          content: "运营一个公众号\n- 定位\n- 选题\n- 写稿\n- 排版\n- 推广"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 公众号
+          weight: 2
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-3
+    title: 目标长度变体（15 条任务）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的目标描述都稳定出计划
+      content: "请为下面的目标生成计划：推进季度目标
+
+        - 任务 1：完成模块 1 的开发与测试
+
+        - 任务 2：完成模块 2 的开发与测试
+
+        - 任务 3：完成模块 3 的开发与测试
+
+        - 任务 4：完成模块 4 的开发与测试
+
+        - 任务 5：完成模块 5 的开发与测试
+
+        - 任务 6：完成模块 6 的开发与测试
+
+        - 任务 7：完成模块 7 的开发与测试
+
+        - 任务 8：完成模块 8 的开发与测试
+
+        - 任务 9：完成模块 9 的开发与测试
+
+        - 任务 10：完成模块 10 的开发与测试
+
+        - 任务 11：完成模块 11 的开发与测试
+
+        - 任务 12：完成模块 12 的开发与测试
+
+        - 任务 13：完成模块 13 的开发与测试
+
+        - 任务 14：完成模块 14 的开发与测试
+
+        - 任务 15：完成模块 15 的开发与测试"
+      files:
+        - path: input/goal.md
+          content: "推进季度目标
+
+            - 任务 1：完成模块 1 的开发与测试
+
+            - 任务 2：完成模块 2 的开发与测试
+
+            - 任务 3：完成模块 3 的开发与测试
+
+            - 任务 4：完成模块 4 的开发与测试
+
+            - 任务 5：完成模块 5 的开发与测试
+
+            - 任务 6：完成模块 6 的开发与测试
+
+            - 任务 7：完成模块 7 的开发与测试
+
+            - 任务 8：完成模块 8 的开发与测试
+
+            - 任务 9：完成模块 9 的开发与测试
+
+            - 任务 10：完成模块 10 的开发与测试
+
+            - 任务 11：完成模块 11 的开发与测试
+
+            - 任务 12：完成模块 12 的开发与测试
+
+            - 任务 13：完成模块 13 的开发与测试
+
+            - 任务 14：完成模块 14 的开发与测试
+
+            - 任务 15：完成模块 15 的开发与测试"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 季度目标
+          weight: 2
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-4
+    title: 目标长度变体（多阶段 20 行）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的目标描述都稳定出计划
+      content: "请为下面的目标生成计划：年度数字化规划
+
+        第1阶段：推进方向 1
+
+        - 调研方向 1
+
+        - 落地方向 1
+
+        第2阶段：推进方向 2
+
+        - 调研方向 2
+
+        - 落地方向 2
+
+        第3阶段：推进方向 3
+
+        - 调研方向 3
+
+        - 落地方向 3
+
+        第4阶段：推进方向 4
+
+        - 调研方向 4
+
+        - 落地方向 4
+
+        第5阶段：推进方向 5
+
+        - 调研方向 5
+
+        - 落地方向 5"
+      files:
+        - path: input/goal.md
+          content: "年度数字化规划
+
+            第1阶段：推进方向 1
+
+            - 调研方向 1
+
+            - 落地方向 1
+
+            第2阶段：推进方向 2
+
+            - 调研方向 2
+
+            - 落地方向 2
+
+            第3阶段：推进方向 3
+
+            - 调研方向 3
+
+            - 落地方向 3
+
+            第4阶段：推进方向 4
+
+            - 调研方向 4
+
+            - 落地方向 4
+
+            第5阶段：推进方向 5
+
+            - 调研方向 5
+
+            - 落地方向 5"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 数字化
+          weight: 2
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-len-5
+    title: 目标长度变体（只有约束行）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的目标描述都稳定出计划
+      content: 请为下面的目标生成计划：约束：一周内完成，预算 1000 元
+      files:
+        - path: input/goal.md
+          content: 约束：一周内完成，预算 1000 元
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 目标拆解计划
+          weight: 1
+        - type: contains
+          text: 预算
+          weight: 2
+        - type: contains
+          text: WBS
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-1
+    title: 排期风格变体（稳妥 / 20 天）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 稳妥与激进风格、不同窗口都稳定排程
+      content: "请为下面的目标生成计划：一个月内学会 Python 并做两个小项目
+
+        第一阶段：基础语法（3 天）
+
+        - 学完变量与控制流
+
+        - 完成 20 道练习题
+
+        第二阶段：项目实战（2 周）
+
+        - 做一个爬虫小项目
+
+        - 做一个 Web 小项目
+
+        约束：每天投入 2 小时"
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "20"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：稳妥
+          weight: 2
+        - type: contains
+          text: 计划窗口：20 天
+          weight: 1
+        - type: contains
+          text: Python
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2
+    title: 排期风格变体（激进 / 20 天）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 稳妥与激进风格、不同窗口都稳定排程
+      content: "请为下面的目标生成计划：一个月内学会 Python 并做两个小项目
+
+        第一阶段：基础语法（3 天）
+
+        - 学完变量与控制流
+
+        - 完成 20 道练习题
+
+        第二阶段：项目实战（2 周）
+
+        - 做一个爬虫小项目
+
+        - 做一个 Web 小项目
+
+        约束：每天投入 2 小时"
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "20"
+        start: 2026-11-02
+        style: 激进
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：激进
+          weight: 2
+        - type: contains
+          text: 计划窗口：20 天
+          weight: 1
+        - type: contains
+          text: Python
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3
+    title: 排期风格变体（稳妥 / 60 天）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 稳妥与激进风格、不同窗口都稳定排程
+      content: "请为下面的目标生成计划：三个月上线小程序商城
+
+        第一阶段：需求与设计（2 周）
+
+        - 输出 PRD
+
+        - 完成原型评审
+
+        第二阶段：开发（6 周）
+
+        - 完成商品与订单模块
+
+        - 完成支付对接
+
+        第三阶段：上线（2 周）
+
+        - 灰度发布
+
+        - 正式上线
+
+        约束：预算不超过 20 万元，团队 5 人"
+      files:
+        - path: input/goal.md
+          content: "三个月上线小程序商城
+
+            第一阶段：需求与设计（2 周）
+
+            - 输出 PRD
+
+            - 完成原型评审
+
+            第二阶段：开发（6 周）
+
+            - 完成商品与订单模块
+
+            - 完成支付对接
+
+            第三阶段：上线（2 周）
+
+            - 灰度发布
+
+            - 正式上线
+
+            约束：预算不超过 20 万元，团队 5 人"
+      params:
+        goal: ""
+        days: "60"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：稳妥
+          weight: 2
+        - type: contains
+          text: 计划窗口：60 天
+          weight: 1
+        - type: contains
+          text: 小程序商城
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4
+    title: 排期风格变体（激进 / 60 天）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 稳妥与激进风格、不同窗口都稳定排程
+      content: "请为下面的目标生成计划：三个月上线小程序商城
+
+        第一阶段：需求与设计（2 周）
+
+        - 输出 PRD
+
+        - 完成原型评审
+
+        第二阶段：开发（6 周）
+
+        - 完成商品与订单模块
+
+        - 完成支付对接
+
+        第三阶段：上线（2 周）
+
+        - 灰度发布
+
+        - 正式上线
+
+        约束：预算不超过 20 万元，团队 5 人"
+      files:
+        - path: input/goal.md
+          content: "三个月上线小程序商城
+
+            第一阶段：需求与设计（2 周）
+
+            - 输出 PRD
+
+            - 完成原型评审
+
+            第二阶段：开发（6 周）
+
+            - 完成商品与订单模块
+
+            - 完成支付对接
+
+            第三阶段：上线（2 周）
+
+            - 灰度发布
+
+            - 正式上线
+
+            约束：预算不超过 20 万元，团队 5 人"
+      params:
+        goal: ""
+        days: "60"
+        start: 2026-11-02
+        style: 激进
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：激进
+          weight: 2
+        - type: contains
+          text: 计划窗口：60 天
+          weight: 1
+        - type: contains
+          text: 小程序商城
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-5
+    title: 排期风格变体（稳妥 / 10 天）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 稳妥与激进风格、不同窗口都稳定排程
+      content: "请为下面的目标生成计划：组织 200 人年度团建活动
+
+        第一阶段：策划（1 周）
+
+        - 确定主题与预算
+
+        - 选定场地
+
+        第二阶段：执行（2 周）
+
+        - 发通知并统计报名
+
+        - 现场组织与拍摄
+
+        约束：一个月内完成，预算 5 万元"
+      files:
+        - path: input/goal.md
+          content: "组织 200 人年度团建活动
+
+            第一阶段：策划（1 周）
+
+            - 确定主题与预算
+
+            - 选定场地
+
+            第二阶段：执行（2 周）
+
+            - 发通知并统计报名
+
+            - 现场组织与拍摄
+
+            约束：一个月内完成，预算 5 万元"
+      params:
+        goal: ""
+        days: "10"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 风格：稳妥
+          weight: 2
+        - type: contains
+          text: 计划窗口：10 天
+          weight: 1
+        - type: contains
+          text: 团建
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-start-1
+    title: 开始日期变体（2026-11-02）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同开始日期（周末/月末/闰日/远期）都稳定排程
+      content: "请为下面的目标生成计划：一个月内学会 Python 并做两个小项目
+
+        第一阶段：基础语法（3 天）
+
+        - 学完变量与控制流
+
+        - 完成 20 道练习题
+
+        第二阶段：项目实战（2 周）
+
+        - 做一个爬虫小项目
+
+        - 做一个 Web 小项目
+
+        约束：每天投入 2 小时"
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-02
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 开始日期：2026-11-02
+          weight: 2
+          note: 开始日期与参数一致
+        - type: contains
+          text: Python
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-start-2
+    title: 开始日期变体（2026-11-07）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同开始日期（周末/月末/闰日/远期）都稳定排程
+      content: "请为下面的目标生成计划：一个月内学会 Python 并做两个小项目
+
+        第一阶段：基础语法（3 天）
+
+        - 学完变量与控制流
+
+        - 完成 20 道练习题
+
+        第二阶段：项目实战（2 周）
+
+        - 做一个爬虫小项目
+
+        - 做一个 Web 小项目
+
+        约束：每天投入 2 小时"
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-11-07
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 开始日期：2026-11-07
+          weight: 2
+          note: 开始日期与参数一致
+        - type: contains
+          text: Python
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-start-3
+    title: 开始日期变体（2026-12-31）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同开始日期（周末/月末/闰日/远期）都稳定排程
+      content: "请为下面的目标生成计划：一个月内学会 Python 并做两个小项目
+
+        第一阶段：基础语法（3 天）
+
+        - 学完变量与控制流
+
+        - 完成 20 道练习题
+
+        第二阶段：项目实战（2 周）
+
+        - 做一个爬虫小项目
+
+        - 做一个 Web 小项目
+
+        约束：每天投入 2 小时"
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "30"
+        start: 2026-12-31
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 开始日期：2026-12-31
+          weight: 2
+          note: 开始日期与参数一致
+        - type: contains
+          text: Python
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-start-4
+    title: 开始日期变体（2028-02-29）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同开始日期（周末/月末/闰日/远期）都稳定排程
+      content: "请为下面的目标生成计划：一个月内学会 Python 并做两个小项目
+
+        第一阶段：基础语法（3 天）
+
+        - 学完变量与控制流
+
+        - 完成 20 道练习题
+
+        第二阶段：项目实战（2 周）
+
+        - 做一个爬虫小项目
+
+        - 做一个 Web 小项目
+
+        约束：每天投入 2 小时"
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "30"
+        start: 2028-02-29
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 开始日期：2028-02-29
+          weight: 2
+          note: 开始日期与参数一致
+        - type: contains
+          text: Python
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-start-5
+    title: 开始日期变体（2030-01-01）
+    tags:
+      - variation
+      - date
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同开始日期（周末/月末/闰日/远期）都稳定排程
+      content: "请为下面的目标生成计划：一个月内学会 Python 并做两个小项目
+
+        第一阶段：基础语法（3 天）
+
+        - 学完变量与控制流
+
+        - 完成 20 道练习题
+
+        第二阶段：项目实战（2 周）
+
+        - 做一个爬虫小项目
+
+        - 做一个 Web 小项目
+
+        约束：每天投入 2 小时"
+      files:
+        - path: input/goal.md
+          content: "一个月内学会 Python 并做两个小项目
+
+            第一阶段：基础语法（3 天）
+
+            - 学完变量与控制流
+
+            - 完成 20 道练习题
+
+            第二阶段：项目实战（2 周）
+
+            - 做一个爬虫小项目
+
+            - 做一个 Web 小项目
+
+            约束：每天投入 2 小时"
+      params:
+        goal: ""
+        days: "30"
+        start: 2030-01-01
+        style: 稳妥
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 开始日期：2030-01-01
+          weight: 2
+          note: 开始日期与参数一致
+        - type: contains
+          text: Python
+          weight: 1
+        - type: contains
+          text: 甘特图
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []

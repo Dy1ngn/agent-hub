@@ -65,6 +65,19 @@ agent-hub/
 
 <!-- AGENTS:END -->
 
+## 评测平台接入（agent-manager）
+
+每个 Agent 文件夹附带两份评测配置，让 [agent-manager](../agent-manager/) 以「源码模式」自适应接入、自动跑评测：
+
+- `aep.agent.json` —— 运行清单：入口、argv 模板（`{{caseFile}}` `{{workDir}}` `{{outputDir}}` 等占位符）、
+  输入物化、输出抽取、模型协议（`anthropic` 时平台自动注入 Anthropic→OpenAI 协议桥）。
+- `eval/spec.json` —— 紧凑用例规格（`rows` 对齐组合 × `vars` 变量轴 × `repeat` 重复调用），
+  用 `node ../agent-manager/scripts/gen_evalsets.mjs --only <agent>` 生成 5 个测试用例组
+  （`eval/g1-basic` ~ `g5-stability`，每组 100 次调用）。
+
+平台侧：`node ../agent-manager/server/dist/cli.js builtin sync` 注册 + 导入用例组，
+`run-all` 批量评测。单独跑 Agent 需要 OpenAI 兼容模型时，用 `runtime/anthropic_bridge.py` 起协议桥。
+
 ## 如何添加新 Agent
 
 1. 在 `agents/` 目录下新建一个文件夹作为这个 Agent（文件夹名用小写英文和连字符，例如 `code-reviewer`）

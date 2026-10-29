@@ -1,0 +1,679 @@
+id: ts-b-grammar-checker-g2-variation
+agentId: grammar-checker
+group: g2-variation
+name: 中英校对 · 输入变体：语言 / 规模 / 文体 / 参数组合
+description: 不同语言模式、最低级别过滤、文档规模与文体下的校对表现（模型语义校对链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-lang-1
+    title: 语言模式变体（自动（中英混合））
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定语言模式校对文档
+      content: "我们用Python写脚本。This is is a mixed document.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 语言模式：自动（中英混合）
+          weight: 2
+          note: 报告元信息记录语言模式参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2
+    title: 语言模式变体（中文）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定语言模式校对文档
+      content: "他快速的跑向终点。我们用Python写脚本。\n"
+      files: []
+      params:
+        lang: 中文
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 语言模式：中文
+          weight: 2
+          note: 报告元信息记录语言模式参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3
+    title: 语言模式变体（英文）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定语言模式校对文档
+      content: "I recieve teh package tomorrow. This is is fine.\n"
+      files: []
+      params:
+        lang: 英文
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 语言模式：英文
+          weight: 2
+          note: 报告元信息记录语言模式参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4
+    title: 语言模式变体（自动（中英混合））
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定语言模式校对文档
+      content: "今天天气很好,我们去散步吧。We use Java daily.\n"
+      files: []
+      params:
+        lang: auto
+        min: 警告
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 语言模式：自动（中英混合）
+          weight: 2
+          note: 报告元信息记录语言模式参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-minlevel-1
+    title: 最低级别过滤变体（提示）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定最低展示级别输出校对报告
+      content: "这是什么？？真的！！\nI recieve teh package.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 最小展示级别：提示
+          weight: 2
+          note: 报告元信息记录级别参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-minlevel-2
+    title: 最低级别过滤变体（警告）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定最低展示级别输出校对报告
+      content: "这是什么？？真的！！\nI recieve teh package.\n"
+      files: []
+      params:
+        lang: auto
+        min: 警告
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 最小展示级别：警告
+          weight: 2
+          note: 报告元信息记录级别参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-minlevel-3
+    title: 最低级别过滤变体（错误）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定最低展示级别输出校对报告
+      content: "这是什么？？真的！！\nI recieve teh package.\n"
+      files: []
+      params:
+        lang: auto
+        min: 错误
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 最小展示级别：错误
+          weight: 2
+          note: 报告元信息记录级别参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-minlevel-4
+    title: 最低级别过滤变体（提示）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定最低展示级别输出校对报告
+      content: "这个的问题需要解决，我马上就就去处理。\n"
+      files: []
+      params:
+        lang: 中文
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: contains
+          text: 最小展示级别：提示
+          weight: 2
+          note: 报告元信息记录级别参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-1
+    title: 文档规模变体（单句）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模文档都要产出完整校对报告
+      content: "他快速的跑向终点。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: 问题合计：[0-9]+ 个
+          weight: 1
+          note: 统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-2
+    title: 文档规模变体（短段落）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模文档都要产出完整校对报告
+      content: "他快速的跑向终点。
+
+        她的认真地态度让人佩服。
+
+        今天天气很好,我们去散步吧。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: 问题合计：[0-9]+ 个
+          weight: 1
+          note: 统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-3
+    title: 文档规模变体（中等文档）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模文档都要产出完整校对报告
+      content: "项目周报。
+
+        本周我们用Python写脚本，完成了数据清洗。这个的问题需要解决，我马上就就去处理。
+
+        下周计划：优化性能，补充测试。This is is a good week.
+
+        风险：接口联调时间紧张，需要提前沟通。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: 问题合计：[0-9]+ 个
+          weight: 1
+          note: 统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-4
+    title: 文档规模变体（较长文档）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模文档都要产出完整校对报告
+      content: "季度总结报告。
+
+        一、总体情况。本季度团队用Python写脚本，用Java开发后端服务，整体进展顺利。
+
+        二、存在的问题。这个的问题需要解决，我马上就就去处理。部分文档标点混用,需要统一。
+
+        三、下季度计划。继续推进自动化测试，这是什么？？真的！！需要认真对待。
+
+        四、风险提示。I recieve teh feedback regularly. This is is something to watch.
+
+        五、其他事项。价格是２０２６元，型号ＡＢＣ。发货数量１００件。
+
+        补充说明：他快速的跑向终点，她的认真地态度让人佩服。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: 问题合计：[0-9]+ 个
+          weight: 1
+          note: 统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-1
+    title: 文体变体（商务邮件）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文体的文档都要给出校对意见
+      content: "尊敬的客户：
+
+        您好！关于合同的事我们再见吧，我在也不会拖延了。
+
+        顺祝商祺。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: 校对文件：[0-9]+ 个
+          weight: 1
+          note: 统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-2
+    title: 文体变体（技术文档）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文体的文档都要给出校对意见
+      content: "# 部署说明
+
+
+        我们用Python写脚本完成部署。
+
+        注意：配置文件中的逗号,必须使用英文逗号。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: 校对文件：[0-9]+ 个
+          weight: 1
+          note: 统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-3
+    title: 文体变体（营销文案）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文体的文档都要给出校对意见
+      content: "这是什么？？真的！！超值好物等你来抢。。\n全网最低价，快来下单！\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: 校对文件：[0-9]+ 个
+          weight: 1
+          note: 统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-style-4
+    title: 文体变体（论文摘要）
+    tags:
+      - variation
+      - style
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同文体的文档都要给出校对意见
+      content: "This is is a study of the the scheduling problem.
+
+        We recieve teh results and analyse them.\n"
+      files: []
+      params:
+        lang: 英文
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: 校对文件：[0-9]+ 个
+          weight: 1
+          note: 统计格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-1
+    title: 多问题混合文档（1）
+    tags:
+      - variation
+      - mixed
+    repeat: 5
+    input:
+      kind: text
+      goal: 一份文档同时含多类问题，都要被报出来
+      content: "他快速的跑向终点。
+
+        这是什么？？真的！！
+
+        我们用Python写脚本。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-2
+    title: 多问题混合文档（2）
+    tags:
+      - variation
+      - mixed
+    repeat: 5
+    input:
+      kind: text
+      goal: 一份文档同时含多类问题，都要被报出来
+      content: "我们在见吧，我在也不会来了。
+
+        这个的问题需要解决。
+
+        价格是２０２６元。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-3
+    title: 多问题混合文档（3）
+    tags:
+      - variation
+      - mixed
+    repeat: 5
+    input:
+      kind: text
+      goal: 一份文档同时含多类问题，都要被报出来
+      content: "这项做用很明显。
+
+        今天天气很好,我们去散步吧。
+
+        I recieve teh package tomorrow.\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-multi-4
+    title: 多问题混合文档（4）
+    tags:
+      - variation
+      - mixed
+    repeat: 5
+    input:
+      kind: text
+      goal: 一份文档同时含多类问题，都要被报出来
+      content: "This is is a test of the the system.
+
+        你好  世界。
+
+        末尾有空格的行。 \ \n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 1
+        - type: regex
+          pattern: GR[0-9][0-9][0-9]
+          weight: 2
+          note: 规则命中带规则编号
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

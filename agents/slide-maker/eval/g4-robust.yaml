@@ -1,0 +1,455 @@
+id: ts-b-slide-maker-g4-robust
+agentId: slide-maker
+group: g4-robust
+name: 幻灯片生成 · 鲁棒性：乱码 / 控制字符 / 畸形 Markdown
+description: 乱码、控制字符、零宽字符、未闭合围栏、NUL 字符等异常输入下优雅处理不崩溃（离线排版模式）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：乱码文档
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：乱码文档
+      files:
+        - path: input/doc.md
+          content: "# ��文档�\n\n## 背景�\n\n- ��内容乱码�\n"
+      params:
+        offline: true
+        topic: 乱码测试
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：控制字符
+      files:
+        - path: input/doc.md
+          content: "# 控\a制字符
+
+
+            ## 背\x02景
+
+
+            - 混入\a控制符的要点\n"
+      params:
+        offline: true
+        topic: 控制字符
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：emoji 文档
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：emoji 文档
+      files:
+        - path: input/doc.md
+          content: "# 🎨 设计系统分享
+
+
+            ## 组件库
+
+
+            - 🔧 基础组件 30 个
+
+            - 📦 业务组件 12 个
+
+
+            ## 落地
+
+
+            - 🚀 三个业务线接入\n"
+      params:
+        offline: true
+        topic: emoji
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：未闭合代码围栏
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：未闭合代码围栏
+      files:
+        - path: input/doc.md
+          content: "# 未闭合围栏
+
+
+            ## 代码
+
+
+            ```js
+
+            const x = 1;
+
+
+            ## 下一章
+
+
+            - 要点一\n"
+      params:
+        offline: true
+        topic: 未闭合围栏
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：标题层级混乱
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：标题层级混乱
+      files:
+        - path: input/doc.md
+          content: "# 顶层
+
+
+            ##### 五级标题直接出现
+
+
+            ### 三级
+
+
+            # 又回到一级
+
+
+            - 要点\n"
+      params:
+        offline: true
+        topic: 层级混乱
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：CRLF 换行
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：CRLF 换行
+      files:
+        - path: input/doc.md
+          content: "# CRLF 文档\r
+
+            \r
+
+            ## 背景\r
+
+            \r
+
+            - 要点一\r
+
+            - 要点二\r\n"
+      params:
+        offline: true
+        topic: CRLF
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：零宽字符
+      files:
+        - path: input/doc.md
+          content: "# 零​宽文档\n\n## 背‌景\n\n- 混入‍零宽字符\n"
+      params:
+        offline: true
+        topic: 零宽字符
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：超长无标点单行 2000 字
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：超长无标点单行 2000 字
+      files:
+        - path: input/doc.md
+          content: "# 长行
+
+
+            - 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊\n"
+      params:
+        offline: true
+        topic: 无标点长行
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：纯符号文档
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：纯符号文档
+      files:
+        - path: input/doc.md
+          content: "！！！@@@###---***~~~~\n"
+      params:
+        offline: true
+        topic: 纯符号
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：夹杂 NUL 字符
+    tags:
+      - robust
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，仍要输出合法 Marp
+      content: 异常用例：夹杂 NUL 字符
+      files:
+        - path: input/doc.md
+          content: "# 夹杂 NUL
+
+
+            ## 背景
+
+
+            - 混入\0空字符的要点\n"
+      params:
+        offline: true
+        topic: NUL 字符
+        slides: "8"
+        audience: 通用听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 异常输入仍产出合法 Marp
+        - type: contains
+          text: Q&A
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: not_contains
+          text: SyntaxError
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

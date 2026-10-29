@@ -1,0 +1,2705 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型中文数据问答",
+      "description": "分组计数、汇总、最值、过滤、多表、无匹配、JSON/TSV 数据源等典型问答（自然语言→SQL 模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-count-{n}",
+          "title": "分组计数（{fmt}）",
+          "tags": [
+            "basic",
+            "aggregate"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "每个城市有多少条记录",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "每个城市有多少条记录？",
+              "sql": "SELECT city, COUNT(*) AS cnt FROM data GROUP BY city",
+              "limit": "200",
+              "fmt": "CSV",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "city,amount\n北京,10\n北京,20\n上海,30\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "每个城市有多少条记录？",
+              "sql": "SELECT city, COUNT(*) AS cnt FROM data GROUP BY city",
+              "limit": "200",
+              "fmt": "小样本",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(北京|上海|城市)",
+                "weight": 2,
+                "note": "结果包含城市分组"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-sum-{n}",
+          "title": "金额汇总（{fmt}）",
+          "tags": [
+            "basic",
+            "aggregate"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "每个城市的金额合计",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "每个城市的金额合计是多少？",
+              "sql": "SELECT city, SUM(amount) AS total FROM data GROUP BY city",
+              "limit": "200",
+              "fmt": "CSV",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "city,amount\n南京,50\n南京,70\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "每个城市的金额合计是多少？",
+              "sql": "SELECT city, SUM(amount) AS total FROM data GROUP BY city",
+              "limit": "200",
+              "fmt": "小样本",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(180|310|120|50|70|合计|SUM|sum)",
+                "weight": 2,
+                "note": "汇总结果符合数据"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-max-{n}",
+          "title": "最大值记录（{fmt}）",
+          "tags": [
+            "basic",
+            "query"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "找出金额最大的记录",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "金额最大的记录是哪条？",
+              "sql": "SELECT * FROM data ORDER BY amount DESC LIMIT 1",
+              "limit": "200",
+              "fmt": "CSV",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,杭州,9\n2,苏州,99\n3,无锡,999\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "金额最大的记录是哪条？",
+              "sql": "SELECT * FROM data ORDER BY amount DESC LIMIT 1",
+              "limit": "200",
+              "fmt": "极值样本",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(250|999|最大|ORDER BY|order by)",
+                "weight": 2,
+                "note": "最大值记录正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-filter-{n}",
+          "title": "条件过滤（{fmt}）",
+          "tags": [
+            "basic",
+            "query"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "按城市过滤记录",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "北京的记录有哪些？",
+              "sql": "SELECT * FROM data WHERE city = '北京'",
+              "limit": "200",
+              "fmt": "等值过滤",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "金额超过 100 的记录有哪些？",
+              "sql": "SELECT * FROM data WHERE amount > 100",
+              "limit": "200",
+              "fmt": "范围过滤",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(北京|250|120)",
+                "weight": 2,
+                "note": "过滤结果符合数据"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-join-{n}",
+          "title": "多表查询（{fmt}）",
+          "tags": [
+            "basic",
+            "multi-table"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "跨表统计每个客户的订单",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/tables/orders.csv",
+              "d1": "id,customer_id,total\n1,1,100\n2,1,250\n3,2,80\n4,3,120\n5,2,60\n",
+              "src": "input/tables",
+              "f2": "input/tables/customers.csv",
+              "d2": "id,name\n1,张三\n2,李四\n3,王五\n",
+              "q": "每个客户下了多少订单？",
+              "sql": "SELECT c.name, COUNT(o.id) AS orders FROM customers c LEFT JOIN orders o ON o.customer_id = c.id GROUP BY c.name",
+              "limit": "200",
+              "fmt": "目录多表",
+              "n": "1"
+            },
+            {
+              "f1": "input/tables/customers.csv",
+              "d1": "id,name\n1,张三\n2,李四\n3,王五\n",
+              "src": "input/tables",
+              "f2": "input/tables/orders.csv",
+              "d2": "id,customer_id,total\n1,1,100\n2,1,250\n3,2,80\n4,3,120\n5,2,60\n",
+              "q": "客户名单里有哪些人？",
+              "sql": "SELECT name FROM customers ORDER BY id",
+              "limit": "200",
+              "fmt": "目录多表二",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(张三|李四|王五|客户|name)",
+                "weight": 2,
+                "note": "多表查询结果正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-empty-{n}",
+          "title": "无匹配结果（{fmt}）",
+          "tags": [
+            "basic",
+            "empty"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "查询没有匹配的条件",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "有没有东京的记录？",
+              "sql": "SELECT * FROM data WHERE city = '东京'",
+              "limit": "200",
+              "fmt": "等值无匹配",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "有没有金额超过 10000 的记录？",
+              "sql": "SELECT * FROM data WHERE amount > 10000",
+              "limit": "200",
+              "fmt": "范围无匹配",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(查询结果|（无）)",
+                "weight": 2,
+                "note": "空结果优雅呈现"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-avg-{n}",
+          "title": "平均值统计（{fmt}）",
+          "tags": [
+            "basic",
+            "aggregate"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "计算平均金额",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "平均金额是多少？",
+              "sql": "SELECT AVG(amount) AS avg_amount FROM data",
+              "limit": "200",
+              "fmt": "CSV",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "amount\n10\n20\n30\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "平均金额是多少？",
+              "sql": "SELECT AVG(amount) AS avg_amount FROM data",
+              "limit": "200",
+              "fmt": "单列",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)(avg|122|20|平均)",
+                "weight": 2,
+                "note": "平均值结果正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-sort-{n}",
+          "title": "排序取前 N（{fmt}）",
+          "tags": [
+            "basic",
+            "query"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "按金额降序取前三",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "按金额从高到低列出前 3 条",
+              "sql": "SELECT * FROM data ORDER BY amount DESC LIMIT 3",
+              "limit": "200",
+              "fmt": "CSV",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,amount\n1,5\n2,15\n3,25\n4,35\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "按金额从高到低列出前 2 条",
+              "sql": "SELECT * FROM data ORDER BY amount DESC LIMIT 2",
+              "limit": "200",
+              "fmt": "排序样本",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(250|120|100|35|25)",
+                "weight": 2,
+                "note": "排序结果正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-json-{n}",
+          "title": "JSON 数据源（{fmt}）",
+          "tags": [
+            "basic",
+            "json"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "查询 JSON 数据",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.json",
+              "d1": "[{\"id\": 1, \"city\": \"北京\", \"amount\": 100}, {\"id\": 2, \"city\": \"上海\", \"amount\": 250}]",
+              "src": "input/data.json",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "总金额是多少？",
+              "sql": "SELECT SUM(amount) AS total FROM data",
+              "limit": "200",
+              "fmt": "JSON 数组",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.json",
+              "d1": "[{\"id\": 1, \"tag\": \"a\"}, {\"id\": 2, \"tag\": \"b\"}]",
+              "src": "input/data.json",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "有多少条记录？",
+              "sql": "SELECT COUNT(*) AS cnt FROM data",
+              "limit": "200",
+              "fmt": "JSON 小样本",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(data.json|350|2)",
+                "weight": 2,
+                "note": "JSON 数据源可查询"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-tsv-{n}",
+          "title": "TSV 数据源（{fmt}）",
+          "tags": [
+            "basic",
+            "tsv"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "查询 TSV 数据",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.tsv",
+              "d1": "id\tcity\tamount\n1\t北京\t100\n2\t上海\t250\n",
+              "src": "input/data.tsv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "有多少行？",
+              "sql": "SELECT COUNT(*) AS cnt FROM data",
+              "limit": "200",
+              "fmt": "TSV",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.tsv",
+              "d1": "id\tcity\tamount\n1\t北京\t100\n2\t上海\t250\n3\t北京\t80\n",
+              "src": "input/data.tsv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "北京有几行？",
+              "sql": "SELECT COUNT(*) AS cnt FROM data WHERE city = '北京'",
+              "limit": "200",
+              "fmt": "TSV 过滤",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(data.tsv|2|3)",
+                "weight": 2,
+                "note": "TSV 数据源可查询"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：参数 / 结构 / 多表",
+      "description": "结果截断、中文列名、空值、宽表、日期、目录多表、多聚合、别名等变体（模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-limit-{n}",
+          "title": "结果截断（limit={limit}）",
+          "tags": [
+            "variation",
+            "params"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "验证结果行数上限",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n6,深圳,200\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "列出全部记录",
+              "sql": "SELECT * FROM data",
+              "limit": "2",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n6,深圳,200\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "列出全部记录",
+              "sql": "SELECT * FROM data",
+              "limit": "100",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(已截断|查询结果)",
+                "weight": 2,
+                "note": "截断行为正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-cn-{n}",
+          "title": "中文列名（{fmt}）",
+          "tags": [
+            "variation",
+            "i18n"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "查询中文列名的数据",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "姓名,城市,金额\n张三,北京,100\n李四,上海,250\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "每个人的金额是多少？",
+              "sql": "SELECT 姓名, 金额 FROM data",
+              "limit": "200",
+              "fmt": "中文列",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "订单号,客户,金额\nD001,甲公司,100\nD002,乙公司,250\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "有哪些订单？",
+              "sql": "SELECT 订单号, 客户 FROM data",
+              "limit": "200",
+              "fmt": "中文业务列",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(姓名|金额|订单号|客户)",
+                "weight": 2,
+                "note": "中文列名查询正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-null-{n}",
+          "title": "空值处理（{fmt}）",
+          "tags": [
+            "variation",
+            "null"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "处理 NULL 与空字符串",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,\n3,广州,80\n4,,\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "金额为空的记录有几条？",
+              "sql": "SELECT COUNT(*) AS cnt FROM data WHERE amount IS NULL OR amount = ''",
+              "limit": "200",
+              "fmt": "空值",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,\n3,广州,80\n4,,\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "每列各有多少非空值？",
+              "sql": "SELECT COUNT(city) AS c, COUNT(amount) AS a FROM data",
+              "limit": "200",
+              "fmt": "非空计数",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(NULL|null|查询结果|2|4)",
+                "weight": 2,
+                "note": "空值统计正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-wide-{n}",
+          "title": "宽表多列（{n}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "查询 10 列宽表",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10\n1,2,3,4,5,6,7,8,9,10\n11,12,13,14,15,16,17,18,19,20\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "第一行数据是什么？",
+              "sql": "SELECT * FROM data LIMIT 1",
+              "limit": "200",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "c1,c2,c3,c4,c5,c6,c7,c8,c9,c10\n1,2,3,4,5,6,7,8,9,10\n11,12,13,14,15,16,17,18,19,20\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "c10 列的最大值是多少？",
+              "sql": "SELECT MAX(c10) AS m FROM data",
+              "limit": "200",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(c10|查询结果|20)",
+                "weight": 2,
+                "note": "宽表查询正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-group-{n}",
+          "title": "多维分组（{n}）",
+          "tags": [
+            "variation",
+            "aggregate"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "按城市与日期分组",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,day,amount\n1,2024-01-15,100\n2,2024-02-20,250\n3,2024-03-25,80\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "每个月的金额合计是多少？",
+              "sql": "SELECT substr(day, 1, 7) AS month, SUM(amount) AS total FROM data GROUP BY month",
+              "limit": "200",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n6,深圳,200\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "每个城市有几条记录？",
+              "sql": "SELECT city, COUNT(*) AS cnt FROM data GROUP BY city",
+              "limit": "200",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(2024|北京|上海|city)",
+                "weight": 2,
+                "note": "分组结果正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-date-{n}",
+          "title": "日期字符串比较（{n}）",
+          "tags": [
+            "variation",
+            "date"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "按日期过滤",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,day,amount\n1,2024-01-15,100\n2,2024-02-20,250\n3,2024-03-25,80\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "2 月以后的记录有哪些？",
+              "sql": "SELECT * FROM data WHERE day >= '2024-02-01'",
+              "limit": "200",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,day,amount\n1,2024-01-15,100\n2,2024-02-20,250\n3,2024-03-25,80\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "1 月的记录有哪些？",
+              "sql": "SELECT * FROM data WHERE day < '2024-02-01'",
+              "limit": "200",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(2024)",
+                "weight": 2,
+                "note": "日期过滤结果正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-multi-{n}",
+          "title": "目录多表（{n}）",
+          "tags": [
+            "variation",
+            "multi-table"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "查询目录下的多张表",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/tables/orders.csv",
+              "d1": "id,customer_id,total\n1,1,100\n2,1,250\n3,2,80\n4,3,120\n5,2,60\n",
+              "src": "input/tables",
+              "f2": "input/tables/customers.csv",
+              "d2": "id,name\n1,张三\n2,李四\n3,王五\n",
+              "q": "订单总金额是多少？",
+              "sql": "SELECT SUM(total) AS amount FROM orders",
+              "limit": "200",
+              "n": "1"
+            },
+            {
+              "f1": "input/tables/customers.csv",
+              "d1": "id,name\n1,张三\n2,李四\n3,王五\n",
+              "src": "input/tables",
+              "f2": "input/tables/orders.csv",
+              "d2": "id,customer_id,total\n1,1,100\n2,1,250\n3,2,80\n4,3,120\n5,2,60\n",
+              "q": "有多少个客户？",
+              "sql": "SELECT COUNT(*) AS cnt FROM customers",
+              "limit": "200",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(orders|customers|610|3)",
+                "weight": 2,
+                "note": "多表查询正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-agg-{n}",
+          "title": "多聚合统计（{n}）",
+          "tags": [
+            "variation",
+            "aggregate"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "一次算多个聚合",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "金额的总和、平均值和最大值分别是多少？",
+              "sql": "SELECT SUM(amount) AS s, AVG(amount) AS a, MAX(amount) AS m FROM data",
+              "limit": "200",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n6,深圳,200\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "记录数与最小金额是多少？",
+              "sql": "SELECT COUNT(*) AS c, MIN(amount) AS m FROM data",
+              "limit": "200",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)(sum|avg|max|min|count)",
+                "weight": 2,
+                "note": "聚合结果正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-alias-{n}",
+          "title": "表名与别名（{n}）",
+          "tags": [
+            "variation",
+            "sql"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "带别名的查询",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "各城市金额合计，按金额排序",
+              "sql": "SELECT city AS 城市, SUM(amount) AS 合计 FROM data GROUP BY city ORDER BY 合计 DESC",
+              "limit": "200",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,amount\n1,10\n2,20\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "金额翻倍后是多少？",
+              "sql": "SELECT id, amount * 2 AS double_amount FROM data",
+              "limit": "200",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(城市|合计|double_amount|40)",
+                "weight": 2,
+                "note": "别名查询正确"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-empty-{n}",
+          "title": "空结果变体（{n}）",
+          "tags": [
+            "variation",
+            "empty"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "不同无匹配条件",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "有没有金额为负的记录？",
+              "sql": "SELECT * FROM data WHERE amount < 0",
+              "limit": "200",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "有没有深圳的记录？",
+              "sql": "SELECT * FROM data WHERE city = '深圳'",
+              "limit": "200",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 1,
+                "note": "产出标准查询报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 结论",
+                "weight": 1,
+                "note": "报告固定结构（结论小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(查询结果|（无）)",
+                "weight": 2,
+                "note": "空结果优雅呈现"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 单行 / 极值",
+      "description": "空 CSV、仅表头、单行单列、极大数值、空 JSON 数组等边界输入下的稳定产出（离线 --sql）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "边界输入也要产出可读报告，不允许崩溃",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "空数据文件",
+              "sql": "SELECT COUNT(*) AS cnt FROM data",
+              "limit": "200",
+              "kw": "查询未执行完成|未产生结果",
+              "title": "空 CSV",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "仅表头",
+              "sql": "SELECT COUNT(*) AS cnt FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "仅表头 CSV",
+              "n": "2"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "单行数据",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "单行数据",
+              "n": "3"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id\n1\n2\n3\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "单列多行",
+              "sql": "SELECT COUNT(*) AS cnt FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "单列",
+              "n": "4"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "无匹配",
+              "sql": "SELECT * FROM data WHERE city = '火星'",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "查询零行",
+              "n": "5"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "取前一列",
+              "sql": "SELECT city FROM data LIMIT 1",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "LIMIT 1",
+              "n": "6"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,amount\n1,999999999999\n2,888888888888\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "极大数值",
+              "sql": "SELECT SUM(amount) AS s FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "极大数值",
+              "n": "7"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,amount\n1,-10.5\n2,0\n3,0.001\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "负数与小数",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "负数与小数",
+              "n": "8"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "姓名,金额\n张三,100\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "中文列名单行",
+              "sql": "SELECT 姓名 FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "中文列名",
+              "n": "9"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,amount\n1,\n2,\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "全空值列",
+              "sql": "SELECT COUNT(*) AS cnt FROM data WHERE amount IS NULL",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "全空值",
+              "n": "10"
+            },
+            {
+              "f1": "input/data.json",
+              "d1": "[]",
+              "src": "input/data.json",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "空 JSON 数组",
+              "sql": "SELECT COUNT(*) AS cnt FROM data",
+              "limit": "200",
+              "kw": "查询未执行完成|未产生结果",
+              "title": "空 JSON 数组",
+              "n": "11"
+            },
+            {
+              "f1": "input/data.json",
+              "d1": "[1,2,3]",
+              "src": "input/data.json",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "JSON 标量数组",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "JSON 标量数组",
+              "n": "12"
+            },
+            {
+              "f1": "input/data.tsv",
+              "d1": "id\tcity\n1\t北京\n",
+              "src": "input/data.tsv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "TSV 单表",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "TSV 数据",
+              "n": "13"
+            },
+            {
+              "f1": "input/tables/orders.csv",
+              "d1": "id,customer_id,total\n1,1,100\n2,1,250\n3,2,80\n4,3,120\n5,2,60\n",
+              "src": "input/tables",
+              "f2": "input/tables/x.csv",
+              "d2": "a,b\n1,2\n",
+              "q": "目录单表",
+              "sql": "SELECT COUNT(*) AS cnt FROM orders",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "目录单表",
+              "n": "14"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "统计空值",
+              "sql": "SELECT COUNT(amount) AS a, COUNT(*) AS c FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "空值计数",
+              "n": "15"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "全表计数",
+              "sql": "SELECT COUNT(*) AS cnt FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "COUNT 空表口径",
+              "n": "16"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "多列查询",
+              "sql": "SELECT id, city, amount FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "SELECT 多列",
+              "n": "17"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "城市去重",
+              "sql": "SELECT DISTINCT city FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "DISTINCT",
+              "n": "18"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "无匹配分组",
+              "sql": "SELECT city FROM data WHERE amount > 100000 GROUP BY city",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "无匹配分组",
+              "n": "19"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "只查一格",
+              "sql": "SELECT amount FROM data WHERE id = 1",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "单值查询",
+              "n": "20"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 2,
+                "note": "边界输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "边界处理结果符合预期"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：坏数据源与非法 SQL",
+      "description": "畸形 CSV、坏 JSON、NUL、写操作 SQL、多语句、坏列名、非法参数等异常输入下优雅拒绝不崩溃（离线 --sql）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "异常输入不能让工具崩溃：要么正常查询，要么优雅拒绝",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city\n1,北京,extra\n2\n3,上海\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "列数不齐",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果|查询未执行完成",
+              "title": "列数不齐 CSV",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city\n1,\"北京\n2,上海\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "引号未闭合",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果|查询未执行完成",
+              "title": "引号未闭合",
+              "n": "2"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id;city\n1;北京\n2,上海\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "分隔符混用",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果|查询未执行完成",
+              "title": "分隔符混用",
+              "n": "3"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "鲤鲦鲪,2\n锟斤拷,3\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "乱码内容",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果|查询未执行完成",
+              "title": "乱码内容",
+              "n": "4"
+            },
+            {
+              "f1": "input/data.json",
+              "d1": "{\"a\": [1,2",
+              "src": "input/data.json",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "坏 JSON",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询未执行完成|未产生结果",
+              "title": "坏 JSON 截断",
+              "n": "5"
+            },
+            {
+              "f1": "input/data.json",
+              "d1": "{\"a\": 1}",
+              "src": "input/data.json",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "JSON 顶层对象",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询未执行完成|未产生结果",
+              "title": "JSON 顶层非数组",
+              "n": "6"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city\n1\u0000,北京\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "NUL 字节",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果|查询未执行完成",
+              "title": "NUL 字节",
+              "n": "7"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "写操作",
+              "sql": "DELETE FROM data",
+              "limit": "200",
+              "kw": "查询未执行完成|已拒绝|只允许",
+              "title": "非法 SQL 写操作",
+              "n": "8"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "多语句",
+              "sql": "SELECT 1; SELECT 2",
+              "limit": "200",
+              "kw": "查询未执行完成|一条",
+              "title": "非法 SQL 多语句",
+              "n": "9"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "坏列名",
+              "sql": "SELECT bad_col FROM data",
+              "limit": "200",
+              "kw": "查询未执行完成|SQLite",
+              "title": "SQL 列不存在",
+              "n": "10"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "非法参数",
+              "sql": "SELECT * FROM data",
+              "limit": "0",
+              "kw": "查询未执行完成|正整数",
+              "title": "非法参数 limit=0",
+              "n": "11"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "非法参数",
+              "sql": "SELECT * FROM data",
+              "limit": "-5",
+              "kw": "查询未执行完成|正整数",
+              "title": "非法参数 limit=-5",
+              "n": "12"
+            },
+            {
+              "f1": "input/unused.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/ghost.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "缺数据源",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询未执行完成|数据源不存在",
+              "title": "数据源不存在",
+              "n": "13"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city\n1,北京\u0007\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "控制字符",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果|查询未执行完成",
+              "title": "控制字符",
+              "n": "14"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,note\n1,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "超长单元格",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "超长单元格",
+              "n": "15"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,name\n1,😀甲\n2,🚀乙\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "emoji 值",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "emoji 值",
+              "n": "16"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,name\n1,\"'); DROP TABLE data; --\"\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "注入样式值",
+              "sql": "SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "SQL 注入样式值",
+              "n": "17"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "只读 PRAGMA",
+              "sql": "PRAGMA table_info(data)",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "只读 PRAGMA",
+              "n": "18"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "执行计划",
+              "sql": "EXPLAIN QUERY PLAN SELECT * FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "title": "EXPLAIN 查询",
+              "n": "19"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "只有注释",
+              "sql": "-- just a comment",
+              "limit": "200",
+              "kw": "查询未执行完成|SQL 为空",
+              "title": "SQL 只有注释",
+              "n": "20"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 2,
+                "note": "异常输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "优雅处理结果符合预期"
+              },
+              {
+                "type": "min_length",
+                "value": 100,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同 SQL 重复执行",
+      "description": "10 条确定性 SQL 各重复执行 10 次（离线 --sql），断言结果值稳定一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：{title}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "input": {
+            "kind": "table",
+            "goal": "同一 SQL 重复执行 10 次，结果表应稳定一致",
+            "content": "请用中文回答这个数据问题，并给出只读 SQL 与结果表。",
+            "files": [
+              {
+                "path": "{f1}",
+                "content": "{d1}"
+              },
+              {
+                "path": "{f2}",
+                "content": "{d2}"
+              }
+            ],
+            "params": {
+              "src": "{src}",
+              "q": "{q}",
+              "sql": "{sql}",
+              "limit": "{limit}",
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "各城市计数",
+              "sql": "SELECT city, COUNT(*) AS cnt FROM data GROUP BY city",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 北京 | 2 |",
+              "title": "分组计数",
+              "n": "1"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "各城市合计",
+              "sql": "SELECT city, SUM(amount) AS total FROM data GROUP BY city",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 上海 | 310 |",
+              "title": "分组求和",
+              "n": "2"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "最大金额",
+              "sql": "SELECT MAX(amount) AS m FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 250 |",
+              "title": "最大值",
+              "n": "3"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "最小金额",
+              "sql": "SELECT MIN(amount) AS m FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 60 |",
+              "title": "最小值",
+              "n": "4"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "总记录数",
+              "sql": "SELECT COUNT(*) AS cnt FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 5 |",
+              "title": "全表计数",
+              "n": "5"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "城市数",
+              "sql": "SELECT COUNT(DISTINCT city) AS c FROM data",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 3 |",
+              "title": "去重计数",
+              "n": "6"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "北京条数",
+              "sql": "SELECT COUNT(*) AS cnt FROM data WHERE city = '北京'",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 2 |",
+              "title": "条件计数",
+              "n": "7"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "最高金额",
+              "sql": "SELECT amount FROM data ORDER BY amount DESC LIMIT 1",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 250 |",
+              "title": "排序取值",
+              "n": "8"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "无匹配查询",
+              "sql": "SELECT * FROM data WHERE city = '火星'",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| id | city | amount |",
+              "title": "空结果表头",
+              "n": "9"
+            },
+            {
+              "f1": "input/data.csv",
+              "d1": "id,city,amount\n1,北京,100\n2,上海,250\n3,北京,80\n4,广州,120\n5,上海,60\n",
+              "src": "input/data.csv",
+              "f2": "input/extra.csv",
+              "d2": "k,v\n1,2\n",
+              "q": "字符长度",
+              "sql": "SELECT city, LENGTH(city) AS len FROM data WHERE id = 1",
+              "limit": "200",
+              "kw": "查询结果",
+              "exact": "| 北京 | 2 |",
+              "title": "标量函数",
+              "n": "10"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "sql-chat 查询结果",
+                "weight": 2,
+                "note": "重复调用仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "查询结构稳定出现"
+              },
+              {
+                "type": "contains",
+                "text": "{exact}",
+                "weight": 2,
+                "note": "断言确定性结果值"
+              },
+              {
+                "type": "min_length",
+                "value": 120,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

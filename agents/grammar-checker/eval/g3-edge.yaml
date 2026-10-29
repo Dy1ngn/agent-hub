@@ -1,0 +1,650 @@
+id: ts-b-grammar-checker-g3-edge
+agentId: grammar-checker
+group: g3-edge
+name: 中英校对 · 边界情况：空 / 极短 / 极端参数
+description: 空文件、极短文本、纯符号与极端参数组合下的稳定产出（离线纯规则模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空文件
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: ""
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：单字
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: 好
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：纯标点
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: 。。。，？？！！
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：只有空格
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: "  \ \n \ \n   "
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：只有换行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: "\n\n\n\n\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：单个英文词
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: hello
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：纯数字
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: "1234567890"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：纯 emoji
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: 😀🚀
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：超长单行（无换行）
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: 这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本这是一行完全不换行的超长文本
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：极短中英混合
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出校对报告
+      content: 我like它
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 边界输入仍产出校对报告
+        - type: contains
+          text: 附录：文件清单
+          weight: 1
+          note: 附录章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: 极端参数：min=错误 + 仅提示级问题
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "这是什么？？真的！！\n"
+      files: []
+      params:
+        lang: auto
+        min: 错误
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: 极端参数：min=错误 + 干净文本
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "今天天气不错。\n"
+      files: []
+      params:
+        lang: auto
+        min: 错误
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: 极端参数：min=警告 + 混合问题
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "他快速的跑向终点。\nI recieve teh package.\n"
+      files: []
+      params:
+        lang: auto
+        min: 警告
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: 极端参数：英文模式 + 中文文本
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "他快速的跑向终点。\n"
+      files: []
+      params:
+        lang: 英文
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: 极端参数：中文模式 + 英文文本
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "This is is a test of the the system.\n"
+      files: []
+      params:
+        lang: 中文
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: 极端参数：英文模式 + 英文拼写问题
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "I recieve teh package tomorrow.\n"
+      files: []
+      params:
+        lang: 英文
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: 极端参数：min=提示 + 空文件
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: ""
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: 极端参数：min=错误 + 空文件
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: ""
+      files: []
+      params:
+        lang: auto
+        min: 错误
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: 极端参数：中文模式 + 标点问题
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "这是什么？？真的！！好。。\n"
+      files: []
+      params:
+        lang: 中文
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: 极端参数：min=警告 + 超长句
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 极端参数组合下也要优雅产出
+      content: "这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，这是一段用于测试超长句子检测规则的示例文本，读起来非常累。\n"
+      files: []
+      params:
+        lang: auto
+        min: 警告
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 极端参数仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []

@@ -1,0 +1,1750 @@
+id: ts-b-doc-writer-g2-variation
+agentId: doc-writer
+group: g2-variation
+name: 项目文档生成 · 输入变体：项目规模 / 文件组合 / 文档类型与语言
+description: 不同规模、文件组合、文档类型（正交轴）与中英文的变体输入，走模型链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-scale-1
+    title: 较大项目 README（big-monolith）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描较大的项目并生成 readme 文档
+      content: 请为 input/big-monolith 项目生成 README 文档。
+      files:
+        - path: input/big-monolith/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()
+
+
+            def handler_1():
+
+            \    return 1
+
+
+            def handler_2():
+
+            \    return 2
+
+
+            def handler_3():
+
+            \    return 3
+
+
+            def handler_4():
+
+            \    return 4
+
+
+            def handler_5():
+
+            \    return 5
+
+
+            def handler_6():
+
+            \    return 6
+
+
+            def handler_7():
+
+            \    return 7
+
+
+            def handler_8():
+
+            \    return 8
+
+
+            def handler_9():
+
+            \    return 9
+
+
+            def handler_10():
+
+            \    return 10
+
+
+            def handler_11():
+
+            \    return 11
+
+
+            def handler_12():
+
+            \    return 12
+
+
+            def handler_13():
+
+            \    return 13
+
+
+            def handler_14():
+
+            \    return 14
+
+
+            def handler_15():
+
+            \    return 15
+
+
+            def handler_16():
+
+            \    return 16
+
+
+            def handler_17():
+
+            \    return 17
+
+
+            def handler_18():
+
+            \    return 18
+
+
+            def handler_19():
+
+            \    return 19
+
+
+            def handler_20():
+
+            \    return 20\n"
+        - path: input/big-monolith/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/big-monolith/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/big-monolith
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: min_length
+          value: 400
+          weight: 1
+        - type: contains
+          text: big-monolith
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-2
+    title: 较大项目 README（big-platform）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描较大的项目并生成 readme 文档
+      content: 请为 input/big-platform 项目生成 README 文档。
+      files:
+        - path: input/big-platform/service.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()
+
+
+            def handler_1():
+
+            \    return 1
+
+
+            def handler_2():
+
+            \    return 2
+
+
+            def handler_3():
+
+            \    return 3
+
+
+            def handler_4():
+
+            \    return 4
+
+
+            def handler_5():
+
+            \    return 5
+
+
+            def handler_6():
+
+            \    return 6
+
+
+            def handler_7():
+
+            \    return 7
+
+
+            def handler_8():
+
+            \    return 8
+
+
+            def handler_9():
+
+            \    return 9
+
+
+            def handler_10():
+
+            \    return 10
+
+
+            def handler_11():
+
+            \    return 11
+
+
+            def handler_12():
+
+            \    return 12
+
+
+            def handler_13():
+
+            \    return 13
+
+
+            def handler_14():
+
+            \    return 14
+
+
+            def handler_15():
+
+            \    return 15
+
+
+            def handler_16():
+
+            \    return 16
+
+
+            def handler_17():
+
+            \    return 17
+
+
+            def handler_18():
+
+            \    return 18
+
+
+            def handler_19():
+
+            \    return 19
+
+
+            def handler_20():
+
+            \    return 20\n"
+        - path: input/big-platform/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/big-platform/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/big-platform
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: min_length
+          value: 400
+          weight: 1
+        - type: contains
+          text: big-platform
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-3
+    title: 较大项目 README（big-crm）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描较大的项目并生成 readme 文档
+      content: 请为 input/big-crm 项目生成 README 文档。
+      files:
+        - path: input/big-crm/crm.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()
+
+
+            def handler_1():
+
+            \    return 1
+
+
+            def handler_2():
+
+            \    return 2
+
+
+            def handler_3():
+
+            \    return 3
+
+
+            def handler_4():
+
+            \    return 4
+
+
+            def handler_5():
+
+            \    return 5
+
+
+            def handler_6():
+
+            \    return 6
+
+
+            def handler_7():
+
+            \    return 7
+
+
+            def handler_8():
+
+            \    return 8
+
+
+            def handler_9():
+
+            \    return 9
+
+
+            def handler_10():
+
+            \    return 10
+
+
+            def handler_11():
+
+            \    return 11
+
+
+            def handler_12():
+
+            \    return 12
+
+
+            def handler_13():
+
+            \    return 13
+
+
+            def handler_14():
+
+            \    return 14
+
+
+            def handler_15():
+
+            \    return 15
+
+
+            def handler_16():
+
+            \    return 16
+
+
+            def handler_17():
+
+            \    return 17
+
+
+            def handler_18():
+
+            \    return 18
+
+
+            def handler_19():
+
+            \    return 19
+
+
+            def handler_20():
+
+            \    return 20\n"
+        - path: input/big-crm/settings.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/big-crm/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/big-crm
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: min_length
+          value: 400
+          weight: 1
+        - type: contains
+          text: big-crm
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-4
+    title: 较大项目 README（big-erp）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描较大的项目并生成 readme 文档
+      content: 请为 input/big-erp 项目生成 README 文档。
+      files:
+        - path: input/big-erp/erp.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()
+
+
+            def handler_1():
+
+            \    return 1
+
+
+            def handler_2():
+
+            \    return 2
+
+
+            def handler_3():
+
+            \    return 3
+
+
+            def handler_4():
+
+            \    return 4
+
+
+            def handler_5():
+
+            \    return 5
+
+
+            def handler_6():
+
+            \    return 6
+
+
+            def handler_7():
+
+            \    return 7
+
+
+            def handler_8():
+
+            \    return 8
+
+
+            def handler_9():
+
+            \    return 9
+
+
+            def handler_10():
+
+            \    return 10
+
+
+            def handler_11():
+
+            \    return 11
+
+
+            def handler_12():
+
+            \    return 12
+
+
+            def handler_13():
+
+            \    return 13
+
+
+            def handler_14():
+
+            \    return 14
+
+
+            def handler_15():
+
+            \    return 15
+
+
+            def handler_16():
+
+            \    return 16
+
+
+            def handler_17():
+
+            \    return 17
+
+
+            def handler_18():
+
+            \    return 18
+
+
+            def handler_19():
+
+            \    return 19
+
+
+            def handler_20():
+
+            \    return 20\n"
+        - path: input/big-erp/settings.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/big-erp/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/big-erp
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: min_length
+          value: 400
+          weight: 1
+        - type: contains
+          text: big-erp
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-long-1
+    title: 超长文件项目架构说明（long-file-app）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描含超长文件的项目并生成 arch 文档
+      content: 请为 input/long-file-app 项目生成架构说明。
+      files:
+        - path: input/long-file-app/const.py
+          content: "VALUE = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"
+
+            import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/long-file-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/long-file-app
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: long-file-app
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-long-2
+    title: 超长文件项目架构说明（huge-config-app）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描含超长文件的项目并生成 arch 文档
+      content: 请为 input/huge-config-app 项目生成架构说明。
+      files:
+        - path: input/huge-config-app/settings.py
+          content: "VALUE = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"
+
+            import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/huge-config-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/huge-config-app
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: huge-config-app
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-long-3
+    title: 超长文件项目架构说明（wide-table-app）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描含超长文件的项目并生成 arch 文档
+      content: 请为 input/wide-table-app 项目生成架构说明。
+      files:
+        - path: input/wide-table-app/table.py
+          content: "VALUE = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"
+
+            import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/wide-table-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/wide-table-app
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: wide-table-app
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-long-4
+    title: 超长文件项目架构说明（archive-app）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描含超长文件的项目并生成 arch 文档
+      content: 请为 input/archive-app 项目生成架构说明。
+      files:
+        - path: input/archive-app/archive.py
+          content: "VALUE = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"
+
+            import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/archive-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/archive-app
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: archive-app
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-styles-1
+    title: 多文件混合项目 API 文档（mixed-app）
+    tags:
+      - variation
+      - multi-file
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描多文件混合项目并生成 api 文档
+      content: 请为 input/mixed-app 项目生成 API 文档。
+      files:
+        - path: input/mixed-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/mixed-app/index.js
+          content: 'const express = require("express");
+
+            const app = express();
+
+
+            app.get("/api/orders", (req, res) => res.json({ ok: true }));
+
+            app.post("/api/orders", (req, res) => res.status(201).json({ ok: true }));
+
+
+            app.listen(3000);
+
+            '
+        - path: input/mixed-app/package.json
+          content: "{
+
+            \  \"name\": \"mixed-app\",
+
+            \  \"version\": \"1.0.0\",
+
+            \  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },
+
+            \  \"dependencies\": { \"express\": \"^4.18.0\" }
+
+            }\n"
+      params:
+        project_dir: input/mixed-app
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (接口|端点|Endpoints|API)
+          weight: 2
+        - type: contains
+          text: mixed-app
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-styles-2
+    title: 多文件混合项目 API 文档（mixed-service）
+    tags:
+      - variation
+      - multi-file
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描多文件混合项目并生成 api 文档
+      content: 请为 input/mixed-service 项目生成 API 文档。
+      files:
+        - path: input/mixed-service/server.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/mixed-service/main.js
+          content: 'const express = require("express");
+
+            const app = express();
+
+
+            app.get("/api/orders", (req, res) => res.json({ ok: true }));
+
+            app.post("/api/orders", (req, res) => res.status(201).json({ ok: true }));
+
+
+            app.listen(3000);
+
+            '
+        - path: input/mixed-service/package.json
+          content: "{
+
+            \  \"name\": \"mixed-service\",
+
+            \  \"version\": \"1.0.0\",
+
+            \  \"scripts\": { \"start\": \"node index.js\", \"test\": \"node test.js\" },
+
+            \  \"dependencies\": { \"express\": \"^4.18.0\" }
+
+            }\n"
+      params:
+        project_dir: input/mixed-service
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (接口|端点|Endpoints|API)
+          weight: 2
+        - type: contains
+          text: mixed-service
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-vars-1
+    title: 文档类型 × 语言正交变体（matrix-app）
+    tags:
+      - variation
+      - matrix
+    repeat: 5
+    input:
+      kind: text
+      goal: 对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）
+      content: 请为 input/matrix-app 项目生成文档。
+      files:
+        - path: input/matrix-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/matrix-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/matrix-app
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: matrix-app
+          weight: 2
+          note: 项目名出现在文档里
+        - type: regex
+          pattern: ^#
+          weight: 1
+          note: Markdown 标题开头
+        - type: regex
+          pattern: (文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-vars-2
+    title: 文档类型 × 语言正交变体（matrix-app）
+    tags:
+      - variation
+      - matrix
+    repeat: 5
+    input:
+      kind: text
+      goal: 对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）
+      content: 请为 input/matrix-app 项目生成文档。
+      files:
+        - path: input/matrix-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/matrix-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/matrix-app
+        doc_type: readme
+        lang: en
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: matrix-app
+          weight: 2
+          note: 项目名出现在文档里
+        - type: regex
+          pattern: ^#
+          weight: 1
+          note: Markdown 标题开头
+        - type: regex
+          pattern: (文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-vars-3
+    title: 文档类型 × 语言正交变体（matrix-app）
+    tags:
+      - variation
+      - matrix
+    repeat: 5
+    input:
+      kind: text
+      goal: 对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）
+      content: 请为 input/matrix-app 项目生成文档。
+      files:
+        - path: input/matrix-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/matrix-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/matrix-app
+        doc_type: api
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: matrix-app
+          weight: 2
+          note: 项目名出现在文档里
+        - type: regex
+          pattern: ^#
+          weight: 1
+          note: Markdown 标题开头
+        - type: regex
+          pattern: (文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-vars-4
+    title: 文档类型 × 语言正交变体（matrix-app）
+    tags:
+      - variation
+      - matrix
+    repeat: 5
+    input:
+      kind: text
+      goal: 对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）
+      content: 请为 input/matrix-app 项目生成文档。
+      files:
+        - path: input/matrix-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/matrix-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/matrix-app
+        doc_type: api
+        lang: en
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: matrix-app
+          weight: 2
+          note: 项目名出现在文档里
+        - type: regex
+          pattern: ^#
+          weight: 1
+          note: Markdown 标题开头
+        - type: regex
+          pattern: (文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-vars-5
+    title: 文档类型 × 语言正交变体（matrix-app）
+    tags:
+      - variation
+      - matrix
+    repeat: 5
+    input:
+      kind: text
+      goal: 对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）
+      content: 请为 input/matrix-app 项目生成文档。
+      files:
+        - path: input/matrix-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/matrix-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/matrix-app
+        doc_type: arch
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: matrix-app
+          weight: 2
+          note: 项目名出现在文档里
+        - type: regex
+          pattern: ^#
+          weight: 1
+          note: Markdown 标题开头
+        - type: regex
+          pattern: (文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-vars-6
+    title: 文档类型 × 语言正交变体（matrix-app）
+    tags:
+      - variation
+      - matrix
+    repeat: 5
+    input:
+      kind: text
+      goal: 对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）
+      content: 请为 input/matrix-app 项目生成文档。
+      files:
+        - path: input/matrix-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/matrix-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/matrix-app
+        doc_type: arch
+        lang: en
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: matrix-app
+          weight: 2
+          note: 项目名出现在文档里
+        - type: regex
+          pattern: ^#
+          weight: 1
+          note: Markdown 标题开头
+        - type: regex
+          pattern: (文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-vars-7
+    title: 文档类型 × 语言正交变体（matrix-app）
+    tags:
+      - variation
+      - matrix
+    repeat: 5
+    input:
+      kind: text
+      goal: 对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）
+      content: 请为 input/matrix-app 项目生成文档。
+      files:
+        - path: input/matrix-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/matrix-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/matrix-app
+        doc_type: onboarding
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: matrix-app
+          weight: 2
+          note: 项目名出现在文档里
+        - type: regex
+          pattern: ^#
+          weight: 1
+          note: Markdown 标题开头
+        - type: regex
+          pattern: (文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-vars-8
+    title: 文档类型 × 语言正交变体（matrix-app）
+    tags:
+      - variation
+      - matrix
+    repeat: 5
+    input:
+      kind: text
+      goal: 对同一项目分别生成 readme/api/arch/onboarding 四类文档（中/英）
+      content: 请为 input/matrix-app 项目生成文档。
+      files:
+        - path: input/matrix-app/app.py
+          content: "from flask import Flask
+
+
+            app = Flask(__name__)
+
+
+            @app.get(\"/users\")
+
+            def list_users():
+
+            \    return []
+
+
+            @app.post(\"/users\")
+
+            def create_user():
+
+            \    return {}, 201
+
+
+            if __name__ == \"__main__\":
+
+            \    app.run()\n"
+        - path: input/matrix-app/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/matrix-app
+        doc_type: onboarding
+        lang: en
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: matrix-app
+          weight: 2
+          note: 项目名出现在文档里
+        - type: regex
+          pattern: ^#
+          weight: 1
+          note: Markdown 标题开头
+        - type: regex
+          pattern: (文档|说明|指南|清单|Guide|Reference|Architecture|Onboarding|Overview|README)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 250
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-params-1
+    title: 配置项/入口多样的项目 README（config-heavy）
+    tags:
+      - variation
+      - config
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描配置与入口丰富的项目并生成 readme 文档
+      content: 请为 input/config-heavy 项目生成 README 文档。
+      files:
+        - path: input/config-heavy/main.py
+          content: "import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/config-heavy/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            TIMEOUT = 30
+
+            RETRY = 3
+
+            BATCH_SIZE = 100
+
+            '
+        - path: input/config-heavy/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/config-heavy
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (配置|Configuration|配置项)
+          weight: 2
+          note: 配置项小节
+        - type: contains
+          text: config-heavy
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-params-2
+    title: 配置项/入口多样的项目 README（entry-heavy）
+    tags:
+      - variation
+      - config
+    repeat: 5
+    input:
+      kind: text
+      goal: 扫描配置与入口丰富的项目并生成 readme 文档
+      content: 请为 input/entry-heavy 项目生成 README 文档。
+      files:
+        - path: input/entry-heavy/cli.py
+          content: "import argparse
+
+
+            def main():
+
+            \    parser = argparse.ArgumentParser()
+
+            \    parser.add_argument(\"--verbose\", action=\"store_true\")
+
+            \    parser.add_argument(\"--count\", type=int, default=10)
+
+            \    args = parser.parse_args()
+
+            \    print(\"done\")
+
+
+            if __name__ == \"__main__\":
+
+            \    main()\n"
+        - path: input/entry-heavy/config.py
+          content: 'API_KEY = "placeholder"
+
+            DEBUG = False
+
+            MAX_RETRIES = 3
+
+            '
+        - path: input/entry-heavy/requirements.txt
+          content: "flask==3.0.0
+
+            requests==2.31.0
+
+            click==8.1.7\n"
+      params:
+        project_dir: input/entry-heavy
+        doc_type: readme
+        lang: zh
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: (配置|Configuration|配置项)
+          weight: 2
+          note: 配置项小节
+        - type: contains
+          text: entry-heavy
+          weight: 2
+          note: 报告出现项目名（来自扫描摘要）
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

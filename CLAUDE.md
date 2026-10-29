@@ -7,7 +7,11 @@
 ## 目录结构
 - `agents/` — 所有 Agent，一个文件夹 = 一个 Agent
   - `agents/<agent 名>/README.md` — 该 Agent 的介绍文件（汇总到顶层 README 的数据来源）
+  - `agents/<agent 名>/aep.agent.json` — 评测平台（agent-manager）接入清单：怎么跑、输入怎么给、输出怎么读、模型协议
+  - `agents/<agent 名>/eval/spec.json` — 评测用例规格（生成 5 组 × 100 次调用的任务集）
+  - `agents/<agent 名>/eval/g*.yaml` — 生成的用例组（`node agent-manager/scripts/gen_evalsets.mjs` 产出，勿手改）
   - `agents/<agent 名>/...` — 该 Agent 的实现代码
+- `runtime/anthropic_bridge.py` — Anthropic→OpenAI 协议桥（独立跑 Agent 时把 ANTHROPIC_BASE_URL 指到它即可用 OpenAI 兼容模型）
 - `scripts/sync_agents.py` — 顶层 README Agent 列表自动同步脚本
 - `.claude/settings.json` — hook 配置（PostToolUse + SessionStart 触发同步）
 - `README.md` — 项目介绍，包含自动维护的 Agent 列表区块
@@ -17,6 +21,11 @@
 2. 正常情况下 hook 会自动同步；若发现列表与实际不符，立即手动运行：`python3 scripts/sync_agents.py`
 3. 不要手动编辑顶层 README.md 中 `AGENTS:START` / `AGENTS:END` 标记之间的内容（会被自动覆盖）。
 4. 新增 Agent 时：在 `agents/` 下建一个文件夹，写好代码，并创建 `README.md` 介绍文件（见 README「如何添加新 Agent」）。
+5. **新增/改动 Agent 时同步维护 `aep.agent.json` 与 `eval/spec.json`**（评测平台自适应接入约定）：
+   - `aep.agent.json` 字段见 `agent-manager/server/src/lab/manifest.ts` 的 AgentManifestSchema；
+   - 用例由 `node agent-manager/scripts/gen_evalsets.mjs --only <agent>` 生成 5 组 × 100 次调用；
+   - CLI 入参要能接受用例文件/文本输入（评测在独立工作区跑，argv 模板 + 夹具文件给入参），
+     不满足就给 agent 加可选参数（向后兼容、`--self-test` 必须仍通过）。
 
 ## 介绍信息提取规则（sync_agents.py 的逻辑）
 - 名称优先级：frontmatter `name` > 正文第一个 `#` 大标题 > 文件夹名

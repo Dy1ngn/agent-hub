@@ -1,0 +1,626 @@
+id: ts-b-grammar-checker-g4-robust
+agentId: grammar-checker
+group: g4-robust
+name: 中英校对 · 鲁棒性：畸形 / 乱码 / 编码异常输入
+description: 乱码、控制字符、零宽字符、结构损坏等异常输入下不崩溃、优雅降级（离线纯规则模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：mojibake 乱码
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "鐑傛嵁鏂囨。閿欒緶銆傝繖鏄حاض涔辩爜銆�\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "a\ab = 2\ac = 3\a\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "a​b‌c‍d\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：emoji 与变体选择符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "❤️‍🔥😀👍🏽🚀✨\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：RTL 希伯来文
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "שלום עולם hello\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：未闭合代码块
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "```python\nprint(1)\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：重复标点 50 次
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "啊啊啊啊啊啊啊啊啊啊！！！！！！！！！！。。。。。。。。。。？？？？？？？？？？\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：混合换行符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "第一行\r\n第二行\r第三行\n\n第四行\r\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：超长单词
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：HTML 标签嵌文本
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "<div><p>hello &amp; world</p><script>var x = 1;</script></div>\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 异常输入仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-1
+    title: 编码/字符异常：BOM 开头
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "﻿这是带 BOM 的文本。\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-2
+    title: 编码/字符异常：全角空格
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "全角　空格　测试\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-3
+    title: 编码/字符异常：制表符混合
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "列一\t列二\t\t列三\n值一  值二\t值三\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-4
+    title: 编码/字符异常：数学符号
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "∑∫√∞≠≤≥±×÷π\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-5
+    title: 编码/字符异常：韩文/日文混合
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "안녕하세요 こんにちは 你好\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-6
+    title: 编码/字符异常：零宽连接符
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "a‍b‍c️d\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-7
+    title: 编码/字符异常：不成对括号
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "（(（[[[{{{\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-8
+    title: 编码/字符异常：JSON 片段
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: '{"name": "测试", "value": 123,}
+
+        '
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-9
+    title: 编码/字符异常：重复单词垃圾
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-encoding-10
+    title: 编码/字符异常：竖线表格乱列
+    tags:
+      - robust
+      - offline
+      - encoding
+    repeat: 5
+    input:
+      kind: text
+      goal: 编码异常输入不能让工具崩溃
+      content: "| a | b | c |
+
+        |---|---|
+
+        | 1 | 2 | 3 | 4 |\n"
+      files: []
+      params:
+        lang: auto
+        min: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 校对报告
+          weight: 2
+          note: 编码异常仍产出校对报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []

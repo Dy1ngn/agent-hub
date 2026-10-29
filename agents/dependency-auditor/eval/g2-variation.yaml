@@ -1,0 +1,1105 @@
+id: ts-b-dependency-auditor-g2-variation
+agentId: dependency-auditor
+group: g2-variation
+name: 依赖审计 · 输入变体：清单类型 / 规模 / 参数
+description: Pipfile、dev 清单、extras/环境标记、过宽约束、级别过滤、公告匹配、大清单、多清单等变体（模型链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-pipfile-1
+    title: Pipfile / Pipfile.lock（Pipfile）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析 Pipfile 系列清单
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/Pipfile
+          content: '[[source]]
+
+            url = "https://pypi.org/simple"
+
+
+            [packages]
+
+            requests = "==2.31.0"
+
+            flask = "*"
+
+            '
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出审计明细
+        - type: regex
+          pattern: (?i)pipfile
+          weight: 1
+          note: 识别 Pipfile 系列
+      requiredSuggestions: []
+  - id: g2-pipfile-2
+    title: Pipfile / Pipfile.lock（Pipfile.lock）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析 Pipfile 系列清单
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/Pipfile.lock
+          content: '{"default": {"requests": {"version": "==2.31.0"}}, "develop": {"pytest": {"version": "==7.4.0"}}}'
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出审计明细
+        - type: regex
+          pattern: (?i)pipfile
+          weight: 1
+          note: 识别 Pipfile 系列
+      requiredSuggestions: []
+  - id: g2-devfile-1
+    title: dev 清单命名变体（requirements-dev）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别开发依赖清单的文件名变体
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements-dev.txt
+          content: "pytest==7.4.0\nmypy==1.8.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)requirements-dev|dev-requirements
+          weight: 1
+          note: 识别 dev 清单文件名
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出审计明细
+      requiredSuggestions: []
+  - id: g2-devfile-2
+    title: dev 清单命名变体（dev-requirements）
+    tags:
+      - variation
+      - format
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别开发依赖清单的文件名变体
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/dev-requirements.txt
+          content: "black==23.12.1\nruff==0.1.9\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: (?i)requirements-dev|dev-requirements
+          weight: 1
+          note: 识别 dev 清单文件名
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出审计明细
+      requiredSuggestions: []
+  - id: g2-markers-1
+    title: extras / 环境标记 / -r 引用（extras+标记+引用）
+    tags:
+      - variation
+      - syntax
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析带 extras、环境标记与引用的清单
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests[socks]>=2.31,<3.0 ; python_version<'3.12'
+
+            flask==3.0.3
+
+            -r requirements-base.txt\n"
+        - path: input/deps/requirements-base.txt
+          content: "urllib3==2.2.3\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出审计明细
+      requiredSuggestions: []
+  - id: g2-markers-2
+    title: extras / 环境标记 / -r 引用（extras+引用）
+    tags:
+      - variation
+      - syntax
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析带 extras、环境标记与引用的清单
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "uvicorn[standard]>=0.27
+
+            -r requirements-base.txt\n"
+        - path: input/deps/requirements-base.txt
+          content: "anyio==4.2.0\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出审计明细
+      requiredSuggestions: []
+  - id: g2-constraints-1
+    title: 过宽版本约束（>=0）
+    tags:
+      - variation
+      - rule
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别等于没有约束的声明
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "flask>=0\nrequests==2.32.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: "\\| (提示|警告|风险) \\| DA002 "
+          weight: 2
+          note: DA002 命中
+      requiredSuggestions: []
+  - id: g2-constraints-2
+    title: 过宽版本约束（* / any）
+    tags:
+      - variation
+      - rule
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别等于没有约束的声明
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/package.json
+          content: '{"name": "app", "dependencies": {"lodash": "*", "chalk": "any"}}'
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: "\\| (提示|警告|风险) \\| DA002 "
+          weight: 2
+          note: DA002 命中
+      requiredSuggestions: []
+  - id: g2-level-1
+    title: 级别过滤（最低级别 警告）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 验证 --min-level 过滤行为
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\nflask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 警告
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 没有达到「警告」
+          weight: 2
+          note: 级别过滤文案与参数一致
+      requiredSuggestions: []
+  - id: g2-level-2
+    title: 级别过滤（最低级别 风险）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 验证 --min-level 过滤行为
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\nflask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 风险
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 没有达到「风险」
+          weight: 2
+          note: 级别过滤文案与参数一致
+      requiredSuggestions: []
+  - id: g2-advisory-1
+    title: 本地安全公告匹配（固定版本命中）
+    tags:
+      - variation
+      - advisory
+    repeat: 5
+    input:
+      kind: text
+      goal: 用本地公告匹配依赖版本
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.31.0\nflask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: '[{"package": "requests", "versions": ["==2.31.0"], "severity": "high", "title": "CVE-2024-演示公告", "link": "https://example.com/cve"}]'
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: CVE-2024-演示公告
+          weight: 2
+          note: 公告命中并展示标题
+        - type: regex
+          pattern: (公告范围|受影响范围)
+          weight: 1
+          note: 给出命中说明
+      requiredSuggestions: []
+  - id: g2-advisory-2
+    title: 本地安全公告匹配（范围命中）
+    tags:
+      - variation
+      - advisory
+    repeat: 5
+    input:
+      kind: text
+      goal: 用本地公告匹配依赖版本
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests>=2.0,<3.0\nflask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: '[{"package": "requests", "versions": [">=2.0,<2.32"], "severity": "medium", "title": "CVE-2024-演示公告", "link": ""}]'
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: CVE-2024-演示公告
+          weight: 2
+          note: 公告命中并展示标题
+        - type: regex
+          pattern: (公告范围|受影响范围)
+          weight: 1
+          note: 给出命中说明
+      requiredSuggestions: []
+  - id: g2-big-1
+    title: 30 包大清单（1）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 审计大体量清单
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3
+
+            flask==3.0.3
+
+            django==4.2.10
+
+            numpy==1.26.4
+
+            pandas==2.2.0
+
+            pkg01==1.0.1
+
+            pkg02==1.0.2
+
+            pkg03==1.0.3
+
+            pkg04==1.0.4
+
+            pkg05==1.0.5
+
+            pkg06==1.0.6
+
+            pkg07==1.0.7
+
+            pkg08==1.0.8
+
+            pkg09==1.0.9
+
+            pkg10==1.0.10
+
+            pkg11==1.0.11
+
+            pkg12==1.0.12
+
+            pkg13==1.0.13
+
+            pkg14==1.0.14
+
+            pkg15==1.0.15
+
+            pkg16==1.0.16
+
+            pkg17==1.0.17
+
+            pkg18==1.0.18
+
+            pkg19==1.0.19
+
+            pkg20==1.0.20
+
+            pkg21==1.0.21
+
+            pkg22==1.0.22
+
+            pkg23==1.0.23
+
+            pkg24==1.0.24
+
+            pkg25==1.0.25\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 800
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出审计明细
+        - type: contains
+          text: 规则命中统计
+          weight: 1
+          note: 给出规则命中统计
+      requiredSuggestions: []
+  - id: g2-big-2
+    title: 30 包大清单（2）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 审计大体量清单
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3
+
+            flask==3.0.3
+
+            django==4.2.10
+
+            numpy==1.26.4
+
+            pandas==2.2.0
+
+            pkg01==1.0.1
+
+            pkg02==1.0.2
+
+            pkg03==1.0.3
+
+            pkg04==1.0.4
+
+            pkg05==1.0.5
+
+            pkg06==1.0.6
+
+            pkg07==1.0.7
+
+            pkg08==1.0.8
+
+            pkg09==1.0.9
+
+            pkg10==1.0.10
+
+            pkg11==1.0.11
+
+            pkg12==1.0.12
+
+            pkg13==1.0.13
+
+            pkg14==1.0.14
+
+            pkg15==1.0.15
+
+            pkg16==1.0.16
+
+            pkg17==1.0.17
+
+            pkg18==1.0.18
+
+            pkg19==1.0.19
+
+            pkg20==1.0.20
+
+            pkg21==1.0.21
+
+            pkg22==1.0.22
+
+            pkg23==1.0.23
+
+            pkg24==1.0.24
+
+            pkg25==1.0.25
+
+            extra_pkg\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 800
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出审计明细
+        - type: contains
+          text: 规则命中统计
+          weight: 1
+          note: 给出规则命中统计
+      requiredSuggestions: []
+  - id: g2-multimanifest-1
+    title: 多清单并存（1）
+    tags:
+      - variation
+      - multi
+    repeat: 5
+    input:
+      kind: text
+      goal: 同时解析多种清单文件
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\nflask==3.0.3\n"
+        - path: input/deps/package.json
+          content: '{"name": "app", "dependencies": {"lodash": "4.17.21"}}'
+        - path: input/deps/pyproject.toml
+          content: '[project]
+
+            name = "x"
+
+            version = "1.0"
+
+            dependencies = ["click==8.1.7"]
+
+            '
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 多清单合并审计
+        - type: regex
+          pattern: (清单文件数|多清单|逐包明细)
+          weight: 1
+          note: 展示清单来源
+      requiredSuggestions: []
+  - id: g2-multimanifest-2
+    title: 多清单并存（2）
+    tags:
+      - variation
+      - multi
+    repeat: 5
+    input:
+      kind: text
+      goal: 同时解析多种清单文件
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\n"
+        - path: input/deps/package.json
+          content: '{"name": "app", "dependencies": {"express": "4.18.2"}}'
+        - path: input/deps/Pipfile
+          content: '[packages]
+
+            click = "==8.1.7"
+
+            '
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 多清单合并审计
+        - type: regex
+          pattern: (清单文件数|多清单|逐包明细)
+          weight: 1
+          note: 展示清单来源
+      requiredSuggestions: []
+  - id: g2-name-1
+    title: 包名命名不规范（下划线）
+    tags:
+      - variation
+      - rule
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别不规范的包名
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "my_package==1.0.0\nsome_pkg>=1.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: "\\| (提示|警告|风险) \\| DA009 "
+          weight: 2
+          note: DA009 命中
+      requiredSuggestions: []
+  - id: g2-name-2
+    title: 包名命名不规范（大小写混合）
+    tags:
+      - variation
+      - rule
+    repeat: 5
+    input:
+      kind: text
+      goal: 识别不规范的包名
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "PyYAML==6.0.1\nMy_Package==2.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: regex
+          pattern: "\\| (提示|警告|风险) \\| DA009 "
+          weight: 2
+          note: DA009 命中
+      requiredSuggestions: []
+  - id: g2-peerdev-1
+    title: npm 开发/对等依赖（1）
+    tags:
+      - variation
+      - npm
+    repeat: 5
+    input:
+      kind: text
+      goal: 区分运行、开发与对等依赖
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/package.json
+          content: '{"name": "app", "dependencies": {"react": "18.2.0"}, "devDependencies": {"jest": "26.0.0"}, "peerDependencies": {"react-dom": "18.2.0"}}'
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出类型
+        - type: regex
+          pattern: (开发|运行)
+          weight: 1
+          note: 区分依赖类型
+      requiredSuggestions: []
+  - id: g2-peerdev-2
+    title: npm 开发/对等依赖（2）
+    tags:
+      - variation
+      - npm
+    repeat: 5
+    input:
+      kind: text
+      goal: 区分运行、开发与对等依赖
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/package.json
+          content: '{"name": "lib", "dependencies": {"lodash": "4.17.21"}, "devDependencies": {"eslint": "8.56.0"}}'
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 1
+          note: 产出标准审计报告
+        - type: contains
+          text: "## 概览"
+          weight: 1
+          note: 报告固定结构（概览小节）
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 300
+          weight: 1
+          note: 报告不是空壳
+        - type: contains
+          text: 逐包明细
+          weight: 1
+          note: 逐包给出类型
+        - type: regex
+          pattern: (开发|运行)
+          weight: 1
+          note: 区分依赖类型
+      requiredSuggestions: []

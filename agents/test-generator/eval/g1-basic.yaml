@@ -1,0 +1,600 @@
+id: ts-b-test-generator-g1-basic
+agentId: test-generator
+group: g1-basic
+name: 单元测试生成 · 基础功能：典型模块的测试生成
+description: 函数/类/异步/生成器/异常契约等典型被测代码，走「ast 分析 + 用例规划 + 骨架生成 + 模型补全断言」完整链路（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-basic-1
+    title: 为 billing.py 生成单元测试（apply_coupon）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/billing.py
+          content: "\"\"\"账单计算模块。\"\"\"
+
+
+            class BillError(Exception):
+
+            \    pass
+
+
+
+            def total(items, tax_rate):
+
+            \    \"\"\"计算含税总价。
+
+
+            \    Args:
+
+            \        items: 条目列表
+
+            \        tax_rate: 税率
+
+            \    Returns:
+
+            \        含税总价
+
+            \    Raises:
+
+            \        BillError: 条目为空时抛出
+
+            \    \"\"\"
+
+            \    if not items:
+
+            \        raise BillError(\"empty\")
+
+            \    return sum(items) * (1 + tax_rate)
+
+
+
+            def apply_coupon(amount, code):
+
+            \    if code == \"SAVE10\":
+
+            \        return amount * 0.9
+
+            \    return amount\n"
+      params:
+        src: input/billing.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: apply_coupon
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-2
+    title: 为 auth.py 生成单元测试（reset_password）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/auth.py
+          content: "def login(username, password):
+
+            \    \"\"\"登录并返回会话。\"\"\"
+
+            \    if not username:
+
+            \        raise ValueError(\"username required\")
+
+            \    return find_user(username, password)
+
+
+
+            def verify(token):
+
+            \    return decode(token) is not None
+
+
+
+            def reset_password(user, new_password):
+
+            \    if len(new_password) < 8:
+
+            \        raise ValueError(\"weak password\")
+
+            \    user.password = hash_password(new_password)
+
+            \    return user\n"
+      params:
+        src: input/auth.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: reset_password
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-3
+    title: 为 parser.py 生成单元测试（parse_line）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/parser.py
+          content: "def parse_line(line):
+
+            \    \"\"\"解析一行记录。\"\"\"
+
+            \    parts = line.split(\",\")
+
+            \    if len(parts) < 3:
+
+            \        raise ValueError(\"bad line\")
+
+            \    return parts
+
+
+
+            def parse_file(path):
+
+            \    with open(path) as f:
+
+            \        for line in f:
+
+            \            yield parse_line(line)\n"
+      params:
+        src: input/parser.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: parse_line
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-4
+    title: 为 cache.py 生成单元测试（Cache）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/cache.py
+          content: "class Cache:
+
+            \    \"\"\"带容量限制的缓存。\"\"\"
+
+
+            \    def __init__(self, capacity=128):
+
+            \        self.capacity = capacity
+
+            \        self.data = {}
+
+
+            \    def get(self, key):
+
+            \        return self.data.get(key)
+
+
+            \    def put(self, key, value):
+
+            \        if len(self.data) >= self.capacity:
+
+            \            self.data.pop(next(iter(self.data)))
+
+            \        self.data[key] = value
+
+
+            \    def __len__(self):
+
+            \        return len(self.data)\n"
+      params:
+        src: input/cache.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: Cache
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-5
+    title: 为 mathx.py 生成单元测试（clamp）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/mathx.py
+          content: "def gcd(a, b):
+
+            \    \"\"\"最大公约数。\"\"\"
+
+            \    while b:
+
+            \        a, b = b, a % b
+
+            \    return a
+
+
+
+            def lcm(a, b):
+
+            \    return a * b // gcd(a, b)
+
+
+
+            def clamp(value, low, high):
+
+            \    return max(low, min(high, value))\n"
+      params:
+        src: input/mathx.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: clamp
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-6
+    title: 为 io_utils.py 生成单元测试（write_json）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/io_utils.py
+          content: "import json
+
+
+
+            def read_json(path):
+
+            \    with open(path, encoding=\"utf-8\") as f:
+
+            \        return json.loads(f.read())
+
+
+
+            def write_json(path, data):
+
+            \    with open(path, \"w\", encoding=\"utf-8\") as f:
+
+            \        f.write(json.dumps(data, ensure_ascii=False, indent=2))
+
+            \    return path\n"
+      params:
+        src: input/io_utils.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: write_json
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-7
+    title: 为 api.py 生成单元测试（fetch_user）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/api.py
+          content: "async def fetch_user(user_id):
+
+            \    \"\"\"拉取用户信息。\"\"\"
+
+            \    resp = await http_get(\"/users/%s\" % user_id)
+
+            \    return resp.json()
+
+
+
+            async def fetch_all(user_ids):
+
+            \    result = []
+
+            \    for uid in user_ids:
+
+            \        result.append(await fetch_user(uid))
+
+            \    return result\n"
+      params:
+        src: input/api.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: fetch_user
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-8
+    title: 为 validate.py 生成单元测试（validate_email）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/validate.py
+          content: "import re
+
+
+
+            def validate_email(value):
+
+            \    if not re.match(r\"^[^@]+@[^@]+\\.[^@]+$\", value):
+
+            \        raise ValueError(\"bad email\")
+
+            \    return True
+
+
+
+            def validate_age(age):
+
+            \    if age < 0 or age > 150:
+
+            \        raise ValueError(\"bad age\")
+
+            \    return True\n"
+      params:
+        src: input/validate.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: validate_email
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-9
+    title: 为 report.py 生成单元测试（summarize）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/report.py
+          content: "def render(rows):
+
+            \    \"\"\"渲染表格。\"\"\"
+
+            \    def cell(v):
+
+            \        return str(v).strip()
+
+            \    return \"\\n\".join(\" | \".join(cell(v) for v in row) for row in rows)
+
+
+
+            def summarize(values):
+
+            \    return {\"count\": len(values), \"sum\": sum(values)}\n"
+      params:
+        src: input/report.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: summarize
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-basic-10
+    title: 为 config.py 生成单元测试（load_config）
+    tags:
+      - testgen
+    repeat: 10
+    input:
+      kind: code
+      goal: 分析被测模块并生成 pytest 测试骨架与用例清单
+      content: 请为 input/ 下的被测代码生成单元测试骨架与测试计划报告。
+      files:
+        - path: input/config.py
+          content: "def load_config(path, defaults=None, strict=False):
+
+            \    \"\"\"加载配置。\"\"\"
+
+            \    cfg = dict(defaults or {})
+
+            \    cfg.update(read_ini(path))
+
+            \    if strict and \"host\" not in cfg:
+
+            \        raise KeyError(\"host\")
+
+            \    return cfg\n"
+      params:
+        src: input/config.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: load_config
+          weight: 2
+          note: 被测对象确定性出现在报告里
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

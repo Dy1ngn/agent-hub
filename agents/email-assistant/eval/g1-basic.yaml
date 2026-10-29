@@ -1,0 +1,1071 @@
+id: ts-b-email-assistant-g1-basic
+agentId: email-assistant
+group: g1-basic
+name: 邮件助手 · 基础功能：典型邮件处理
+description: 紧急/账单/资讯/多收件人/mbox/纯文本/附件等典型邮件输入，走完整「解析 + 模型分析」链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-urgent-1
+    title: 紧急邮件：优先级高（紧急：合同确认（请今天内回复））
+    tags:
+      - basic
+      - priority
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析紧急邮件并给出优先级、待办与草稿
+      content: 请处理 input/ 目录下的紧急邮件。
+      files:
+        - path: input/urgent.txt
+          content: "Subject: 紧急：合同确认（请今天内回复）
+
+            From: 张三 <zhangsan@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四，你好：
+
+            这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？
+
+            请尽快回复：是否需要法务复核？能否今天内给出结论？\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 紧急：合同确认（请今天内回复）
+          weight: 2
+          note: 邮件主题出现在报告里
+        - type: regex
+          pattern: 级别：\*\*高\*\*
+          weight: 2
+          note: 紧急邮件判为高优先级
+        - type: contains
+          text: "### 待办与关键信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-urgent-2
+    title: 紧急邮件：优先级高（紧急：上线审批（紧急））
+    tags:
+      - basic
+      - priority
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析紧急邮件并给出优先级、待办与草稿
+      content: 请处理 input/ 目录下的紧急邮件。
+      files:
+        - path: input/notice.txt
+          content: "Subject: 紧急：上线审批（紧急）
+
+            From: 张三 <zhangsan@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四，你好：
+
+            这封邮件比较紧急，请在 2026-10-30 前确认上线日期 2026-11-11是否正确？
+
+            请尽快回复：是否需要法务复核？能否今天内给出结论？\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 紧急：上线审批（紧急）
+          weight: 2
+          note: 邮件主题出现在报告里
+        - type: regex
+          pattern: 级别：\*\*高\*\*
+          weight: 2
+          note: 紧急邮件判为高优先级
+        - type: contains
+          text: "### 待办与关键信息"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-invite-1
+    title: 会议邀请 .eml（Q4 Planning Meeting Agenda）
+    tags:
+      - basic
+      - eml
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析会议邀请邮件并摘要
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/invite.eml
+          content: "From: carol@example.com
+
+            To: team@example.com
+
+            Subject: Q4 Planning Meeting Agenda
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+
+
+            Hi team,
+
+
+            The Q4 planning meeting is on 2026-11-02. Please review the agenda.\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Q4 Planning Meeting Agenda
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "### 摘要"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-invite-2
+    title: 会议邀请 .eml（Contract Review Needed）
+    tags:
+      - basic
+      - eml
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析会议邀请邮件并摘要
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/review.eml
+          content: "From: dave@example.com
+
+            To: legal@example.com
+
+            Subject: Contract Review Needed
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            Cc: boss@example.com, audit@example.com
+
+
+
+            Please review the contract draft before 2026-11-01. Thanks!\n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Contract Review Needed
+          weight: 2
+          note: 主题回显
+        - type: contains
+          text: "### 元信息"
+          weight: 1
+        - type: contains
+          text: "### 摘要"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-bill-1
+    title: 账单邮件：金额与日期提取（十月账单与报销明细）
+    tags:
+      - basic
+      - extraction
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析账单邮件并提取金额、日期等关键信息
+      content: 请处理 input/ 目录下的账单邮件。
+      files:
+        - path: input/bill.txt
+          content: "Subject: 十月账单与报销明细
+
+            From: 财务 <finance@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四你好，十月账单已出，合计 1234.56 元，明细见下。
+
+            如有疑问请在 2026-11-05 前反馈。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 十月账单与报销明细
+          weight: 2
+        - type: contains
+          text: "1234.56"
+          weight: 2
+          note: 金额出现在报告里
+        - type: contains
+          text: "### 优先级"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-bill-2
+    title: 账单邮件：金额与日期提取（差旅报销单）
+    tags:
+      - basic
+      - extraction
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析账单邮件并提取金额、日期等关键信息
+      content: 请处理 input/ 目录下的账单邮件。
+      files:
+        - path: input/expense.txt
+          content: "Subject: 差旅报销单
+
+            From: 财务 <finance@example.com>
+
+            To: 李四 <lisi@example.com>
+
+
+            李四你好，十月账单已出，合计 888.00 元，明细见下。
+
+            如有疑问请在 2026-11-05 前反馈。\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 差旅报销单
+          weight: 2
+        - type: contains
+          text: "888.00"
+          weight: 2
+          note: 金额出现在报告里
+        - type: contains
+          text: "### 优先级"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-news-1
+    title: 资讯/低优先级邮件（产品月刊第 12 期）
+    tags:
+      - basic
+      - priority
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析资讯邮件并给出优先级
+      content: 请处理 input/ 目录下的资讯邮件。
+      files:
+        - path: input/news.txt
+          content: "Subject: 产品月刊第 12 期
+
+            From: 运营 <ops@example.com>
+
+            To: 订阅者 <list@example.com>
+
+
+            本期产品月刊介绍新功能与团队动态，欢迎浏览。\n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 产品月刊第 12 期
+          weight: 2
+        - type: regex
+          pattern: 级别：\*\*(低|中)\*\*
+          weight: 2
+          note: 无紧急特征，优先级不高
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-news-2
+    title: 资讯/低优先级邮件（技术周报精选）
+    tags:
+      - basic
+      - priority
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析资讯邮件并给出优先级
+      content: 请处理 input/ 目录下的资讯邮件。
+      files:
+        - path: input/digest.txt
+          content: "Subject: 技术周报精选
+
+            From: 运营 <ops@example.com>
+
+            To: 订阅者 <list@example.com>
+
+
+            本周技术文章精选合集，欢迎浏览。\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 技术周报精选
+          weight: 2
+        - type: regex
+          pattern: 级别：\*\*(低|中)\*\*
+          weight: 2
+          note: 无紧急特征，优先级不高
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-cc-1
+    title: 多收件人/抄送 .eml（Contract Review Needed）
+    tags:
+      - basic
+      - eml
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析多收件人邮件
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/cc.eml
+          content: "From: dave@example.com
+
+            To: legal@example.com
+
+            Subject: Contract Review Needed
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            Cc: boss@example.com, audit@example.com
+
+
+
+            Please review the contract draft before 2026-11-01. Thanks!\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Contract Review Needed
+          weight: 2
+        - type: contains
+          text: "| 抄送 |"
+          weight: 1
+          note: 元信息含抄送行
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-cc-2
+    title: "多收件人/抄送 .eml（Re: Server Migration Plan）"
+    tags:
+      - basic
+      - eml
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析多收件人邮件
+      content: 请处理 input/ 目录下的邮件。
+      files:
+        - path: input/thread.eml
+          content: "From: erin@example.com
+
+            To: bob@example.com
+
+            Subject: Re: Server Migration Plan
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            In-Reply-To: <parent@example.com>
+
+            References: <root@example.com> <parent@example.com>
+
+
+
+            Following up on the migration plan discussed last week.\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "Re: Server Migration Plan"
+          weight: 2
+        - type: contains
+          text: "| 抄送 |"
+          weight: 1
+          note: 元信息含抄送行
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-mbox-1
+    title: mbox 多封邮件（3 封）
+    tags:
+      - basic
+      - mbox
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析 mbox 邮箱文件里的多封邮件
+      content: 请处理 input/ 目录下的 mbox 邮件。
+      files:
+        - path: input/inbox.mbox
+          content: "From - Mon Oct 26 09:00:00 2026
+
+            From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Weekly Report
+
+            Date: Mon, 26 Oct 2026 09:00:00 +0800
+
+
+            Please find the weekly report.
+
+
+            From - Tue Oct 27 10:00:00 2026
+
+            From: carol@example.com
+
+            To: bob@example.com
+
+            Subject: Server Maintenance
+
+            Date: Tue, 27 Oct 2026 10:00:00 +0800
+
+
+            Maintenance is tonight.
+
+
+            From - Wed Oct 28 11:00:00 2026
+
+            From: dave@example.com
+
+            To: bob@example.com
+
+            Subject: Budget Approval
+
+            Date: Wed, 28 Oct 2026 11:00:00 +0800
+
+
+            Budget approval is pending.\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Weekly Report
+          weight: 2
+        - type: regex
+          pattern: 处理邮件数：3
+          weight: 2
+          note: 解析出正确邮件数
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-mbox-2
+    title: mbox 多封邮件（3 封）
+    tags:
+      - basic
+      - mbox
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析 mbox 邮箱文件里的多封邮件
+      content: 请处理 input/ 目录下的 mbox 邮件。
+      files:
+        - path: input/box.mbox
+          content: "From - Mon Oct 26 09:00:00 2026
+
+            From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Weekly Report
+
+            Date: Mon, 26 Oct 2026 09:00:00 +0800
+
+
+            Please find the weekly report.
+
+
+            From - Tue Oct 27 10:00:00 2026
+
+            From: carol@example.com
+
+            To: bob@example.com
+
+            Subject: Server Maintenance
+
+            Date: Tue, 27 Oct 2026 10:00:00 +0800
+
+
+            Maintenance window confirmed.
+
+
+            From - Wed Oct 28 11:00:00 2026
+
+            From: dave@example.com
+
+            To: bob@example.com
+
+            Subject: Release Notes
+
+            Date: Wed, 28 Oct 2026 11:00:00 +0800
+
+
+            Budget approval is pending.\n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Release Notes
+          weight: 2
+        - type: regex
+          pattern: 处理邮件数：3
+          weight: 2
+          note: 解析出正确邮件数
+        - type: contains
+          text: "## 汇总统计"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-bare-1
+    title: 纯文本邮件：主题取文件名（reminder）
+    tags:
+      - basic
+      - txt
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析无邮件头的纯文本邮件
+      content: 请处理 input/ 目录下的纯文本邮件。
+      files:
+        - path: input/reminder.txt
+          content: "记得明天下午三点提交周报，别忘了带上数据截图。\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: reminder
+          weight: 2
+          note: 主题取文件名
+        - type: contains
+          text: "### 草稿回复"
+          weight: 1
+          note: 起草回复小节
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-bare-2
+    title: 纯文本邮件：主题取文件名（memo）
+    tags:
+      - basic
+      - txt
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析无邮件头的纯文本邮件
+      content: 请处理 input/ 目录下的纯文本邮件。
+      files:
+        - path: input/memo.txt
+          content: "记得明天下午三点提交月报，别忘了带上数据截图。\n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: memo
+          weight: 2
+          note: 主题取文件名
+        - type: contains
+          text: "### 草稿回复"
+          weight: 1
+          note: 起草回复小节
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-attach-1
+    title: 带附件 .eml（Contract Draft）
+    tags:
+      - basic
+      - attachment
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析带附件邮件并列出附件清单
+      content: 请处理 input/ 目录下的带附件邮件。
+      files:
+        - path: input/attach.eml
+          content: 'From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Contract Draft
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            MIME-Version: 1.0
+
+            Content-Type: multipart/mixed; boundary="BBB"
+
+
+            --BBB
+
+            Content-Type: text/plain
+
+
+            Please review the attached report.
+
+
+            --BBB
+
+            Content-Type: application/pdf; name="report.pdf"
+
+            Content-Transfer-Encoding: base64
+
+            Content-Disposition: attachment; filename="report.pdf"
+
+
+            JVBERi0xLjQK
+
+            --BBB--
+
+            '
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Contract Draft
+          weight: 2
+        - type: contains
+          text: report.pdf
+          weight: 2
+          note: 附件名出现在附件清单
+        - type: contains
+          text: "### 附件清单"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-attach-2
+    title: 带附件 .eml（Design Review）
+    tags:
+      - basic
+      - attachment
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析带附件邮件并列出附件清单
+      content: 请处理 input/ 目录下的带附件邮件。
+      files:
+        - path: input/draft.eml
+          content: 'From: alice@example.com
+
+            To: bob@example.com
+
+            Subject: Design Review
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            MIME-Version: 1.0
+
+            Content-Type: multipart/mixed; boundary="BBB"
+
+
+            --BBB
+
+            Content-Type: text/plain
+
+
+            Please review the attached design.
+
+
+            --BBB
+
+            Content-Type: application/pdf; name="report.pdf"
+
+            Content-Transfer-Encoding: base64
+
+            Content-Disposition: attachment; filename="report.pdf"
+
+
+            JVBERi0xLjQK
+
+            --BBB--
+
+            '
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Design Review
+          weight: 2
+        - type: contains
+          text: report.pdf
+          weight: 2
+          note: 附件名出现在附件清单
+        - type: contains
+          text: "### 附件清单"
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-bilingual-1
+    title: 中英混合邮件（跨团队协作方案 / Cross-team Plan）
+    tags:
+      - basic
+      - mixed
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析中英混合邮件
+      content: 请处理 input/ 目录下的双语邮件。
+      files:
+        - path: input/bilingual.txt
+          content: "Subject: 跨团队协作方案 / Cross-team Plan
+
+            From: Emily <emily@example.com>
+
+            To: 王五 <wangwu@example.com>
+
+
+            王五你好，这是中英双语的协作方案 draft，请查收。
+
+            Please send feedback before 2026-11-03. 谢谢！\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 跨团队协作方案 / Cross-team Plan
+          weight: 2
+        - type: regex
+          pattern: (摘要|Summary)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-bilingual-2
+    title: 中英混合邮件（Global Rollout Plan）
+    tags:
+      - basic
+      - mixed
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析中英混合邮件
+      content: 请处理 input/ 目录下的双语邮件。
+      files:
+        - path: input/global.txt
+          content: "Subject: Global Rollout Plan
+
+            From: Emily <emily@example.com>
+
+            To: 李四 <wangwu@example.com>
+
+
+            李四你好，这是中英双语的协作方案 draft，请查收。
+
+            Please send feedback before 2026-11-03. 谢谢！\n"
+      params:
+        tone: 友好
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: Global Rollout Plan
+          weight: 2
+        - type: regex
+          pattern: (摘要|Summary)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-thread-1
+    title: "带引用线程的回复邮件（Re: Server Migration Plan）"
+    tags:
+      - basic
+      - thread
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析回复邮件并剥离引用内容
+      content: 请处理 input/ 目录下的回复邮件。
+      files:
+        - path: input/reply.eml
+          content: "From: erin@example.com
+
+            To: bob@example.com
+
+            Subject: Re: Server Migration Plan
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            In-Reply-To: <parent@example.com>
+
+            References: <root@example.com> <parent@example.com>
+
+
+
+            Following up on the migration plan discussed last week.\n"
+      params:
+        tone: 正式
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "Re: Server Migration Plan"
+          weight: 2
+        - type: contains
+          text: 引用线程
+          weight: 1
+          note: 元信息含引用线程
+        - type: regex
+          pattern: (剥离|引用)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-thread-2
+    title: "带引用线程的回复邮件（Re: Q4 Budget Review）"
+    tags:
+      - basic
+      - thread
+    repeat: 5
+    input:
+      kind: text
+      goal: 解析回复邮件并剥离引用内容
+      content: 请处理 input/ 目录下的回复邮件。
+      files:
+        - path: input/followup.eml
+          content: "From: erin@example.com
+
+            To: bob@example.com
+
+            Subject: Re: Q4 Budget Review
+
+            Date: Mon, 27 Oct 2026 09:30:00 +0800
+
+            In-Reply-To: <parent@example.com>
+
+            References: <root@example.com> <parent@example.com>
+
+
+
+            Following up on the budget review discussed last week.\n"
+      params:
+        tone: 简洁
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "Re: Q4 Budget Review"
+          weight: 2
+        - type: contains
+          text: 引用线程
+          weight: 1
+          note: 元信息含引用线程
+        - type: regex
+          pattern: (剥离|引用)
+          weight: 1
+        - type: contains
+          text: "# 邮件处理报告"
+          weight: 2
+          note: 报告固定标题
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

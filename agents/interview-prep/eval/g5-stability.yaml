@@ -1,0 +1,480 @@
+id: ts-b-interview-prep-g5-stability
+agentId: interview-prep
+group: g5-stability
+name: 面试准备 · 稳定性：同输入重复调用
+description: 10 个样本各重复 10 次（离线确定性模式），验证同样种子抽出同样题目、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：技术面 6 题（seed 42）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 1：技术面 6 题（seed 42）
+      files:
+        - path: input/jd.txt
+          content: "职位：后端开发工程师
+
+            职责：负责核心交易系统的服务端研发与性能优化。
+
+            要求：
+
+            - 精通 Java 与 Spring Boot 框架
+
+            - 熟悉 MySQL、Redis、Kafka
+
+            - 了解 Kubernetes 容器化部署\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 技术
+        count: "6"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：6
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：技术
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：技术面 10 题（seed 7）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 2：技术面 10 题（seed 7）
+      files:
+        - path: input/jd.txt
+          content: "职位：算法工程师
+
+            职责：负责推荐排序算法研发与迭代。
+
+            要求：
+
+            - 熟练 Python 与 PyTorch
+
+            - 熟悉 TensorFlow 与 Pandas
+
+            - 掌握 SQL 取数分析\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 技术
+        count: "10"
+        seed: "7"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：10
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：技术
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：行为面 5 题（seed 42）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 3：行为面 5 题（seed 42）
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 行为
+        count: "5"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：5
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：行为
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：行为面 8 题（seed 100）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 4：行为面 8 题（seed 100）
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 行为
+        count: "8"
+        seed: "100"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：8
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：行为
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：产品面 6 题（seed 42）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 5：产品面 6 题（seed 42）
+      files:
+        - path: input/jd.txt
+          content: "职位：产品经理
+
+            职责：负责产品设计与需求分析。
+
+            要求：熟悉产品设计与用户研究。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 产品
+        count: "6"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：6
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：产品
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：产品面 10 题（seed 7）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 6：产品面 10 题（seed 7）
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 产品
+        count: "10"
+        seed: "7"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：10
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：产品
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：综合面 8 题（seed 42）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 7：综合面 8 题（seed 42）
+      files:
+        - path: input/jd.txt
+          content: "职位：数据分析师
+
+            职责：负责业务数据分析与指标体系搭建。
+
+            要求：
+
+            - 熟练 SQL 与 Python
+
+            - 熟悉 Pandas 与 Tableau\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "8"
+        seed: "42"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：8
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：综合
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：综合面 12 题（seed 2026）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 8：综合面 12 题（seed 2026）
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "12"
+        seed: "2026"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：12
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：综合
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：技术面 12 题（seed 2026）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 9：技术面 12 题（seed 2026）
+      files:
+        - path: input/jd.txt
+          content: "职位：前端开发工程师
+
+            职责：负责 C 端活动页与组件库建设。
+
+            要求：
+
+            - 熟练 React 与 TypeScript
+
+            - 熟悉 Node.js 与 Webpack\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 技术
+        count: "12"
+        seed: "2026"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：12
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：技术
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：综合面 15 题（seed 0）
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证确定性抽题稳定
+      content: 稳定性样本 10：综合面 15 题（seed 0）
+      files:
+        - path: input/jd.txt
+          content: "职位：软件开发工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n"
+        - path: input/record.json
+          content: ""
+      params:
+        offline: true
+        type: 综合
+        count: "15"
+        seed: "0"
+        record: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 面试准备报告
+          weight: 2
+        - type: contains
+          text: 题目数：15
+          weight: 2
+          note: 确定性出题数量
+        - type: contains
+          text: 面试类型：综合
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 500
+          weight: 1
+      requiredSuggestions: []

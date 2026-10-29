@@ -1,0 +1,1416 @@
+id: ts-b-resume-reviewer-g2-variation
+agentId: resume-reviewer
+group: g2-variation
+name: 简历诊断 · 输入变体：语言 / 长度 / 岗位 / JD 形态
+description: 中英混合、emoji、表格、极短极长简历与各类 JD 形态下的稳定诊断（模型改写链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-lang-1
+    title: 语言与排版变体（resume-cn.md）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言与排版形态的简历都要产出稳定报告
+      content: 请体检 resume-cn.md（目标岗位：后端开发工程师）。
+      files:
+        - path: input/resume-cn.md
+          content: "# 刘洋
+
+
+            ## 工作经历
+
+            ### 云启科技 · 后端工程师（2021.04 - 至今）
+
+            - 负责用户中心服务开发
+
+            - 重构鉴权模块，接口错误率从 1% 降到 0.1%
+
+
+            ## 教育背景
+
+            - 四川大学 · 计算机 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - Python、Django、PostgreSQL\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 后端开发工程师
+        resume: input/resume-cn.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-cn.md
+          weight: 2
+          note: 报告标注简历文件
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2
+    title: 语言与排版变体（resume-mixed.md）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言与排版形态的简历都要产出稳定报告
+      content: 请体检 resume-mixed.md（目标岗位：Data Engineer）。
+      files:
+        - path: input/resume-mixed.md
+          content: "# Alex Zhou
+
+
+            ## Work Experience
+
+            ### DataFlow Inc. · Data Engineer（2022.01 - 至今）
+
+            - 负责 ETL pipeline 维护
+
+            - Rebuilt nightly ETL jobs with Airflow，处理时长从 3 小时降到 40 分钟
+
+
+            ## Education
+
+            - 同济大学 · 软件工程 · 本科（2018-2022）
+
+
+            ## Skills
+
+            - Python、Spark、Airflow、SQL\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: Data Engineer
+        resume: input/resume-mixed.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-mixed.md
+          weight: 2
+          note: 报告标注简历文件
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3
+    title: 语言与排版变体（resume-en.md）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言与排版形态的简历都要产出稳定报告
+      content: 请体检 resume-en.md（目标岗位：Backend Engineer）。
+      files:
+        - path: input/resume-en.md
+          content: "# Emily Carter
+
+
+            ## Experience
+
+            ### Bright Labs · Backend Engineer (2021.06 - present)
+
+            - Responsible for payment service development
+
+            - Optimized PostgreSQL queries, reducing API latency by 45%
+
+
+            ## Education
+
+            - BS in Computer Science, 2017-2021
+
+
+            ## Skills
+
+            - Python, PostgreSQL, Docker\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: Backend Engineer
+        resume: input/resume-en.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-en.md
+          weight: 2
+          note: 报告标注简历文件
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4
+    title: 语言与排版变体（resume-emoji.md）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言与排版形态的简历都要产出稳定报告
+      content: 请体检 resume-emoji.md（目标岗位：运营专员）。
+      files:
+        - path: input/resume-emoji.md
+          content: "# 🌟 赵琳 🌟
+
+
+            ## 工作经历
+
+            ### 🍊 鲜橙文化 · 运营专员（2023.05 - 至今）
+
+            - 负责小红书账号运营
+
+            - 策划 8 场直播活动，累计曝光 50 万次
+
+
+            ## 教育背景
+
+            - 暨南大学 · 新闻学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - 内容策划、数据分析、Excel\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 运营专员
+        resume: input/resume-emoji.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-emoji.md
+          weight: 2
+          note: 报告标注简历文件
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-5
+    title: 语言与排版变体（resume-table.md）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言与排版形态的简历都要产出稳定报告
+      content: 请体检 resume-table.md（目标岗位：测试开发工程师）。
+      files:
+        - path: input/resume-table.md
+          content: "# 孙浩
+
+
+            ## 工作经历
+
+
+            | 公司 | 职位 | 时间 |
+
+            | --- | --- | --- |
+
+            | 云测科技 | 测试开发 | 2022.02 - 至今 |
+
+
+            ### 云测科技 · 测试开发工程师（2022.02 - 至今）
+
+            - 负责接口自动化测试
+
+            - 搭建 Python 自动化框架，回归时间从 2 天降到 3 小时
+
+
+            ## 教育背景
+
+            - 电子科技大学 · 软件工程 · 本科（2018-2022）
+
+
+            ## 技能
+
+            - Python、Selenium、Pytest\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 测试开发工程师
+        resume: input/resume-table.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-table.md
+          weight: 2
+          note: 报告标注简历文件
+        - type: contains
+          text: 问题清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-1
+    title: 长度变体（resume-tiny.txt）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的简历都要产出稳定报告
+      content: 请体检 resume-tiny.txt（目标岗位：实习生）。
+      files:
+        - path: input/resume-tiny.txt
+          content: "# 何鑫\n\n## 技能\n- Excel、PPT\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 实习生
+        resume: input/resume-tiny.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-tiny.txt
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-2
+    title: 长度变体（resume-10.txt）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的简历都要产出稳定报告
+      content: 请体检 resume-10.txt（目标岗位：后端开发工程师）。
+      files:
+        - path: input/resume-10.txt
+          content: "# 周航
+
+
+            ## 工作经历
+
+
+            ### 云枢科技 · 后端工程师（2021.03 - 至今）
+
+            - 负责服务模块 1 的日常开发与维护
+
+            - 重构模块 2，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 3 的评审与联调
+
+            - 推动模块 4 上线，覆盖 200 万用户
+
+            - 负责服务模块 5 的日常开发与维护
+
+            - 重构模块 6，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 7 的评审与联调
+
+            - 推动模块 8 上线，覆盖 200 万用户
+
+            - 负责服务模块 9 的日常开发与维护
+
+            - 重构模块 10，接口耗时从 500ms 降到 80ms
+
+
+            ## 教育背景
+
+            - 北京邮电大学 · 计算机 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - Go、Kubernetes\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 后端开发工程师
+        resume: input/resume-10.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-10.txt
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-3
+    title: 长度变体（resume-25.txt）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的简历都要产出稳定报告
+      content: 请体检 resume-25.txt（目标岗位：平台工程师）。
+      files:
+        - path: input/resume-25.txt
+          content: "# 马腾
+
+
+            ## 工作经历
+
+
+            ### 云枢科技 · 后端工程师（2021.03 - 至今）
+
+            - 负责服务模块 1 的日常开发与维护
+
+            - 重构模块 2，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 3 的评审与联调
+
+            - 推动模块 4 上线，覆盖 200 万用户
+
+            - 负责服务模块 5 的日常开发与维护
+
+            - 重构模块 6，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 7 的评审与联调
+
+            - 推动模块 8 上线，覆盖 200 万用户
+
+            - 负责服务模块 9 的日常开发与维护
+
+            - 重构模块 10，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 11 的评审与联调
+
+            - 推动模块 12 上线，覆盖 200 万用户
+
+            - 负责服务模块 13 的日常开发与维护
+
+            - 重构模块 14，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 15 的评审与联调
+
+            - 推动模块 16 上线，覆盖 200 万用户
+
+            - 负责服务模块 17 的日常开发与维护
+
+            - 重构模块 18，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 19 的评审与联调
+
+            - 推动模块 20 上线，覆盖 200 万用户
+
+            - 负责服务模块 21 的日常开发与维护
+
+            - 重构模块 22，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 23 的评审与联调
+
+            - 推动模块 24 上线，覆盖 200 万用户
+
+            - 负责服务模块 25 的日常开发与维护
+
+
+            ## 教育背景
+
+            - 北京邮电大学 · 计算机 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - Go、Kubernetes\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 平台工程师
+        resume: input/resume-25.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-25.txt
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-4
+    title: 长度变体（resume-40.txt）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的简历都要产出稳定报告
+      content: 请体检 resume-40.txt（目标岗位：架构师）。
+      files:
+        - path: input/resume-40.txt
+          content: "# 顾北
+
+
+            ## 工作经历
+
+
+            ### 云枢科技 · 后端工程师（2021.03 - 至今）
+
+            - 负责服务模块 1 的日常开发与维护
+
+            - 重构模块 2，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 3 的评审与联调
+
+            - 推动模块 4 上线，覆盖 200 万用户
+
+            - 负责服务模块 5 的日常开发与维护
+
+            - 重构模块 6，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 7 的评审与联调
+
+            - 推动模块 8 上线，覆盖 200 万用户
+
+            - 负责服务模块 9 的日常开发与维护
+
+            - 重构模块 10，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 11 的评审与联调
+
+            - 推动模块 12 上线，覆盖 200 万用户
+
+            - 负责服务模块 13 的日常开发与维护
+
+            - 重构模块 14，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 15 的评审与联调
+
+            - 推动模块 16 上线，覆盖 200 万用户
+
+            - 负责服务模块 17 的日常开发与维护
+
+            - 重构模块 18，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 19 的评审与联调
+
+            - 推动模块 20 上线，覆盖 200 万用户
+
+            - 负责服务模块 21 的日常开发与维护
+
+            - 重构模块 22，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 23 的评审与联调
+
+            - 推动模块 24 上线，覆盖 200 万用户
+
+            - 负责服务模块 25 的日常开发与维护
+
+            - 重构模块 26，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 27 的评审与联调
+
+            - 推动模块 28 上线，覆盖 200 万用户
+
+            - 负责服务模块 29 的日常开发与维护
+
+            - 重构模块 30，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 31 的评审与联调
+
+            - 推动模块 32 上线，覆盖 200 万用户
+
+            - 负责服务模块 33 的日常开发与维护
+
+            - 重构模块 34，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 35 的评审与联调
+
+            - 推动模块 36 上线，覆盖 200 万用户
+
+            - 负责服务模块 37 的日常开发与维护
+
+            - 重构模块 38，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 39 的评审与联调
+
+            - 推动模块 40 上线，覆盖 200 万用户
+
+
+            ## 教育背景
+
+            - 北京邮电大学 · 计算机 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - Java、Kafka\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 架构师
+        resume: input/resume-40.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-40.txt
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-5
+    title: 长度变体（resume-longline.txt）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同长度的简历都要产出稳定报告
+      content: 请体检 resume-longline.txt（目标岗位：数据工程师）。
+      files:
+        - path: input/resume-longline.txt
+          content: "# 秦朗
+
+
+            ## 工作经历
+
+
+            ### 恒星数据
+
+            - 负责一整条超长的数据链路建设工作包括采集清洗建模调度监控告警回溯补数权限治理成本优化等所有环节的日常推进与跨部门协作沟通以及最终的交付验收和文档沉淀工作
+
+
+            ## 技能
+
+            - Spark、Flink\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        role: 数据工程师
+        resume: input/resume-longline.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-longline.txt
+          weight: 2
+        - type: contains
+          text: 评分卡
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 600
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-role-1
+    title: 岗位变体（小学数学教师）
+    tags:
+      - variation
+      - role
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同职业的简历与 JD 都能诊断
+      content: 请体检 resume-teacher.md 并对照 JD（目标岗位：小学数学教师）。
+      files:
+        - path: input/resume-teacher.md
+          content: "# 林小雨
+
+
+            ## 工作经历
+
+            ### 阳光小学 · 数学教师（2021.09 - 至今）
+
+            - 负责三年级数学教学
+
+            - 带班成绩平均分提升 15 分
+
+
+            ## 教育背景
+
+            - 华东师范大学 · 小学教育 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - 课堂教学、家校沟通、多媒体课件\n"
+        - path: input/jd.txt
+          content: "职位：小学数学教师
+
+            职责：负责小学数学课堂教学与班级管理。
+
+            要求：师范类专业，热爱教育，具备课堂管理与家校沟通能力。\n"
+      params:
+        role: 小学数学教师
+        resume: input/resume-teacher.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: 小学数学教师
+          weight: 2
+        - type: regex
+          pattern: (JD 匹配|匹配度)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-role-2
+    title: 岗位变体（临床护士）
+    tags:
+      - variation
+      - role
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同职业的简历与 JD 都能诊断
+      content: 请体检 resume-nurse.md 并对照 JD（目标岗位：临床护士）。
+      files:
+        - path: input/resume-nurse.md
+          content: "# 周敏
+
+
+            ## 工作经历
+
+            ### 仁和医院 · 护士（2020.07 - 至今）
+
+            - 负责内科病房护理
+
+            - 参与 300 例患者的护理工作
+
+
+            ## 教育背景
+
+            - 首都医科大学 · 护理学 · 本科（2016-2020）
+
+
+            ## 技能
+
+            - 基础护理、急救配合、病历书写\n"
+        - path: input/jd.txt
+          content: "职位：临床护士
+
+            职责：负责病房护理与患者管理。
+
+            要求：护理学专业，具备护士执业资格，有三甲医院经验优先。\n"
+      params:
+        role: 临床护士
+        resume: input/resume-nurse.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: 临床护士
+          weight: 2
+        - type: regex
+          pattern: (JD 匹配|匹配度)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-role-3
+    title: 岗位变体（大客户销售经理）
+    tags:
+      - variation
+      - role
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同职业的简历与 JD 都能诊断
+      content: 请体检 resume-sales.md 并对照 JD（目标岗位：大客户销售经理）。
+      files:
+        - path: input/resume-sales.md
+          content: "# 郭涛
+
+
+            ## 工作经历
+
+            ### 恒通软件 · 销售经理（2019.03 - 至今）
+
+            - 负责华东区域大客户开拓
+
+            - 完成年度 800 万元销售目标，达成率 120%
+
+
+            ## 教育背景
+
+            - 上海大学 · 市场营销 · 本科（2015-2019）
+
+
+            ## 技能
+
+            - 客户关系管理、商务谈判、CRM\n"
+        - path: input/jd.txt
+          content: "职位：大客户销售经理
+
+            职责：负责企业级软件的大客户销售与关系维护。
+
+            要求：3 年以上 B 端销售经验，具备大客户资源与商务谈判能力。\n"
+      params:
+        role: 大客户销售经理
+        resume: input/resume-sales.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: 大客户销售经理
+          weight: 2
+        - type: regex
+          pattern: (JD 匹配|匹配度)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-role-4
+    title: 岗位变体（HRBP）
+    tags:
+      - variation
+      - role
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同职业的简历与 JD 都能诊断
+      content: 请体检 resume-hr.md 并对照 JD（目标岗位：HRBP）。
+      files:
+        - path: input/resume-hr.md
+          content: "# 蒋雯
+
+
+            ## 工作经历
+
+            ### 星辰集团 · HRBP（2022.04 - 至今）
+
+            - 负责 200 人研发团队的 HRBP 工作
+
+            - 搭建技术岗胜任力模型，招聘到岗周期缩短 30%
+
+
+            ## 教育背景
+
+            - 中国人民大学 · 人力资源管理 · 本科（2018-2022）
+
+
+            ## 技能
+
+            - 招聘、绩效、员工关系、Excel\n"
+        - path: input/jd.txt
+          content: "职位：HRBP
+
+            职责：支持研发组织的人才招聘、绩效与组织发展。
+
+            要求：熟悉 HR 三支柱模式，有互联网研发团队支持经验优先。\n"
+      params:
+        role: HRBP
+        resume: input/resume-hr.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: HRBP
+          weight: 2
+        - type: regex
+          pattern: (JD 匹配|匹配度)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-role-5
+    title: 岗位变体（执业律师）
+    tags:
+      - variation
+      - role
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同职业的简历与 JD 都能诊断
+      content: 请体检 resume-lawyer.md 并对照 JD（目标岗位：执业律师）。
+      files:
+        - path: input/resume-lawyer.md
+          content: "# 罗宇
+
+
+            ## 工作经历
+
+            ### 正衡律师事务所 · 律师（2021.10 - 至今）
+
+            - 负责合同审查与争议解决
+
+            - 承办 60 余起民商事案件
+
+
+            ## 教育背景
+
+            - 中国政法大学 · 法学 · 硕士（2018-2021）
+
+
+            ## 技能
+
+            - 合同法、争议解决、法律检索\n"
+        - path: input/jd.txt
+          content: "职位：执业律师
+
+            职责：负责民商事争议解决与公司法律顾问业务。
+
+            要求：已取得律师执业证，具备扎实的法律文书写作能力。\n"
+      params:
+        role: 执业律师
+        resume: input/resume-lawyer.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: 执业律师
+          weight: 2
+        - type: regex
+          pattern: (JD 匹配|匹配度)
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-1
+    title: JD 形态变体（resume-jd1.txt）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的 JD（英文/超长/过短/无技能词）都能做匹配分析
+      content: 请把 resume-jd1.txt 与给定 JD 做匹配分析。
+      files:
+        - path: input/resume-jd1.txt
+          content: "# 张伟（数据分析师）
+
+
+            手机：13800001234 ｜ 邮箱：zhangwei@example.com
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常业务数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 我参与了用户增长分析项目
+
+
+            ### 星辰数据 · 数据实习生（2022.06 - 2022.12）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析，输出 3 份周报
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL、Excel、Tableau\n"
+        - path: input/jd.txt
+          content: "Machine Learning Engineer: build ranking models with Python and PyTorch, deploy with Docker and Kubernetes, strong SQL skills required."
+      params:
+        role: 算法工程师
+        resume: input/resume-jd1.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-jd1.txt
+          weight: 2
+        - type: contains
+          text: 命中技能
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-2
+    title: JD 形态变体（resume-jd2.txt）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的 JD（英文/超长/过短/无技能词）都能做匹配分析
+      content: 请把 resume-jd2.txt 与给定 JD 做匹配分析。
+      files:
+        - path: input/resume-jd2.txt
+          content: "# 张伟（数据分析师）
+
+
+            手机：13800001234 ｜ 邮箱：zhangwei@example.com
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常业务数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 我参与了用户增长分析项目
+
+
+            ### 星辰数据 · 数据实习生（2022.06 - 2022.12）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析，输出 3 份周报
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL、Excel、Tableau\n"
+        - path: input/jd.txt
+          content: "职位：后端开发工程师
+
+            要求：Java、Spring、Spring Boot、MyBatis、MySQL、Redis、Kafka、Elasticsearch、Docker、Kubernetes、Git、Linux、设计模式、微服务、分布式、高并发、性能优化、单元测试、CI/CD。
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes
+
+            - 需要掌握的技术很多，包括 Java、Spring、MySQL、Redis、Kafka、Docker、Kubernetes\n"
+      params:
+        role: 后端开发工程师
+        resume: input/resume-jd2.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-jd2.txt
+          weight: 2
+        - type: contains
+          text: 命中技能
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-3
+    title: JD 形态变体（resume-jd3.txt）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的 JD（英文/超长/过短/无技能词）都能做匹配分析
+      content: 请把 resume-jd3.txt 与给定 JD 做匹配分析。
+      files:
+        - path: input/resume-jd3.txt
+          content: "# 张伟（数据分析师）
+
+
+            手机：13800001234 ｜ 邮箱：zhangwei@example.com
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常业务数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 我参与了用户增长分析项目
+
+
+            ### 星辰数据 · 数据实习生（2022.06 - 2022.12）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析，输出 3 份周报
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL、Excel、Tableau\n"
+        - path: input/jd.txt
+          content: 招内容编辑，会写文章就行。
+      params:
+        role: 内容编辑
+        resume: input/resume-jd3.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-jd3.txt
+          weight: 2
+        - type: contains
+          text: 命中技能
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-4
+    title: JD 形态变体（resume-jd4.txt）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的 JD（英文/超长/过短/无技能词）都能做匹配分析
+      content: 请把 resume-jd4.txt 与给定 JD 做匹配分析。
+      files:
+        - path: input/resume-jd4.txt
+          content: "# 张伟（数据分析师）
+
+
+            手机：13800001234 ｜ 邮箱：zhangwei@example.com
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常业务数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 我参与了用户增长分析项目
+
+
+            ### 星辰数据 · 数据实习生（2022.06 - 2022.12）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析，输出 3 份周报
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL、Excel、Tableau\n"
+        - path: input/jd.txt
+          content: "职位：行政助理
+
+            职责：会议安排、办公用品采购、访客接待。
+
+            要求：细致耐心，沟通良好。\n"
+      params:
+        role: 行政助理
+        resume: input/resume-jd4.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-jd4.txt
+          weight: 2
+        - type: contains
+          text: 命中技能
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-jd-5
+    title: JD 形态变体（resume-jd5.txt）
+    tags:
+      - variation
+      - jd
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同形态的 JD（英文/超长/过短/无技能词）都能做匹配分析
+      content: 请把 resume-jd5.txt 与给定 JD 做匹配分析。
+      files:
+        - path: input/resume-jd5.txt
+          content: "# 张伟（数据分析师）
+
+
+            手机：13800001234 ｜ 邮箱：zhangwei@example.com
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常业务数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 我参与了用户增长分析项目
+
+
+            ### 星辰数据 · 数据实习生（2022.06 - 2022.12）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析，输出 3 份周报
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL、Excel、Tableau\n"
+        - path: input/jd.txt
+          content: "Data Analyst（数据分析师）
+
+            - Use SQL & Python for business analysis
+
+            - 熟悉 Tableau 可视化
+
+            - 3 年以上数据分析经验\n"
+      params:
+        role: 数据分析师
+        resume: input/resume-jd5.txt
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 1
+        - type: contains
+          text: resume-jd5.txt
+          weight: 2
+        - type: contains
+          text: 命中技能
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []

@@ -1,0 +1,672 @@
+id: ts-b-doc-summarizer-g4-robust
+agentId: doc-summarizer
+group: g4-robust
+name: 长文摘要 · 鲁棒性：畸形 / 乱码 / 编码异常输入
+description: 乱码、控制字符、零宽字符、结构损坏等异常输入下不崩溃、优雅降级（离线抽取式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：mojibake 乱码
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "鐑傛嵁鏂囨。閿欒緶銆傝繖鏄حاض涔辩爜銆傛嵁鏂囨。閿欒緶銆傛嵁鏂囨。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "a\ab = 2\ac = 3\a\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：零宽字符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "a​b‌c‍d\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：emoji 与变体选择符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "❤️‍🔥😀👍🏽🚀✨\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：未闭合代码块
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "# 文档\n\n```python\nprint(1)\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：HTML 垃圾嵌套
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "<div><span><p>hello</p><script>var x = 1;</script></span><div>\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：重复标点 50 次
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "啊啊啊啊啊啊啊啊啊啊！！！！！！！！！！。。。。。。。。。。？？？？？？？？？？\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：混合换行符
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "第一段\r\n第二段\r第三段\n\n第四段\r\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：超长单词
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：RTL 文本
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃
+      content: "שלום עולם مثال على الكود\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 异常输入仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-1
+    title: 结构损坏输入：行列不齐的表格
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: "| a | b | c |
+
+        |---|---|
+
+        | 1 | 2 | 3 | 4 |
+
+        | 5 |\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-2
+    title: 结构损坏输入：内部标题标记行
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: "【H1】大标题\n【H2】小标题\n正文内容在这里。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-3
+    title: 结构损坏输入：数学符号行
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: "∑∫√∞≠≤≥±×÷π\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-4
+    title: 结构损坏输入：全角空格与制表符
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: "全角　空格　测试\n列一\t列二\t\t列三\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-5
+    title: 结构损坏输入：纯 URL 行
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: "https://example.com/a?b=1&c=2
+
+        https://example.com/d\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-6
+    title: 结构损坏输入：不成对引号括号
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: '他说："这是一段没有结束的引号。（(（[[[
+
+        '
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-7
+    title: 结构损坏输入：花括号嵌套
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: '配置内容：外层配置{"key": "值"}，还有模板占位符与其它符号混排。
+
+        '
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-8
+    title: 结构损坏输入：重复标题
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: "# 标题\n# 标题\n# 标题\n# 标题\n# 标题\n正文。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-9
+    title: 结构损坏输入：HTML 实体
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: "价格 &amp; 说明 &lt;示例&gt; &quot;引用&quot;\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-format-10
+    title: 结构损坏输入：BOM 开头
+    tags:
+      - robust
+      - offline
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 结构损坏的文档不能让工具崩溃
+      content: "﻿带 BOM 的文档内容，用于验证编码鲁棒性。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 2
+          note: 结构损坏仍产出摘要报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 150
+          weight: 1
+      requiredSuggestions: []

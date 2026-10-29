@@ -1,0 +1,928 @@
+id: ts-b-dependency-auditor-g3-edge
+agentId: dependency-auditor
+group: g3-edge
+name: 依赖审计 · 边界情况：空 / 极小 / 极大清单
+description: 空清单、单包、超长约束、30 包大清单、缺失引用等边界输入下的稳定产出（离线模式）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空清单
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: ""
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：只有注释
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "# 只有注释\n# 还是注释\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：只有空行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "\n\n\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：单包无版本
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA001
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：空 package.json
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/package.json
+          content: "{}"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：package.json 仅元数据
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/package.json
+          content: '{"name": "app", "version": "1.0.0"}'
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：pyproject 无依赖
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/pyproject.toml
+          content: '[project]
+
+            name = "x"
+
+            version = "1.0"
+
+            '
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：单包精确固定
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有达到|逐包明细
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：超长版本约束
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：30 包大清单
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3
+
+            flask==3.0.3
+
+            django==4.2.10
+
+            numpy==1.26.4
+
+            pandas==2.2.0
+
+            pkg01==1.0.1
+
+            pkg02==1.0.2
+
+            pkg03==1.0.3
+
+            pkg04==1.0.4
+
+            pkg05==1.0.5
+
+            pkg06==1.0.6
+
+            pkg07==1.0.7
+
+            pkg08==1.0.8
+
+            pkg09==1.0.9
+
+            pkg10==1.0.10
+
+            pkg11==1.0.11
+
+            pkg12==1.0.12
+
+            pkg13==1.0.13
+
+            pkg14==1.0.14
+
+            pkg15==1.0.15
+
+            pkg16==1.0.16
+
+            pkg17==1.0.17
+
+            pkg18==1.0.18
+
+            pkg19==1.0.19
+
+            pkg20==1.0.20
+
+            pkg21==1.0.21
+
+            pkg22==1.0.22
+
+            pkg23==1.0.23
+
+            pkg24==1.0.24
+
+            pkg25==1.0.25\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 逐包明细|规则命中统计
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-11
+    title: 边界输入：空 Pipfile
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/Pipfile
+          content: ""
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-12
+    title: 边界输入：包名带空格
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests\ \n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA001
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-13
+    title: 边界输入：单字符包名
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "a==1.0.0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-14
+    title: 边界输入：过宽约束
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "flask>=0\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: \| (提示|警告|风险) \| DA002
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-15
+    title: 边界输入：续行与哈希
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3 \\
+
+            \    --hash=sha256:abc
+
+            flask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-16
+    title: 边界输入：-r 引用缺失文件
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "-r missing-base.txt
+
+            requests==2.32.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-17
+    title: 边界输入：环境标记
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests>=2.31 ; python_version<'3.12'
+
+            flask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-18
+    title: 边界输入：URL 依赖
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "pkg @ https://example.com/x.whl
+
+            flask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-19
+    title: 边界输入：空 Pipfile.lock
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/Pipfile.lock
+          content: ""
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有解析出任何依赖|解析备注
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g3-edge-20
+    title: 边界输入：重复相同声明
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 边界输入也要产出可读审计报告
+      content: 请审计 input/deps 目录下的依赖清单，给出风险与升级建议。
+      files:
+        - path: input/deps/requirements.txt
+          content: "requests==2.32.3
+
+            requests==2.32.3
+
+            flask==3.0.3\n"
+        - path: input/deps/NOTES.txt
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/deps/README.md
+          content: "（占位文件，不是依赖清单）\n"
+        - path: input/advisory.json
+          content: "[]"
+      params:
+        level: 提示
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 依赖风险审计报告
+          weight: 2
+          note: 边界输入仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 概览|逐包明细
+          weight: 2
+          note: 边界处理结果符合预期
+        - type: min_length
+          value: 200
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

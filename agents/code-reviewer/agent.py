@@ -897,6 +897,45 @@ def response_text(response):
     return "\n".join(parts).strip()
 
 
+def _extract_json_items(content):
+    """尽量宽容地从模型回复里抠出 JSON 条目：整体数组、{"findings":[...]}、
+    括号不闭合 / 多个对象拼接的残缺输出，都尽量恢复出可用条目再解析。"""
+    decoder = json.JSONDecoder()
+    candidates = []
+    for anchor in ("[", "{"):
+        pos = 0
+        while True:
+            idx = content.find(anchor, pos)
+            if idx < 0:
+                break
+            try:
+                value, _ = decoder.raw_decode(content[idx:])
+            except ValueError:
+                pos = idx + 1
+                continue
+            candidates.append(value)
+            pos = idx + 1
+    items = []
+    for value in candidates:
+        if isinstance(value, list):
+            items.extend(v for v in value if isinstance(v, dict))
+        elif isinstance(value, dict):
+            inner = value.get("findings")
+            if isinstance(inner, list):
+                items.extend(v for v in inner if isinstance(v, dict))
+            else:
+                items.append(value)
+    seen = set()
+    unique = []
+    for item in items:
+        key = (str(item.get("title", "")), str(item.get("file", "")), str(item.get("line", "")))
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(item)
+    return unique
+
+
 def parse_findings_json(text):
     """尽力把模型回复解析成 Finding 列表；解析不出来返回 None"""
     if not text:
@@ -905,18 +944,11 @@ def parse_findings_json(text):
     if content.startswith("```"):
         content = re.sub(r"^```[A-Za-z]*\s*", "", content)
         content = re.sub(r"\s*```$", "", content)
-    start = content.find("[")
-    end = content.rfind("]")
-    if start < 0 or end <= start:
-        return None
-    try:
-        data = json.loads(content[start:end + 1])
-    except ValueError:
-        return None
-    if not isinstance(data, list):
+    items = _extract_json_items(content)
+    if not items:
         return None
     findings = []
-    for item in data:
+    for item in items:
         if not isinstance(item, dict):
             continue
         title = str(item.get("title") or "").strip()

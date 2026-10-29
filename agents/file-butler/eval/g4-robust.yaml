@@ -1,0 +1,310 @@
+id: ts-b-file-butler-g4-robust
+agentId: file-butler
+group: g4-robust
+name: 本地文件管家 · 鲁棒性：乱码 / 无效命令 / 越权与缺文件
+description: 乱码内容、乱码命令、无关命令、越权路径、不存在文件等异常输入下优雅处理不崩溃（模型链路）（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-robust-1
+    title: 异常输入：文件内容乱码
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：文件内容乱码
+      files:
+        - path: files/mojibake.txt
+          content: "���乱码文件��\n"
+        - path: files/正常.md
+          content: "# 正常\n"
+      params:
+        cmd: 总结每个文件的内容要点，写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-2
+    title: 异常输入：控制字符内容
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：控制字符内容
+      files:
+        - path: files/ctrl.txt
+          content: "控\a制\x02字符\a内容\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 读取文件并总结，写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-3
+    title: 异常输入：emoji 内容
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：emoji 内容
+      files:
+        - path: files/emoji.md
+          content: "# 📦 项目资料\n\n- 🚀 里程碑一\n- 🚀 里程碑二\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 总结文件内容，写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-4
+    title: 异常输入：命令是乱码
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：命令是乱码
+      files:
+        - path: files/笔记.md
+          content: "# 笔记\n\n- 内容\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: "！！！@@@ ### ~~~ ???"
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-5
+    title: 异常输入：命令与文件无关
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：命令与文件无关
+      files:
+        - path: files/笔记.md
+          content: "# 笔记\n\n- 内容\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 帮我写一首关于春天的诗
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-6
+    title: 异常输入：越权读取命令
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：越权读取命令
+      files:
+        - path: files/笔记.md
+          content: "# 笔记\n\n- 内容\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 读取 ../secret.txt 的内容并写入 report.md
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-7
+    title: 异常输入：目标文件不存在
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：目标文件不存在
+      files:
+        - path: files/笔记.md
+          content: "# 笔记\n\n- 内容\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 读取 nope.txt 的内容总结后写入 report.md
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-8
+    title: 异常输入：超长文件名
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：超长文件名
+      files:
+        - path: files/长名.md
+          content: "# 内容\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 列出文件写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-9
+    title: 异常输入：文件含 NUL
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：文件含 NUL
+      files:
+        - path: files/nul.txt
+          content: "夹杂\0NUL 的内容\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 读取文件内容总结，写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []
+  - id: g4-robust-10
+    title: 异常输入：超长命令 500 字
+    tags:
+      - robust
+    repeat: 10
+    input:
+      kind: text
+      goal: 异常输入不能让工具崩溃，优雅处理即可
+      content: 异常用例：超长命令 500 字
+      files:
+        - path: files/任务.md
+          content: "# 任务\n\n- 内容\n"
+        - path: files/.pad2
+          content: ""
+      params:
+        cmd: 请完成一个任务：先看文件夹结构，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，然后逐步完成整理工作并随时说明进展，最后把结果写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 20
+          weight: 2
+        - type: regex
+          pattern: (?i)(report|文件|写入|完成|清单|统计|总结|说明|无法|拒绝|抱歉)
+          weight: 2
+      requiredSuggestions: []

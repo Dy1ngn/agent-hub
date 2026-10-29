@@ -1,0 +1,824 @@
+id: ts-b-doc-summarizer-g2-variation
+agentId: doc-summarizer
+group: g2-variation
+name: 长文摘要 · 输入变体：结构 / 规模 / 语言 / 参数组合
+description: 不同文档结构、规模、语言与 level/keywords 参数组合下的摘要表现（模型生成链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-struct-1
+    title: 文档结构变体（多级标题 markdown）
+    tags:
+      - variation
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同结构的文档都要产出完整摘要
+      content: "# 总体介绍
+
+
+        平台服务面向企业客户提供数据处理能力。
+
+
+        ## 子模块一
+
+
+        数据接入模块支持多种数据源接入。
+
+
+        ### 细节
+
+
+        接入延迟控制在秒级。
+
+
+        ## 子模块二
+
+
+        数据清洗模块内置常见清洗规则。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 章节结构
+          weight: 1
+          note: 结构树章节存在
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-struct-2
+    title: 文档结构变体（纯文本无标题）
+    tags:
+      - variation
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同结构的文档都要产出完整摘要
+      content: "这是一份没有标题的纯文本材料。第一段介绍背景，城市交通拥堵问题日益突出。
+
+        第二段介绍方法，通过信号配时优化与潮汐车道缓解拥堵。
+
+        第三段给出结论，试点区域通行时间平均缩短 12%。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 章节结构
+          weight: 1
+          note: 结构树章节存在
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-struct-3
+    title: 文档结构变体（列表为主）
+    tags:
+      - variation
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同结构的文档都要产出完整摘要
+      content: "# 采购清单说明
+
+
+        - 服务器：20 台，用于扩容
+
+        - 网络设备：交换机 10 台
+
+        - 存储：全闪阵列 2 套
+
+        - 服务：三年维保
+
+
+        备注：清单金额已含税，交付周期为 45 天。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 章节结构
+          weight: 1
+          note: 结构树章节存在
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-struct-4
+    title: 文档结构变体（表格加段落）
+    tags:
+      - variation
+      - structure
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同结构的文档都要产出完整摘要
+      content: "# 季度销量统计
+
+
+        | 区域 | 销量 | 同比 |
+
+        | --- | --- | --- |
+
+        | 华东 | 1200 | 12% |
+
+        | 华南 | 900 | 8% |
+
+
+        从表格可以看出华东领先。整体销量受节假日促销拉动明显。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 章节结构
+          weight: 1
+          note: 结构树章节存在
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-1
+    title: 文档规模变体（超短一句）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文档都要产出摘要
+      content: "今天天气很好，适合出门散步。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-2
+    title: 文档规模变体（短文三段）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文档都要产出摘要
+      content: "图书馆暑期开放时间调整。暑期图书馆每天开放十二小时。
+
+        图书馆新增自习座位两百个，图书馆还延长了借阅期限。
+
+        读者可通过图书馆小程序预约座位。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-3
+    title: 文档规模变体（中等文档）
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文档都要产出摘要
+      content: "# 城市绿化年报
+
+
+        城市绿化覆盖率提升到 43%，城市绿化工作聚焦口袋公园与林荫道。
+
+        新增口袋公园 80 个，城市绿化惠及更多社区居民。
+
+        林荫道改造 120 公里，城市绿化与慢行系统结合，步行体验明显提升。
+
+        养护方面，城市绿化养护引入智能灌溉，节水 20%。
+
+        下一年计划继续推进城市绿化，重点补齐老城区绿地缺口。\n"
+      files:
+        - path: input/extra.md
+          content: 备用材料：本段来自 extra 文档。
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-size-4
+    title: 文档规模变体（较长文档（约 2500 字））
+    tags:
+      - variation
+      - scale
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同规模的文档都要产出摘要
+      content: "# 数字化转型白皮书节选
+
+
+        数字化转型正在重塑各行各业的经营方式。本白皮书围绕数字化转型的路径、方法与案例展开。
+
+        第一章，数字化转型的背景。人口红利减弱、流量成本上升，企业必须通过数字化转型寻找新的增长曲线。
+
+        第二章，数字化转型的方法论。数字化转型要从战略、组织、技术三个层面协同推进：战略层面明确数字化转型目标，组织层面建立跨部门的数字化转型团队，技术层面搭建统一的数据底座。
+
+        第三章，数字化转型的典型场景。营销数字化是转型最快的场景，通过用户画像与智能推荐提升转化率；供应链数字化通过需求预测降低库存；生产数字化通过设备联网提升良率；客服数字化通过智能问答降低人工成本。
+
+        第四章，数字化转型的组织保障。数字化转型需要一把手工程，需要配套的考核与激励机制。很多企业的数字化转型受阻，根因是组织惯性而非技术。
+
+        第五章，数字化转型的度量。建议用数据驱动程度、线上化率、决策自动化率三个指标度量数字化转型进展。
+
+        第六章，案例一：某零售企业的数字化转型。该企业用三年完成数字化转型，线上营收占比从 15% 提升到 55%。
+
+        第七章，案例二：某制造企业的数字化转型。该企业通过设备联网与质量预测，把不良率降低 30%。
+
+        第八章，风险与对策。数字化转型常见风险包括数据孤岛、人才短缺与投入产出失衡，需要在转型之初就建立风险清单。
+
+        第九章，路线图。建议企业以 90 天为一个迭代周期，小步快跑推进数字化转型。
+
+        第十章，结语。数字化转型是长期工程，唯有坚持长期主义，才能把数字化转型的红利真正兑现。
+
+        补充说明：本白皮书的调研覆盖 200 家企业，数字化转型成熟度模型分为五级。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-1
+    title: 语言变体（纯中文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言的文档都要产出摘要报告
+      content: "春季运动会纪实。春季运动会在操场举行，春季运动会共设十二个比赛项目。
+
+        同学们在春季运动会上奋勇争先，春季运动会还设置了趣味项目。
+
+        最终三年级二班获得春季运动会团体冠军。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-2
+    title: 语言变体（纯英文）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言的文档都要产出摘要报告
+      content: "# Remote Work Survey
+
+
+        The survey shows remote work remains popular. Remote work improves focus for many engineers.
+
+        Companies refine remote work policies. Hybrid remote work is the most common model.
+
+        Managers invest in remote work tooling and async documentation.\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-3
+    title: 语言变体（中英混合）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言的文档都要产出摘要报告
+      content: "# API 网关介绍
+
+
+        API 网关是系统的统一入口，负责 routing 与 rate limit。
+
+        我们的 API 网关基于 open source 组件构建，支持 plugin 扩展。
+
+        API 网关的监控接入 Prometheus，告警走 on-call 流程。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-lang-4
+    title: 语言变体（数字与表格密集）
+    tags:
+      - variation
+      - language
+    repeat: 5
+    input:
+      kind: text
+      goal: 不同语言的文档都要产出摘要报告
+      content: "# 月度运营数据
+
+
+        月度营收 3200 万，环比增长 6%。月度新增用户 12 万，留存率 43%。
+
+        月度订单量 85 万单，客单价 137 元。月度投诉率 0.12%，环比下降 0.03 个百分点。
+
+        月度渠道投放 400 万，ROI 为 1.8。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: regex
+          pattern: 正文共 [0-9]+ 个段落
+          weight: 1
+          note: 统计行格式稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-level-1
+    title: 摘要详细程度参数（简要）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定详细程度输出摘要
+      content: "物流年度总结。物流时效持续改善，物流成本稳步下降。
+
+        物流网络覆盖扩大到 2800 个区县，物流破损率下降 15%。
+
+        下一年物流工作重点是冷链能力建设。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: brief
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 详细程度：简要
+          weight: 2
+          note: 报告元信息记录详细程度参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-level-2
+    title: 摘要详细程度参数（标准）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定详细程度输出摘要
+      content: "物流年度总结。物流时效持续改善，物流成本稳步下降。
+
+        物流网络覆盖扩大到 2800 个区县，物流破损率下降 15%。
+
+        下一年物流工作重点是冷链能力建设。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 详细程度：标准
+          weight: 2
+          note: 报告元信息记录详细程度参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-level-3
+    title: 摘要详细程度参数（详细）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定详细程度输出摘要
+      content: "物流年度总结。物流时效持续改善，物流成本稳步下降。
+
+        物流网络覆盖扩大到 2800 个区县，物流破损率下降 15%。
+
+        下一年物流工作重点是冷链能力建设。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 详细程度：详细
+          weight: 2
+          note: 报告元信息记录详细程度参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-level-4
+    title: 摘要详细程度参数（详细）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定详细程度输出摘要
+      content: "客服年度报告。客服满意度提升到 92%，客服平均响应时长缩短到 18 秒。
+
+        智能客服承担了 61% 的咨询量，客服人力转向复杂问题处理。
+
+        客服培训体系升级，新人客服上岗周期缩短一半。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: detailed
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 详细程度：详细
+          weight: 2
+          note: 报告元信息记录详细程度参数
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-keywords-1
+    title: 关键词数量参数（1 个）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定关键词数量提取关键词
+      content: "食品安全科普。食品安全关系每个人的健康。选购食品要注意生产日期，储存食品要注意温度。
+
+        烹饪食品要烧熟煮透，食品安全也离不开厨房卫生。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "1"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 出现次数
+          weight: 1
+          note: 关键词表存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-keywords-2
+    title: 关键词数量参数（3 个）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定关键词数量提取关键词
+      content: "食品安全科普。食品安全关系每个人的健康。选购食品要注意生产日期，储存食品要注意温度。
+
+        烹饪食品要烧熟煮透，食品安全也离不开厨房卫生。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "3"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 出现次数
+          weight: 1
+          note: 关键词表存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-keywords-3
+    title: 关键词数量参数（10 个）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定关键词数量提取关键词
+      content: "食品安全科普。食品安全关系每个人的健康。选购食品要注意生产日期，储存食品要注意温度。
+
+        烹饪食品要烧熟煮透，食品安全也离不开厨房卫生。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "10"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 出现次数
+          weight: 1
+          note: 关键词表存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-keywords-4
+    title: 关键词数量参数（50 个）
+    tags:
+      - variation
+      - params
+    repeat: 5
+    input:
+      kind: text
+      goal: 按指定关键词数量提取关键词
+      content: "食品安全科普。食品安全关系每个人的健康。选购食品要注意生产日期，储存食品要注意温度。
+
+        烹饪食品要烧熟煮透，食品安全也离不开厨房卫生。\n"
+      files:
+        - path: input/extra.md
+          content: ""
+      params:
+        level: standard
+        keywords: "50"
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 文档摘要报告
+          weight: 1
+        - type: contains
+          text: 出现次数
+          weight: 1
+          note: 关键词表存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

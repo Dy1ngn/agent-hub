@@ -1,0 +1,1314 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：JD 画像 + 抽题 + 框架 + 模拟面试",
+      "description": "典型 JD 与面试类型下的完整链路：岗位画像、可复现抽题、答题框架、复习计划与模型模拟面试",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-tech-{i}",
+          "title": "技术面出题（{role}）",
+          "tags": [
+            "basic",
+            "tech"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "按 JD 抽技术面题目并给答题框架",
+            "content": "请为 {role} 岗位生成技术面准备文档，重点技能：{skill}。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "type": "技术",
+              "count": "2",
+              "seed": "42",
+              "record": ""
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "role": "Java 后端开发工程师",
+              "skill": "Java",
+              "jd": "职位：后端开发工程师\n职责：负责核心交易系统的服务端研发与性能优化。\n要求：\n- 精通 Java 与 Spring Boot 框架\n- 熟悉 MySQL、Redis、Kafka\n- 了解 Kubernetes 容器化部署\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "role": "算法工程师",
+              "skill": "Python",
+              "jd": "职位：算法工程师\n职责：负责推荐排序算法研发与迭代。\n要求：\n- 熟练 Python 与 PyTorch\n- 熟悉 TensorFlow 与 Pandas\n- 掌握 SQL 取数分析\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "role": "前端开发工程师",
+              "skill": "React",
+              "jd": "职位：前端开发工程师\n职责：负责 C 端活动页与组件库建设。\n要求：\n- 熟练 React 与 TypeScript\n- 熟悉 Node.js 与 Webpack\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "role": "数据分析师",
+              "skill": "SQL",
+              "jd": "职位：数据分析师\n职责：负责业务数据分析与指标体系搭建。\n要求：\n- 熟练 SQL 与 Python\n- 熟悉 Pandas 与 Tableau\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "面试准备报告",
+                "weight": 1,
+                "note": "产出标准报告"
+              },
+              {
+                "type": "contains",
+                "text": "岗位画像",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{skill}",
+                "weight": 2,
+                "note": "JD 技能进入岗位画像"
+              },
+              {
+                "type": "contains",
+                "text": "题目数：6",
+                "weight": 1,
+                "note": "出题数量确定"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-behavior-{i}",
+          "title": "行为面出题（{role}）",
+          "tags": [
+            "basic",
+            "behavior"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "抽行为面题目并渲染 STAR 答题框架",
+            "content": "请为 {role} 生成行为面准备文档。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "type": "行为",
+              "count": "2",
+              "seed": "{seed}",
+              "record": ""
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "role": "项目经理",
+              "seed": "7",
+              "jd": "职位：项目经理\n职责：负责跨团队项目管理与交付。\n要求：3 年以上项目管理经验，跨团队协调能力强。\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "role": "产品经理",
+              "seed": "42",
+              "jd": "职位：产品经理\n职责：负责产品设计与需求分析。\n要求：熟悉用户研究与产品设计。\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "role": "团队负责人",
+              "seed": "100",
+              "jd": "职位：技术团队负责人\n职责：负责团队管理与技术规划。\n要求：有团队管理与项目管理经验。\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "role": "运营专员",
+              "seed": "2026",
+              "jd": "职位：运营专员\n职责：负责活动运营与复盘。\n要求：有活动策划与复盘经验。\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "面试准备报告",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "(STAR|情境)",
+                "weight": 2,
+                "note": "STAR 答题框架"
+              },
+              {
+                "type": "contains",
+                "text": "回答框架",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "随机种子：{seed}",
+                "weight": 1,
+                "note": "种子可复现"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-profile-{i}",
+          "title": "JD 岗位画像（{industry}）",
+          "tags": [
+            "basic",
+            "jd"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析 JD 岗位画像并按权重抽综合题",
+            "content": "请解析 {industry} 岗位 JD 并生成综合面准备文档。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "type": "综合",
+              "count": "2",
+              "seed": "42",
+              "record": ""
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "industry": "金融风控",
+              "skill": "风控",
+              "jd": "职位：风控算法工程师\n职责：负责风控模型与策略研发。\n要求：熟悉风控建模、机器学习与 SQL。\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "industry": "支付",
+              "skill": "支付",
+              "jd": "职位：支付开发工程师\n职责：负责支付网关与清结算系统。\n要求：熟悉支付业务、Java 与 MySQL。\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "industry": "电商推荐",
+              "skill": "推荐系统",
+              "jd": "职位：推荐算法工程师\n职责：负责推荐系统排序与召回。\n要求：熟悉推荐系统、Python 与 TensorFlow。\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "industry": "大数据",
+              "skill": "大数据",
+              "jd": "职位：大数据开发工程师\n职责：负责数据仓库与实时计算。\n要求：熟悉大数据技术栈、Spark、Flink 与 SQL。\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "岗位画像",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{skill}",
+                "weight": 2,
+                "note": "行业技能词进入画像"
+              },
+              {
+                "type": "contains",
+                "text": "抽题权重",
+                "weight": 2,
+                "note": "输出抽题权重表"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-record-{i}",
+          "title": "练习记录与复习计划（{label}）",
+          "tags": [
+            "basic",
+            "record"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "读入练习记录，排复习计划与进步曲线",
+            "content": "请结合练习记录生成准备文档（{label}）。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record}"
+              }
+            ],
+            "params": {
+              "type": "综合",
+              "count": "2",
+              "seed": "42",
+              "record": "input/record.json"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "label": "近期练习",
+              "record": "[{\"id\": \"Q001\", \"date\": \"2026-10-20\", \"score\": 3, \"note\": \"第一次练习，思路卡壳\"}, {\"id\": \"Q010\", \"date\": \"2026-10-22\", \"score\": 4, \"note\": \"结构更清楚了\"}]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "label": "早前练习待复习",
+              "record": "[{\"id\": \"Q002\", \"date\": \"2026-09-01\", \"score\": 2, \"note\": \"早前练习，待复习\"}, {\"id\": \"Q003\", \"date\": \"2026-09-02\", \"score\": 3, \"note\": \"早前练习\"}, {\"id\": \"Q002\", \"date\": \"2026-09-10\", \"score\": 4, \"note\": \"复习一次\"}]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "label": "空记录表",
+              "record": "[]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "label": "混合格式记录",
+              "record": "[{\"id\": \"Q005\", \"date\": \"2026-10-18\", \"score\": 5, \"note\": \"复习完成\", \"extra\": \"未知字段\", \"source\": \"manual\"}, {\"id\": \"Q006\", \"date\": \"2026-10-19\", \"note\": \"缺 score 字段\"}, {\"id\": \"Q999\", \"date\": \"2026-10-21\", \"score\": 4, \"note\": \"题库外的 id\"}]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "复习计划",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "复习间隔",
+                "weight": 1,
+                "note": "1/2/4/7/15 天间隔说明"
+              },
+              {
+                "type": "contains",
+                "text": "自评表",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-seed-{i}",
+          "title": "可复现抽题（seed {seed}）",
+          "tags": [
+            "basic",
+            "determinism"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "固定随机种子抽题，验证可复现",
+            "content": "请用随机种子 {seed} 抽题生成准备文档。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "type": "技术",
+              "count": "2",
+              "seed": "{seed}",
+              "record": ""
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "seed": "42",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "seed": "7",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "seed": "100",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "seed": "2026",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "面试准备报告",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "随机种子：{seed}",
+                "weight": 2,
+                "note": "种子写进报告，输出可复现"
+              },
+              {
+                "type": "contains",
+                "text": "题目 id",
+                "weight": 2,
+                "note": "题目带稳定 id"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：行业 / 数量 / 类型 / 记录形态",
+      "description": "不同行业 JD、出题数量、面试类型与练习记录形态下的稳定产出（含模型模拟面试链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-jd-{i}",
+          "title": "JD 行业变体（{industry}）",
+          "tags": [
+            "variation",
+            "jd"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同行业 JD 都能解析出岗位画像并出题",
+            "content": "请解析 {industry} 行业 JD 并生成准备文档。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "type": "综合",
+              "count": "2",
+              "seed": "42",
+              "record": ""
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "industry": "金融",
+              "skill": "风控",
+              "jd": "职位：金融数据分析师\n职责：负责风控数据监控。\n要求：熟悉风控指标、SQL 与 Python。\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "industry": "医疗",
+              "skill": "数据分析",
+              "jd": "职位：医疗数据产品经理\n职责：负责医疗数据平台产品设计。\n要求：熟悉数据分析与产品设计。\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "industry": "教育",
+              "skill": "需求分析",
+              "jd": "职位：教育产品经理\n职责：负责在线教育产品规划。\n要求：熟悉需求分析与用户研究。\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "industry": "电商",
+              "skill": "订单",
+              "jd": "职位：电商交易研发\n职责：负责订单与支付链路研发。\n要求：熟悉订单、支付业务与 Java。\n",
+              "record_content": ""
+            },
+            {
+              "i": "5",
+              "industry": "游戏",
+              "skill": "高并发",
+              "jd": "职位：游戏服务端开发\n职责：负责游戏大厅服务端。\n要求：熟悉高并发、分布式与 Go。\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "岗位画像",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{skill}",
+                "weight": 2,
+                "note": "行业技能词进入画像"
+              },
+              {
+                "type": "contains",
+                "text": "题目清单",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 600,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-count-{i}",
+          "title": "出题数量变体（{count} 题）",
+          "tags": [
+            "variation",
+            "count"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同出题数量都稳定出题",
+            "content": "请生成 {count} 道题的准备文档。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "type": "综合",
+              "count": "2",
+              "seed": "42",
+              "record": ""
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "count": "1",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "count": "2",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "count": "2",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "count": "2",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "5",
+              "count": "2",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "面试准备报告",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "题目数：{count}",
+                "weight": 2,
+                "note": "出题数量与参数一致"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 500,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-type-{i}",
+          "title": "面试类型变体（{type}）",
+          "tags": [
+            "variation",
+            "type"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "四种面试类型都稳定出题",
+            "content": "请生成 {type} 面试的准备文档。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "type": "{type}",
+              "count": "2",
+              "seed": "42",
+              "record": ""
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "type": "技术",
+              "count": "2",
+              "jd": "职位：后端开发工程师\n职责：负责核心交易系统的服务端研发与性能优化。\n要求：\n- 精通 Java 与 Spring Boot 框架\n- 熟悉 MySQL、Redis、Kafka\n- 了解 Kubernetes 容器化部署\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "type": "行为",
+              "count": "2",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "type": "产品",
+              "count": "2",
+              "jd": "职位：产品经理\n职责：负责产品设计与需求分析。\n要求：熟悉产品设计、需求分析与用户研究。\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "type": "综合",
+              "count": "2",
+              "jd": "职位：数据分析师\n职责：负责业务数据分析与指标体系搭建。\n要求：\n- 熟练 SQL 与 Python\n- 熟悉 Pandas 与 Tableau\n",
+              "record_content": ""
+            },
+            {
+              "i": "5",
+              "type": "技术",
+              "count": "2",
+              "jd": "职位：算法工程师\n职责：负责推荐排序算法研发与迭代。\n要求：\n- 熟练 Python 与 PyTorch\n- 熟悉 TensorFlow 与 Pandas\n- 掌握 SQL 取数分析\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "面试类型：{type}",
+                "weight": 2,
+                "note": "类型与参数一致"
+              },
+              {
+                "type": "contains",
+                "text": "回答框架",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 500,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-record-{i}",
+          "title": "记录形态变体（{label}）",
+          "tags": [
+            "variation",
+            "record"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "不同形态的练习记录都能排复习计划",
+            "content": "请结合练习记录（{label}）生成准备文档。",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record}"
+              }
+            ],
+            "params": {
+              "type": "综合",
+              "count": "2",
+              "seed": "42",
+              "record": "input/record.json"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "i": "1",
+              "label": "空记录",
+              "record": "[]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "2",
+              "label": "近期记录",
+              "record": "[{\"id\": \"Q001\", \"date\": \"2026-10-20\", \"score\": 3, \"note\": \"第一次练习，思路卡壳\"}, {\"id\": \"Q010\", \"date\": \"2026-10-22\", \"score\": 4, \"note\": \"结构更清楚了\"}]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "3",
+              "label": "过期待复习",
+              "record": "[{\"id\": \"Q002\", \"date\": \"2026-09-01\", \"score\": 2, \"note\": \"早前练习，待复习\"}, {\"id\": \"Q003\", \"date\": \"2026-09-02\", \"score\": 3, \"note\": \"早前练习\"}, {\"id\": \"Q002\", \"date\": \"2026-09-10\", \"score\": 4, \"note\": \"复习一次\"}]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "4",
+              "label": "含未知 id 与缺字段",
+              "record": "[{\"id\": \"Q005\", \"date\": \"2026-10-18\", \"score\": 5, \"note\": \"复习完成\", \"extra\": \"未知字段\", \"source\": \"manual\"}, {\"id\": \"Q006\", \"date\": \"2026-10-19\", \"note\": \"缺 score 字段\"}, {\"id\": \"Q999\", \"date\": \"2026-10-21\", \"score\": 4, \"note\": \"题库外的 id\"}]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "i": "5",
+              "label": "含 HTML/SQL 样式备注",
+              "record": "[{\"id\": \"Q007\", \"date\": \"2026-10-23\", \"score\": 3, \"note\": \"<script>alert('x')</script>\"}, {\"id\": \"Q008\", \"date\": \"2026-10-24\", \"score\": 4, \"note\": \"SELECT * FROM users; -- 注入样式备注\"}]",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "复习计划",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "自评表",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "坏记录不许崩"
+              },
+              {
+                "type": "min_length",
+                "value": 500,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 JD / 极端数量 / 极端种子",
+      "description": "空 JD、极短 JD、超题库数量、负种子等边界参数下的稳定产出（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{i}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出准备文档，不允许崩溃",
+            "content": "边界用例：{title}",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "type": "{type}",
+              "count": "{count}",
+              "seed": "{seed}",
+              "record": "{record}"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "空 JD 文件",
+              "jd": "",
+              "type": "技术",
+              "count": "5",
+              "seed": "42",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "2",
+              "title": "JD 只有一个词",
+              "jd": "Python",
+              "type": "技术",
+              "count": "5",
+              "seed": "42",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "3",
+              "title": "出题数 1（最少）",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "type": "综合",
+              "count": "1",
+              "seed": "42",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "4",
+              "title": "出题数 50（超技术题库）",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "type": "技术",
+              "count": "50",
+              "seed": "42",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "5",
+              "title": "出题数 100（超全部题库）",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "type": "综合",
+              "count": "100",
+              "seed": "42",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "6",
+              "title": "负随机种子",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "type": "技术",
+              "count": "5",
+              "seed": "-5",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "7",
+              "title": "种子 0",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "type": "产品",
+              "count": "5",
+              "seed": "0",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "8",
+              "title": "空记录表",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "type": "行为",
+              "count": "5",
+              "seed": "42",
+              "record": "input/record.json",
+              "record_content": "[]"
+            },
+            {
+              "n": "9",
+              "title": "JD 超长（关键词堆叠）",
+              "jd": "职位：资深开发工程师\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n- 熟悉 Java、Python、SQL、Redis、Kafka、Docker、Kubernetes、微服务、分布式、高并发\n",
+              "type": "综合",
+              "count": "8",
+              "seed": "42",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "10",
+              "title": "行为面全量抽题",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "type": "行为",
+              "count": "21",
+              "seed": "42",
+              "record": "",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "面试准备报告",
+                "weight": 2,
+                "note": "边界输入仍产出报告"
+              },
+              {
+                "type": "contains",
+                "text": "题目清单",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "not_contains",
+                "text": "ValueError",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：乱码 / 控制字符 / 缺字段记录",
+      "description": "乱码 JD、控制字符、emoji、零宽字符与缺字段练习记录下优雅处理不崩溃（离线确定性模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{i}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃",
+            "content": "异常用例：{title}",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "type": "综合",
+              "count": "5",
+              "seed": "42",
+              "record": "{record}"
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "JD 乱码",
+              "jd": "职位���\n要求��� Python��",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "2",
+              "title": "JD 控制字符",
+              "jd": "职\u0007位：开发\n要\u0002求：熟悉 Python\u0007",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "3",
+              "title": "JD emoji 满屏",
+              "jd": "😀🚀 职位：开发工程师 🚀😀\n要求：熟悉 Python 💻",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "4",
+              "title": "JD 纯标点",
+              "jd": "！！！……###@@@——\n",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "5",
+              "title": "JD 超长单词",
+              "jd": "职位：开发\n要求：abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz\n",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "6",
+              "title": "记录含未知字段",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record": "input/record.json",
+              "record_content": "[{\"id\": \"Q005\", \"date\": \"2026-10-18\", \"score\": 5, \"note\": \"复习完成\", \"extra\": \"未知字段\", \"source\": \"manual\"}, {\"id\": \"Q006\", \"date\": \"2026-10-19\", \"note\": \"缺 score 字段\"}, {\"id\": \"Q999\", \"date\": \"2026-10-21\", \"score\": 4, \"note\": \"题库外的 id\"}]"
+            },
+            {
+              "n": "7",
+              "title": "记录缺 score 字段",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record": "input/record.json",
+              "record_content": "[{\"id\": \"Q009\", \"date\": \"2026-10-25\", \"note\": \"缺 score\"}, {\"id\": \"Q010\", \"date\": \"2026-10-26\"}]"
+            },
+            {
+              "n": "8",
+              "title": "记录含 HTML/SQL",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record": "input/record.json",
+              "record_content": "[{\"id\": \"Q007\", \"date\": \"2026-10-23\", \"score\": 3, \"note\": \"<script>alert('x')</script>\"}, {\"id\": \"Q008\", \"date\": \"2026-10-24\", \"score\": 4, \"note\": \"SELECT * FROM users; -- 注入样式备注\"}]"
+            },
+            {
+              "n": "9",
+              "title": "JD 零宽字符",
+              "jd": "职​位：开发\n要‌求：熟悉 Python‍\n",
+              "record": "",
+              "record_content": ""
+            },
+            {
+              "n": "10",
+              "title": "JD 中英数乱序",
+              "jd": "zzz 123 中文 abc 混乱 \t\t ### 排序 456 def 异常\n",
+              "record": "",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "面试准备报告",
+                "weight": 2,
+                "note": "异常输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "岗位画像",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复 10 次（离线确定性模式），验证同样种子抽出同样题目、结构一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{i}",
+          "title": "稳定性重复：{type}面 {count} 题（seed {seed}）",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "repeat": 10,
+          "input": {
+            "kind": "text",
+            "goal": "重复调用验证确定性抽题稳定",
+            "content": "稳定性样本 {n}：{type}面 {count} 题（seed {seed}）",
+            "files": [
+              {
+                "path": "input/jd.txt",
+                "content": "{jd}"
+              },
+              {
+                "path": "input/record.json",
+                "content": "{record_content}"
+              }
+            ],
+            "params": {
+              "offline": true,
+              "type": "{type}",
+              "count": "{count}",
+              "seed": "{seed}",
+              "record": ""
+            }
+          },
+          "rows": [
+            {
+              "n": "1",
+              "type": "技术",
+              "count": "6",
+              "seed": "42",
+              "jd": "职位：后端开发工程师\n职责：负责核心交易系统的服务端研发与性能优化。\n要求：\n- 精通 Java 与 Spring Boot 框架\n- 熟悉 MySQL、Redis、Kafka\n- 了解 Kubernetes 容器化部署\n",
+              "record_content": ""
+            },
+            {
+              "n": "2",
+              "type": "技术",
+              "count": "10",
+              "seed": "7",
+              "jd": "职位：算法工程师\n职责：负责推荐排序算法研发与迭代。\n要求：\n- 熟练 Python 与 PyTorch\n- 熟悉 TensorFlow 与 Pandas\n- 掌握 SQL 取数分析\n",
+              "record_content": ""
+            },
+            {
+              "n": "3",
+              "type": "行为",
+              "count": "5",
+              "seed": "42",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "n": "4",
+              "type": "行为",
+              "count": "8",
+              "seed": "100",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "n": "5",
+              "type": "产品",
+              "count": "6",
+              "seed": "42",
+              "jd": "职位：产品经理\n职责：负责产品设计与需求分析。\n要求：熟悉产品设计与用户研究。\n",
+              "record_content": ""
+            },
+            {
+              "n": "6",
+              "type": "产品",
+              "count": "10",
+              "seed": "7",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "n": "7",
+              "type": "综合",
+              "count": "8",
+              "seed": "42",
+              "jd": "职位：数据分析师\n职责：负责业务数据分析与指标体系搭建。\n要求：\n- 熟练 SQL 与 Python\n- 熟悉 Pandas 与 Tableau\n",
+              "record_content": ""
+            },
+            {
+              "n": "8",
+              "type": "综合",
+              "count": "12",
+              "seed": "2026",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            },
+            {
+              "n": "9",
+              "type": "技术",
+              "count": "12",
+              "seed": "2026",
+              "jd": "职位：前端开发工程师\n职责：负责 C 端活动页与组件库建设。\n要求：\n- 熟练 React 与 TypeScript\n- 熟悉 Node.js 与 Webpack\n",
+              "record_content": ""
+            },
+            {
+              "n": "10",
+              "type": "综合",
+              "count": "15",
+              "seed": "0",
+              "jd": "职位：软件开发工程师\n职责：负责业务系统研发与迭代。\n要求：熟悉 Java 或 Python，掌握 SQL 与常用框架。\n",
+              "record_content": ""
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "面试准备报告",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "题目数：{count}",
+                "weight": 2,
+                "note": "确定性出题数量"
+              },
+              {
+                "type": "contains",
+                "text": "面试类型：{type}",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 500,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

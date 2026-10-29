@@ -1,0 +1,856 @@
+id: ts-b-code-explainer-g3-edge
+agentId: code-explainer
+group: g3-edge
+name: 代码讲解 · 边界情况：空 / 极短 / 极端参数
+description: 空文件、单字符、纯注释、超长内容与极端参数组合下的稳定产出（离线骨架讲解）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g3-edge-1
+    title: 边界输入：空文件
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: ""
+      files: []
+      params:
+        lang: auto
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-2
+    title: 边界输入：单字符
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: x
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-3
+    title: 边界输入：纯注释
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: "# 只有注释没有代码\n# 第二行注释\n"
+      files: []
+      params:
+        lang: python
+        level: 入门
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-4
+    title: 边界输入：只有空行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: "\n\n\n\n\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-5
+    title: 边界输入：只有 shebang
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: "#!/usr/bin/env python3\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-6
+    title: 边界输入：单词 token
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: "hello\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-7
+    title: 边界输入：纯数字
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: "1234567890\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-8
+    title: 边界输入：超长单行
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: "a = 1; b = 2; c = 3; d = 4; e = 5; f = 6; g = 7; h = 8; i = 9; j = 10; k = 11; l = 12; m = 13; n = 14; o = 15; p = 16; q = 17; r = 18; s = 19; t = 20; u = 21; v = 22; w = 23; x = 24; y = 25; z = 26;\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-9
+    title: 边界输入：超长标识符
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: "averyveryverylongidentifiernamethatgoesonandonandonandonandonandon = 1\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-edge-10
+    title: 边界输入：纯括号符号
+    tags:
+      - edge
+      - offline
+    repeat: 5
+    input:
+      kind: code
+      goal: 边界输入也要产出结构完整的讲解文档
+      content: "((()))\n[[[]]]\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 边界输入仍产出讲解文档
+        - type: contains
+          text: 结构表
+          weight: 1
+          note: 确定性结构章节仍存在
+        - type: not_contains
+          text: Traceback
+          weight: 1
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-1
+    title: 极端参数/极端代码：深度不匹配：Python 代码标成 java
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "def hello(name):
+
+        \    return 'hi ' + name\n"
+      files: []
+      params:
+        lang: java
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-2
+    title: 极端参数/极端代码：深度不匹配：JS 代码标成 python
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "function hello(name) {
+
+        \  return 'hi ' + name;
+
+        }\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-3
+    title: 极端参数/极端代码：入门 + 空文件
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: ""
+      files: []
+      params:
+        lang: auto
+        level: 入门
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-4
+    title: 极端参数/极端代码：深入 + 超长文件（约 3 万字符）
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "def f0():
+
+        \    return 0
+
+        def f1():
+
+        \    return 1
+
+        def f2():
+
+        \    return 2
+
+        def f3():
+
+        \    return 3
+
+        def f4():
+
+        \    return 4
+
+        def f5():
+
+        \    return 5
+
+        def f6():
+
+        \    return 6
+
+        def f7():
+
+        \    return 7
+
+        def f8():
+
+        \    return 8
+
+        def f9():
+
+        \    return 9\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-5
+    title: 极端参数/极端代码：30 个函数的文件
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "def a1():
+
+        \    pass
+
+        def a2():
+
+        \    pass
+
+        def a3():
+
+        \    pass
+
+        def a4():
+
+        \    pass
+
+        def a5():
+
+        \    pass
+
+        def a6():
+
+        \    pass
+
+        def a7():
+
+        \    pass
+
+        def a8():
+
+        \    pass
+
+        def a9():
+
+        \    pass
+
+        def a10():
+
+        \    pass
+
+        def a11():
+
+        \    pass
+
+        def a12():
+
+        \    pass
+
+        def a13():
+
+        \    pass
+
+        def a14():
+
+        \    pass
+
+        def a15():
+
+        \    pass
+
+        def a16():
+
+        \    pass
+
+        def a17():
+
+        \    pass
+
+        def a18():
+
+        \    pass
+
+        def a19():
+
+        \    pass
+
+        def a20():
+
+        \    pass
+
+        def a21():
+
+        \    pass
+
+        def a22():
+
+        \    pass
+
+        def a23():
+
+        \    pass
+
+        def a24():
+
+        \    pass
+
+        def a25():
+
+        \    pass
+
+        def a26():
+
+        \    pass
+
+        def a27():
+
+        \    pass
+
+        def a28():
+
+        \    pass
+
+        def a29():
+
+        \    pass
+
+        def a30():
+
+        \    pass\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-6
+    title: 极端参数/极端代码：极深嵌套
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "def deep(x):
+
+        \    if x > 0:
+
+        \        if x > 10:
+
+        \            if x > 100:
+
+        \                if x > 1000:
+
+        \                    return 4
+
+        \                return 3
+
+        \            return 2
+
+        \        return 1
+
+        \    return 0\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-7
+    title: 极端参数/极端代码：多语言混合内容
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "# 说明：中文注释 with English words
+
+        # Datenanalyse und Verarbeitung
+
+        def mixed_处理(data):
+
+        \    return [x for x in data if x is not None]\n"
+      files: []
+      params:
+        lang: auto
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-8
+    title: 极端参数/极端代码：只有类骨架
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "class Empty:\n    pass\n"
+      files: []
+      params:
+        lang: python
+        level: 深入
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-9
+    title: 极端参数/极端代码：重复定义同名函数
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "def f():
+
+        \    return 1
+
+        def f():
+
+        \    return 2
+
+        def f():
+
+        \    return 3\n"
+      files: []
+      params:
+        lang: python
+        level: 中级
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g3-extreme-10
+    title: 极端参数/极端代码：入门 + 单行代码
+    tags:
+      - edge
+      - offline
+      - params
+    repeat: 5
+    input:
+      kind: code
+      goal: 极端参数组合下也要优雅产出
+      content: "print('hello')\n"
+      files: []
+      params:
+        lang: python
+        level: 入门
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码讲解
+          weight: 2
+          note: 极端参数仍产出讲解文档
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

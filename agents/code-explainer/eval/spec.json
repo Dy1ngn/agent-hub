@@ -1,0 +1,611 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型代码讲解",
+      "description": "典型 Python/JS/Go/Java 代码的完整讲解链路（确定性结构分析 + 模型分层讲解），产出讲解文档",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-pyfunc",
+          "title": "Python 小工具函数讲解（{fname}）",
+          "tags": ["basic", "python"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段 Python 代码的作用、结构与复杂度",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "moving_average", "lang": "python", "level": "中级", "code": "def moving_average(values, window):\n    if window <= 0:\n        raise ValueError(\"window must be positive\")\n    out = []\n    for i in range(len(values) - window + 1):\n        chunk = values[i:i + window]\n        out.append(sum(chunk) / window)\n    return out\n\n\ndef smooth(values, window=3):\n    return moving_average(values, window)\n" },
+            { "fname": "parse_duration", "lang": "python", "level": "入门", "code": "import re\n\nUNIT_SECONDS = {\"s\": 1, \"m\": 60, \"h\": 3600}\n\ndef parse_duration(text):\n    match = re.fullmatch(r\"(\\d+)([smh])\", text.strip())\n    if not match:\n        raise ValueError(\"bad duration: %s\" % text)\n    value, unit = match.groups()\n    return int(value) * UNIT_SECONDS[unit]\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1, "note": "产出标准讲解文档" },
+              { "type": "contains", "text": "结构表", "weight": 1, "note": "确定性结构分析章节存在" },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-pyclass",
+          "title": "Python 类与方法讲解（{fname}）",
+          "tags": ["basic", "python", "class"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这个类的职责、方法结构与复杂度",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "Cart", "lang": "python", "level": "深入", "code": "class Cart:\n    def __init__(self):\n        self.items = []\n\n    def add(self, sku, qty, price):\n        self.items.append({\"sku\": sku, \"qty\": qty, \"price\": price})\n\n    def total(self):\n        amount = 0\n        for item in self.items:\n            amount += item[\"qty\"] * item[\"price\"]\n        return amount\n\n    def discount(self, rate):\n        if not 0 <= rate <= 1:\n            raise ValueError(\"rate out of range\")\n        return self.total() * (1 - rate)\n" },
+            { "fname": "RingBuffer", "lang": "python", "level": "中级", "code": "class RingBuffer:\n    def __init__(self, capacity):\n        self.capacity = capacity\n        self.data = []\n\n    def push(self, value):\n        self.data.append(value)\n        if len(self.data) > self.capacity:\n            self.data.pop(0)\n\n    def last(self, n):\n        return self.data[-n:] if n > 0 else []\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "类与方法", "weight": 1, "note": "类结构章节存在" },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "类名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-js",
+          "title": "JavaScript 模块讲解（{fname}）",
+          "tags": ["basic", "javascript"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段 JavaScript 代码",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "debounce", "lang": "javascript", "level": "中级", "code": "function debounce(fn, wait) {\n  let timer = null;\n  return function () {\n    const args = arguments;\n    const ctx = this;\n    if (timer) clearTimeout(timer);\n    timer = setTimeout(function () {\n      fn.apply(ctx, args);\n    }, wait);\n  };\n}\n\nmodule.exports = { debounce };\n" },
+            { "fname": "groupBy", "lang": "javascript", "level": "入门", "code": "function groupBy(items, keyFn) {\n  const groups = {};\n  for (const item of items) {\n    const key = keyFn(item);\n    if (!groups[key]) groups[key] = [];\n    groups[key].push(item);\n  }\n  return groups;\n}\n\nmodule.exports = { groupBy };\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-go",
+          "title": "Go 函数讲解（{fname}）",
+          "tags": ["basic", "go"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段 Go 代码",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "ParseSize", "lang": "go", "level": "中级", "code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nfunc ParseSize(s string) (int64, error) {\n\ts = strings.TrimSpace(s)\n\tif s == \"\" {\n\t\treturn 0, fmt.Errorf(\"empty size\")\n\t}\n\tmult := int64(1)\n\tlast := s[len(s)-1]\n\tif last == 'K' || last == 'M' || last == 'G' {\n\t\tmult = 1024\n\t\ts = s[:len(s)-1]\n\t}\n\tn, err := strconv.ParseInt(s, 10, 64)\n\tif err != nil {\n\t\treturn 0, err\n\t}\n\treturn n * mult, nil\n}\n" },
+            { "fname": "Chunk", "lang": "go", "level": "深入", "code": "package util\n\nfunc Chunk(items []string, size int) [][]string {\n\tvar out [][]string\n\tif size <= 0 {\n\t\treturn out\n\t}\n\tfor i := 0; i < len(items); i += size {\n\t\tend := i + size\n\t\tif end > len(items) {\n\t\t\tend = len(items)\n\t\t}\n\t\tout = append(out, items[i:end])\n\t}\n\treturn out\n}\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-java",
+          "title": "Java 类讲解（{fname}）",
+          "tags": ["basic", "java"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段 Java 代码",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "Retry", "lang": "java", "level": "中级", "code": "public class Retry {\n    private final int maxAttempts;\n\n    public Retry(int maxAttempts) {\n        this.maxAttempts = maxAttempts;\n    }\n\n    public <T> T run(Task<T> task) throws Exception {\n        Exception last = null;\n        for (int i = 0; i < maxAttempts; i++) {\n            try {\n                return task.call();\n            } catch (Exception e) {\n                last = e;\n            }\n        }\n        throw last;\n    }\n}\n" },
+            { "fname": "RateLimiter", "lang": "java", "level": "深入", "code": "public class RateLimiter {\n    private final long capacity;\n    private long tokens;\n    private long lastRefill;\n\n    public RateLimiter(long capacity) {\n        this.capacity = capacity;\n        this.tokens = capacity;\n        this.lastRefill = System.currentTimeMillis();\n    }\n\n    public synchronized boolean tryAcquire() {\n        refill();\n        if (tokens > 0) {\n            tokens--;\n            return true;\n        }\n        return false;\n    }\n\n    private void refill() {\n        long now = System.currentTimeMillis();\n        long gained = (now - lastRefill) / 1000;\n        tokens = Math.min(capacity, tokens + gained);\n        lastRefill = now;\n    }\n}\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "类与方法", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "类名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-commented",
+          "title": "带注释代码讲解（{fname}）",
+          "tags": ["basic", "comments"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段带注释的代码，注释应被结构提取利用",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "calc_gpa", "lang": "python", "level": "入门", "code": "# 绩点计算工具：把百分制成绩换算成 4.0 绩点后求平均\n\ndef score_to_point(score):\n    # 分段映射：90+ 4.0，80+ 3.0，70+ 2.0，60+ 1.0，其余 0\n    if score >= 90:\n        return 4.0\n    if score >= 80:\n        return 3.0\n    if score >= 70:\n        return 2.0\n    if score >= 60:\n        return 1.0\n    return 0.0\n\n\ndef calc_gpa(scores):\n    # scores 是百分制成绩列表；空列表返回 0\n    if not scores:\n        return 0.0\n    total = sum(score_to_point(s) for s in scores)\n    return total / len(scores)\n" },
+            { "fname": "normalizeName", "lang": "javascript", "level": "中级", "code": "// 把用户输入的姓名规整成统一格式：去空白、首字母大写\nfunction normalizeName(raw) {\n  // 去掉首尾空白并折叠中间连续空白\n  const cleaned = String(raw).trim().replace(/\\s+/g, ' ');\n  if (!cleaned) {\n    return '';\n  }\n  // 每个词首字母大写\n  return cleaned.split(' ').map(function (word) {\n    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();\n  }).join(' ');\n}\n\nmodule.exports = { normalizeName };\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-algo",
+          "title": "算法实现讲解（{fname}）",
+          "tags": ["basic", "algorithm"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段算法代码的思路与复杂度",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "binary_search", "lang": "python", "level": "中级", "code": "def binary_search(items, target):\n    lo, hi = 0, len(items) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if items[mid] == target:\n            return mid\n        if items[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n" },
+            { "fname": "quickSort", "lang": "javascript", "level": "深入", "code": "function quickSort(arr) {\n  if (arr.length <= 1) return arr;\n  const pivot = arr[Math.floor(arr.length / 2)];\n  const left = [];\n  const mid = [];\n  const right = [];\n  for (const x of arr) {\n    if (x < pivot) left.push(x);\n    else if (x > pivot) right.push(x);\n    else mid.push(x);\n  }\n  return quickSort(left).concat(mid, quickSort(right));\n}\n\nmodule.exports = { quickSort };\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "复杂度提示", "weight": 1, "note": "复杂度章节存在" },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-web",
+          "title": "前端/DOM 代码讲解（{fname}）",
+          "tags": ["basic", "web"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段前端代码",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "bindTabs", "lang": "javascript", "level": "入门", "code": "function bindTabs(root) {\n  const tabs = root.querySelectorAll('[data-tab]');\n  tabs.forEach(function (tab) {\n    tab.addEventListener('click', function () {\n      tabs.forEach(function (t) { t.classList.remove('active'); });\n      tab.classList.add('active');\n      const id = tab.getAttribute('data-tab');\n      showPanel(root, id);\n    });\n  });\n}\n\nfunction showPanel(root, id) {\n  const panels = root.querySelectorAll('[data-panel]');\n  panels.forEach(function (p) {\n    p.hidden = p.getAttribute('data-panel') !== id;\n  });\n}\n" },
+            { "fname": "serializeForm", "lang": "javascript", "level": "中级", "code": "function serializeForm(form) {\n  const data = {};\n  const fields = form.querySelectorAll('input, select, textarea');\n  fields.forEach(function (field) {\n    if (!field.name) return;\n    if (field.type === 'checkbox') {\n      data[field.name] = field.checked;\n    } else {\n      data[field.name] = field.value;\n    }\n  });\n  return data;\n}\n\nmodule.exports = { serializeForm };\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-data",
+          "title": "数据处理脚本讲解（{fname}）",
+          "tags": ["basic", "data"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段数据处理代码",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "fill_missing", "lang": "python", "level": "中级", "code": "def fill_missing(rows, column, default=0):\n    for row in rows:\n        if row.get(column) is None:\n            row[column] = default\n    return rows\n\n\ndef summarize(rows, column):\n    values = [r[column] for r in rows if r.get(column) is not None]\n    if not values:\n        return {\"count\": 0, \"avg\": None, \"max\": None}\n    return {\n        \"count\": len(values),\n        \"avg\": sum(values) / len(values),\n        \"max\": max(values),\n    }\n" },
+            { "fname": "toCsv", "lang": "go", "level": "深入", "code": "package export\n\nimport \"strings\"\n\nfunc ToCsv(rows [][]string) string {\n\tvar b strings.Builder\n\tfor _, row := range rows {\n\t\tcells := make([]string, 0, len(row))\n\t\tfor _, cell := range row {\n\t\t\tif strings.ContainsAny(cell, \",\\\"\\n\") {\n\t\t\t\tcell = \"\\\"\" + strings.ReplaceAll(cell, \"\\\"\", \"\\\"\\\"\") + \"\\\"\"\n\t\t\t}\n\t\t\tcells = append(cells, cell)\n\t\t}\n\t\tb.WriteString(strings.Join(cells, \",\"))\n\t\tb.WriteString(\"\\n\")\n\t}\n\treturn b.String()\n}\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g1-cli",
+          "title": "CLI 工具代码讲解（{fname}）",
+          "tags": ["basic", "cli"],
+          "input": {
+            "kind": "code",
+            "goal": "讲解这段命令行工具代码",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "fname": "main", "lang": "python", "level": "中级", "code": "import argparse\nimport json\nimport sys\n\n\ndef load_config(path):\n    with open(path, encoding=\"utf-8\") as handle:\n        return json.load(handle)\n\n\ndef main(argv=None):\n    parser = argparse.ArgumentParser(description=\"dump config keys\")\n    parser.add_argument(\"config\")\n    parser.add_argument(\"--prefix\", default=\"\")\n    args = parser.parse_args(argv)\n    data = load_config(args.config)\n    for key in sorted(data):\n        if key.startswith(args.prefix):\n            print(key, \"=\", data[key])\n    return 0\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n" },
+            { "fname": "run", "lang": "go", "level": "入门", "code": "package main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc run(args []string) int {\n\tif len(args) == 0 {\n\t\tfmt.Fprintln(os.Stderr, \"usage: tool <file>\")\n\t\treturn 2\n\t}\n\tdata, err := os.ReadFile(args[0])\n\tif err != nil {\n\t\tfmt.Fprintln(os.Stderr, \"read failed:\", err)\n\t\treturn 1\n\t}\n\tfmt.Printf(\"%d bytes\\n\", len(data))\n\treturn 0\n}\n\nfunc main() {\n\tos.Exit(run(os.Args[1:]))\n}\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名被结构提取命中" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：语言 / 规模 / 风格 / 参数组合",
+      "description": "同一逻辑多语言、不同代码规模、注释风格与讲解深度参数组合下的讲解表现（模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-lang-{n}",
+          "title": "同一逻辑多语言对照（{lang} / {fname}）",
+          "tags": ["variation", "language"],
+          "input": {
+            "kind": "code",
+            "goal": "用指定语言模式讲解对应语言的代码",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "fname": "clamp", "lang": "python", "level": "中级", "code": "def clamp(value, lo, hi):\n    if lo > hi:\n        raise ValueError(\"lo must be <= hi\")\n    return max(lo, min(hi, value))\n" },
+            { "n": "2", "fname": "clamp", "lang": "javascript", "level": "中级", "code": "function clamp(value, lo, hi) {\n  if (lo > hi) throw new Error('lo must be <= hi');\n  return Math.max(lo, Math.min(hi, value));\n}\n\nmodule.exports = { clamp };\n" },
+            { "n": "3", "fname": "Clamp", "lang": "go", "level": "中级", "code": "package clamp\n\nfunc Clamp(value, lo, hi int) int {\n\tif value < lo {\n\t\treturn lo\n\t}\n\tif value > hi {\n\t\treturn hi\n\t}\n\treturn value\n}\n" },
+            { "n": "4", "fname": "Clamp", "lang": "java", "level": "中级", "code": "public class Clamp {\n    public static int clamp(int value, int lo, int hi) {\n        return Math.max(lo, Math.min(hi, value));\n    }\n}\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 2, "note": "函数名进结构表" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-level-{n}",
+          "title": "讲解深度参数变体（{level}）",
+          "tags": ["variation", "params"],
+          "input": {
+            "kind": "code",
+            "goal": "按不同讲解深度输出讲解文档",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "fname": "merge", "lang": "python", "level": "入门", "code": "def merge(left, right):\n    out = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            out.append(left[i])\n            i += 1\n        else:\n            out.append(right[j])\n            j += 1\n    out.extend(left[i:])\n    out.extend(right[j:])\n    return out\n" },
+            { "n": "2", "fname": "merge", "lang": "python", "level": "中级", "code": "def merge(left, right):\n    out = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            out.append(left[i])\n            i += 1\n        else:\n            out.append(right[j])\n            j += 1\n    out.extend(left[i:])\n    out.extend(right[j:])\n    return out\n" },
+            { "n": "3", "fname": "merge", "lang": "python", "level": "深入", "code": "def merge(left, right):\n    out = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            out.append(left[i])\n            i += 1\n        else:\n            out.append(right[j])\n            j += 1\n    out.extend(left[i:])\n    out.extend(right[j:])\n    return out\n" },
+            { "n": "4", "fname": "retry_call", "lang": "javascript", "level": "深入", "code": "async function retryCall(fn, times, delayMs) {\n  let lastError = null;\n  for (let attempt = 0; attempt < times; attempt++) {\n    try {\n      return await fn();\n    } catch (err) {\n      lastError = err;\n      await new Promise(function (resolve) {\n        setTimeout(resolve, delayMs * (attempt + 1));\n      });\n    }\n  }\n  throw lastError;\n}\n\nmodule.exports = { retryCall };\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "讲解深度：{level}", "weight": 1, "note": "报告元信息记录讲解深度参数" },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 1, "note": "函数名进结构表" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-size-{n}",
+          "title": "代码规模变体（{title}）",
+          "tags": ["variation", "scale"],
+          "input": {
+            "kind": "code",
+            "goal": "不同规模的代码都要产出结构完整的讲解",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "两行极短", "fname": "double", "lang": "python", "level": "中级", "code": "def double(x):\n    return x * 2\n" },
+            { "n": "2", "title": "单行极短", "fname": "identity", "lang": "python", "level": "中级", "code": "identity = lambda x: x\n" },
+            { "n": "3", "title": "中等规模多函数", "fname": "pipeline", "lang": "python", "level": "中级", "code": "import re\n\n\ndef tokenize(text):\n    return re.findall(r\"[\\w']+\", text.lower())\n\n\ndef count_words(tokens):\n    counts = {}\n    for token in tokens:\n        counts[token] = counts.get(token, 0) + 1\n    return counts\n\n\ndef top_n(counts, n):\n    ranked = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))\n    return ranked[:n]\n\n\ndef pipeline(text, n=5):\n    return top_n(count_words(tokenize(text)), n)\n" },
+            { "n": "4", "title": "较长多函数文件", "fname": "process_all", "lang": "python", "level": "深入", "code": "import json\nimport os\n\n\ndef read_lines(path):\n    with open(path, encoding=\"utf-8\") as handle:\n        return [line.strip() for line in handle if line.strip()]\n\n\ndef parse_line(line):\n    parts = line.split(\",\")\n    if len(parts) < 3:\n        return None\n    return {\"id\": parts[0], \"name\": parts[1], \"score\": float(parts[2])}\n\n\ndef validate(row):\n    if row is None:\n        return False\n    if not row[\"id\"]:\n        return False\n    return 0 <= row[\"score\"] <= 100\n\n\ndef load_rows(path):\n    rows = []\n    for line in read_lines(path):\n        row = parse_line(line)\n        if validate(row):\n            rows.append(row)\n    return rows\n\n\ndef average(rows):\n    if not rows:\n        return 0.0\n    return sum(r[\"score\"] for r in rows) / len(rows)\n\n\ndef write_report(rows, out_path):\n    report = {\"count\": len(rows), \"average\": average(rows), \"rows\": rows}\n    with open(out_path, \"w\", encoding=\"utf-8\") as handle:\n        json.dump(report, handle, ensure_ascii=False, indent=2)\n\n\ndef process_all(in_path, out_path):\n    rows = load_rows(in_path)\n    write_report(rows, out_path)\n    return len(rows)\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 1, "note": "函数名进结构表" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-style-{n}",
+          "title": "代码风格变体（{title}）",
+          "tags": ["variation", "style"],
+          "input": {
+            "kind": "code",
+            "goal": "不同注释密度与编码风格的代码讲解",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "密集注释教学风格", "fname": "transfer", "lang": "python", "level": "入门", "code": "# 转账：从 from_acc 扣款，给 to_acc 加款\n# 1. 校验金额必须为正\n# 2. 校验余额充足\n# 3. 双边记账\ndef transfer(from_acc, to_acc, amount):\n    # 步骤 1\n    if amount <= 0:\n        raise ValueError(\"amount must be positive\")\n    # 步骤 2\n    if from_acc.balance < amount:\n        raise ValueError(\"insufficient balance\")\n    # 步骤 3\n    from_acc.balance -= amount\n    to_acc.balance += amount\n    return from_acc.balance\n" },
+            { "n": "2", "title": "无注释紧凑风格", "fname": "stats", "lang": "python", "level": "中级", "code": "def stats(xs):\n    n = len(xs)\n    if n == 0:\n        return (0, 0.0, 0.0)\n    mean = sum(xs) / n\n    var = sum((x - mean) ** 2 for x in xs) / n\n    return (n, mean, var ** 0.5)\n" },
+            { "n": "3", "title": "面向对象风格", "fname": "Inventory", "lang": "python", "level": "深入", "code": "class Inventory:\n    def __init__(self):\n        self._stock = {}\n\n    def receive(self, sku, qty):\n        self._stock[sku] = self._stock.get(sku, 0) + qty\n\n    def ship(self, sku, qty):\n        have = self._stock.get(sku, 0)\n        if have < qty:\n            raise ValueError(\"not enough stock\")\n        self._stock[sku] = have - qty\n\n    def low(self, threshold):\n        return sorted(k for k, v in self._stock.items() if v < threshold)\n" },
+            { "n": "4", "title": "函数式风格", "fname": "transform", "lang": "javascript", "level": "中级", "code": "const transform = (items) => items\n  .filter((item) => item.active)\n  .map((item) => ({ id: item.id, label: item.name.trim() }))\n  .sort((a, b) => a.label.localeCompare(b.label));\n\nmodule.exports = { transform };\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 1, "note": "函数/类名进结构表" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g2-autolang-{n}",
+          "title": "自动语言检测变体（{title}）",
+          "tags": ["variation", "detect"],
+          "input": {
+            "kind": "code",
+            "goal": "不指定 --lang，验证自动检测下也能产出讲解",
+            "content": "{code}",
+            "params": { "lang": "auto", "level": "{level}" }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "Python 特征明显", "fname": "slugify", "level": "中级", "code": "import re\nimport unicodedata\n\n\ndef slugify(text):\n    text = unicodedata.normalize(\"NFKD\", text)\n    text = text.encode(\"ascii\", \"ignore\").decode(\"ascii\")\n    text = re.sub(r\"[^a-zA-Z0-9]+\", \"-\", text).strip(\"-\")\n    return text.lower()\n" },
+            { "n": "2", "title": "JavaScript 特征明显", "fname": "parseQuery", "level": "中级", "code": "function parseQuery(qs) {\n  const out = {};\n  qs.replace(/^\\?/, '').split('&').forEach(function (pair) {\n    if (!pair) return;\n    const parts = pair.split('=');\n    out[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');\n  });\n  return out;\n}\n\nmodule.exports = { parseQuery };\n" },
+            { "n": "3", "title": "Go 特征明显", "fname": "Sum", "level": "中级", "code": "package stats\n\nfunc Sum(values []float64) float64 {\n\ttotal := 0.0\n\tfor _, v := range values {\n\t\ttotal += v\n\t}\n\treturn total\n}\n" },
+            { "n": "4", "title": "Java 特征明显", "fname": "Cache", "level": "深入", "code": "import java.util.LinkedHashMap;\nimport java.util.Map;\n\npublic class Cache<K, V> extends LinkedHashMap<K, V> {\n    private final int capacity;\n\n    public Cache(int capacity) {\n        super(capacity + 1, 1f, true);\n        this.capacity = capacity;\n    }\n\n    @Override\n    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n        return size() > capacity;\n    }\n}\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 1 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "regex", "pattern": "(?i)\\b{fname}\\b", "weight": 1, "note": "函数/类名进结构表" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 极短 / 极端参数",
+      "description": "空文件、单字符、纯注释、超长内容与极端参数组合下的稳定产出（离线骨架讲解）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": ["edge", "offline"],
+          "input": {
+            "kind": "code",
+            "goal": "边界输入也要产出结构完整的讲解文档",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "空文件", "lang": "auto", "level": "中级", "code": "" },
+            { "n": "2", "title": "单字符", "lang": "python", "level": "中级", "code": "x" },
+            { "n": "3", "title": "纯注释", "lang": "python", "level": "入门", "code": "# 只有注释没有代码\n# 第二行注释\n" },
+            { "n": "4", "title": "只有空行", "lang": "auto", "level": "中级", "code": "\n\n\n\n\n" },
+            { "n": "5", "title": "只有 shebang", "lang": "auto", "level": "中级", "code": "#!/usr/bin/env python3\n" },
+            { "n": "6", "title": "单词 token", "lang": "auto", "level": "中级", "code": "hello\n" },
+            { "n": "7", "title": "纯数字", "lang": "auto", "level": "中级", "code": "1234567890\n" },
+            { "n": "8", "title": "超长单行", "lang": "python", "level": "深入", "code": "a = 1; b = 2; c = 3; d = 4; e = 5; f = 6; g = 7; h = 8; i = 9; j = 10; k = 11; l = 12; m = 13; n = 14; o = 15; p = 16; q = 17; r = 18; s = 19; t = 20; u = 21; v = 22; w = 23; x = 24; y = 25; z = 26;\n" },
+            { "n": "9", "title": "超长标识符", "lang": "python", "level": "中级", "code": "averyveryverylongidentifiernamethatgoesonandonandonandonandonandon = 1\n" },
+            { "n": "10", "title": "纯括号符号", "lang": "auto", "level": "中级", "code": "((()))\n[[[]]]\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 2, "note": "边界输入仍产出讲解文档" },
+              { "type": "contains", "text": "结构表", "weight": 1, "note": "确定性结构章节仍存在" },
+              { "type": "not_contains", "text": "Traceback", "weight": 1, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g3-extreme-{n}",
+          "title": "极端参数/极端代码：{title}",
+          "tags": ["edge", "offline", "params"],
+          "input": {
+            "kind": "code",
+            "goal": "极端参数组合下也要优雅产出",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "深度不匹配：Python 代码标成 java", "lang": "java", "level": "中级", "code": "def hello(name):\n    return 'hi ' + name\n" },
+            { "n": "2", "title": "深度不匹配：JS 代码标成 python", "lang": "python", "level": "中级", "code": "function hello(name) {\n  return 'hi ' + name;\n}\n" },
+            { "n": "3", "title": "入门 + 空文件", "lang": "auto", "level": "入门", "code": "" },
+            { "n": "4", "title": "深入 + 超长文件（约 3 万字符）", "lang": "python", "level": "深入", "code": "def f0():\n    return 0\ndef f1():\n    return 1\ndef f2():\n    return 2\ndef f3():\n    return 3\ndef f4():\n    return 4\ndef f5():\n    return 5\ndef f6():\n    return 6\ndef f7():\n    return 7\ndef f8():\n    return 8\ndef f9():\n    return 9\n" },
+            { "n": "5", "title": "30 个函数的文件", "lang": "python", "level": "中级", "code": "def a1():\n    pass\ndef a2():\n    pass\ndef a3():\n    pass\ndef a4():\n    pass\ndef a5():\n    pass\ndef a6():\n    pass\ndef a7():\n    pass\ndef a8():\n    pass\ndef a9():\n    pass\ndef a10():\n    pass\ndef a11():\n    pass\ndef a12():\n    pass\ndef a13():\n    pass\ndef a14():\n    pass\ndef a15():\n    pass\ndef a16():\n    pass\ndef a17():\n    pass\ndef a18():\n    pass\ndef a19():\n    pass\ndef a20():\n    pass\ndef a21():\n    pass\ndef a22():\n    pass\ndef a23():\n    pass\ndef a24():\n    pass\ndef a25():\n    pass\ndef a26():\n    pass\ndef a27():\n    pass\ndef a28():\n    pass\ndef a29():\n    pass\ndef a30():\n    pass\n" },
+            { "n": "6", "title": "极深嵌套", "lang": "python", "level": "深入", "code": "def deep(x):\n    if x > 0:\n        if x > 10:\n            if x > 100:\n                if x > 1000:\n                    return 4\n                return 3\n            return 2\n        return 1\n    return 0\n" },
+            { "n": "7", "title": "多语言混合内容", "lang": "auto", "level": "中级", "code": "# 说明：中文注释 with English words\n# Datenanalyse und Verarbeitung\ndef mixed_处理(data):\n    return [x for x in data if x is not None]\n" },
+            { "n": "8", "title": "只有类骨架", "lang": "python", "level": "深入", "code": "class Empty:\n    pass\n" },
+            { "n": "9", "title": "重复定义同名函数", "lang": "python", "level": "中级", "code": "def f():\n    return 1\ndef f():\n    return 2\ndef f():\n    return 3\n" },
+            { "n": "10", "title": "入门 + 单行代码", "lang": "python", "level": "入门", "code": "print('hello')\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 2, "note": "极端参数仍产出讲解文档" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形 / 乱码 / 编码异常输入",
+      "description": "语法损坏、控制字符、零宽字符、乱码等异常输入下不崩溃、优雅降级（离线骨架讲解）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": ["robust", "offline"],
+          "input": {
+            "kind": "code",
+            "goal": "异常输入不能让工具崩溃",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "语法损坏", "lang": "python", "level": "中级", "code": "def broken(:\n    pass\n@@@ ###\n" },
+            { "n": "2", "title": "未闭合引号", "lang": "python", "level": "中级", "code": "s = 'unterminated\nprint(s)\n" },
+            { "n": "3", "title": "未闭合括号", "lang": "python", "level": "中级", "code": "def f(a, b:\n    return a + b\n" },
+            { "n": "4", "title": "控制字符", "lang": "python", "level": "中级", "code": "a = 1\u0007b = 2\u0007c = 3\n" },
+            { "n": "5", "title": "零宽字符", "lang": "python", "level": "中级", "code": "a\u200b = 1\nb\u200c = 2\n" },
+            { "n": "6", "title": "emoji 标识符", "lang": "python", "level": "中级", "code": "\ud83d\ude00 = 1\n\ud83d\ude80\ud83d\ude80 = 2\n" },
+            { "n": "7", "title": "混合中英数字符", "lang": "python", "level": "中级", "code": "变量 = 1\nmixed_变量_2 = '值'\n# 注释 with English and 123\n" },
+            { "n": "8", "title": "非法转义", "lang": "python", "level": "中级", "code": "s = '\\q\\z\\' \n" },
+            { "n": "9", "title": "超多空行", "lang": "python", "level": "中级", "code": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" },
+            { "n": "10", "title": "损坏的 JS 花括号", "lang": "javascript", "level": "中级", "code": "function broken() {\n  if (true {\n    return 1\n  \n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 2, "note": "异常输入仍产出讲解文档" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        },
+        {
+          "id": "g4-encoding-{n}",
+          "title": "编码/字符异常：{title}",
+          "tags": ["robust", "offline", "encoding"],
+          "input": {
+            "kind": "code",
+            "goal": "编码异常输入不能让工具崩溃",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}", "offline": true }
+          },
+          "repeat": 5,
+          "rows": [
+            { "n": "1", "title": "mojibake 乱码", "lang": "python", "level": "中级", "code": "def 鐑傛嵁(x):\n    return x + 1\n" },
+            { "n": "2", "title": "BOM 开头", "lang": "python", "level": "中级", "code": "\ufeffdef with_bom(x):\n    return x\n" },
+            { "n": "3", "title": "RTL 阿拉伯文注释", "lang": "python", "level": "中级", "code": "# \u0645\u062b\u0627\u0644 \u0639\u0644\u0649 \u0627\u0644\u0643\u0648\u062f\ndef rtl_demo(x):\n    return x\n" },
+            { "n": "4", "title": "全角字符代码", "lang": "python", "level": "中级", "code": "ｄｅｆ　ｆｕｌｌｗｉｄｔｈ（ｘ）：\n    ｒｅｔｕｒｎ　ｘ\n" },
+            { "n": "5", "title": "希腊/西里尔字母标识符", "lang": "python", "level": "中级", "code": "\u03b1\u03b2\u03b3 = 1\n\u043c\u0443\u043b\u044c = 2\n" },
+            { "n": "6", "title": "重复单词垃圾文本", "lang": "auto", "level": "中级", "code": "foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo foo\n" },
+            { "n": "7", "title": "表格分隔符垃圾", "lang": "auto", "level": "中级", "code": "| a | b | c |\n|---|---|---|\n| 1 | 2 | 3 |\n" },
+            { "n": "8", "title": "HTML 片段当代码", "lang": "auto", "level": "中级", "code": "<div><p>hello</p><script>var x = 1;</script></div>\n" },
+            { "n": "9", "title": "Markdown 文档当代码", "lang": "auto", "level": "中级", "code": "# 标题\n\n- 列表一\n- 列表二\n" },
+            { "n": "10", "title": "混合换行符", "lang": "python", "level": "中级", "code": "def eol(x):\r\n    return x\r\n\n\nlast = 1\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 2, "note": "编码异常仍产出讲解文档" },
+              { "type": "not_contains", "text": "Traceback", "weight": 2, "note": "不允许 Python 崩栈" },
+              { "type": "min_length", "value": 200, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个样本各重复调用 10 次（离线骨架讲解），验证输出稳定、不崩溃、结构一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：样本 {n}",
+          "tags": ["stability", "offline"],
+          "repeat": 10,
+          "input": {
+            "kind": "code",
+            "goal": "重复调用验证讲解输出稳定",
+            "content": "{code}",
+            "params": { "lang": "{lang}", "level": "{level}", "offline": true }
+          },
+          "rows": [
+            { "n": "1", "lang": "python", "level": "中级", "code": "def moving_average(values, window):\n    out = []\n    for i in range(len(values) - window + 1):\n        out.append(sum(values[i:i + window]) / window)\n    return out\n" },
+            { "n": "2", "lang": "python", "level": "中级", "code": "class Counter:\n    def __init__(self):\n        self.value = 0\n\n    def incr(self, step=1):\n        self.value += step\n        return self.value\n" },
+            { "n": "3", "lang": "javascript", "level": "中级", "code": "function unique(items) {\n  const seen = new Set();\n  return items.filter(function (x) {\n    if (seen.has(x)) return false;\n    seen.add(x);\n    return true;\n  });\n}\n" },
+            { "n": "4", "lang": "go", "level": "中级", "code": "package main\n\nfunc Reverse(s string) string {\n\trunes := []rune(s)\n\tfor i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {\n\t\trunes[i], runes[j] = runes[j], runes[i]\n\t}\n\treturn string(runes)\n}\n" },
+            { "n": "5", "lang": "java", "level": "中级", "code": "public class Parse {\n    public static int parse(String s) {\n        try {\n            return Integer.parseInt(s.trim());\n        } catch (NumberFormatException e) {\n            return 0;\n        }\n    }\n}\n" },
+            { "n": "6", "lang": "python", "level": "深入", "code": "def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n\n\ndef fib_memo(n, memo=None):\n    memo = {} if memo is None else memo\n    if n in memo:\n        return memo[n]\n    if n < 2:\n        return n\n    memo[n] = fib_memo(n - 1, memo) + fib_memo(n - 2, memo)\n    return memo[n]\n" },
+            { "n": "7", "lang": "python", "level": "中级", "code": "import json\n\n\ndef load_config(path):\n    with open(path, encoding=\"utf-8\") as handle:\n        return json.load(handle)\n\n\ndef get(data, dotted, default=None):\n    cur = data\n    for part in dotted.split('.'):\n        if not isinstance(cur, dict) or part not in cur:\n            return default\n        cur = cur[part]\n    return cur\n" },
+            { "n": "8", "lang": "javascript", "level": "入门", "code": "function padLeft(text, width, ch) {\n  ch = ch || ' ';\n  let out = String(text);\n  while (out.length < width) {\n    out = ch + out;\n  }\n  return out;\n}\n\nmodule.exports = { padLeft };\n" },
+            { "n": "9", "lang": "python", "level": "中级", "code": "def flatten(rows):\n    out = []\n    for row in rows:\n        if isinstance(row, list):\n            out.extend(flatten(row))\n        else:\n            out.append(row)\n    return out\n" },
+            { "n": "10", "lang": "python", "level": "中级", "code": "def is_palindrome(text):\n    cleaned = ''.join(ch.lower() for ch in text if ch.isalnum())\n    return cleaned == cleaned[::-1]\n" }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              { "type": "contains", "text": "代码讲解", "weight": 2 },
+              { "type": "contains", "text": "结构表", "weight": 1 },
+              { "type": "not_contains", "text": "Traceback", "weight": 2 },
+              { "type": "min_length", "value": 300, "weight": 1 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "knowledge-qa",
+  "name": "知识库问答",
+  "description": "本地知识库问答：倒排索引加 BM25 检索命中片段，再让模型生成带来源引用的中文回答。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 240000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "--kb",
+      "kb",
+      "--ask",
+      "{{params.q}}",
+      "--output",
+      "{{outputDir}}/report.md",
+      "--top-k",
+      "{{params.topk}}",
+      "--min-score",
+      "{{params.minscore}}"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "答案"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

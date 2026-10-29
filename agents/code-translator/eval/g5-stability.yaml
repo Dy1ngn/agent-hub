@@ -1,0 +1,457 @@
+id: ts-b-code-translator-g5-stability
+agentId: code-translator
+group: g5-stability
+name: 代码翻译 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线确定性模式），验证译文与报告稳定、结构一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 1
+      files:
+        - path: input/s1.py
+          content: "def greet(name):
+
+            \    print('hi', name)
+
+            \    return name.strip()\n"
+      params:
+        src: input/s1.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: console.log
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 2
+      files:
+        - path: input/s2.py
+          content: "import json
+
+
+            def load(raw):
+
+            \    return json.loads(raw)\n"
+      params:
+        src: input/s2.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: JSON.parse
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 3
+      files:
+        - path: input/s3.js
+          content: "function run(x) {
+
+            \  console.log('run', x);
+
+            \  return x + 1;
+
+            }\n"
+      params:
+        src: input/s3.js
+        target: python
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: print(
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 4
+      files:
+        - path: input/s4.py
+          content: "class A:
+
+            \    def __init__(self, v):
+
+            \        self.v = v\n"
+      params:
+        src: input/s4.py
+        target: typescript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: constructor
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 5
+      files:
+        - path: input/s5.py
+          content: "def total(items):
+
+            \    return sum(i.price for i in items)\n"
+      params:
+        src: input/s5.py
+        target: go
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 6
+      files:
+        - path: input/s6.py
+          content: "def total(items):
+
+            \    return sum(items)\n"
+      params:
+        src: input/s6.py
+        target: java
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 7
+      files:
+        - path: input/s7.js
+          content: "const add = (a, b) => a + b;\n"
+      params:
+        src: input/s7.js
+        target: go
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 8
+      files:
+        - path: input/s8.ts
+          content: "let total: number = 0;
+
+            export function add(n: number): number {
+
+            \  total += n;
+
+            \  return total;
+
+            }\n"
+      params:
+        src: input/s8.ts
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 9
+      files:
+        - path: input/s9.go
+          content: "package main
+
+
+            func Add(a, b int) int {
+
+            \treturn a + b
+
+            }\n"
+      params:
+        src: input/s9.go
+        target: python
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: 结构对照
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - translate
+    repeat: 10
+    input:
+      kind: code
+      goal: 重复调用验证翻译报告稳定
+      content: 稳定性样本 10
+      files:
+        - path: input/s10.py
+          content: "class B:
+
+            \    def __init__(self):
+
+            \        self.value = 0
+
+
+            \    def inc(self):
+
+            \        self.value += 1\n"
+      params:
+        src: input/s10.py
+        target: javascript
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 代码翻译报告
+          weight: 2
+          note: 产出标准翻译报告
+        - type: contains
+          text: "## 映射命中清单"
+          weight: 1
+        - type: contains
+          text: "## 结构对照"
+          weight: 1
+        - type: contains
+          text: this.
+          weight: 1
+          note: 确定性映射/结构输出稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 200
+          weight: 1
+      requiredSuggestions: []

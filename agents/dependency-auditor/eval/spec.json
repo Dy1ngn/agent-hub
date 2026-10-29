@@ -1,0 +1,2878 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型依赖风险审计",
+      "description": "无版本约束、typosquat、过旧版本、git 依赖、许可证、约束冲突等典型风险，走完整「规则扫描 + 模型升级建议」链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-clean-{n}",
+          "title": "干净依赖集（{fmt}）",
+          "tags": [
+            "basic",
+            "clean"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "确认规范依赖集没有风险",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "标准",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\nrequests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "重复声明自动去重",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "没有达到",
+                "weight": 2,
+                "note": "干净依赖集无命中项"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-unpinned-{n}",
+          "title": "无版本约束（{fmt}）",
+          "tags": [
+            "basic",
+            "rule"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出没有版本约束的依赖",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests\nflask\nnumpy\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "Python 清单",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"dependencies\": {\"express\": \"\", \"chalk\": \"\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "npm 空约束",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA001 ",
+                "weight": 2,
+                "note": "DA001 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-typosquat-{n}",
+          "title": "疑似 typosquat 投毒包（{fmt}）",
+          "tags": [
+            "basic",
+            "security"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出与流行包名字相近的可疑包",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requets==2.31.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "Python 清单",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"dependencies\": {\"lodahs\": \"1.0.0\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "npm 清单",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA005 ",
+                "weight": 2,
+                "note": "DA005 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-oldpin-{n}",
+          "title": "固定在过旧版本（{fmt}）",
+          "tags": [
+            "basic",
+            "rule"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出固定在过旧版本的依赖",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "django==2.0.11\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "django 2.x",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "flask==2.0.1\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "flask 2.0",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA003 ",
+                "weight": 2,
+                "note": "DA003 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-vcs-{n}",
+          "title": "git / 本地路径依赖（{fmt}）",
+          "tags": [
+            "basic",
+            "supply-chain"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出指向仓库或本地路径的依赖",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "git+https://github.com/x/y.git\n-e ./local/pkg\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "git 与可编辑安装",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "git+ssh://git@github.com/a/b.git@v1#egg=b\nfile:./third/pkg\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "ssh 仓库与 file:",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA004 ",
+                "weight": 2,
+                "note": "DA004 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-devdep-{n}",
+          "title": "开发依赖混入生产清单（{fmt}）",
+          "tags": [
+            "basic",
+            "rule"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出混进生产依赖的开发工具",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "pytest\nmypy\nrequests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "requirements",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"dependencies\": {\"jest\": \"26.0.0\", \"lodash\": \"4.17.21\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "package.json",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA008 ",
+                "weight": 2,
+                "note": "DA008 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-license-{n}",
+          "title": "许可证缺失 / 传染风险（{fmt}）",
+          "tags": [
+            "basic",
+            "license"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出许可证有风险的依赖",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "someinternal==1.0.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "未知许可证",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"dependencies\": {\"left-pad\": \"1.3.0\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "npm 未知许可证",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA007 ",
+                "weight": 2,
+                "note": "DA007 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-conflict-{n}",
+          "title": "重复声明且约束冲突（{fmt}）",
+          "tags": [
+            "basic",
+            "rule"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "找出互相矛盾的重复声明",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.31.0\nrequests>=3.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "requests 冲突",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "flask==2.0.0\nflask>=3.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "flask 冲突",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA006 ",
+                "weight": 2,
+                "note": "DA006 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-mixed-{n}",
+          "title": "混合风险清单（{fmt}）",
+          "tags": [
+            "basic",
+            "mixed"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "一次性审计多类风险",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests\nflask>=2.0\nrequets==2.31.0\ndjango==2.0.11\npytest\nPyYAML\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "混合样本一",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "lodash==4.17.20\nlodahs==1.0.0\ndjango==1.11.0\njest\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "混合样本二",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA005 ",
+                "weight": 1,
+                "note": "DA005 命中"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA001 ",
+                "weight": 1,
+                "note": "DA001 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-npm-{n}",
+          "title": "npm 清单审计（{fmt}）",
+          "tags": [
+            "basic",
+            "npm"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "审计 package.json 依赖",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"version\": \"1.0.0\", \"dependencies\": {\"lodash\": \"4.17.21\", \"express\": \"4.18.2\"}, \"devDependencies\": {\"jest\": \"26.0.0\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "前后端混合",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"web\", \"dependencies\": {\"react\": \"18.2.0\", \"vue\": \"3.2.0\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "前端项目",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "逐包明细",
+                "weight": 1,
+                "note": "逐包给出审计明细"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)package\\.json",
+                "weight": 1,
+                "note": "识别 npm 清单"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：清单类型 / 规模 / 参数",
+      "description": "Pipfile、dev 清单、extras/环境标记、过宽约束、级别过滤、公告匹配、大清单、多清单等变体（模型链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-pipfile-{n}",
+          "title": "Pipfile / Pipfile.lock（{fmt}）",
+          "tags": [
+            "variation",
+            "format"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析 Pipfile 系列清单",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/Pipfile",
+              "c1": "[[source]]\nurl = \"https://pypi.org/simple\"\n\n[packages]\nrequests = \"==2.31.0\"\nflask = \"*\"\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "Pipfile",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/Pipfile.lock",
+              "c1": "{\"default\": {\"requests\": {\"version\": \"==2.31.0\"}}, \"develop\": {\"pytest\": {\"version\": \"==7.4.0\"}}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "Pipfile.lock",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "逐包明细",
+                "weight": 1,
+                "note": "逐包给出审计明细"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)pipfile",
+                "weight": 1,
+                "note": "识别 Pipfile 系列"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-devfile-{n}",
+          "title": "dev 清单命名变体（{fmt}）",
+          "tags": [
+            "variation",
+            "format"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "识别开发依赖清单的文件名变体",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements-dev.txt",
+              "c1": "pytest==7.4.0\nmypy==1.8.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "requirements-dev",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/dev-requirements.txt",
+              "c1": "black==23.12.1\nruff==0.1.9\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "dev-requirements",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "(?i)requirements-dev|dev-requirements",
+                "weight": 1,
+                "note": "识别 dev 清单文件名"
+              },
+              {
+                "type": "contains",
+                "text": "逐包明细",
+                "weight": 1,
+                "note": "逐包给出审计明细"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-markers-{n}",
+          "title": "extras / 环境标记 / -r 引用（{fmt}）",
+          "tags": [
+            "variation",
+            "syntax"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析带 extras、环境标记与引用的清单",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests[socks]>=2.31,<3.0 ; python_version<'3.12'\nflask==3.0.3\n-r requirements-base.txt\n",
+              "p2": "input/deps/requirements-base.txt",
+              "c2": "urllib3==2.2.3\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "extras+标记+引用",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "uvicorn[standard]>=0.27\n-r requirements-base.txt\n",
+              "p2": "input/deps/requirements-base.txt",
+              "c2": "anyio==4.2.0\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "extras+引用",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "逐包明细",
+                "weight": 1,
+                "note": "逐包给出审计明细"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-constraints-{n}",
+          "title": "过宽版本约束（{fmt}）",
+          "tags": [
+            "variation",
+            "rule"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "识别等于没有约束的声明",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "flask>=0\nrequests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": ">=0",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"dependencies\": {\"lodash\": \"*\", \"chalk\": \"any\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "* / any",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA002 ",
+                "weight": 2,
+                "note": "DA002 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-level-{n}",
+          "title": "级别过滤（最低级别 {level}）",
+          "tags": [
+            "variation",
+            "params"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "验证 --min-level 过滤行为",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "警告",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "风险",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "没有达到「{level}」",
+                "weight": 2,
+                "note": "级别过滤文案与参数一致"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-advisory-{n}",
+          "title": "本地安全公告匹配（{fmt}）",
+          "tags": [
+            "variation",
+            "advisory"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "用本地公告匹配依赖版本",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.31.0\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[{\"package\": \"requests\", \"versions\": [\"==2.31.0\"], \"severity\": \"high\", \"title\": \"CVE-2024-演示公告\", \"link\": \"https://example.com/cve\"}]",
+              "level": "提示",
+              "fmt": "固定版本命中",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests>=2.0,<3.0\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[{\"package\": \"requests\", \"versions\": [\">=2.0,<2.32\"], \"severity\": \"medium\", \"title\": \"CVE-2024-演示公告\", \"link\": \"\"}]",
+              "level": "提示",
+              "fmt": "范围命中",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "CVE-2024-演示公告",
+                "weight": 2,
+                "note": "公告命中并展示标题"
+              },
+              {
+                "type": "regex",
+                "pattern": "(公告范围|受影响范围)",
+                "weight": 1,
+                "note": "给出命中说明"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-big-{n}",
+          "title": "30 包大清单（{n}）",
+          "tags": [
+            "variation",
+            "scale"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "审计大体量清单",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\ndjango==4.2.10\nnumpy==1.26.4\npandas==2.2.0\npkg01==1.0.1\npkg02==1.0.2\npkg03==1.0.3\npkg04==1.0.4\npkg05==1.0.5\npkg06==1.0.6\npkg07==1.0.7\npkg08==1.0.8\npkg09==1.0.9\npkg10==1.0.10\npkg11==1.0.11\npkg12==1.0.12\npkg13==1.0.13\npkg14==1.0.14\npkg15==1.0.15\npkg16==1.0.16\npkg17==1.0.17\npkg18==1.0.18\npkg19==1.0.19\npkg20==1.0.20\npkg21==1.0.21\npkg22==1.0.22\npkg23==1.0.23\npkg24==1.0.24\npkg25==1.0.25\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "大清单一",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\ndjango==4.2.10\nnumpy==1.26.4\npandas==2.2.0\npkg01==1.0.1\npkg02==1.0.2\npkg03==1.0.3\npkg04==1.0.4\npkg05==1.0.5\npkg06==1.0.6\npkg07==1.0.7\npkg08==1.0.8\npkg09==1.0.9\npkg10==1.0.10\npkg11==1.0.11\npkg12==1.0.12\npkg13==1.0.13\npkg14==1.0.14\npkg15==1.0.15\npkg16==1.0.16\npkg17==1.0.17\npkg18==1.0.18\npkg19==1.0.19\npkg20==1.0.20\npkg21==1.0.21\npkg22==1.0.22\npkg23==1.0.23\npkg24==1.0.24\npkg25==1.0.25\nextra_pkg\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "大清单二",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 800,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "逐包明细",
+                "weight": 1,
+                "note": "逐包给出审计明细"
+              },
+              {
+                "type": "contains",
+                "text": "规则命中统计",
+                "weight": 1,
+                "note": "给出规则命中统计"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-multimanifest-{n}",
+          "title": "多清单并存（{n}）",
+          "tags": [
+            "variation",
+            "multi"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "同时解析多种清单文件",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\n",
+              "p2": "input/deps/package.json",
+              "c2": "{\"name\": \"app\", \"dependencies\": {\"lodash\": \"4.17.21\"}}",
+              "p3": "input/deps/pyproject.toml",
+              "c3": "[project]\nname = \"x\"\nversion = \"1.0\"\ndependencies = [\"click==8.1.7\"]\n",
+              "adv": "[]",
+              "level": "提示",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\n",
+              "p2": "input/deps/package.json",
+              "c2": "{\"name\": \"app\", \"dependencies\": {\"express\": \"4.18.2\"}}",
+              "p3": "input/deps/Pipfile",
+              "c3": "[packages]\nclick = \"==8.1.7\"\n",
+              "adv": "[]",
+              "level": "提示",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "逐包明细",
+                "weight": 1,
+                "note": "多清单合并审计"
+              },
+              {
+                "type": "regex",
+                "pattern": "(清单文件数|多清单|逐包明细)",
+                "weight": 1,
+                "note": "展示清单来源"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-name-{n}",
+          "title": "包名命名不规范（{fmt}）",
+          "tags": [
+            "variation",
+            "rule"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "识别不规范的包名",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "my_package==1.0.0\nsome_pkg>=1.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "下划线",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "PyYAML==6.0.1\nMy_Package==2.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "fmt": "大小写混合",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "regex",
+                "pattern": "\\| (提示|警告|风险) \\| DA009 ",
+                "weight": 2,
+                "note": "DA009 命中"
+              }
+            ]
+          }
+        },
+        {
+          "id": "g2-peerdev-{n}",
+          "title": "npm 开发/对等依赖（{n}）",
+          "tags": [
+            "variation",
+            "npm"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "区分运行、开发与对等依赖",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}"
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"dependencies\": {\"react\": \"18.2.0\"}, \"devDependencies\": {\"jest\": \"26.0.0\"}, \"peerDependencies\": {\"react-dom\": \"18.2.0\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"lib\", \"dependencies\": {\"lodash\": \"4.17.21\"}, \"devDependencies\": {\"eslint\": \"8.56.0\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "n": "2"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 1,
+                "note": "产出标准审计报告"
+              },
+              {
+                "type": "contains",
+                "text": "## 概览",
+                "weight": 1,
+                "note": "报告固定结构（概览小节）"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              },
+              {
+                "type": "contains",
+                "text": "逐包明细",
+                "weight": 1,
+                "note": "逐包给出类型"
+              },
+              {
+                "type": "regex",
+                "pattern": "(开发|运行)",
+                "weight": 1,
+                "note": "区分依赖类型"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 极小 / 极大清单",
+      "description": "空清单、单包、超长约束、30 包大清单、缺失引用等边界输入下的稳定产出（离线模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "边界输入也要产出可读审计报告",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "空清单",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "# 只有注释\n# 还是注释\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "只有注释",
+              "n": "2"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "\n\n\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "只有空行",
+              "n": "3"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA001",
+              "title": "单包无版本",
+              "n": "4"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "空 package.json",
+              "n": "5"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"version\": \"1.0.0\"}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "package.json 仅元数据",
+              "n": "6"
+            },
+            {
+              "p1": "input/deps/pyproject.toml",
+              "c1": "[project]\nname = \"x\"\nversion = \"1.0\"\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "pyproject 无依赖",
+              "n": "7"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有达到|逐包明细",
+              "title": "单包精确固定",
+              "n": "8"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "超长版本约束",
+              "n": "9"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\ndjango==4.2.10\nnumpy==1.26.4\npandas==2.2.0\npkg01==1.0.1\npkg02==1.0.2\npkg03==1.0.3\npkg04==1.0.4\npkg05==1.0.5\npkg06==1.0.6\npkg07==1.0.7\npkg08==1.0.8\npkg09==1.0.9\npkg10==1.0.10\npkg11==1.0.11\npkg12==1.0.12\npkg13==1.0.13\npkg14==1.0.14\npkg15==1.0.15\npkg16==1.0.16\npkg17==1.0.17\npkg18==1.0.18\npkg19==1.0.19\npkg20==1.0.20\npkg21==1.0.21\npkg22==1.0.22\npkg23==1.0.23\npkg24==1.0.24\npkg25==1.0.25\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "逐包明细|规则命中统计",
+              "title": "30 包大清单",
+              "n": "10"
+            },
+            {
+              "p1": "input/deps/Pipfile",
+              "c1": "",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "空 Pipfile",
+              "n": "11"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests \n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA001",
+              "title": "包名带空格",
+              "n": "12"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "a==1.0.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "单字符包名",
+              "n": "13"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "flask>=0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA002",
+              "title": "过宽约束",
+              "n": "14"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3 \\\n    --hash=sha256:abc\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "续行与哈希",
+              "n": "15"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "-r missing-base.txt\nrequests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "-r 引用缺失文件",
+              "n": "16"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests>=2.31 ; python_version<'3.12'\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "环境标记",
+              "n": "17"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "pkg @ https://example.com/x.whl\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "URL 依赖",
+              "n": "18"
+            },
+            {
+              "p1": "input/deps/Pipfile.lock",
+              "c1": "",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "空 Pipfile.lock",
+              "n": "19"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nrequests==2.32.3\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "重复相同声明",
+              "n": "20"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 2,
+                "note": "边界输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "边界处理结果符合预期"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形清单与坏公告文件",
+      "description": "坏 TOML/JSON、乱码包名、非法约束、控制字符、坏公告文件、目录缺失等异常输入下优雅处理不崩溃（离线模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "异常输入不能让工具崩溃：要么正常审计，要么优雅报错",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "rows": [
+            {
+              "p1": "input/deps/pyproject.toml",
+              "c1": "[project\nname = \"x\"\n",
+              "p2": "input/deps/requirements.txt",
+              "c2": "requests==2.32.3\nflask==3.0.3\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "坏 TOML + 正常清单",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{not json",
+              "p2": "input/deps/requirements.txt",
+              "c2": "requests\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "坏 package.json + 正常清单",
+              "n": "2"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "鲤鲦鲪==1.0.0\n锟斤拷>=2.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "乱码包名",
+              "n": "3"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "pkg===\npkg2>=abc\npkg3==\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "非法版本约束",
+              "n": "4"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "bad name==1.0.0\nanother bad>=2\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "包名带空格",
+              "n": "5"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\u0007\nflask==3.0.3\u0007\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "控制字符",
+              "n": "6"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "pkg==999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "超长单行",
+              "n": "7"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.\u00003\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "NUL 字节",
+              "n": "8"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "😀pkg==1.0.0\n🚀==2.0.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "emoji 包名",
+              "n": "9"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "pkg~1.0\npkg2@1.0\npkg3:1.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "非法约束符号",
+              "n": "10"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "{",
+              "level": "提示",
+              "kw": "解析备注|公告文件读取失败",
+              "title": "公告文件坏 JSON",
+              "n": "11"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "\"oops\"",
+              "level": "提示",
+              "kw": "解析备注|公告文件读取失败",
+              "title": "公告文件顶层字符串",
+              "n": "12"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[{\"versions\": [\">=1.0\"]}, {\"package\": \"\"}]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "公告条目缺字段",
+              "n": "13"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[{\"package\": \"requests\", \"versions\": [\"abc\", \"\", \"*\"], \"severity\": \"unknown\", \"title\": \"怪公告\"}]",
+              "level": "提示",
+              "kw": "怪公告|本地公告命中",
+              "title": "公告版本格式怪",
+              "n": "14"
+            },
+            {
+              "p1": "input/notes/a.txt",
+              "c1": "（占位）\n",
+              "p2": "input/notes/b.txt",
+              "c2": "（占位）\n",
+              "p3": "input/notes/c.txt",
+              "c3": "（占位）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "路径检查失败|路径不存在|解析备注",
+              "title": "清单目录不存在",
+              "n": "15"
+            },
+            {
+              "p1": "input/deps/keep.txt",
+              "c1": "（无关文件）\n",
+              "p2": "input/deps/keep2.txt",
+              "c2": "（无关文件）\n",
+              "p3": "input/deps/keep3.txt",
+              "c3": "（无关文件）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "目录里没有清单",
+              "n": "16"
+            },
+            {
+              "p1": "input/deps/README.md",
+              "c1": "（无关文件）\n",
+              "p2": "input/deps/data.txt",
+              "c2": "（无关文件）\n",
+              "p3": "input/deps/main.py",
+              "c3": "print('hi')\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有解析出任何依赖|解析备注",
+              "title": "目录里只有无关文件",
+              "n": "17"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "﻿# 说明 comment\nrequests==2.32.3\n# komentar\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "BOM 与多语言注释",
+              "n": "18"
+            },
+            {
+              "p1": "input/deps/package.json",
+              "c1": "{\"name\": \"app\", \"dependencies\": {\"x\": {\"version\": 1}, \"lodash\": \"4.17.21\"}}",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "package.json 值为对象",
+              "n": "19"
+            },
+            {
+              "p1": "input/deps/Pipfile.lock",
+              "c1": "{bad json",
+              "p2": "input/deps/requirements.txt",
+              "c2": "requests==2.32.3\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "概览|逐包明细",
+              "title": "坏 Pipfile.lock",
+              "n": "20"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 2,
+                "note": "异常输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "优雅处理结果符合预期"
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个确定性样本（9 条规则 + 干净集 + 公告命中）各重复调用 10 次（离线模式）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：{title}",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "同一输入重复调用 10 次，确定性结论应稳定出现",
+            "content": "请审计 input/deps 目录下的依赖清单，给出风险与升级建议。",
+            "files": [
+              {
+                "path": "{p1}",
+                "content": "{c1}"
+              },
+              {
+                "path": "{p2}",
+                "content": "{c2}"
+              },
+              {
+                "path": "{p3}",
+                "content": "{c3}"
+              },
+              {
+                "path": "input/advisory.json",
+                "content": "{adv}"
+              }
+            ],
+            "params": {
+              "level": "{level}",
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA001",
+              "exact": "声明了 requests 但没写版本约束",
+              "title": "DA001 无版本约束",
+              "n": "1"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "django==2.0.11\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA003",
+              "exact": "固定在 2.0.11，低于内置对照表里的主流版本 4.2",
+              "title": "DA003 过旧版本",
+              "n": "2"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requets==2.31.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA005",
+              "exact": "与流行包 `requests` 的编辑距离",
+              "title": "DA005 typosquat",
+              "n": "3"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "git+https://github.com/x/y.git\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA004",
+              "exact": "依赖指向本地路径或仓库地址",
+              "title": "DA004 git 依赖",
+              "n": "4"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "pytest\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA008",
+              "exact": "是开发期工具",
+              "title": "DA008 开发依赖",
+              "n": "5"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "flask>=0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA002",
+              "exact": "过宽，等于没有约束",
+              "title": "DA002 过宽约束",
+              "n": "6"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.31.0\nrequests>=3.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA006",
+              "exact": "被声明 2 次，约束分别为",
+              "title": "DA006 约束冲突",
+              "n": "7"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "my_package==1.0.0\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "\\| (提示|警告|风险) \\| DA009",
+              "exact": "含下划线或大写字母",
+              "title": "DA009 命名不规范",
+              "n": "8"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.32.3\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[]",
+              "level": "提示",
+              "kw": "没有达到",
+              "exact": "没有达到「提示」级别及以上的命中项。",
+              "title": "干净依赖集",
+              "n": "9"
+            },
+            {
+              "p1": "input/deps/requirements.txt",
+              "c1": "requests==2.31.0\nflask==3.0.3\n",
+              "p2": "input/deps/NOTES.txt",
+              "c2": "（占位文件，不是依赖清单）\n",
+              "p3": "input/deps/README.md",
+              "c3": "（占位文件，不是依赖清单）\n",
+              "adv": "[{\"package\": \"requests\", \"versions\": [\"==2.31.0\"], \"severity\": \"high\", \"title\": \"CVE-2024-演示公告\", \"link\": \"https://example.com/cve\"}]",
+              "level": "提示",
+              "kw": "公告范围",
+              "exact": "CVE-2024-演示公告",
+              "title": "公告命中",
+              "n": "10"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "依赖风险审计报告",
+                "weight": 2,
+                "note": "重复调用仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "regex",
+                "pattern": "{kw}",
+                "weight": 2,
+                "note": "规则命中稳定出现"
+              },
+              {
+                "type": "contains",
+                "text": "{exact}",
+                "weight": 2,
+                "note": "断言确定性细节"
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1,
+                "note": "报告不是空壳"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

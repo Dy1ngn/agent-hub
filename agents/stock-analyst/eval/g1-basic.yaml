@@ -1,0 +1,740 @@
+id: ts-b-stock-analyst-g1-basic
+agentId: stock-analyst
+group: g1-basic
+name: 股票分析 · 基础功能：典型行情分析（规则链路）
+description: 不同股票代码 / 趋势 / 情绪面下的确定性分析链路（analyzer.py 源码直跑）：指标、评分、预测、信号清单（20 条用例 / 100 次调用）
+judge:
+  enabled: true
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-600519-up
+    title: 600519 行情分析（up/正面）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "600519", "seed": 11, "trend": "up", "days": 120}'
+      files: []
+      params:
+        sentiment: 正面
+        fund_score: "70"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: "600519"
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-000001-down
+    title: 000001 行情分析（down/负面）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "000001", "seed": 22, "trend": "down", "days": 120}'
+      files: []
+      params:
+        sentiment: 负面
+        fund_score: "30"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: "000001"
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-300750-sideways
+    title: 300750 行情分析（sideways/中性）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "300750", "seed": 33, "trend": "sideways", "days": 120}'
+      files: []
+      params:
+        sentiment: 中性
+        fund_score: "50"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: "300750"
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-AAPL-volatile
+    title: AAPL 行情分析（volatile/中性）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "AAPL", "seed": 44, "trend": "volatile", "days": 120}'
+      files: []
+      params:
+        sentiment: 中性
+        fund_score: "55"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: AAPL
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-MSFT-up
+    title: MSFT 行情分析（up/正面）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "MSFT", "seed": 55, "trend": "up", "days": 120}'
+      files: []
+      params:
+        sentiment: 正面
+        fund_score: "65"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: MSFT
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-601318-down
+    title: 601318 行情分析（down/负面）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "601318", "seed": 66, "trend": "down", "days": 120}'
+      files: []
+      params:
+        sentiment: 负面
+        fund_score: "25"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: "601318"
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-002594-sideways
+    title: 002594 行情分析（sideways/中性）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "002594", "seed": 77, "trend": "sideways", "days": 120}'
+      files: []
+      params:
+        sentiment: 中性
+        fund_score: "48"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: "002594"
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-NVDA-volatile
+    title: NVDA 行情分析（volatile/正面）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "NVDA", "seed": 88, "trend": "volatile", "days": 120}'
+      files: []
+      params:
+        sentiment: 正面
+        fund_score: "72"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: NVDA
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-600036-up
+    title: 600036 行情分析（up/中性）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "600036", "seed": 99, "trend": "up", "days": 120}'
+      files: []
+      params:
+        sentiment: 中性
+        fund_score: "58"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: "600036"
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-000858-down
+    title: 000858 行情分析（down/负面）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 对该股票做完整技术分析并给出综合评分与明日预测
+      content: '{"symbol": "000858", "seed": 101, "trend": "down", "days": 120}'
+      files: []
+      params:
+        sentiment: 负面
+        fund_score: "35"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 股票分析报告
+          weight: 1
+          note: 产出标准报告
+        - type: contains
+          text: "000858"
+          weight: 1
+          note: 报告带标的代码
+        - type: regex
+          pattern: 综合[评分]+[^\d]*\d+
+          weight: 2
+          note: 给出综合评分
+        - type: regex
+          pattern: (倾向|上涨概率)
+          weight: 1
+          note: 给出预测
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-score-5
+    title: 评分与预测口径（seed 5）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 5, "trend": "up", "days": 90, "fund_score": 90, "sentiment": "正面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-6
+    title: 评分与预测口径（seed 6）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 6, "trend": "up", "days": 90, "fund_score": 10, "sentiment": "正面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-7
+    title: 评分与预测口径（seed 7）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 7, "trend": "down", "days": 90, "fund_score": 90, "sentiment": "负面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-8
+    title: 评分与预测口径（seed 8）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 8, "trend": "down", "days": 90, "fund_score": 10, "sentiment": "负面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-9
+    title: 评分与预测口径（seed 9）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 9, "trend": "sideways", "days": 90, "fund_score": 50, "sentiment": "中性"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-10
+    title: 评分与预测口径（seed 10）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 10, "trend": "volatile", "days": 90, "fund_score": 50, "sentiment": "中性"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-11
+    title: 评分与预测口径（seed 11）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 11, "trend": "up", "days": 90, "fund_score": 50, "sentiment": "中性"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-12
+    title: 评分与预测口径（seed 12）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 12, "trend": "down", "days": 90, "fund_score": 50, "sentiment": "中性"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-13
+    title: 评分与预测口径（seed 13）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 13, "trend": "sideways", "days": 90, "fund_score": 90, "sentiment": "正面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []
+  - id: g1-score-14
+    title: 评分与预测口径（seed 14）
+    tags:
+      - basic
+      - rule
+    repeat: 5
+    input:
+      kind: json
+      goal: 验证评分口径稳定：技术面/资金面/消息面加权出综合分
+      content: '{"symbol": "600519", "seed": 14, "trend": "volatile", "days": 90, "fund_score": 10, "sentiment": "负面"}'
+      files: []
+      params:
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: 技术面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 资金面\s*\d+
+          weight: 1
+        - type: regex
+          pattern: 消息面\s*\d+
+          weight: 1
+        - type: contains
+          text: 信号清单
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 2
+      requiredSuggestions: []

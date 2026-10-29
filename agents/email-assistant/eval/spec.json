@@ -1,0 +1,1778 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型邮件处理",
+      "description": "紧急/账单/资讯/多收件人/mbox/纯文本/附件等典型邮件输入，走完整「解析 + 模型分析」链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-urgent-{i}",
+          "title": "紧急邮件：优先级高（{subject}）",
+          "tags": [
+            "basic",
+            "priority"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析紧急邮件并给出优先级、待办与草稿",
+            "content": "请处理 input/ 目录下的紧急邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2,
+                "note": "邮件主题出现在报告里"
+              },
+              {
+                "type": "regex",
+                "pattern": "级别：\\*\\*高\\*\\*",
+                "weight": 2,
+                "note": "紧急邮件判为高优先级"
+              },
+              {
+                "type": "contains",
+                "text": "### 待办与关键信息",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "urgent.txt",
+              "raw": "Subject: 紧急：合同确认（请今天内回复）\nFrom: 张三 <zhangsan@example.com>\nTo: 李四 <lisi@example.com>\n\n李四，你好：\n这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？\n请尽快回复：是否需要法务复核？能否今天内给出结论？\n",
+              "subject": "紧急：合同确认（请今天内回复）",
+              "tone": "正式"
+            },
+            {
+              "f1": "notice.txt",
+              "raw": "Subject: 紧急：上线审批（紧急）\nFrom: 张三 <zhangsan@example.com>\nTo: 李四 <lisi@example.com>\n\n李四，你好：\n这封邮件比较紧急，请在 2026-10-30 前确认上线日期 2026-11-11是否正确？\n请尽快回复：是否需要法务复核？能否今天内给出结论？\n",
+              "subject": "紧急：上线审批（紧急）",
+              "tone": "友好"
+            }
+          ]
+        },
+        {
+          "id": "g1-invite-{i}",
+          "title": "会议邀请 .eml（{subject}）",
+          "tags": [
+            "basic",
+            "eml"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析会议邀请邮件并摘要",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2,
+                "note": "主题回显"
+              },
+              {
+                "type": "contains",
+                "text": "### 元信息",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "### 摘要",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "invite.eml",
+              "raw": "From: carol@example.com\nTo: team@example.com\nSubject: Q4 Planning Meeting Agenda\nDate: Mon, 27 Oct 2026 09:30:00 +0800\n\n\nHi team,\n\nThe Q4 planning meeting is on 2026-11-02. Please review the agenda.\n",
+              "subject": "Q4 Planning Meeting Agenda",
+              "tone": "正式"
+            },
+            {
+              "f1": "review.eml",
+              "raw": "From: dave@example.com\nTo: legal@example.com\nSubject: Contract Review Needed\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nCc: boss@example.com, audit@example.com\n\n\nPlease review the contract draft before 2026-11-01. Thanks!\n",
+              "subject": "Contract Review Needed",
+              "tone": "简洁"
+            }
+          ]
+        },
+        {
+          "id": "g1-bill-{i}",
+          "title": "账单邮件：金额与日期提取（{subject}）",
+          "tags": [
+            "basic",
+            "extraction"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析账单邮件并提取金额、日期等关键信息",
+            "content": "请处理 input/ 目录下的账单邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{amount}",
+                "weight": 2,
+                "note": "金额出现在报告里"
+              },
+              {
+                "type": "contains",
+                "text": "### 优先级",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "bill.txt",
+              "raw": "Subject: 十月账单与报销明细\nFrom: 财务 <finance@example.com>\nTo: 李四 <lisi@example.com>\n\n李四你好，十月账单已出，合计 1234.56 元，明细见下。\n如有疑问请在 2026-11-05 前反馈。\n",
+              "subject": "十月账单与报销明细",
+              "amount": "1234.56",
+              "tone": "正式"
+            },
+            {
+              "f1": "expense.txt",
+              "raw": "Subject: 差旅报销单\nFrom: 财务 <finance@example.com>\nTo: 李四 <lisi@example.com>\n\n李四你好，十月账单已出，合计 888.00 元，明细见下。\n如有疑问请在 2026-11-05 前反馈。\n",
+              "subject": "差旅报销单",
+              "amount": "888.00",
+              "tone": "友好"
+            }
+          ]
+        },
+        {
+          "id": "g1-news-{i}",
+          "title": "资讯/低优先级邮件（{subject}）",
+          "tags": [
+            "basic",
+            "priority"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析资讯邮件并给出优先级",
+            "content": "请处理 input/ 目录下的资讯邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "级别：\\*\\*(低|中)\\*\\*",
+                "weight": 2,
+                "note": "无紧急特征，优先级不高"
+              },
+              {
+                "type": "contains",
+                "text": "## 汇总统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "news.txt",
+              "raw": "Subject: 产品月刊第 12 期\nFrom: 运营 <ops@example.com>\nTo: 订阅者 <list@example.com>\n\n本期产品月刊介绍新功能与团队动态，欢迎浏览。\n",
+              "subject": "产品月刊第 12 期",
+              "tone": "简洁"
+            },
+            {
+              "f1": "digest.txt",
+              "raw": "Subject: 技术周报精选\nFrom: 运营 <ops@example.com>\nTo: 订阅者 <list@example.com>\n\n本周技术文章精选合集，欢迎浏览。\n",
+              "subject": "技术周报精选",
+              "tone": "正式"
+            }
+          ]
+        },
+        {
+          "id": "g1-cc-{i}",
+          "title": "多收件人/抄送 .eml（{subject}）",
+          "tags": [
+            "basic",
+            "eml"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析多收件人邮件",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "| 抄送 |",
+                "weight": 1,
+                "note": "元信息含抄送行"
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "cc.eml",
+              "raw": "From: dave@example.com\nTo: legal@example.com\nSubject: Contract Review Needed\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nCc: boss@example.com, audit@example.com\n\n\nPlease review the contract draft before 2026-11-01. Thanks!\n",
+              "subject": "Contract Review Needed",
+              "tone": "正式"
+            },
+            {
+              "f1": "thread.eml",
+              "raw": "From: erin@example.com\nTo: bob@example.com\nSubject: Re: Server Migration Plan\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nIn-Reply-To: <parent@example.com>\nReferences: <root@example.com> <parent@example.com>\n\n\nFollowing up on the migration plan discussed last week.\n",
+              "subject": "Re: Server Migration Plan",
+              "tone": "正式"
+            }
+          ]
+        },
+        {
+          "id": "g1-mbox-{i}",
+          "title": "mbox 多封邮件（{count} 封）",
+          "tags": [
+            "basic",
+            "mbox"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析 mbox 邮箱文件里的多封邮件",
+            "content": "请处理 input/ 目录下的 mbox 邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "处理邮件数：{count}",
+                "weight": 2,
+                "note": "解析出正确邮件数"
+              },
+              {
+                "type": "contains",
+                "text": "## 汇总统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "inbox.mbox",
+              "raw": "From - Mon Oct 26 09:00:00 2026\nFrom: alice@example.com\nTo: bob@example.com\nSubject: Weekly Report\nDate: Mon, 26 Oct 2026 09:00:00 +0800\n\nPlease find the weekly report.\n\nFrom - Tue Oct 27 10:00:00 2026\nFrom: carol@example.com\nTo: bob@example.com\nSubject: Server Maintenance\nDate: Tue, 27 Oct 2026 10:00:00 +0800\n\nMaintenance is tonight.\n\nFrom - Wed Oct 28 11:00:00 2026\nFrom: dave@example.com\nTo: bob@example.com\nSubject: Budget Approval\nDate: Wed, 28 Oct 2026 11:00:00 +0800\n\nBudget approval is pending.\n",
+              "subject": "Weekly Report",
+              "count": "3",
+              "tone": "正式"
+            },
+            {
+              "f1": "box.mbox",
+              "raw": "From - Mon Oct 26 09:00:00 2026\nFrom: alice@example.com\nTo: bob@example.com\nSubject: Weekly Report\nDate: Mon, 26 Oct 2026 09:00:00 +0800\n\nPlease find the weekly report.\n\nFrom - Tue Oct 27 10:00:00 2026\nFrom: carol@example.com\nTo: bob@example.com\nSubject: Server Maintenance\nDate: Tue, 27 Oct 2026 10:00:00 +0800\n\nMaintenance window confirmed.\n\nFrom - Wed Oct 28 11:00:00 2026\nFrom: dave@example.com\nTo: bob@example.com\nSubject: Release Notes\nDate: Wed, 28 Oct 2026 11:00:00 +0800\n\nBudget approval is pending.\n",
+              "subject": "Release Notes",
+              "count": "3",
+              "tone": "简洁"
+            }
+          ]
+        },
+        {
+          "id": "g1-bare-{i}",
+          "title": "纯文本邮件：主题取文件名（{subject}）",
+          "tags": [
+            "basic",
+            "txt"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析无邮件头的纯文本邮件",
+            "content": "请处理 input/ 目录下的纯文本邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2,
+                "note": "主题取文件名"
+              },
+              {
+                "type": "contains",
+                "text": "### 草稿回复",
+                "weight": 1,
+                "note": "起草回复小节"
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "reminder.txt",
+              "raw": "记得明天下午三点提交周报，别忘了带上数据截图。\n",
+              "subject": "reminder",
+              "tone": "友好"
+            },
+            {
+              "f1": "memo.txt",
+              "raw": "记得明天下午三点提交月报，别忘了带上数据截图。\n",
+              "subject": "memo",
+              "tone": "简洁"
+            }
+          ]
+        },
+        {
+          "id": "g1-attach-{i}",
+          "title": "带附件 .eml（{subject}）",
+          "tags": [
+            "basic",
+            "attachment"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析带附件邮件并列出附件清单",
+            "content": "请处理 input/ 目录下的带附件邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "report.pdf",
+                "weight": 2,
+                "note": "附件名出现在附件清单"
+              },
+              {
+                "type": "contains",
+                "text": "### 附件清单",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "attach.eml",
+              "raw": "From: alice@example.com\nTo: bob@example.com\nSubject: Contract Draft\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"BBB\"\n\n--BBB\nContent-Type: text/plain\n\nPlease review the attached report.\n\n--BBB\nContent-Type: application/pdf; name=\"report.pdf\"\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; filename=\"report.pdf\"\n\nJVBERi0xLjQK\n--BBB--\n",
+              "subject": "Contract Draft",
+              "tone": "正式"
+            },
+            {
+              "f1": "draft.eml",
+              "raw": "From: alice@example.com\nTo: bob@example.com\nSubject: Design Review\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"BBB\"\n\n--BBB\nContent-Type: text/plain\n\nPlease review the attached design.\n\n--BBB\nContent-Type: application/pdf; name=\"report.pdf\"\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; filename=\"report.pdf\"\n\nJVBERi0xLjQK\n--BBB--\n",
+              "subject": "Design Review",
+              "tone": "正式"
+            }
+          ]
+        },
+        {
+          "id": "g1-bilingual-{i}",
+          "title": "中英混合邮件（{subject}）",
+          "tags": [
+            "basic",
+            "mixed"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析中英混合邮件",
+            "content": "请处理 input/ 目录下的双语邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "(摘要|Summary)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "bilingual.txt",
+              "raw": "Subject: 跨团队协作方案 / Cross-team Plan\nFrom: Emily <emily@example.com>\nTo: 王五 <wangwu@example.com>\n\n王五你好，这是中英双语的协作方案 draft，请查收。\nPlease send feedback before 2026-11-03. 谢谢！\n",
+              "subject": "跨团队协作方案 / Cross-team Plan",
+              "tone": "正式"
+            },
+            {
+              "f1": "global.txt",
+              "raw": "Subject: Global Rollout Plan\nFrom: Emily <emily@example.com>\nTo: 李四 <wangwu@example.com>\n\n李四你好，这是中英双语的协作方案 draft，请查收。\nPlease send feedback before 2026-11-03. 谢谢！\n",
+              "subject": "Global Rollout Plan",
+              "tone": "友好"
+            }
+          ]
+        },
+        {
+          "id": "g1-thread-{i}",
+          "title": "带引用线程的回复邮件（{subject}）",
+          "tags": [
+            "basic",
+            "thread"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "解析回复邮件并剥离引用内容",
+            "content": "请处理 input/ 目录下的回复邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "引用线程",
+                "weight": 1,
+                "note": "元信息含引用线程"
+              },
+              {
+                "type": "regex",
+                "pattern": "(剥离|引用)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "reply.eml",
+              "raw": "From: erin@example.com\nTo: bob@example.com\nSubject: Re: Server Migration Plan\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nIn-Reply-To: <parent@example.com>\nReferences: <root@example.com> <parent@example.com>\n\n\nFollowing up on the migration plan discussed last week.\n",
+              "subject": "Re: Server Migration Plan",
+              "tone": "正式"
+            },
+            {
+              "f1": "followup.eml",
+              "raw": "From: erin@example.com\nTo: bob@example.com\nSubject: Re: Q4 Budget Review\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nIn-Reply-To: <parent@example.com>\nReferences: <root@example.com> <parent@example.com>\n\n\nFollowing up on the budget review discussed last week.\n",
+              "subject": "Re: Q4 Budget Review",
+              "tone": "简洁"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：长度 / 语气参数 / 多文件 / 邮件头风格",
+      "description": "正文长度、回复语气参数、多文件混合与邮件头风格变体，走模型链路",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-length-{i}",
+          "title": "正文长度变体（{subject}）",
+          "tags": [
+            "variation",
+            "length"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "处理不同长度的邮件正文",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "### 正文（已剥离引用，共剥离 0 行）",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "tiny.txt",
+              "raw": "Subject: 一句话通知\nFrom: a@example.com\nTo: b@example.com\n\n好。\n",
+              "subject": "一句话通知",
+              "tone": "正式"
+            },
+            {
+              "f1": "medium.txt",
+              "raw": "Subject: 周会纪要确认\nFrom: a@example.com\nTo: b@example.com\n\n本周周会纪要请确认，主要讨论了发布计划。\n如有异议请提出。\n",
+              "subject": "周会纪要确认",
+              "tone": "正式"
+            },
+            {
+              "f1": "long.txt",
+              "raw": "Subject: 季度总结与规划\nFrom: a@example.com\nTo: b@example.com\n\n这是一封很长的邮件正文。\n第 1 段：项目进度、风险与后续安排都写在这里。\n第 2 段：项目进度、风险与后续安排都写在这里。\n第 3 段：项目进度、风险与后续安排都写在这里。\n第 4 段：项目进度、风险与后续安排都写在这里。\n第 5 段：项目进度、风险与后续安排都写在这里。\n第 6 段：项目进度、风险与后续安排都写在这里。\n第 7 段：项目进度、风险与后续安排都写在这里。\n第 8 段：项目进度、风险与后续安排都写在这里。\n第 9 段：项目进度、风险与后续安排都写在这里。\n第 10 段：项目进度、风险与后续安排都写在这里。\n第 11 段：项目进度、风险与后续安排都写在这里。\n第 12 段：项目进度、风险与后续安排都写在这里。\n第 13 段：项目进度、风险与后续安排都写在这里。\n第 14 段：项目进度、风险与后续安排都写在这里。\n第 15 段：项目进度、风险与后续安排都写在这里。\n第 16 段：项目进度、风险与后续安排都写在这里。\n第 17 段：项目进度、风险与后续安排都写在这里。\n第 18 段：项目进度、风险与后续安排都写在这里。\n第 19 段：项目进度、风险与后续安排都写在这里。\n第 20 段：项目进度、风险与后续安排都写在这里。\n第 21 段：项目进度、风险与后续安排都写在这里。\n第 22 段：项目进度、风险与后续安排都写在这里。\n第 23 段：项目进度、风险与后续安排都写在这里。\n第 24 段：项目进度、风险与后续安排都写在这里。\n第 25 段：项目进度、风险与后续安排都写在这里。\n第 26 段：项目进度、风险与后续安排都写在这里。\n第 27 段：项目进度、风险与后续安排都写在这里。\n第 28 段：项目进度、风险与后续安排都写在这里。\n第 29 段：项目进度、风险与后续安排都写在这里。\n第 30 段：项目进度、风险与后续安排都写在这里。\n第 31 段：项目进度、风险与后续安排都写在这里。\n第 32 段：项目进度、风险与后续安排都写在这里。\n第 33 段：项目进度、风险与后续安排都写在这里。\n第 34 段：项目进度、风险与后续安排都写在这里。\n第 35 段：项目进度、风险与后续安排都写在这里。\n第 36 段：项目进度、风险与后续安排都写在这里。\n第 37 段：项目进度、风险与后续安排都写在这里。\n第 38 段：项目进度、风险与后续安排都写在这里。\n第 39 段：项目进度、风险与后续安排都写在这里。\n第 40 段：项目进度、风险与后续安排都写在这里。\n第 41 段：项目进度、风险与后续安排都写在这里。\n第 42 段：项目进度、风险与后续安排都写在这里。\n第 43 段：项目进度、风险与后续安排都写在这里。\n第 44 段：项目进度、风险与后续安排都写在这里。\n第 45 段：项目进度、风险与后续安排都写在这里。\n第 46 段：项目进度、风险与后续安排都写在这里。\n第 47 段：项目进度、风险与后续安排都写在这里。\n第 48 段：项目进度、风险与后续安排都写在这里。\n第 49 段：项目进度、风险与后续安排都写在这里。\n第 50 段：项目进度、风险与后续安排都写在这里。\n第 51 段：项目进度、风险与后续安排都写在这里。\n第 52 段：项目进度、风险与后续安排都写在这里。\n第 53 段：项目进度、风险与后续安排都写在这里。\n第 54 段：项目进度、风险与后续安排都写在这里。\n第 55 段：项目进度、风险与后续安排都写在这里。\n第 56 段：项目进度、风险与后续安排都写在这里。\n第 57 段：项目进度、风险与后续安排都写在这里。\n第 58 段：项目进度、风险与后续安排都写在这里。\n第 59 段：项目进度、风险与后续安排都写在这里。\n请在 2026-11-09 前确认。\n",
+              "subject": "季度总结与规划",
+              "tone": "正式"
+            },
+            {
+              "f1": "questions.txt",
+              "raw": "Subject: 三个问题需要确认\nFrom: a@example.com\nTo: b@example.com\n\n方案 A 可行吗？预算够吗？排期来得及吗？请回复。\n",
+              "subject": "三个问题需要确认",
+              "tone": "友好"
+            },
+            {
+              "f1": "blank.txt",
+              "raw": "Subject: 空正文邮件\nFrom: a@example.com\nTo: b@example.com\n\n",
+              "subject": "空正文邮件",
+              "tone": "简洁"
+            }
+          ]
+        },
+        {
+          "id": "g2-tone-{i}",
+          "title": "语气参数变体（{tone}）",
+          "tags": [
+            "variation",
+            "params"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "用不同语气起草回复",
+            "content": "请处理 input/ 目录下的邮件并按指定语气起草回复。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "「{tone}」语气",
+                "weight": 2,
+                "note": "按指定语气起草"
+              },
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "mail.txt",
+              "raw": "Subject: 紧急：合同确认（请今天内回复）\nFrom: 张三 <zhangsan@example.com>\nTo: 李四 <lisi@example.com>\n\n李四，你好：\n这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？\n请尽快回复：是否需要法务复核？能否今天内给出结论？\n",
+              "subject": "紧急：合同确认（请今天内回复）",
+              "tone": "正式"
+            },
+            {
+              "f1": "mail.txt",
+              "raw": "Subject: 紧急：合同确认（请今天内回复）\nFrom: 张三 <zhangsan@example.com>\nTo: 李四 <lisi@example.com>\n\n李四，你好：\n这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？\n请尽快回复：是否需要法务复核？能否今天内给出结论？\n",
+              "subject": "紧急：合同确认（请今天内回复）",
+              "tone": "友好"
+            },
+            {
+              "f1": "mail.txt",
+              "raw": "Subject: 紧急：合同确认（请今天内回复）\nFrom: 张三 <zhangsan@example.com>\nTo: 李四 <lisi@example.com>\n\n李四，你好：\n这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？\n请尽快回复：是否需要法务复核？能否今天内给出结论？\n",
+              "subject": "紧急：合同确认（请今天内回复）",
+              "tone": "简洁"
+            },
+            {
+              "f1": "mail2.txt",
+              "raw": "Subject: 十月账单与报销明细\nFrom: 财务 <finance@example.com>\nTo: 李四 <lisi@example.com>\n\n李四你好，十月账单已出，合计 1234.56 元，明细见下。\n如有疑问请在 2026-11-05 前反馈。\n",
+              "subject": "十月账单与报销明细",
+              "tone": "正式"
+            },
+            {
+              "f1": "mail2.txt",
+              "raw": "Subject: 十月账单与报销明细\nFrom: 财务 <finance@example.com>\nTo: 李四 <lisi@example.com>\n\n李四你好，十月账单已出，合计 1234.56 元，明细见下。\n如有疑问请在 2026-11-05 前反馈。\n",
+              "subject": "十月账单与报销明细",
+              "tone": "友好"
+            }
+          ]
+        },
+        {
+          "id": "g2-multi-{i}",
+          "title": "多文件混合输入（{count} 个文件）",
+          "tags": [
+            "variation",
+            "multi-file"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "一次处理多个邮件文件",
+            "content": "请处理 input/ 目录下的全部邮件文件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              },
+              {
+                "path": "input/{f2}",
+                "content": "{raw2}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "处理邮件数：{count}",
+                "weight": 2,
+                "note": "解析出正确邮件数"
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "a.txt",
+              "raw": "Subject: 产品月刊第 12 期\nFrom: 运营 <ops@example.com>\nTo: 订阅者 <list@example.com>\n\n本期产品月刊介绍新功能与团队动态，欢迎浏览。\n",
+              "f2": "b.txt",
+              "raw2": "记得明天下午三点提交周报，别忘了带上数据截图。\n",
+              "subject": "产品月刊第 12 期",
+              "count": "2",
+              "tone": "正式"
+            },
+            {
+              "f1": "c.eml",
+              "raw": "From: carol@example.com\nTo: team@example.com\nSubject: Q4 Planning Meeting Agenda\nDate: Mon, 27 Oct 2026 09:30:00 +0800\n\n\nHi team,\n\nThe Q4 planning meeting is on 2026-11-02. Please review the agenda.\n",
+              "f2": "d.txt",
+              "raw2": "Subject: 十月账单与报销明细\nFrom: 财务 <finance@example.com>\nTo: 李四 <lisi@example.com>\n\n李四你好，十月账单已出，合计 1234.56 元，明细见下。\n如有疑问请在 2026-11-05 前反馈。\n",
+              "subject": "Q4 Planning Meeting Agenda",
+              "count": "2",
+              "tone": "正式"
+            },
+            {
+              "f1": "e.mbox",
+              "raw": "From - Mon Oct 26 09:00:00 2026\nFrom: alice@example.com\nTo: bob@example.com\nSubject: Weekly Report\nDate: Mon, 26 Oct 2026 09:00:00 +0800\n\nPlease find the weekly report.\n\nFrom - Tue Oct 27 10:00:00 2026\nFrom: carol@example.com\nTo: bob@example.com\nSubject: Server Maintenance\nDate: Tue, 27 Oct 2026 10:00:00 +0800\n\nMaintenance is tonight.\n\nFrom - Wed Oct 28 11:00:00 2026\nFrom: dave@example.com\nTo: bob@example.com\nSubject: Budget Approval\nDate: Wed, 28 Oct 2026 11:00:00 +0800\n\nBudget approval is pending.\n",
+              "f2": "f.txt",
+              "raw2": "Subject: 产品月刊第 12 期\nFrom: 运营 <ops@example.com>\nTo: 订阅者 <list@example.com>\n\n本期产品月刊介绍新功能与团队动态，欢迎浏览。\n",
+              "subject": "Weekly Report",
+              "count": "4",
+              "tone": "简洁"
+            },
+            {
+              "f1": "g.eml",
+              "raw": "From: alice@example.com\nTo: bob@example.com\nSubject: Contract Draft\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"BBB\"\n\n--BBB\nContent-Type: text/plain\n\nPlease review the attached report.\n\n--BBB\nContent-Type: application/pdf; name=\"report.pdf\"\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; filename=\"report.pdf\"\n\nJVBERi0xLjQK\n--BBB--\n",
+              "f2": "h.txt",
+              "raw2": "Subject: 紧急：合同确认（请今天内回复）\nFrom: 张三 <zhangsan@example.com>\nTo: 李四 <lisi@example.com>\n\n李四，你好：\n这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？\n请尽快回复：是否需要法务复核？能否今天内给出结论？\n",
+              "subject": "Contract Draft",
+              "count": "2",
+              "tone": "友好"
+            },
+            {
+              "f1": "i.txt",
+              "raw": "Subject: 跨团队协作方案 / Cross-team Plan\nFrom: Emily <emily@example.com>\nTo: 王五 <wangwu@example.com>\n\n王五你好，这是中英双语的协作方案 draft，请查收。\nPlease send feedback before 2026-11-03. 谢谢！\n",
+              "f2": "j.eml",
+              "raw2": "From: erin@example.com\nTo: bob@example.com\nSubject: Re: Server Migration Plan\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nIn-Reply-To: <parent@example.com>\nReferences: <root@example.com> <parent@example.com>\n\n\nFollowing up on the migration plan discussed last week.\n",
+              "subject": "跨团队协作方案 / Cross-team Plan",
+              "count": "2",
+              "tone": "正式"
+            }
+          ]
+        },
+        {
+          "id": "g2-headers-{i}",
+          "title": "邮件头风格变体（{subject}）",
+          "tags": [
+            "variation",
+            "headers"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "处理不同邮件头写法的邮件",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}"
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "### 元信息",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "re.txt",
+              "raw": "Subject: Re: 发布窗口确认\nFrom: a@example.com\nTo: b@example.com\n\n发布窗口请确认。\n",
+              "subject": "Re: 发布窗口确认",
+              "tone": "正式"
+            },
+            {
+              "f1": "fwd.txt",
+              "raw": "Subject: Fwd: 客户反馈汇总\nFrom: a@example.com\nTo: b@example.com\n\n转发客户反馈，请跟进。\n",
+              "subject": "Fwd: 客户反馈汇总",
+              "tone": "正式"
+            },
+            {
+              "f1": "nofrom.txt",
+              "raw": "Subject: 缺发件人的邮件\nTo: b@example.com\n\n这封邮件没有 From 头。\n",
+              "subject": "缺发件人的邮件",
+              "tone": "简洁"
+            },
+            {
+              "f1": "colon.txt",
+              "raw": "Subject: 半角冒头风格\nFrom: a@example.com\nTo: b@example.com\n\n正文内容，供测试。\n",
+              "subject": "半角冒头风格",
+              "tone": "友好"
+            },
+            {
+              "f1": "dups.txt",
+              "raw": "Subject: 重复头邮件\nSubject: 重复头邮件\nFrom: a@example.com\nFrom: c@example.com\nTo: b@example.com\n\n重复头也能解析。\n",
+              "subject": "重复头邮件",
+              "tone": "正式"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：空 / 极短 / 极端数值",
+      "description": "空邮件、极短正文、超长主题/正文、极端金额等边界输入，离线确定性输出",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-minimal-{i}",
+          "title": "极小/空邮件（{subject}）",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "极小与空内容邮件也要优雅处理",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "regex",
+                "pattern": "(正文为空|无摘要|摘要)",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "empty.txt",
+              "raw": "",
+              "subject": "empty",
+              "tone": "正式"
+            },
+            {
+              "f1": "oneline.txt",
+              "raw": "好。\n",
+              "subject": "oneline",
+              "tone": "正式"
+            },
+            {
+              "f1": "headersonly.eml",
+              "raw": "From: a@example.com\nTo: b@example.com\nSubject: Only Headers\nDate: Mon, 27 Oct 2026 09:30:00 +0800\n\n",
+              "subject": "Only Headers",
+              "tone": "正式"
+            },
+            {
+              "f1": "subjectonly.txt",
+              "raw": "Subject: 只有主题\nFrom: a@example.com\n\n",
+              "subject": "只有主题",
+              "tone": "正式"
+            },
+            {
+              "f1": "spaces.txt",
+              "raw": "   \n\n  \n",
+              "subject": "spaces",
+              "tone": "正式"
+            },
+            {
+              "f1": "tiny.eml",
+              "raw": "From: alice@example.com\nTo: bob@example.com\nSubject: Tiny\nDate: Mon, 27 Oct 2026 09:30:00 +0800\n\n\nhi",
+              "subject": "Tiny",
+              "tone": "简洁"
+            },
+            {
+              "f1": "question.txt",
+              "raw": "Subject: 一个问句\nFrom: a@example.com\nTo: b@example.com\n\n在吗？\n",
+              "subject": "一个问句",
+              "tone": "简洁"
+            },
+            {
+              "f1": "emoji.txt",
+              "raw": "Subject: 🎉🎉🎉\nFrom: a@example.com\nTo: b@example.com\n\n🎉🚀✨\n",
+              "subject": "🎉🎉🎉",
+              "tone": "友好"
+            },
+            {
+              "f1": "oneword.txt",
+              "raw": "嗯\n",
+              "subject": "oneword",
+              "tone": "正式"
+            },
+            {
+              "f1": "dateonly.txt",
+              "raw": "Subject: 只有日期\nFrom: a@example.com\nTo: b@example.com\n\n2026-10-28\n",
+              "subject": "只有日期",
+              "tone": "正式"
+            }
+          ]
+        },
+        {
+          "id": "g3-extreme-{i}",
+          "title": "极端数值/超长（{subject}）",
+          "tags": [
+            "edge",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "极端数值与超长内容也要正常出报告",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "## 汇总统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "bigmoney.txt",
+              "raw": "Subject: 巨额账单\nFrom: a@example.com\nTo: b@example.com\n\n本次金额 999999.99 元，请核对。\n",
+              "subject": "巨额账单",
+              "tone": "正式"
+            },
+            {
+              "f1": "cent.txt",
+              "raw": "Subject: 一分钱\nFrom: a@example.com\nTo: b@example.com\n\n金额 0.01 元。\n",
+              "subject": "一分钱",
+              "tone": "正式"
+            },
+            {
+              "f1": "longsubject.txt",
+              "raw": "Subject: 超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题\nFrom: a@example.com\nTo: b@example.com\n\n正文。\n",
+              "subject": "超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题超长主题",
+              "tone": "正式"
+            },
+            {
+              "f1": "longbody.txt",
+              "raw": "Subject: 超长正文\nFrom: a@example.com\nTo: b@example.com\n\n这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。这是一段很长的正文。\n",
+              "subject": "超长正文",
+              "tone": "正式"
+            },
+            {
+              "f1": "manyq.txt",
+              "raw": "Subject: 十连问\nFrom: a@example.com\nTo: b@example.com\n\n问题1？问题2？问题3？问题4？问题5？问题6？问题7？问题8？问题9？问题10？\n",
+              "subject": "十连问",
+              "tone": "正式"
+            },
+            {
+              "f1": "manylinks.txt",
+              "raw": "Subject: 链接汇总\nFrom: a@example.com\nTo: b@example.com\n\nhttps://example.com/page1 https://example.com/page2 https://example.com/page3 https://example.com/page4 https://example.com/page5 https://example.com/page6 https://example.com/page7 https://example.com/page8 https://example.com/page9 https://example.com/page10 https://example.com/page11 https://example.com/page12 https://example.com/page13 https://example.com/page14 https://example.com/page15 https://example.com/page16 https://example.com/page17 https://example.com/page18 https://example.com/page19 https://example.com/page20\n",
+              "subject": "链接汇总",
+              "tone": "简洁"
+            },
+            {
+              "f1": "manyphones.txt",
+              "raw": "Subject: 电话本\nFrom: a@example.com\nTo: b@example.com\n\n联系电话 13800138000 或 13900139000 或 010-88886666。\n",
+              "subject": "电话本",
+              "tone": "简洁"
+            },
+            {
+              "f1": "zerolike.txt",
+              "raw": "Subject: 零金额\nFrom: a@example.com\nTo: b@example.com\n\n金额 0 元。\n",
+              "subject": "零金额",
+              "tone": "正式"
+            },
+            {
+              "f1": "dates.txt",
+              "raw": "Subject: 排期密集\nFrom: a@example.com\nTo: b@example.com\n\n2026-10-01 立项，2026-10-15 联调，2026-10-30 发布。\n",
+              "subject": "排期密集",
+              "tone": "正式"
+            },
+            {
+              "f1": "bigattach.eml",
+              "raw": "From: alice@example.com\nTo: bob@example.com\nSubject: Contract Draft\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"BBB\"\n\n--BBB\nContent-Type: text/plain\n\nPlease review the attached report.\n\n--BBB\nContent-Type: application/pdf; name=\"report.pdf\"\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; filename=\"report.pdf\"\n\nQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJD\n--BBB--\n",
+              "subject": "Contract Draft",
+              "tone": "正式"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：损坏 / 乱码 / 缺字段",
+      "description": "损坏邮件头、乱码、空字节、坏编码、缺字段等畸形输入，优雅处理不崩溃（离线）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-broken-{i}",
+          "title": "格式损坏邮件 + 正常邮件（{subject}）",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "损坏邮件不崩溃，正常邮件照常出报告",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              },
+              {
+                "path": "input/{f2}",
+                "content": "{raw2}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2,
+                "note": "正常邮件主题回显"
+              },
+              {
+                "type": "contains",
+                "text": "## 汇总统计",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "garbage.eml",
+              "raw": "!!! not an email at all !!!\n\u0001\u0002\u0003\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "noheaders.eml",
+              "raw": "随便一段没有头的文本\n���\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "brokenhead.eml",
+              "raw": "From\nTo:\nSubject\n\n正文\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "inject.eml",
+              "raw": "From: a@example.com\nSubject: 折行\n 拼接主题\nTo: b@example.com\n\n正文。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "nul.txt",
+              "raw": "Subject: \u0000空字节\u0000\nFrom: a@example.com\nTo: b@example.com\n\n\u0000\u0000\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "mojibake.txt",
+              "raw": "Subject: ��锟斤拷\nFrom: ��@example.com\nTo: b@example.com\n\nÿþý 锟斤拷�\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "badcharset.eml",
+              "raw": "From: a@example.com\nTo: b@example.com\nSubject: =?gbk?B?1tDOxw==?=\nContent-Type: text/plain; charset=not-a-charset\n\n正文乱码测试。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "badbase64.eml",
+              "raw": "From: a@example.com\nTo: b@example.com\nSubject: Bad Base64\nContent-Transfer-Encoding: base64\n\n@@@@ not base64 @@@@\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "emptymbox.mbox",
+              "raw": "",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "baddate.txt",
+              "raw": "Subject: 坏日期\nFrom: a@example.com\nTo: b@example.com\nDate: 昨天大概中午\n\n日期解析不出来也没关系。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            }
+          ]
+        },
+        {
+          "id": "g4-missing-{i}",
+          "title": "缺字段/畸形输入（{subject}）",
+          "tags": [
+            "robust",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "缺字段与畸形输入优雅处理",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              },
+              {
+                "path": "input/{f2}",
+                "content": "{raw2}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}",
+              "offline": true
+            }
+          },
+          "repeat": 5,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "### 元信息",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 2,
+                "note": "报告固定标题"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 400,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "nosubject.txt",
+              "raw": "From: a@example.com\nTo: b@example.com\n\n没有主题的邮件。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "nofromto.txt",
+              "raw": "Subject: 没有收发件人\n\n正文在这里。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "onlybody.txt",
+              "raw": "只有正文，没有任何头。\n第二行。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "badmultipart.eml",
+              "raw": "From: a@example.com\nTo: b@example.com\nSubject: Bad Multipart\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"NOPE\"\n\n没有分隔线的内容。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "bom.txt",
+              "raw": "﻿Subject: 带 BOM 的邮件\nFrom: a@example.com\nTo: b@example.com\n\nBOM 开头。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "crlf.txt",
+              "raw": "Subject: 混合换行\r\nFrom: a@example.com\r\nTo: b@example.com\r\n\r\n行尾混用。\r\n\r\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "emptyfields.txt",
+              "raw": "Subject: 空字段\nFrom:\nTo:\nCc:\n\n空字段邮件。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "quoteonly.txt",
+              "raw": "Subject: 只有引用\nFrom: a@example.com\nTo: b@example.com\n\n> 被引用的旧内容\n> 又一行引用\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "longhead.txt",
+              "raw": "Subject: 很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头很长的头\nFrom: a@example.com\nTo: b@example.com\n\n正文。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            },
+            {
+              "f1": "mboxmix.mbox",
+              "raw": "垃圾行没有 From 分隔\n\nFrom - Mon Oct 26 09:00:00 2026\nFrom: a@example.com\nTo: b@example.com\nSubject: Mixed Box\n\n正文。\n",
+              "f2": "keep.txt",
+              "raw2": "Subject: 兜底邮件\nFrom: keeper@example.com\nTo: bob@example.com\n\n这是一封格式正常的邮件，用于保证有可解析的输入。\n",
+              "subject": "兜底邮件",
+              "tone": "正式"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：10 样本 × 重复 10 次",
+      "description": "10 个确定性邮件样本各重复 10 次，离线输出必须完全一致",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{i}",
+          "title": "稳定性样本（{subject}）",
+          "tags": [
+            "stability",
+            "offline"
+          ],
+          "input": {
+            "kind": "text",
+            "goal": "同输入重复运行，输出应完全一致",
+            "content": "请处理 input/ 目录下的邮件。",
+            "files": [
+              {
+                "path": "input/{f1}",
+                "content": "{raw}"
+              }
+            ],
+            "params": {
+              "tone": "{tone}",
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "# 邮件处理报告",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "{subject}",
+                "weight": 2,
+                "note": "主题回显"
+              },
+              {
+                "type": "contains",
+                "text": "## 汇总统计",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 1
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          },
+          "rows": [
+            {
+              "f1": "s1.txt",
+              "raw": "Subject: 紧急：合同确认（请今天内回复）\nFrom: 张三 <zhangsan@example.com>\nTo: 李四 <lisi@example.com>\n\n李四，你好：\n这封邮件比较紧急，请在 2026-10-30 前确认合同金额 12000 元是否正确？\n请尽快回复：是否需要法务复核？能否今天内给出结论？\n",
+              "subject": "紧急：合同确认（请今天内回复）",
+              "tone": "正式"
+            },
+            {
+              "f1": "s2.txt",
+              "raw": "Subject: 十月账单与报销明细\nFrom: 财务 <finance@example.com>\nTo: 李四 <lisi@example.com>\n\n李四你好，十月账单已出，合计 1234.56 元，明细见下。\n如有疑问请在 2026-11-05 前反馈。\n",
+              "subject": "十月账单与报销明细",
+              "tone": "正式"
+            },
+            {
+              "f1": "s3.txt",
+              "raw": "Subject: 产品月刊第 12 期\nFrom: 运营 <ops@example.com>\nTo: 订阅者 <list@example.com>\n\n本期产品月刊介绍新功能与团队动态，欢迎浏览。\n",
+              "subject": "产品月刊第 12 期",
+              "tone": "正式"
+            },
+            {
+              "f1": "s4.eml",
+              "raw": "From: carol@example.com\nTo: team@example.com\nSubject: Q4 Planning Meeting Agenda\nDate: Mon, 27 Oct 2026 09:30:00 +0800\n\n\nHi team,\n\nThe Q4 planning meeting is on 2026-11-02. Please review the agenda.\n",
+              "subject": "Q4 Planning Meeting Agenda",
+              "tone": "正式"
+            },
+            {
+              "f1": "s5.eml",
+              "raw": "From: alice@example.com\nTo: bob@example.com\nSubject: Contract Draft\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"BBB\"\n\n--BBB\nContent-Type: text/plain\n\nPlease review the attached report.\n\n--BBB\nContent-Type: application/pdf; name=\"report.pdf\"\nContent-Transfer-Encoding: base64\nContent-Disposition: attachment; filename=\"report.pdf\"\n\nJVBERi0xLjQK\n--BBB--\n",
+              "subject": "Contract Draft",
+              "tone": "正式"
+            },
+            {
+              "f1": "s6.mbox",
+              "raw": "From - Mon Oct 26 09:00:00 2026\nFrom: alice@example.com\nTo: bob@example.com\nSubject: Weekly Report\nDate: Mon, 26 Oct 2026 09:00:00 +0800\n\nPlease find the weekly report.\n\nFrom - Tue Oct 27 10:00:00 2026\nFrom: carol@example.com\nTo: bob@example.com\nSubject: Server Maintenance\nDate: Tue, 27 Oct 2026 10:00:00 +0800\n\nMaintenance is tonight.\n\nFrom - Wed Oct 28 11:00:00 2026\nFrom: dave@example.com\nTo: bob@example.com\nSubject: Budget Approval\nDate: Wed, 28 Oct 2026 11:00:00 +0800\n\nBudget approval is pending.\n",
+              "subject": "Weekly Report",
+              "tone": "正式"
+            },
+            {
+              "f1": "s7.txt",
+              "raw": "记得明天下午三点提交周报，别忘了带上数据截图。\n",
+              "subject": "s7",
+              "tone": "正式"
+            },
+            {
+              "f1": "s8.txt",
+              "raw": "Subject: 跨团队协作方案 / Cross-team Plan\nFrom: Emily <emily@example.com>\nTo: 王五 <wangwu@example.com>\n\n王五你好，这是中英双语的协作方案 draft，请查收。\nPlease send feedback before 2026-11-03. 谢谢！\n",
+              "subject": "跨团队协作方案 / Cross-team Plan",
+              "tone": "正式"
+            },
+            {
+              "f1": "s9.eml",
+              "raw": "From: erin@example.com\nTo: bob@example.com\nSubject: Re: Server Migration Plan\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nIn-Reply-To: <parent@example.com>\nReferences: <root@example.com> <parent@example.com>\n\n\nFollowing up on the migration plan discussed last week.\n",
+              "subject": "Re: Server Migration Plan",
+              "tone": "正式"
+            },
+            {
+              "f1": "s10.eml",
+              "raw": "From: dave@example.com\nTo: legal@example.com\nSubject: Contract Review Needed\nDate: Mon, 27 Oct 2026 09:30:00 +0800\nCc: boss@example.com, audit@example.com\n\n\nPlease review the contract draft before 2026-11-01. Thanks!\n",
+              "subject": "Contract Review Needed",
+              "tone": "正式"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

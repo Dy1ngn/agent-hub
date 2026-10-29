@@ -1,0 +1,674 @@
+id: ts-b-knowledge-qa-g5-stability
+agentId: knowledge-qa
+group: g5-stability
+name: 知识库问答 · 稳定性：同问题重复检索
+description: 10 个确定性问题各重复调用 10 次（离线检索），断言片段、来源与得分表稳定一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：命中片段排序
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何安装依赖？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 片段
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: "### 片段 1："
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：检索得分表
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何安装依赖？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 检索得分表
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: "## 检索得分表"
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：引用清单结构
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何安装依赖？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 引用清单
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: "## 引用清单"
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：无命中兜底
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 火星上的天气怎么样？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 没有相关内容
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: 知识库里没有相关内容
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：top-k 参数稳定
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何安装依赖？
+        topk: "2"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 检索片段数
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: （top-k=2
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：标题面包屑
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何安装依赖？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 标题路径
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: 标题路径：
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：CSV 来源引用
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/org.csv
+          content: "城市,负责人\n北京,张三\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 北京的负责人是谁？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: org.csv
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: org.csv
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：JSON 来源引用
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/notes.json
+          content: '[{"code": 1, "message": "错误一"}]'
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 错误码是什么？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: notes.json
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: notes.json
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：txt 来源引用
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/readme.txt
+          content: "备份说明\n\n每天做全量备份。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 备份怎么做？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: readme.txt
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: readme.txt
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：得分表表头
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 同一问题重复检索 10 次，报告结构与来源应稳定一致
+      content: 请根据本地知识库回答问题，并给出来源引用。
+      files:
+        - path: kb/guide.md
+          content: "# 产品安装指南
+
+
+            ## 依赖安装
+
+
+            使用 pip install -r requirements.txt 安装依赖，建议先创建虚拟环境再安装。
+
+
+            ## 虚拟环境
+
+
+            推荐用 python3 -m venv 创建虚拟环境。\n"
+        - path: kb/faq.md
+          content: "# 常见问题
+
+
+            ## 服务启动失败
+
+
+            服务启动失败时先检查端口占用，再查看日志文件 error.log。
+
+
+            ## 忘记密码
+
+
+            忘记密码请联系管理员重置密码。\n"
+        - path: kb/notes.md
+          content: "# 杂记\n\n随便写点无关内容，用于干扰检索。\n"
+      params:
+        q: 如何安装依赖？
+        topk: "5"
+        minscore: "0.5"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 知识库问答报告
+          weight: 2
+          note: 重复调用仍产出报告
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: regex
+          pattern: 检索得分表
+          weight: 2
+          note: 检索结论稳定出现
+        - type: contains
+          text: "| 排名 | 得分 | 来源 | 标题路径 | 命中词 |"
+          weight: 2
+          note: 断言确定性细节
+        - type: min_length
+          value: 150
+          weight: 1
+          note: 报告不是空壳
+      requiredSuggestions: []

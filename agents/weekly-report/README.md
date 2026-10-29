@@ -9,6 +9,7 @@ description: 采集 git 提交与工作记录，做分类统计与合并去重�
 ## 它能做什么
 
 - **git 采集**：解析 commit hash/日期/作者/说明与每个文件的增删行数，支持 `--repo` 指定仓库、`--days` 控制时间窗、`--author` 过滤作者
+- **commit 列表文件**：`--commits 文件` 从文本读 commit 列表（每行 `日期 | 提交说明 | +新增 -删除 | 文件列表`，字段可省略、`#` 为注释），没有 git 仓库也能出完整的提交统计；可与 `--repo` 同时用
 - **提交分类**：conventional 前缀（feat/fix/docs/refactor/test/chore）优先，中文说明按关键词（新增/修复/文档/重构/测试/杂项）兜底，认不出归「其他」；`#1022 xxx`、`【标签】xxx` 这类前缀会先剥掉
 - **模块聚合**：按改动文件的顶层目录聚合（`src/…` 归 src，根目录文件归「根目录」），统计每个模块的提交数、增删行、文件数
 - **活跃分布**：commit 总数、代码增删总量、活跃天数与每日提交分布
@@ -74,6 +75,9 @@ python3 agent.py --notes 工作记录.md --offline
 
 # 4. 生成日报 + 走第三方兼容网关指定模型名
 python3 agent.py --repo . --type daily --model qwen3.8-max
+
+# 5. 没有 git 仓库：用 commit 列表文件 + 工作记录，纯确定性骨架
+python3 agent.py --commits commits.txt --notes 工作记录.md --offline
 ```
 
 ## 实现方式
@@ -99,7 +103,7 @@ python3 agent.py --repo . --type daily --model qwen3.8-max
 能。`--offline` 直接生成确定性骨架周报：概述里的数据、按类型分组的 commit 清单、代码量、活跃分布、下周计划（工作记录未勾选项）都在，只是没有模型润色的表述。`--self-test` 也不需要 key。
 
 **Q2：没装 git 或者只写了工作记录怎么办？**
-只给 `--notes` 就行；或者给 `--repo` 但本机没装 git 时会提示「跳过 git 采集」并只用工作记录。两边都没数据才会报错退出。
+只给 `--notes` 就行；或者给 `--repo` 但本机没装 git 时会提示「跳过 git 采集」并只用工作记录。也可以用 `--commits 文件` 提供 commit 列表（每行 `日期 | 提交说明 | +新增 -删除 | 文件列表`，除说明外都可省略），没有仓库也能出完整提交统计。各来源都没数据才会报错退出。
 
 **Q3：commit 说明和工作记录写了同一件事，会不会重复算？**
 不会。`merge_by_day()` 会去掉 conventional 前缀、标点和空白后比较，完全相同或互相包含的条目只保留 git 那份，丢弃数量写在报告「数量汇总」里。

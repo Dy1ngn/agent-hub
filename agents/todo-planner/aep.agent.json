@@ -1,0 +1,52 @@
+{
+  "id": "todo-planner",
+  "name": "任务拆解",
+  "description": "把目标描述拆成里程碑与任务，生成 WBS、依赖表、工作日甘特图和风险清单的中文计划。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "--goal",
+      "{{params.goal}}",
+      "--from",
+      "input/goal.md",
+      "--days",
+      "{{params.days}}",
+      "--start",
+      "{{params.start}}",
+      "--style",
+      "{{params.style}}",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "提示"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

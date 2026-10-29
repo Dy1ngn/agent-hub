@@ -1,0 +1,391 @@
+id: ts-b-prompt-optimizer-g5-stability
+agentId: prompt-optimizer
+group: g5-stability
+name: 提示词优化 · 稳定性：同输入重复调用
+description: 10 个样本各重复调用 10 次（离线确定性模式），验证五要素判定、模糊词识别与评分稳定一致（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：样本 1
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: 帮我写一份周报模板，涵盖进度、风险、下周计划三部分，给出若干条示例条目，输出 Markdown，字数不超过 300。
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 「若干」
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：样本 2
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: 写一个函数，把两个列表合并去重后排序返回，注意处理空列表，输出 Python 代码。
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 「角色」
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：样本 3
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: "生成 3 个正则表达式：匹配邮箱、手机号、身份证号。
+
+        要求：每个正则附一行说明，输出代码块。"
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 「示例」
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：样本 4
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: "# 角色
+
+        你是资深运维工程师。
+
+
+        # 任务
+
+        为给定服务写巡检清单。
+
+
+        # 背景
+
+        服务是支付网关，日峰值 5000 QPS。
+
+
+        # 约束
+
+        不要推荐付费工具。
+
+
+        # 输出格式
+
+        分点清单，每点一行。
+
+
+        # 示例
+
+        输入「redis」→ 输出「检查内存命中率……」。"
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 评分卡
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：样本 5
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: "把下面的段落翻译成英文，保持术语一致，不要增删事实，输出译文即可：
+
+        本系统支持多租户部署，租户之间数据完全隔离。"
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 「输出格式」
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：样本 6
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: Rewrite the paragraph to make it good and nice. Use some examples and make it better. Output the rewritten text.
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 「good」
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：样本 7
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: 写一首关于春天的诗，中文，三段。
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 「约束」
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：样本 8
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: 你好，谢谢，再见。
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 「任务」
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：样本 9
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: 请帮我把这份文档写得不错、较好一点，尽量专业，改完给我看，大概 500 字左右，语气要合适，必要时可以适当补充一些例子。
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: 「不错」
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：样本 10
+    tags:
+      - prompt
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证体检结论稳定
+      content: 给 {{name}} 写一封欢迎信，语气友好，输出正文。
+      files: []
+      params:
+        goal: 稳定性测试
+        style: 详细
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 提示词体检与优化报告
+          weight: 2
+          note: 产出标准体检报告
+        - type: contains
+          text: "## 三、评分卡"
+          weight: 1
+        - type: contains
+          text: "{{name}}"
+          weight: 2
+          note: 确定性体检结论稳定
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

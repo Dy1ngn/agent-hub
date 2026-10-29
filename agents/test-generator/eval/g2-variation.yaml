@@ -1,0 +1,1644 @@
+id: ts-b-test-generator-g2-variation
+agentId: test-generator
+group: g2-variation
+name: 单元测试生成 · 输入变体：框架 / 覆盖范围 / 规模 / 形态
+description: pytest × unittest 两种框架、公开函数/全部两种覆盖范围，叠加大小模块与类/异步/微型代码形态（模型链路）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-variant-1
+    title: billing.py · pytest / 公开函数
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 1：billing.py（pytest / 公开函数）
+      files:
+        - path: input/billing.py
+          content: "\"\"\"账单计算模块。\"\"\"
+
+
+            class BillError(Exception):
+
+            \    pass
+
+
+
+            def total(items, tax_rate):
+
+            \    \"\"\"计算含税总价。
+
+
+            \    Args:
+
+            \        items: 条目列表
+
+            \        tax_rate: 税率
+
+            \    Returns:
+
+            \        含税总价
+
+            \    Raises:
+
+            \        BillError: 条目为空时抛出
+
+            \    \"\"\"
+
+            \    if not items:
+
+            \        raise BillError(\"empty\")
+
+            \    return sum(items) * (1 + tax_rate)
+
+
+
+            def apply_coupon(amount, code):
+
+            \    if code == \"SAVE10\":
+
+            \        return amount * 0.9
+
+            \    return amount\n"
+      params:
+        src: input/billing.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-1-2
+    title: billing.py · unittest / 公开函数
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 1：billing.py（unittest / 公开函数）
+      files:
+        - path: input/billing.py
+          content: "\"\"\"账单计算模块。\"\"\"
+
+
+            class BillError(Exception):
+
+            \    pass
+
+
+
+            def total(items, tax_rate):
+
+            \    \"\"\"计算含税总价。
+
+
+            \    Args:
+
+            \        items: 条目列表
+
+            \        tax_rate: 税率
+
+            \    Returns:
+
+            \        含税总价
+
+            \    Raises:
+
+            \        BillError: 条目为空时抛出
+
+            \    \"\"\"
+
+            \    if not items:
+
+            \        raise BillError(\"empty\")
+
+            \    return sum(items) * (1 + tax_rate)
+
+
+
+            def apply_coupon(amount, code):
+
+            \    if code == \"SAVE10\":
+
+            \        return amount * 0.9
+
+            \    return amount\n"
+      params:
+        src: input/billing.py
+        framework: unittest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-2
+    title: billing.py · pytest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 2：billing.py（pytest / 全部）
+      files:
+        - path: input/billing.py
+          content: "\"\"\"账单计算模块。\"\"\"
+
+
+            class BillError(Exception):
+
+            \    pass
+
+
+
+            def total(items, tax_rate):
+
+            \    \"\"\"计算含税总价。
+
+
+            \    Args:
+
+            \        items: 条目列表
+
+            \        tax_rate: 税率
+
+            \    Returns:
+
+            \        含税总价
+
+            \    Raises:
+
+            \        BillError: 条目为空时抛出
+
+            \    \"\"\"
+
+            \    if not items:
+
+            \        raise BillError(\"empty\")
+
+            \    return sum(items) * (1 + tax_rate)
+
+
+
+            def apply_coupon(amount, code):
+
+            \    if code == \"SAVE10\":
+
+            \        return amount * 0.9
+
+            \    return amount\n"
+      params:
+        src: input/billing.py
+        framework: pytest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-2-4
+    title: billing.py · unittest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 2：billing.py（unittest / 全部）
+      files:
+        - path: input/billing.py
+          content: "\"\"\"账单计算模块。\"\"\"
+
+
+            class BillError(Exception):
+
+            \    pass
+
+
+
+            def total(items, tax_rate):
+
+            \    \"\"\"计算含税总价。
+
+
+            \    Args:
+
+            \        items: 条目列表
+
+            \        tax_rate: 税率
+
+            \    Returns:
+
+            \        含税总价
+
+            \    Raises:
+
+            \        BillError: 条目为空时抛出
+
+            \    \"\"\"
+
+            \    if not items:
+
+            \        raise BillError(\"empty\")
+
+            \    return sum(items) * (1 + tax_rate)
+
+
+
+            def apply_coupon(amount, code):
+
+            \    if code == \"SAVE10\":
+
+            \        return amount * 0.9
+
+            \    return amount\n"
+      params:
+        src: input/billing.py
+        framework: unittest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-3
+    title: cache.py · pytest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 3：cache.py（pytest / 全部）
+      files:
+        - path: input/cache.py
+          content: "class Cache:
+
+            \    \"\"\"带容量限制的缓存。\"\"\"
+
+
+            \    def __init__(self, capacity=128):
+
+            \        self.capacity = capacity
+
+            \        self.data = {}
+
+
+            \    def get(self, key):
+
+            \        return self.data.get(key)
+
+
+            \    def put(self, key, value):
+
+            \        if len(self.data) >= self.capacity:
+
+            \            self.data.pop(next(iter(self.data)))
+
+            \        self.data[key] = value
+
+
+            \    def __len__(self):
+
+            \        return len(self.data)\n"
+      params:
+        src: input/cache.py
+        framework: pytest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-3-6
+    title: cache.py · unittest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 3：cache.py（unittest / 全部）
+      files:
+        - path: input/cache.py
+          content: "class Cache:
+
+            \    \"\"\"带容量限制的缓存。\"\"\"
+
+
+            \    def __init__(self, capacity=128):
+
+            \        self.capacity = capacity
+
+            \        self.data = {}
+
+
+            \    def get(self, key):
+
+            \        return self.data.get(key)
+
+
+            \    def put(self, key, value):
+
+            \        if len(self.data) >= self.capacity:
+
+            \            self.data.pop(next(iter(self.data)))
+
+            \        self.data[key] = value
+
+
+            \    def __len__(self):
+
+            \        return len(self.data)\n"
+      params:
+        src: input/cache.py
+        framework: unittest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-4
+    title: cache.py · pytest / 公开函数
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 4：cache.py（pytest / 公开函数）
+      files:
+        - path: input/cache.py
+          content: "class Cache:
+
+            \    \"\"\"带容量限制的缓存。\"\"\"
+
+
+            \    def __init__(self, capacity=128):
+
+            \        self.capacity = capacity
+
+            \        self.data = {}
+
+
+            \    def get(self, key):
+
+            \        return self.data.get(key)
+
+
+            \    def put(self, key, value):
+
+            \        if len(self.data) >= self.capacity:
+
+            \            self.data.pop(next(iter(self.data)))
+
+            \        self.data[key] = value
+
+
+            \    def __len__(self):
+
+            \        return len(self.data)\n"
+      params:
+        src: input/cache.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-4-8
+    title: cache.py · unittest / 公开函数
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 4：cache.py（unittest / 公开函数）
+      files:
+        - path: input/cache.py
+          content: "class Cache:
+
+            \    \"\"\"带容量限制的缓存。\"\"\"
+
+
+            \    def __init__(self, capacity=128):
+
+            \        self.capacity = capacity
+
+            \        self.data = {}
+
+
+            \    def get(self, key):
+
+            \        return self.data.get(key)
+
+
+            \    def put(self, key, value):
+
+            \        if len(self.data) >= self.capacity:
+
+            \            self.data.pop(next(iter(self.data)))
+
+            \        self.data[key] = value
+
+
+            \    def __len__(self):
+
+            \        return len(self.data)\n"
+      params:
+        src: input/cache.py
+        framework: unittest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-5
+    title: many.py · pytest / 公开函数
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 5：many.py（pytest / 公开函数）
+      files:
+        - path: input/many.py
+          content: "def fn0(a, b):
+
+            \    return a + b + 0
+
+
+
+            def fn1(a, b):
+
+            \    return a + b + 1
+
+
+
+            def fn2(a, b):
+
+            \    return a + b + 2
+
+
+
+            def fn3(a, b):
+
+            \    return a + b + 3
+
+
+
+            def fn4(a, b):
+
+            \    return a + b + 4
+
+
+
+            def fn5(a, b):
+
+            \    return a + b + 5
+
+
+
+            def fn6(a, b):
+
+            \    return a + b + 6
+
+
+
+            def fn7(a, b):
+
+            \    return a + b + 7
+
+
+
+            def fn8(a, b):
+
+            \    return a + b + 8
+
+
+
+            def fn9(a, b):
+
+            \    return a + b + 9
+
+
+
+            def fn10(a, b):
+
+            \    return a + b + 10
+
+
+
+            def fn11(a, b):
+
+            \    return a + b + 11
+
+
+
+            def fn12(a, b):
+
+            \    return a + b + 12
+
+
+
+            def fn13(a, b):
+
+            \    return a + b + 13
+
+
+
+            def fn14(a, b):
+
+            \    return a + b + 14
+
+
+
+            def fn15(a, b):
+
+            \    return a + b + 15
+
+
+
+            def fn16(a, b):
+
+            \    return a + b + 16
+
+
+
+            def fn17(a, b):
+
+            \    return a + b + 17
+
+
+
+            def fn18(a, b):
+
+            \    return a + b + 18
+
+
+
+            def fn19(a, b):
+
+            \    return a + b + 19
+
+
+            \n"
+      params:
+        src: input/many.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-5-10
+    title: many.py · unittest / 公开函数
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 5：many.py（unittest / 公开函数）
+      files:
+        - path: input/many.py
+          content: "def fn0(a, b):
+
+            \    return a + b + 0
+
+
+
+            def fn1(a, b):
+
+            \    return a + b + 1
+
+
+
+            def fn2(a, b):
+
+            \    return a + b + 2
+
+
+
+            def fn3(a, b):
+
+            \    return a + b + 3
+
+
+
+            def fn4(a, b):
+
+            \    return a + b + 4
+
+
+
+            def fn5(a, b):
+
+            \    return a + b + 5
+
+
+
+            def fn6(a, b):
+
+            \    return a + b + 6
+
+
+
+            def fn7(a, b):
+
+            \    return a + b + 7
+
+
+
+            def fn8(a, b):
+
+            \    return a + b + 8
+
+
+
+            def fn9(a, b):
+
+            \    return a + b + 9
+
+
+
+            def fn10(a, b):
+
+            \    return a + b + 10
+
+
+
+            def fn11(a, b):
+
+            \    return a + b + 11
+
+
+
+            def fn12(a, b):
+
+            \    return a + b + 12
+
+
+
+            def fn13(a, b):
+
+            \    return a + b + 13
+
+
+
+            def fn14(a, b):
+
+            \    return a + b + 14
+
+
+
+            def fn15(a, b):
+
+            \    return a + b + 15
+
+
+
+            def fn16(a, b):
+
+            \    return a + b + 16
+
+
+
+            def fn17(a, b):
+
+            \    return a + b + 17
+
+
+
+            def fn18(a, b):
+
+            \    return a + b + 18
+
+
+
+            def fn19(a, b):
+
+            \    return a + b + 19
+
+
+            \n"
+      params:
+        src: input/many.py
+        framework: unittest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-6
+    title: many.py · pytest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 6：many.py（pytest / 全部）
+      files:
+        - path: input/many.py
+          content: "def fn0(a, b):
+
+            \    return a + b + 0
+
+
+
+            def fn1(a, b):
+
+            \    return a + b + 1
+
+
+
+            def fn2(a, b):
+
+            \    return a + b + 2
+
+
+
+            def fn3(a, b):
+
+            \    return a + b + 3
+
+
+
+            def fn4(a, b):
+
+            \    return a + b + 4
+
+
+
+            def fn5(a, b):
+
+            \    return a + b + 5
+
+
+
+            def fn6(a, b):
+
+            \    return a + b + 6
+
+
+
+            def fn7(a, b):
+
+            \    return a + b + 7
+
+
+
+            def fn8(a, b):
+
+            \    return a + b + 8
+
+
+
+            def fn9(a, b):
+
+            \    return a + b + 9
+
+
+
+            def fn10(a, b):
+
+            \    return a + b + 10
+
+
+
+            def fn11(a, b):
+
+            \    return a + b + 11
+
+
+
+            def fn12(a, b):
+
+            \    return a + b + 12
+
+
+
+            def fn13(a, b):
+
+            \    return a + b + 13
+
+
+
+            def fn14(a, b):
+
+            \    return a + b + 14
+
+
+
+            def fn15(a, b):
+
+            \    return a + b + 15
+
+
+
+            def fn16(a, b):
+
+            \    return a + b + 16
+
+
+
+            def fn17(a, b):
+
+            \    return a + b + 17
+
+
+
+            def fn18(a, b):
+
+            \    return a + b + 18
+
+
+
+            def fn19(a, b):
+
+            \    return a + b + 19
+
+
+            \n"
+      params:
+        src: input/many.py
+        framework: pytest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-6-12
+    title: many.py · unittest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 6：many.py（unittest / 全部）
+      files:
+        - path: input/many.py
+          content: "def fn0(a, b):
+
+            \    return a + b + 0
+
+
+
+            def fn1(a, b):
+
+            \    return a + b + 1
+
+
+
+            def fn2(a, b):
+
+            \    return a + b + 2
+
+
+
+            def fn3(a, b):
+
+            \    return a + b + 3
+
+
+
+            def fn4(a, b):
+
+            \    return a + b + 4
+
+
+
+            def fn5(a, b):
+
+            \    return a + b + 5
+
+
+
+            def fn6(a, b):
+
+            \    return a + b + 6
+
+
+
+            def fn7(a, b):
+
+            \    return a + b + 7
+
+
+
+            def fn8(a, b):
+
+            \    return a + b + 8
+
+
+
+            def fn9(a, b):
+
+            \    return a + b + 9
+
+
+
+            def fn10(a, b):
+
+            \    return a + b + 10
+
+
+
+            def fn11(a, b):
+
+            \    return a + b + 11
+
+
+
+            def fn12(a, b):
+
+            \    return a + b + 12
+
+
+
+            def fn13(a, b):
+
+            \    return a + b + 13
+
+
+
+            def fn14(a, b):
+
+            \    return a + b + 14
+
+
+
+            def fn15(a, b):
+
+            \    return a + b + 15
+
+
+
+            def fn16(a, b):
+
+            \    return a + b + 16
+
+
+
+            def fn17(a, b):
+
+            \    return a + b + 17
+
+
+
+            def fn18(a, b):
+
+            \    return a + b + 18
+
+
+
+            def fn19(a, b):
+
+            \    return a + b + 19
+
+
+            \n"
+      params:
+        src: input/many.py
+        framework: unittest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-7
+    title: models.py · pytest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 7：models.py（pytest / 全部）
+      files:
+        - path: input/models.py
+          content: "class Base:
+
+            \    def run(self):
+
+            \        raise NotImplementedError
+
+
+
+            class Impl(Base):
+
+            \    def __init__(self, name):
+
+            \        self.name = name
+
+
+            \    def run(self):
+
+            \        return self.name.upper()
+
+
+
+            class Registry:
+
+            \    def __init__(self):
+
+            \        self.items = {}
+
+
+            \    def register(self, key, item):
+
+            \        self.items[key] = item
+
+
+            \    def resolve(self, key):
+
+            \        return self.items[key]\n"
+      params:
+        src: input/models.py
+        framework: pytest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-7-14
+    title: models.py · unittest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 7：models.py（unittest / 全部）
+      files:
+        - path: input/models.py
+          content: "class Base:
+
+            \    def run(self):
+
+            \        raise NotImplementedError
+
+
+
+            class Impl(Base):
+
+            \    def __init__(self, name):
+
+            \        self.name = name
+
+
+            \    def run(self):
+
+            \        return self.name.upper()
+
+
+
+            class Registry:
+
+            \    def __init__(self):
+
+            \        self.items = {}
+
+
+            \    def register(self, key, item):
+
+            \        self.items[key] = item
+
+
+            \    def resolve(self, key):
+
+            \        return self.items[key]\n"
+      params:
+        src: input/models.py
+        framework: unittest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-8
+    title: asyncsvc.py · pytest / 公开函数
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 8：asyncsvc.py（pytest / 公开函数）
+      files:
+        - path: input/asyncsvc.py
+          content: "async def fetch(url):
+
+            \    return await http_get(url)
+
+
+
+            async def fetch_many(urls):
+
+            \    out = []
+
+            \    for u in urls:
+
+            \        out.append(await fetch(u))
+
+            \    return out
+
+
+
+            def sync_sum(values):
+
+            \    return sum(values)\n"
+      params:
+        src: input/asyncsvc.py
+        framework: pytest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-8-16
+    title: asyncsvc.py · unittest / 公开函数
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 8：asyncsvc.py（unittest / 公开函数）
+      files:
+        - path: input/asyncsvc.py
+          content: "async def fetch(url):
+
+            \    return await http_get(url)
+
+
+
+            async def fetch_many(urls):
+
+            \    out = []
+
+            \    for u in urls:
+
+            \        out.append(await fetch(u))
+
+            \    return out
+
+
+
+            def sync_sum(values):
+
+            \    return sum(values)\n"
+      params:
+        src: input/asyncsvc.py
+        framework: unittest
+        coverage: 公开函数
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-9
+    title: tiny.py · pytest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 9：tiny.py（pytest / 全部）
+      files:
+        - path: input/tiny.py
+          content: "def add(a, b):\n    return a + b\n"
+      params:
+        src: input/tiny.py
+        framework: pytest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-9-18
+    title: tiny.py · unittest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 9：tiny.py（unittest / 全部）
+      files:
+        - path: input/tiny.py
+          content: "def add(a, b):\n    return a + b\n"
+      params:
+        src: input/tiny.py
+        framework: unittest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-10
+    title: validate.py · pytest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 10：validate.py（pytest / 全部）
+      files:
+        - path: input/validate.py
+          content: "import re
+
+
+
+            def validate_email(value):
+
+            \    if not re.match(r\"^[^@]+@[^@]+\\.[^@]+$\", value):
+
+            \        raise ValueError(\"bad email\")
+
+            \    return True
+
+
+
+            def validate_age(age):
+
+            \    if age < 0 or age > 150:
+
+            \        raise ValueError(\"bad age\")
+
+            \    return True\n"
+      params:
+        src: input/validate.py
+        framework: pytest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-variant-10-20
+    title: validate.py · unittest / 全部
+    tags:
+      - testgen
+    repeat: 5
+    input:
+      kind: code
+      goal: 不同框架、覆盖范围与代码形态下的测试生成
+      content: 变体样本 10：validate.py（unittest / 全部）
+      files:
+        - path: input/validate.py
+          content: "import re
+
+
+
+            def validate_email(value):
+
+            \    if not re.match(r\"^[^@]+@[^@]+\\.[^@]+$\", value):
+
+            \        raise ValueError(\"bad email\")
+
+            \    return True
+
+
+
+            def validate_age(age):
+
+            \    if age < 0 or age > 150:
+
+            \        raise ValueError(\"bad age\")
+
+            \    return True\n"
+      params:
+        src: input/validate.py
+        framework: unittest
+        coverage: 全部
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 单元测试生成报告
+          weight: 2
+          note: 产出标准测试计划报告
+        - type: contains
+          text: "## 用例清单"
+          weight: 1
+        - type: contains
+          text: "## 覆盖率计划"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

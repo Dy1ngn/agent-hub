@@ -1,0 +1,52 @@
+{
+  "id": "expense-tracker",
+  "name": "记账分析",
+  "description": "自然语言一句话记账，本地 JSON 账本加分类统计与预算告警，输出带 ASCII 图表的中文月报。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 600000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--ask-model",
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--offline"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "report",
+      "--file",
+      "input/expenses.txt",
+      "--book",
+      "input/book.json",
+      "--month",
+      "{{params.month}}",
+      "--budget",
+      "input/budget.csv",
+      "--output",
+      "{{outputDir}}/report.md"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "异常消费提示"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

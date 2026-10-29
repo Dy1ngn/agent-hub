@@ -1,0 +1,1124 @@
+id: ts-b-slide-maker-g1-basic
+agentId: slide-maker
+group: g1-basic
+name: 幻灯片生成 · 基础功能：主题 / 文档生成 Marp 幻灯片
+description: 典型主题与文档输入下的完整链路：提炼大纲、排版成 Marp（封面/目录/内容/小结/Q&A），走模型生成内容链路（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-topic-1
+    title: 按主题生成（季度业务汇报）
+    tags:
+      - basic
+      - topic
+    repeat: 5
+    input:
+      kind: text
+      goal: 给主题直接生成 Marp 幻灯片
+      content: 请围绕主题「季度业务汇报」生成幻灯片，听众：管理层。
+      files:
+        - path: input/doc.md
+          content: ""
+      params:
+        topic: 季度业务汇报
+        slides: "8"
+        audience: 管理层
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 合法 Marp 头部
+        - type: contains
+          text: 季度业务汇报
+          weight: 2
+          note: 主题写进页脚
+        - type: contains
+          text: 第 1/
+          weight: 1
+          note: 页码页脚
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-topic-2
+    title: 按主题生成（Kubernetes 上手）
+    tags:
+      - basic
+      - topic
+    repeat: 5
+    input:
+      kind: text
+      goal: 给主题直接生成 Marp 幻灯片
+      content: 请围绕主题「Kubernetes 上手」生成幻灯片，听众：后端工程师。
+      files:
+        - path: input/doc.md
+          content: ""
+      params:
+        topic: Kubernetes 上手
+        slides: "8"
+        audience: 后端工程师
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 合法 Marp 头部
+        - type: contains
+          text: Kubernetes 上手
+          weight: 2
+          note: 主题写进页脚
+        - type: contains
+          text: 第 1/
+          weight: 1
+          note: 页码页脚
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-topic-3
+    title: 按主题生成（新员工入职培训）
+    tags:
+      - basic
+      - topic
+    repeat: 5
+    input:
+      kind: text
+      goal: 给主题直接生成 Marp 幻灯片
+      content: 请围绕主题「新员工入职培训」生成幻灯片，听众：新人。
+      files:
+        - path: input/doc.md
+          content: ""
+      params:
+        topic: 新员工入职培训
+        slides: "8"
+        audience: 新人
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 合法 Marp 头部
+        - type: contains
+          text: 新员工入职培训
+          weight: 2
+          note: 主题写进页脚
+        - type: contains
+          text: 第 1/
+          weight: 1
+          note: 页码页脚
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-topic-4
+    title: 按主题生成（产品发布会策划）
+    tags:
+      - basic
+      - topic
+    repeat: 5
+    input:
+      kind: text
+      goal: 给主题直接生成 Marp 幻灯片
+      content: 请围绕主题「产品发布会策划」生成幻灯片，听众：客户。
+      files:
+        - path: input/doc.md
+          content: ""
+      params:
+        topic: 产品发布会策划
+        slides: "8"
+        audience: 客户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+          note: 合法 Marp 头部
+        - type: contains
+          text: 产品发布会策划
+          weight: 2
+          note: 主题写进页脚
+        - type: contains
+          text: 第 1/
+          weight: 1
+          note: 页码页脚
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-doc-1
+    title: 文档提炼生成（云平台迁移方案）
+    tags:
+      - basic
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 从现有文档提炼大纲生成 Marp 幻灯片
+      content: 请把 input/doc.md 提炼成「云平台迁移方案」幻灯片，听众：技术委员会。
+      files:
+        - path: input/doc.md
+          content: "# 云平台迁移方案
+
+
+            ## 背景
+
+
+            - 机房租赁合同明年 3 月到期
+
+            - 现有集群运维成本高
+
+
+            ## 迁移方案
+
+
+            - 采用分批迁移策略，先无状态服务
+
+            - 数据库使用 DTS 双写校验
+
+            - 迁移窗口安排在凌晨低峰期
+
+
+            ## 风险与应对
+
+
+            - 回滚预案：保留旧集群两周
+
+            - 演练：正式迁移前全链路演练 2 次\n"
+      params:
+        topic: 云平台迁移方案
+        slides: "8"
+        audience: 技术委员会
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 云平台迁移方案
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-doc-2
+    title: 文档提炼生成（Kubernetes 教程）
+    tags:
+      - basic
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 从现有文档提炼大纲生成 Marp 幻灯片
+      content: 请把 input/doc.md 提炼成「Kubernetes 教程」幻灯片，听众：开发同学。
+      files:
+        - path: input/doc.md
+          content: "# Kubernetes 上手教程
+
+
+            ## 安装准备
+
+
+            - 准备 3 台 4C8G 虚拟机
+
+            - 安装 containerd 与 kubeadm
+
+
+            ## 集群搭建
+
+
+            - kubeadm init 初始化控制面
+
+            - 加入 worker 节点
+
+            - 安装 Calico 网络插件
+
+
+            ## 应用部署
+
+
+            - 编写 Deployment 与 Service
+
+            - 配置探针与资源限额
+
+            - 用 Helm 管理发布\n"
+      params:
+        topic: Kubernetes 教程
+        slides: "8"
+        audience: 开发同学
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: Kubernetes 教程
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-doc-3
+    title: 文档提炼生成（秒杀活动复盘）
+    tags:
+      - basic
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 从现有文档提炼大纲生成 Marp 幻灯片
+      content: 请把 input/doc.md 提炼成「秒杀活动复盘」幻灯片，听众：项目组。
+      files:
+        - path: input/doc.md
+          content: "# 项目复盘：秒杀活动
+
+
+            ## 目标达成
+
+
+            - 目标 GMV 500 万，实际完成 620 万
+
+            - 订单峰值 8000 TPS
+
+
+            ## 做得好的
+
+
+            - 缓存预热提前 2 小时完成
+
+            - 限流策略保护了核心链路
+
+
+            ## 待改进
+
+
+            - 库存扣减出现 30 单超卖
+
+            - 监控告警阈值设置不合理
+
+
+            ## 行动项
+
+
+            - 下周完成库存扣减重构
+
+            - 补充压测用例 20 个\n"
+      params:
+        topic: 秒杀活动复盘
+        slides: "8"
+        audience: 项目组
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 秒杀活动复盘
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-doc-4
+    title: 文档提炼生成（周报分享）
+    tags:
+      - basic
+      - doc
+    repeat: 5
+    input:
+      kind: text
+      goal: 从现有文档提炼大纲生成 Marp 幻灯片
+      content: 请把 input/doc.md 提炼成「周报分享」幻灯片，听众：部门同事。
+      files:
+        - path: input/doc.md
+          content: "# 第 42 周周报
+
+
+            ## 本周完成
+
+
+            - 完成支付网关联调
+
+            - 修复线上缺陷 8 个
+
+
+            ## 下周计划
+
+
+            - 启动对账模块开发
+
+            - 输出接口文档\n"
+      params:
+        topic: 周报分享
+        slides: "8"
+        audience: 部门同事
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 周报分享
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-slides-1
+    title: 页数控制（目标 6 页）
+    tags:
+      - basic
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 按目标页数排版幻灯片
+      content: 请生成「技术方案评审」幻灯片，目标 6 页。
+      files:
+        - path: input/doc.md
+          content: "# 云平台迁移方案
+
+
+            ## 背景
+
+
+            - 机房租赁合同明年 3 月到期
+
+            - 现有集群运维成本高
+
+
+            ## 迁移方案
+
+
+            - 采用分批迁移策略，先无状态服务
+
+            - 数据库使用 DTS 双写校验
+
+            - 迁移窗口安排在凌晨低峰期
+
+
+            ## 风险与应对
+
+
+            - 回滚预案：保留旧集群两周
+
+            - 演练：正式迁移前全链路演练 2 次\n"
+      params:
+        topic: 技术方案评审
+        slides: "6"
+        audience: 架构师
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 技术方案评审
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-slides-2
+    title: 页数控制（目标 8 页）
+    tags:
+      - basic
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 按目标页数排版幻灯片
+      content: 请生成「技术方案评审」幻灯片，目标 8 页。
+      files:
+        - path: input/doc.md
+          content: "# 云平台迁移方案
+
+
+            ## 背景
+
+
+            - 机房租赁合同明年 3 月到期
+
+            - 现有集群运维成本高
+
+
+            ## 迁移方案
+
+
+            - 采用分批迁移策略，先无状态服务
+
+            - 数据库使用 DTS 双写校验
+
+            - 迁移窗口安排在凌晨低峰期
+
+
+            ## 风险与应对
+
+
+            - 回滚预案：保留旧集群两周
+
+            - 演练：正式迁移前全链路演练 2 次\n"
+      params:
+        topic: 技术方案评审
+        slides: "8"
+        audience: 架构师
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 技术方案评审
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-slides-3
+    title: 页数控制（目标 12 页）
+    tags:
+      - basic
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 按目标页数排版幻灯片
+      content: 请生成「技术方案评审」幻灯片，目标 12 页。
+      files:
+        - path: input/doc.md
+          content: "# Kubernetes 上手教程
+
+
+            ## 安装准备
+
+
+            - 准备 3 台 4C8G 虚拟机
+
+            - 安装 containerd 与 kubeadm
+
+
+            ## 集群搭建
+
+
+            - kubeadm init 初始化控制面
+
+            - 加入 worker 节点
+
+            - 安装 Calico 网络插件
+
+
+            ## 应用部署
+
+
+            - 编写 Deployment 与 Service
+
+            - 配置探针与资源限额
+
+            - 用 Helm 管理发布\n"
+      params:
+        topic: 技术方案评审
+        slides: "12"
+        audience: 架构师
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 技术方案评审
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-slides-4
+    title: 页数控制（目标 20 页）
+    tags:
+      - basic
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 按目标页数排版幻灯片
+      content: 请生成「技术方案评审」幻灯片，目标 20 页。
+      files:
+        - path: input/doc.md
+          content: "# 项目复盘：秒杀活动
+
+
+            ## 目标达成
+
+
+            - 目标 GMV 500 万，实际完成 620 万
+
+            - 订单峰值 8000 TPS
+
+
+            ## 做得好的
+
+
+            - 缓存预热提前 2 小时完成
+
+            - 限流策略保护了核心链路
+
+
+            ## 待改进
+
+
+            - 库存扣减出现 30 单超卖
+
+            - 监控告警阈值设置不合理
+
+
+            ## 行动项
+
+
+            - 下周完成库存扣减重构
+
+            - 补充压测用例 20 个\n"
+      params:
+        topic: 技术方案评审
+        slides: "20"
+        audience: 架构师
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 技术方案评审
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-audience-1
+    title: 听众变体（管理层）
+    tags:
+      - basic
+      - audience
+    repeat: 5
+    input:
+      kind: text
+      goal: 面向不同听众生成幻灯片
+      content: 请生成「数据平台介绍」幻灯片，听众：管理层。
+      files:
+        - path: input/doc.md
+          content: "# 数据平台建设方案
+
+
+            ## 指标体系
+
+
+            | 指标 | 口径 | 负责人 |
+
+            | --- | --- | --- |
+
+            | DAU | 去重登录用户 | 张三 |
+
+            | GMV | 支付成功金额 | 李四 |
+
+
+            ## 数据链路
+
+
+            - 采集：埋点 SDK + 服务端日志
+
+            - 清洗：Flink 实时任务
+
+            - 应用：指标平台 + 报表\n"
+      params:
+        topic: 数据平台介绍
+        slides: "8"
+        audience: 管理层
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 数据平台介绍
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-audience-2
+    title: 听众变体（开发者）
+    tags:
+      - basic
+      - audience
+    repeat: 5
+    input:
+      kind: text
+      goal: 面向不同听众生成幻灯片
+      content: 请生成「数据平台介绍」幻灯片，听众：开发者。
+      files:
+        - path: input/doc.md
+          content: "# 数据平台建设方案
+
+
+            ## 指标体系
+
+
+            | 指标 | 口径 | 负责人 |
+
+            | --- | --- | --- |
+
+            | DAU | 去重登录用户 | 张三 |
+
+            | GMV | 支付成功金额 | 李四 |
+
+
+            ## 数据链路
+
+
+            - 采集：埋点 SDK + 服务端日志
+
+            - 清洗：Flink 实时任务
+
+            - 应用：指标平台 + 报表\n"
+      params:
+        topic: 数据平台介绍
+        slides: "8"
+        audience: 开发者
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 数据平台介绍
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-audience-3
+    title: 听众变体（高校学生）
+    tags:
+      - basic
+      - audience
+    repeat: 5
+    input:
+      kind: text
+      goal: 面向不同听众生成幻灯片
+      content: 请生成「数据平台介绍」幻灯片，听众：高校学生。
+      files:
+        - path: input/doc.md
+          content: "# 数据平台建设方案
+
+
+            ## 指标体系
+
+
+            | 指标 | 口径 | 负责人 |
+
+            | --- | --- | --- |
+
+            | DAU | 去重登录用户 | 张三 |
+
+            | GMV | 支付成功金额 | 李四 |
+
+
+            ## 数据链路
+
+
+            - 采集：埋点 SDK + 服务端日志
+
+            - 清洗：Flink 实时任务
+
+            - 应用：指标平台 + 报表\n"
+      params:
+        topic: 数据平台介绍
+        slides: "8"
+        audience: 高校学生
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 数据平台介绍
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-audience-4
+    title: 听众变体（潜在客户）
+    tags:
+      - basic
+      - audience
+    repeat: 5
+    input:
+      kind: text
+      goal: 面向不同听众生成幻灯片
+      content: 请生成「数据平台介绍」幻灯片，听众：潜在客户。
+      files:
+        - path: input/doc.md
+          content: "# 数据平台建设方案
+
+
+            ## 指标体系
+
+
+            | 指标 | 口径 | 负责人 |
+
+            | --- | --- | --- |
+
+            | DAU | 去重登录用户 | 张三 |
+
+            | GMV | 支付成功金额 | 李四 |
+
+
+            ## 数据链路
+
+
+            - 采集：埋点 SDK + 服务端日志
+
+            - 清洗：Flink 实时任务
+
+            - 应用：指标平台 + 报表\n"
+      params:
+        topic: 数据平台介绍
+        slides: "8"
+        audience: 潜在客户
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 数据平台介绍
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-mixed-1
+    title: 图表/金句内容排版（性能优化分享）
+    tags:
+      - basic
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 数字密集与短句内容按版式排版
+      content: 请把 input/doc.md 生成「性能优化分享」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 前端性能优化
+
+
+            ## 测量
+
+
+            - 用 Lighthouse 测量性能分
+
+            - 关注 LCP 与 CLS
+
+
+            ## 优化手段
+
+
+            - 代码分割：动态 import
+
+            - 图片：WebP + 懒加载
+
+
+            ## 示例
+
+
+            ```js
+
+            const page = await import('./page.js');
+
+            ```\n"
+      params:
+        topic: 性能优化分享
+        slides: "8"
+        audience: 前端工程师
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 性能优化分享
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-mixed-2
+    title: 图表/金句内容排版（英文技术分享）
+    tags:
+      - basic
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 数字密集与短句内容按版式排版
+      content: 请把 input/doc.md 生成「英文技术分享」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# Cloud Native Meetup
+
+
+            ## Agenda
+
+
+            - Keynote: Scaling Kubernetes to 10k nodes
+
+            - Lightning talks from community
+
+
+            ## Speakers
+
+
+            - Alice Chen, Platform Lead
+
+            - Bob Li, SRE
+
+
+            ## Takeaways
+
+
+            - Observability first
+
+            - Automate everything\n"
+      params:
+        topic: 英文技术分享
+        slides: "8"
+        audience: Meetup 听众
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 英文技术分享
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-mixed-3
+    title: 图表/金句内容排版（中英混合分享）
+    tags:
+      - basic
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 数字密集与短句内容按版式排版
+      content: 请把 input/doc.md 生成「中英混合分享」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 中英混合技术分享
+
+
+            ## Background
+
+
+            - 服务网格 Service Mesh 落地背景
+
+            - 采用 Istio 作为控制面
+
+
+            ## Practice
+
+
+            - 灰度发布：基于 header 路由
+
+            - 故障注入：注入 5xx 验证容错\n"
+      params:
+        topic: 中英混合分享
+        slides: "8"
+        audience: 平台团队
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 中英混合分享
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-mixed-4
+    title: 图表/金句内容排版（设计系统分享）
+    tags:
+      - basic
+      - layout
+    repeat: 5
+    input:
+      kind: text
+      goal: 数字密集与短句内容按版式排版
+      content: 请把 input/doc.md 生成「设计系统分享」幻灯片。
+      files:
+        - path: input/doc.md
+          content: "# 🎨 设计系统分享
+
+
+            ## 组件库
+
+
+            - 🔧 基础组件 30 个
+
+            - 📦 业务组件 12 个
+
+
+            ## 落地
+
+
+            - 🚀 三个业务线接入\n"
+      params:
+        topic: 设计系统分享
+        slides: "8"
+        audience: 设计师
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: "marp: true"
+          weight: 2
+        - type: contains
+          text: 设计系统分享
+          weight: 2
+        - type: contains
+          text: 第 1/
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 400
+          weight: 1
+      requiredSuggestions: []

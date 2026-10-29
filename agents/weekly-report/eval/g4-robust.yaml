@@ -1,0 +1,849 @@
+id: ts-b-weekly-report-g4-robust
+agentId: weekly-report
+group: g4-robust
+name: 周报日报 · 鲁棒性：损坏行 / 乱码 / 缺字段
+description: 损坏 commit 行、乱码、坏统计字段、畸形工作记录，优雅处理不崩溃（离线）（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g4-broken-1
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "!!! 乱七八糟的行 !!!
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-2
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "��� 锟斤拷
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-3
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 |  | +1 -0 |
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-4
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "|||||
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-5
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 坏统计字段 | abc | src/x.py
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-6
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 坏文件字段 | +5 -5 | ,,,,
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-7
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-13-45 | feat: 不存在的日期 | +1 -1 | src/x.py
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-8
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 空字节\0提交 | +2 -2 | src/x.py
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-9
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 超长行 | +1 -1 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-broken-10
+    title: "损坏 commit 行（feat: 兜底提交说明）"
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 损坏的 commit 列表不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+
+            ## 2026-10-28
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "
+
+
+
+
+            2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py
+
+
+
+            \n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: "feat: 兜底提交说明"
+          weight: 2
+          note: 可解析的提交仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-1
+    title: 缺字段/畸形记录（兜底记录条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "## 2026-10-28
+
+            - [x] 兜底记录条目
+
+            ## 2026-13-45
+
+            - [ ] 坏日期标题\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 兜底记录条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-2
+    title: 缺字段/畸形记录（兜底提交说明）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "### 只有标题没有条目\n#### 再来一个标题\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 兜底提交说明
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-3
+    title: 缺字段/畸形记录（正常条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "- [x] 兜底记录条目
+
+            - [x]\ 
+
+            - [ ]
+
+            - [x] 正常条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 正常条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-4
+    title: 缺字段/畸形记录（兜底记录条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "﻿- [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 兜底记录条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-5
+    title: 缺字段/畸形记录（兜底记录条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "- [x] 兜底记录条目\r\n- [ ] 混合换行\r\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 兜底记录条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-6
+    title: 缺字段/畸形记录（兜底记录条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "# 工作记录
+
+            ## 标题1
+
+            ## 标题2
+
+            ## 标题3
+
+            ## 标题4
+
+            ## 标题5
+
+            ## 标题6
+
+            ## 标题7
+
+            ## 标题8
+
+            ## 标题9
+
+            ## 标题10
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 兜底记录条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-7
+    title: 缺字段/畸形记录（兜底记录条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "- [x] 兜底记录条目
+
+            - [x] 兜底记录条目
+
+            - [x] 兜底记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 兜底记录条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-8
+    title: 缺字段/畸形记录（����乱码记录条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "- [x] ����乱码记录条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: ����乱码记录条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-9
+    title: 缺字段/畸形记录（兜底记录条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "- [x] 兜底记录条目\n## 周八\n- [ ] 无效星期\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 兜底记录条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g4-missing-10
+    title: 缺字段/畸形记录（兜底记录条目）
+    tags:
+      - robust
+      - offline
+    repeat: 5
+    input:
+      kind: text
+      goal: 缺字段的工作记录不崩溃
+      content: 请生成报告。
+      files:
+        - path: input/notes.md
+          content: "## 2026-10-28
+
+            - [x] 兜底记录条目
+
+            - [x] 含 | 管道 与 {花括号} 的条目\n"
+        - path: input/commits.txt
+          content: "2026-10-28 | feat: 兜底提交说明 | +10 -2 | src/keep.py\n"
+      params:
+        report_type: weekly
+        days: "7"
+        offline: true
+    gold:
+      findings: []
+      checks:
+        - type: regex
+          pattern: "# 工作(周报|日报)"
+          weight: 2
+        - type: contains
+          text: 兜底记录条目
+          weight: 2
+          note: 可解析的记录仍回显
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

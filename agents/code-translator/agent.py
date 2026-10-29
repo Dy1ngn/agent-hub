@@ -300,6 +300,10 @@ def check_syntax(lang, text, expect_functions=False):
         except SyntaxError as exc:
             issues.append({"line": exc.lineno or 0,
                            "message": "Python 语法错误：%s" % (exc.msg or exc)})
+        except ValueError as exc:
+            # 含 NUL 等特殊字节时 ast.parse 抛 ValueError，按预检问题处理、不崩溃
+            issues.append({"line": 0,
+                           "message": "Python 源码解析失败：%s" % exc})
         return issues
 
     stripped, problems = strip_strings_and_comments(text, lang)

@@ -1,0 +1,47 @@
+{
+  "id": "sql-chat",
+  "name": "SQL 问答",
+  "description": "用中文提问，自动生成只读 SQL 查询本地 SQLite/CSV/JSON，输出结果表与中文结论。",
+  "runtime": "python",
+  "entry": "agent.py",
+  "timeoutMs": 240000,
+  "model": {
+    "protocol": "anthropic",
+    "defaultModel": "mimo-v2.6-flash",
+    "args": [
+      "--model",
+      "{{model}}"
+    ],
+    "offlineArgs": [
+      "--sql",
+      "{{params.sql}}"
+    ],
+    "env": {}
+  },
+  "input": {
+    "contentFile": "input/task.txt",
+    "args": [
+      "{{params.src}}",
+      "{{params.q}}",
+      "--output",
+      "{{outputDir}}/report.md",
+      "--limit",
+      "{{params.limit}}"
+    ]
+  },
+  "output": {
+    "source": "file",
+    "path": "{{outputDir}}/report.md",
+    "format": "markdown",
+    "suggestions": {
+      "section": "结论"
+    }
+  },
+  "evalsets": [
+    "eval/g1-basic.yaml",
+    "eval/g2-variation.yaml",
+    "eval/g3-edge.yaml",
+    "eval/g4-robust.yaml",
+    "eval/g5-stability.yaml"
+  ]
+}

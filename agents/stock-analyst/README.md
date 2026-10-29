@@ -51,6 +51,67 @@ python3 agent.py AAPL
 python3 agent.py 600519 --model claude-sonnet-5
 ```
 
+## 本地 HTTP API
+
+`api.py` 把整个 Agent 包成本地 REST 服务，方便本地测试和被其他程序调用：
+
+```bash
+cd agents/stock-analyst
+python3 api.py                      # 默认 http://127.0.0.1:8300，交互式文档 /docs
+python3 api.py --host 0.0.0.0 --port 9000
+```
+
+### 接口一览
+
+| 方法 | 路径 | 说明 | 需要模型 key |
+|------|------|------|:---:|
+| GET | `/health` | 服务状态 + 模型 key 可用性 | 否 |
+| GET | `/quote?symbol=600519` | 实时行情 | 否 |
+| GET | `/kline?symbol=600519&days=60` | 历史 K 线 | 否 |
+| GET | `/indicators?symbol=600519&days=60` | 技术指标+支撑阻力+走势+回测 | 否 |
+| GET | `/analyze?symbol=600519&mode=rule` | 完整分析（浏览器/curl 直接测） | 仅 agent 模式 |
+| POST | `/analyze` | 完整分析（JSON 请求体） | 仅 agent 模式 |
+
+### `POST /analyze` 入参（JSON）
+
+| 字段 | 类型 | 必填 | 默认 | 说明 |
+|------|------|:---:|------|------|
+| `symbol` | string | ✅ | - | 股票代码：A股 `600519`/`000858`，美股 `AAPL`/`TSLA` |
+| `mode` | string | ❌ | `rule` | `rule`=纯规则分析（不调模型，本地可直接测）；`agent`=Claude function-call 生成 Markdown 报告 |
+| `model` | string | ❌ | `claude-opus-5` | agent 模式使用的模型（走网关传 `qwen3.8-max`） |
+| `days` | int | ❌ | `60` | 历史 K 线交易日数，30–250 |
+| `sentiment` | string | ❌ | 自动分析 | 手动指定消息面情绪：`正面/中性/负面` 或 `positive/neutral/negative` |
+| `include_news` | bool | ❌ | `true` | 是否在返回里带相关新闻（rule 模式） |
+
+### 调用示例
+
+```bash
+# 规则模式：不需要 key，本地直接测
+curl "http://127.0.0.1:8300/analyze?symbol=600519&days=60&sentiment=neutral"
+
+# Agent 模式：Claude 生成完整 Markdown 报告（需要 ANTHROPIC_API_KEY）
+curl -X POST "http://127.0.0.1:8300/analyze" \
+     -H "Content-Type: application/json" \
+     -d '{"symbol": "600519", "mode": "agent", "model": "claude-opus-5"}'
+```
+
+### 返回结构（rule 模式）
+
+```json
+{
+  "symbol": "600519", "name": "贵州茅台", "market": "A股", "mode": "rule",
+  "quote": { "price": 1356.84, "change_pct": 0.51, "...": "..." },
+  "indicators": { "macd": {}, "kdj": {}, "rsi": {}, "ma": {}, "...": "..." },
+  "scores": { "technical": 87, "fund": 50, "sentiment": 50, "comprehensive": 64 },
+  "prediction": { "tendency": "谨慎偏多", "up_probability": 55, "down_probability": 45 },
+  "support_resistance": {}, "recent_trend": {}, "backtest": {},
+  "sentiment": {}, "fund_flow": {}, "news": [],
+  "risk_note": "所有分析仅供参考，不构成投资建议。"
+}
+```
+
+agent 模式返回 `{ "report": "<Markdown 分析报告>" }`。出错时统一返回 `{"error": true, "status_code": ..., "detail": "..."}`（422 参数错误 / 502 数据源失败 / 503 缺模型 key）。
+
 ## 输出示例
 
 ```
@@ -105,6 +166,7 @@ python3 agent.py 600519 --model claude-sonnet-5
 
 ```
 agent.py          # 主入口，Claude function-call 循环
+api.py            # 本地 HTTP API 服务（FastAPI）
 ├── data_fetcher.py   # 数据获取层（A股/美股）
 └── analyzer.py       # 技术分析 + 评分逻辑
 ```

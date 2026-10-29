@@ -1,0 +1,698 @@
+{
+  "groups": [
+    {
+      "id": "g1-basic",
+      "name": "基础功能：典型行情分析（规则链路）",
+      "description": "不同股票代码 / 趋势 / 情绪面下的确定性分析链路（analyzer.py 源码直跑）：指标、评分、预测、信号清单",
+      "judge": true,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g1-{symbol}-{trend}",
+          "title": "{symbol} 行情分析（{trend}/{sentiment}）",
+          "tags": [
+            "basic",
+            "rule"
+          ],
+          "input": {
+            "kind": "json",
+            "goal": "对该股票做完整技术分析并给出综合评分与明日预测",
+            "content": "{\"symbol\": \"{symbol}\", \"seed\": {seed}, \"trend\": \"{trend}\", \"days\": 120}",
+            "params": {
+              "sentiment": "{sentiment}",
+              "fund_score": "{fund}",
+              "offline": true
+            }
+          },
+          "repeat": 2,
+          "rows": [
+            {
+              "symbol": "600519",
+              "seed": "11",
+              "trend": "up",
+              "sentiment": "正面",
+              "fund": "70"
+            },
+            {
+              "symbol": "000001",
+              "seed": "22",
+              "trend": "down",
+              "sentiment": "负面",
+              "fund": "30"
+            },
+            {
+              "symbol": "300750",
+              "seed": "33",
+              "trend": "sideways",
+              "sentiment": "中性",
+              "fund": "50"
+            },
+            {
+              "symbol": "AAPL",
+              "seed": "44",
+              "trend": "volatile",
+              "sentiment": "中性",
+              "fund": "55"
+            },
+            {
+              "symbol": "MSFT",
+              "seed": "55",
+              "trend": "up",
+              "sentiment": "正面",
+              "fund": "65"
+            },
+            {
+              "symbol": "601318",
+              "seed": "66",
+              "trend": "down",
+              "sentiment": "负面",
+              "fund": "25"
+            },
+            {
+              "symbol": "002594",
+              "seed": "77",
+              "trend": "sideways",
+              "sentiment": "中性",
+              "fund": "48"
+            },
+            {
+              "symbol": "NVDA",
+              "seed": "88",
+              "trend": "volatile",
+              "sentiment": "正面",
+              "fund": "72"
+            },
+            {
+              "symbol": "600036",
+              "seed": "99",
+              "trend": "up",
+              "sentiment": "中性",
+              "fund": "58"
+            },
+            {
+              "symbol": "000858",
+              "seed": "101",
+              "trend": "down",
+              "sentiment": "负面",
+              "fund": "35"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "股票分析报告",
+                "weight": 1,
+                "note": "产出标准报告"
+              },
+              {
+                "type": "contains",
+                "text": "{symbol}",
+                "weight": 1,
+                "note": "报告带标的代码"
+              },
+              {
+                "type": "regex",
+                "pattern": "综合[评分]+[^\\d]*\\d+",
+                "weight": 2,
+                "note": "给出综合评分"
+              },
+              {
+                "type": "regex",
+                "pattern": "(倾向|上涨概率)",
+                "weight": 1,
+                "note": "给出预测"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "g1-score-{seed}",
+          "title": "评分与预测口径（seed {seed}）",
+          "tags": [
+            "basic",
+            "rule"
+          ],
+          "input": {
+            "kind": "json",
+            "goal": "验证评分口径稳定：技术面/资金面/消息面加权出综合分",
+            "content": "{\"symbol\": \"600519\", \"seed\": {seed}, \"trend\": \"{trend}\", \"days\": 90, \"fund_score\": {fund}, \"sentiment\": \"{sentiment}\"}",
+            "params": {
+              "offline": true
+            }
+          },
+          "repeat": 2,
+          "rows": [
+            {
+              "seed": "5",
+              "trend": "up",
+              "fund": "90",
+              "sentiment": "正面"
+            },
+            {
+              "seed": "6",
+              "trend": "up",
+              "fund": "10",
+              "sentiment": "正面"
+            },
+            {
+              "seed": "7",
+              "trend": "down",
+              "fund": "90",
+              "sentiment": "负面"
+            },
+            {
+              "seed": "8",
+              "trend": "down",
+              "fund": "10",
+              "sentiment": "负面"
+            },
+            {
+              "seed": "9",
+              "trend": "sideways",
+              "fund": "50",
+              "sentiment": "中性"
+            },
+            {
+              "seed": "10",
+              "trend": "volatile",
+              "fund": "50",
+              "sentiment": "中性"
+            },
+            {
+              "seed": "11",
+              "trend": "up",
+              "fund": "50",
+              "sentiment": "中性"
+            },
+            {
+              "seed": "12",
+              "trend": "down",
+              "fund": "50",
+              "sentiment": "中性"
+            },
+            {
+              "seed": "13",
+              "trend": "sideways",
+              "fund": "90",
+              "sentiment": "正面"
+            },
+            {
+              "seed": "14",
+              "trend": "volatile",
+              "fund": "10",
+              "sentiment": "负面"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "regex",
+                "pattern": "技术面\\s*\\d+",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "资金面\\s*\\d+",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "消息面\\s*\\d+",
+                "weight": 1
+              },
+              {
+                "type": "contains",
+                "text": "信号清单",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              }
+            ]
+          }
+        }
+      ],
+      "judgeWeight": 0.3
+    },
+    {
+      "id": "g2-variation",
+      "name": "输入变体：agent 模式（function-call + 模型）",
+      "description": "走 agent.py 的 function-call 循环（模型生成完整报告，行情/新闻用夹具注入），验证模型链路可用",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g2-agent-{symbol}",
+          "title": "agent 模式分析 {symbol}（{trend}）",
+          "tags": [
+            "variation",
+            "agent"
+          ],
+          "input": {
+            "kind": "json",
+            "goal": "用 Agent 模式（工具调用 + 模型）生成完整股票分析报告",
+            "content": "{\"symbol\": \"{symbol}\", \"seed\": {seed}, \"trend\": \"{trend}\", \"days\": 90, \"sentiment\": \"{sentiment}\"}",
+            "params": {}
+          },
+          "repeat": 2,
+          "rows": [
+            {
+              "symbol": "600519",
+              "seed": "21",
+              "trend": "up",
+              "sentiment": "正面"
+            },
+            {
+              "symbol": "000001",
+              "seed": "22",
+              "trend": "down",
+              "sentiment": "负面"
+            },
+            {
+              "symbol": "AAPL",
+              "seed": "23",
+              "trend": "sideways",
+              "sentiment": "中性"
+            },
+            {
+              "symbol": "NVDA",
+              "seed": "24",
+              "trend": "volatile",
+              "sentiment": "正面"
+            },
+            {
+              "symbol": "300750",
+              "seed": "25",
+              "trend": "up",
+              "sentiment": "中性"
+            },
+            {
+              "symbol": "MSFT",
+              "seed": "26",
+              "trend": "down",
+              "sentiment": "负面"
+            },
+            {
+              "symbol": "601318",
+              "seed": "27",
+              "trend": "sideways",
+              "sentiment": "中性"
+            },
+            {
+              "symbol": "002594",
+              "seed": "28",
+              "trend": "volatile",
+              "sentiment": "正面"
+            },
+            {
+              "symbol": "600036",
+              "seed": "29",
+              "trend": "up",
+              "sentiment": "正面"
+            },
+            {
+              "symbol": "000858",
+              "seed": "30",
+              "trend": "down",
+              "sentiment": "负面"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "{symbol}",
+                "weight": 2,
+                "note": "模型报告提到标的"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 200,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3-edge",
+      "name": "边界情况：数据不足 / 空输入 / 极端参数",
+      "description": "K 线不足 30 根、空代码、days=0/500 等边界：给出明确结论而不是崩溃（规则链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g3-edge-{n}",
+          "title": "边界输入：{title}",
+          "tags": [
+            "edge",
+            "rule"
+          ],
+          "input": {
+            "kind": "json",
+            "goal": "边界输入下给出明确结论",
+            "content": "{content}",
+            "params": {
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "K线只有10天",
+              "content": "{\"symbol\": \"600519\", \"seed\": 1, \"days\": 10}"
+            },
+            {
+              "n": "2",
+              "title": "K线只有1天",
+              "content": "{\"symbol\": \"600519\", \"seed\": 2, \"days\": 1}"
+            },
+            {
+              "n": "3",
+              "title": "days=0",
+              "content": "{\"symbol\": \"600519\", \"seed\": 3, \"days\": 0}"
+            },
+            {
+              "n": "4",
+              "title": "空股票代码",
+              "content": "{\"symbol\": \"\", \"seed\": 4, \"days\": 60}"
+            },
+            {
+              "n": "5",
+              "title": "空 content",
+              "content": ""
+            },
+            {
+              "n": "6",
+              "title": "days=500 上限",
+              "content": "{\"symbol\": \"AAPL\", \"seed\": 6, \"days\": 500}"
+            },
+            {
+              "n": "7",
+              "title": "恰好29根K线",
+              "content": "{\"symbol\": \"000001\", \"seed\": 7, \"days\": 29}"
+            },
+            {
+              "n": "8",
+              "title": "恰好30根K线",
+              "content": "{\"symbol\": \"000001\", \"seed\": 8, \"days\": 30}"
+            },
+            {
+              "n": "9",
+              "title": "股票代码是特殊符号",
+              "content": "{\"symbol\": \"@@@\", \"seed\": 9, \"days\": 60}"
+            },
+            {
+              "n": "10",
+              "title": "content 不是 JSON",
+              "content": "just-a-symbol-600519"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "股票分析报告",
+                "weight": 2,
+                "note": "边界输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 80,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g4-robust",
+      "name": "鲁棒性：畸形数据与非法参数",
+      "description": "坏 K 线（字符串价格/负数/缺字段）、非法参数类型等异常输入下优雅降级（规则链路）",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g4-robust-{n}",
+          "title": "异常输入：{title}",
+          "tags": [
+            "robust",
+            "rule"
+          ],
+          "input": {
+            "kind": "json",
+            "goal": "异常输入不能让工具崩溃",
+            "content": "{content}",
+            "params": {
+              "offline": true
+            }
+          },
+          "repeat": 10,
+          "rows": [
+            {
+              "n": "1",
+              "title": "K线价格是字符串",
+              "content": "{\"symbol\": \"600519\", \"klines\": [{\"date\": \"2026-01-01\", \"open\": \"abc\", \"high\": \"x\", \"low\": \"y\", \"close\": \"z\", \"volume\": \"v\"}, {\"date\": \"2026-01-02\", \"open\": \"a\", \"high\": \"b\", \"low\": \"c\", \"close\": \"d\", \"volume\": \"e\"}, {\"date\": \"2026-01-03\", \"open\": 1, \"high\": 2, \"low\": 0.5, \"close\": 1.5, \"volume\": 100}]}"
+            },
+            {
+              "n": "2",
+              "title": "K线缺字段",
+              "content": "{\"symbol\": \"600519\", \"klines\": [{\"close\": 10}, {\"close\": 11}, {\"close\": 12}]}"
+            },
+            {
+              "n": "3",
+              "title": "K线是空数组",
+              "content": "{\"symbol\": \"600519\", \"klines\": []}"
+            },
+            {
+              "n": "4",
+              "title": "K线含负价格",
+              "content": "{\"symbol\": \"600519\", \"klines\": [{\"date\": \"2026-01-01\", \"open\": -1, \"high\": -2, \"low\": -3, \"close\": -4, \"volume\": -5}, {\"date\": \"2026-01-02\", \"open\": -1, \"high\": -2, \"low\": -3, \"close\": -4, \"volume\": -5}, {\"date\": \"2026-01-03\", \"open\": -1, \"high\": -2, \"low\": -3, \"close\": -4, \"volume\": -5}]}"
+            },
+            {
+              "n": "5",
+              "title": "seed 是字符串乱码",
+              "content": "{\"symbol\": \"600519\", \"seed\": \"abc\", \"days\": 60}"
+            },
+            {
+              "n": "6",
+              "title": "days 是负数",
+              "content": "{\"symbol\": \"600519\", \"seed\": 6, \"days\": -100}"
+            },
+            {
+              "n": "7",
+              "title": "days 是小数字符串",
+              "content": "{\"symbol\": \"600519\", \"seed\": 7, \"days\": \"3.14\"}"
+            },
+            {
+              "n": "8",
+              "title": "trend 是未知值",
+              "content": "{\"symbol\": \"600519\", \"seed\": 8, \"trend\": \"????\"}"
+            },
+            {
+              "n": "9",
+              "title": "content 是数组 JSON",
+              "content": "[1, 2, 3]"
+            },
+            {
+              "n": "10",
+              "title": "fund_score 是乱码",
+              "content": "{\"symbol\": \"600519\", \"seed\": 10, \"fund_score\": \"xyz\"}"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "股票分析报告",
+                "weight": 2,
+                "note": "异常输入仍产出报告"
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2,
+                "note": "不允许 Python 崩栈"
+              },
+              {
+                "type": "min_length",
+                "value": 80,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g5-stability",
+      "name": "稳定性：同输入重复调用",
+      "description": "10 个行情样本各重复调用 10 次（规则链路），验证确定性输出与稳定性",
+      "judge": false,
+      "invocations": 100,
+      "cases": [
+        {
+          "id": "g5-stable-{n}",
+          "title": "稳定性重复：{symbol}（{trend}）",
+          "tags": [
+            "stability",
+            "rule"
+          ],
+          "repeat": 10,
+          "input": {
+            "kind": "json",
+            "goal": "重复调用验证稳定性",
+            "content": "{\"symbol\": \"{symbol}\", \"seed\": {seed}, \"trend\": \"{trend}\", \"days\": 120, \"fund_score\": {fund}, \"sentiment\": \"{sentiment}\"}",
+            "params": {
+              "offline": true
+            }
+          },
+          "rows": [
+            {
+              "n": "1",
+              "symbol": "600519",
+              "seed": "41",
+              "trend": "up",
+              "fund": "70",
+              "sentiment": "正面"
+            },
+            {
+              "n": "2",
+              "symbol": "600519",
+              "seed": "42",
+              "trend": "down",
+              "fund": "30",
+              "sentiment": "负面"
+            },
+            {
+              "n": "3",
+              "symbol": "000001",
+              "seed": "43",
+              "trend": "sideways",
+              "fund": "50",
+              "sentiment": "中性"
+            },
+            {
+              "n": "4",
+              "symbol": "000001",
+              "seed": "44",
+              "trend": "volatile",
+              "fund": "55",
+              "sentiment": "中性"
+            },
+            {
+              "n": "5",
+              "symbol": "AAPL",
+              "seed": "45",
+              "trend": "up",
+              "fund": "65",
+              "sentiment": "正面"
+            },
+            {
+              "n": "6",
+              "symbol": "AAPL",
+              "seed": "46",
+              "trend": "down",
+              "fund": "35",
+              "sentiment": "负面"
+            },
+            {
+              "n": "7",
+              "symbol": "NVDA",
+              "seed": "47",
+              "trend": "sideways",
+              "fund": "48",
+              "sentiment": "中性"
+            },
+            {
+              "n": "8",
+              "symbol": "NVDA",
+              "seed": "48",
+              "trend": "volatile",
+              "fund": "52",
+              "sentiment": "中性"
+            },
+            {
+              "n": "9",
+              "symbol": "601318",
+              "seed": "49",
+              "trend": "up",
+              "fund": "60",
+              "sentiment": "正面"
+            },
+            {
+              "n": "10",
+              "symbol": "601318",
+              "seed": "50",
+              "trend": "down",
+              "fund": "40",
+              "sentiment": "负面"
+            }
+          ],
+          "gold": {
+            "findings": [],
+            "checks": [
+              {
+                "type": "contains",
+                "text": "股票分析报告",
+                "weight": 2
+              },
+              {
+                "type": "contains",
+                "text": "{symbol}",
+                "weight": 1
+              },
+              {
+                "type": "regex",
+                "pattern": "综合[评分]+[^\\d]*\\d+",
+                "weight": 1
+              },
+              {
+                "type": "not_contains",
+                "text": "Traceback",
+                "weight": 2
+              },
+              {
+                "type": "min_length",
+                "value": 300,
+                "weight": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

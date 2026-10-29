@@ -1,0 +1,689 @@
+id: ts-b-resume-reviewer-g5-stability
+agentId: resume-reviewer
+group: g5-stability
+name: 简历诊断 · 稳定性：同输入重复调用
+description: 10 个样本各重复 10 次（离线确定性模式），验证输出稳定、结构一致、不崩溃（10 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g5-stable-1
+    title: 稳定性重复：s1-da.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 1：s1-da.md（目标岗位：数据分析师）
+      files:
+        - path: input/s1-da.md
+          content: "# 张伟（数据分析师）
+
+
+            手机：13800001234 ｜ 邮箱：zhangwei@example.com
+
+
+            ## 工作经历
+
+
+            ### 云图科技 · 数据分析师（2023.03 - 至今）
+
+            - 负责日常业务数据报表
+
+            - 搭建 SQL 指标体系，日报产出时间从 4 小时缩短到 30 分钟
+
+            - 我参与了用户增长分析项目
+
+
+            ### 星辰数据 · 数据实习生（2022.06 - 2022.12）
+
+            - 协助清洗用户行为数据
+
+            - 用 Python 做留存分析，输出 3 份周报
+
+
+            ## 教育背景
+
+            - 华东理工大学 · 统计学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - Python、SQL、Excel、Tableau\n"
+        - path: input/jd.txt
+          content: "职位：数据分析师
+
+            职责：负责业务数据分析与指标体系建设，输出可视化分析报告。
+
+            要求：
+
+            - 熟练使用 SQL 完成复杂取数
+
+            - 熟悉 Python 数据分析（pandas）
+
+            - 掌握 Tableau 或同类 BI 工具
+
+            - 有 A/B 实验经验优先\n"
+      params:
+        offline: true
+        role: 数据分析师
+        resume: input/s1-da.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s1-da.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-2
+    title: 稳定性重复：s2-java.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 2：s2-java.md（目标岗位：Java 后端开发工程师）
+      files:
+        - path: input/s2-java.md
+          content: "# 李强
+
+            邮箱：liqiang@example.com
+
+
+            ## 工作经历
+
+
+            ### 蓝鲸科技 · Java 开发工程师（2021 年 7 月 - 至今）
+
+            - 负责订单中心接口开发
+
+            - 用 Spring Boot 重构结算服务，接口 P99 延迟从 800ms 降到 120ms
+
+            - 主导 Redis 缓存改造，数据库 QPS 下降 60%
+
+
+            ## 项目经历
+
+            ### 订单中台
+
+            - 设计订单状态机
+
+            - 完成 20 个接口联调
+
+
+            ## 教育背景
+
+            - 南京大学 · 软件工程 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - Java、Spring Boot、MySQL、Redis\n"
+        - path: input/jd.txt
+          content: "职位：Java 后端开发工程师
+
+            职责：负责核心交易系统的服务端研发与性能优化。
+
+            要求：
+
+            - 精通 Java 与 Spring Boot 框架
+
+            - 熟悉 MySQL 索引优化与 Redis 缓存设计
+
+            - 了解分布式事务与消息队列\n"
+      params:
+        offline: true
+        role: Java 后端开发工程师
+        resume: input/s2-java.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s2-java.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-3
+    title: 稳定性重复：s3-fe.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 3：s3-fe.md（目标岗位：前端开发工程师）
+      files:
+        - path: input/s3-fe.md
+          content: "# 王小美
+
+            手机：13900005678
+
+
+            ## 工作经历
+
+
+            ### 橙子互娱 · 前端开发工程师（2022.03 - 至今）
+
+            - 负责活动页开发
+
+            - 基于 React 搭建组件库，活动页开发效率提升 40%
+
+            - 我优化了首屏加载速度
+
+
+            ## 教育背景
+
+            - 浙江大学 · 计算机科学与技术 · 本科（2018-2022）
+
+
+            ## 技能
+
+            - React、TypeScript、Webpack\n"
+        - path: input/jd.txt
+          content: "职位：前端开发工程师
+
+            职责：负责 C 端活动页与组件库建设。
+
+            要求：
+
+            - 熟练使用 React 与 TypeScript
+
+            - 熟悉 Webpack 构建与前端性能优化\n"
+      params:
+        offline: true
+        role: 前端开发工程师
+        resume: input/s3-fe.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s3-fe.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-4
+    title: 稳定性重复：s4-pm.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 4：s4-pm.md（目标岗位：产品经理）
+      files:
+        - path: input/s4-pm.md
+          content: "# 陈晨
+
+            邮箱：chenchen@example.com ｜ 电话：13611112222
+
+
+            ## 工作经历
+
+
+            ### 星河产品部 · 产品经理（2020 年 3 月 - 至今）
+
+            - 负责支付产品需求梳理
+
+            - 主导收银台改版，支付成功率提升 12%
+
+            - 输出 30 份 PRD 并推动落地
+
+
+            ## 教育背景
+
+            - 武汉大学 · 信息管理 · 本科（2016-2020）
+
+
+            ## 技能
+
+            - Figma、Axure、SQL、数据分析\n"
+        - path: input/jd.txt
+          content: "职位：产品经理
+
+            职责：负责支付产品规划与体验优化。
+
+            要求：
+
+            - 熟练使用 Figma 输出原型
+
+            - 具备数据分析能力，能用 SQL 取数
+
+            - 有支付或交易类产品经验优先\n"
+      params:
+        offline: true
+        role: 产品经理
+        resume: input/s4-pm.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s4-pm.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-5
+    title: 稳定性重复：s5-mixed.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 5：s5-mixed.md（目标岗位：数据工程师）
+      files:
+        - path: input/s5-mixed.md
+          content: "# Alex Zhou
+
+
+            ## Work Experience
+
+            ### DataFlow Inc. · Data Engineer（2022.01 - 至今）
+
+            - 负责 ETL pipeline 维护
+
+            - Rebuilt nightly ETL jobs with Airflow，处理时长从 3 小时降到 40 分钟
+
+
+            ## Education
+
+            - 同济大学 · 软件工程 · 本科（2018-2022）
+
+
+            ## Skills
+
+            - Python、Spark、Airflow、SQL\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        offline: true
+        role: 数据工程师
+        resume: input/s5-mixed.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s5-mixed.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-6
+    title: 稳定性重复：s6-en.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 6：s6-en.md（目标岗位：Backend Engineer）
+      files:
+        - path: input/s6-en.md
+          content: "# Emily Carter
+
+
+            ## Experience
+
+            ### Bright Labs · Backend Engineer (2021.06 - present)
+
+            - Responsible for payment service development
+
+            - Optimized PostgreSQL queries, reducing API latency by 45%
+
+
+            ## Education
+
+            - BS in Computer Science, 2017-2021
+
+
+            ## Skills
+
+            - Python, PostgreSQL, Docker\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        offline: true
+        role: Backend Engineer
+        resume: input/s6-en.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s6-en.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-7
+    title: 稳定性重复：s7-big.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 7：s7-big.md（目标岗位：平台工程师）
+      files:
+        - path: input/s7-big.md
+          content: "# 周航
+
+
+            ## 工作经历
+
+
+            ### 云枢科技 · 后端工程师（2021.03 - 至今）
+
+            - 负责服务模块 1 的日常开发与维护
+
+            - 重构模块 2，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 3 的评审与联调
+
+            - 推动模块 4 上线，覆盖 200 万用户
+
+            - 负责服务模块 5 的日常开发与维护
+
+            - 重构模块 6，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 7 的评审与联调
+
+            - 推动模块 8 上线，覆盖 200 万用户
+
+            - 负责服务模块 9 的日常开发与维护
+
+            - 重构模块 10，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 11 的评审与联调
+
+            - 推动模块 12 上线，覆盖 200 万用户
+
+            - 负责服务模块 13 的日常开发与维护
+
+            - 重构模块 14，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 15 的评审与联调
+
+            - 推动模块 16 上线，覆盖 200 万用户
+
+            - 负责服务模块 17 的日常开发与维护
+
+            - 重构模块 18，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 19 的评审与联调
+
+            - 推动模块 20 上线，覆盖 200 万用户
+
+            - 负责服务模块 21 的日常开发与维护
+
+            - 重构模块 22，接口耗时从 500ms 降到 80ms
+
+            - 参与模块 23 的评审与联调
+
+            - 推动模块 24 上线，覆盖 200 万用户
+
+            - 负责服务模块 25 的日常开发与维护
+
+
+            ## 教育背景
+
+            - 北京邮电大学 · 计算机 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - Go、Kubernetes\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        offline: true
+        role: 平台工程师
+        resume: input/s7-big.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s7-big.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-8
+    title: 稳定性重复：s8-tiny.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 8：s8-tiny.md（目标岗位：实习生）
+      files:
+        - path: input/s8-tiny.md
+          content: "# 何鑫\n\n## 技能\n- Excel、PPT\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        offline: true
+        role: 实习生
+        resume: input/s8-tiny.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s8-tiny.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-9
+    title: 稳定性重复：s9-teacher.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 9：s9-teacher.md（目标岗位：小学数学教师）
+      files:
+        - path: input/s9-teacher.md
+          content: "# 林小雨
+
+
+            ## 工作经历
+
+            ### 阳光小学 · 数学教师（2021.09 - 至今）
+
+            - 负责三年级数学教学
+
+            - 带班成绩平均分提升 15 分
+
+
+            ## 教育背景
+
+            - 华东师范大学 · 小学教育 · 本科（2017-2021）
+
+
+            ## 技能
+
+            - 课堂教学、家校沟通、多媒体课件\n"
+        - path: input/jd.txt
+          content: "职位：小学数学教师
+
+            职责：负责小学数学课堂教学与班级管理。
+
+            要求：师范类专业，热爱教育，具备课堂管理与家校沟通能力。\n"
+      params:
+        offline: true
+        role: 小学数学教师
+        resume: input/s9-teacher.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s9-teacher.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []
+  - id: g5-stable-10
+    title: 稳定性重复：s10-long.md
+    tags:
+      - stability
+      - offline
+    repeat: 10
+    input:
+      kind: text
+      goal: 重复调用验证输出稳定
+      content: 稳定性样本 10：s10-long.md（目标岗位：内容运营）
+      files:
+        - path: input/s10-long.md
+          content: "# 🌟 赵琳 🌟
+
+
+            ## 工作经历
+
+            ### 🍊 鲜橙文化 · 运营专员（2023.05 - 至今）
+
+            - 负责小红书账号运营
+
+            - 策划 8 场直播活动，累计曝光 50 万次
+
+
+            ## 教育背景
+
+            - 暨南大学 · 新闻学 · 本科（2019-2023）
+
+
+            ## 技能
+
+            - 内容策划、数据分析、Excel\n"
+        - path: input/jd.txt
+          content: "职位：全栈工程师
+
+            职责：负责业务系统研发与迭代。
+
+            要求：熟练 Python 或 Java，熟悉 SQL 与主流框架，具备良好的工程习惯。\n"
+      params:
+        offline: true
+        role: 内容运营
+        resume: input/s10-long.md
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 简历诊断报告
+          weight: 2
+        - type: contains
+          text: s10-long.md
+          weight: 2
+          note: 确定性输出身份一致
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 800
+          weight: 1
+      requiredSuggestions: []

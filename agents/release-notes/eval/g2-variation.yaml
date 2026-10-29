@@ -1,0 +1,1711 @@
+id: ts-b-release-notes-g2-variation
+agentId: release-notes
+group: g2-variation
+name: 发布说明生成 · 输入变体：规模 / 形态 / 版本参数
+description: 1~50 条提交、多 scope、大小写类型、显式版本/版本告警/semver 级别等参数变体（模型链路）（35 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g2-scale-1
+    title: 单条提交 · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 单条提交（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增导出功能"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-1-2
+    title: 单条提交 · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 单条提交（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增导出功能"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-2
+    title: 五条提交 · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 五条提交（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增导出功能
+
+            fix: 修复导出空文件
+
+            perf: 导出提速
+
+            docs: 导出说明
+
+            test: 导出用例\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-2-4
+    title: 五条提交 · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 五条提交（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增导出功能
+
+            fix: 修复导出空文件
+
+            perf: 导出提速
+
+            docs: 导出说明
+
+            test: 导出用例\n"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-3
+    title: 五十条提交 · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 五十条提交（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "feat(item0): 新增第 0 项能力
+
+            feat(item1): 新增第 1 项能力
+
+            feat(item2): 新增第 2 项能力
+
+            feat(item3): 新增第 3 项能力
+
+            feat(item4): 新增第 4 项能力
+
+            feat(item5): 新增第 5 项能力
+
+            feat(item6): 新增第 6 项能力
+
+            feat(item7): 新增第 7 项能力
+
+            feat(item8): 新增第 8 项能力
+
+            feat(item9): 新增第 9 项能力
+
+            feat(item10): 新增第 10 项能力
+
+            feat(item11): 新增第 11 项能力
+
+            feat(item12): 新增第 12 项能力
+
+            feat(item13): 新增第 13 项能力
+
+            feat(item14): 新增第 14 项能力
+
+            feat(item15): 新增第 15 项能力
+
+            feat(item16): 新增第 16 项能力
+
+            feat(item17): 新增第 17 项能力
+
+            feat(item18): 新增第 18 项能力
+
+            feat(item19): 新增第 19 项能力
+
+            feat(item20): 新增第 20 项能力
+
+            feat(item21): 新增第 21 项能力
+
+            feat(item22): 新增第 22 项能力
+
+            feat(item23): 新增第 23 项能力
+
+            feat(item24): 新增第 24 项能力
+
+            feat(item25): 新增第 25 项能力
+
+            feat(item26): 新增第 26 项能力
+
+            feat(item27): 新增第 27 项能力
+
+            feat(item28): 新增第 28 项能力
+
+            feat(item29): 新增第 29 项能力
+
+            feat(item30): 新增第 30 项能力
+
+            feat(item31): 新增第 31 项能力
+
+            feat(item32): 新增第 32 项能力
+
+            feat(item33): 新增第 33 项能力
+
+            feat(item34): 新增第 34 项能力
+
+            feat(item35): 新增第 35 项能力
+
+            feat(item36): 新增第 36 项能力
+
+            feat(item37): 新增第 37 项能力
+
+            feat(item38): 新增第 38 项能力
+
+            feat(item39): 新增第 39 项能力
+
+            feat(item40): 新增第 40 项能力
+
+            feat(item41): 新增第 41 项能力
+
+            feat(item42): 新增第 42 项能力
+
+            feat(item43): 新增第 43 项能力
+
+            feat(item44): 新增第 44 项能力
+
+            feat(item45): 新增第 45 项能力
+
+            feat(item46): 新增第 46 项能力
+
+            feat(item47): 新增第 47 项能力
+
+            feat(item48): 新增第 48 项能力
+
+            feat(item49): 新增第 49 项能力"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-3-6
+    title: 五十条提交 · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 五十条提交（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "feat(item0): 新增第 0 项能力
+
+            feat(item1): 新增第 1 项能力
+
+            feat(item2): 新增第 2 项能力
+
+            feat(item3): 新增第 3 项能力
+
+            feat(item4): 新增第 4 项能力
+
+            feat(item5): 新增第 5 项能力
+
+            feat(item6): 新增第 6 项能力
+
+            feat(item7): 新增第 7 项能力
+
+            feat(item8): 新增第 8 项能力
+
+            feat(item9): 新增第 9 项能力
+
+            feat(item10): 新增第 10 项能力
+
+            feat(item11): 新增第 11 项能力
+
+            feat(item12): 新增第 12 项能力
+
+            feat(item13): 新增第 13 项能力
+
+            feat(item14): 新增第 14 项能力
+
+            feat(item15): 新增第 15 项能力
+
+            feat(item16): 新增第 16 项能力
+
+            feat(item17): 新增第 17 项能力
+
+            feat(item18): 新增第 18 项能力
+
+            feat(item19): 新增第 19 项能力
+
+            feat(item20): 新增第 20 项能力
+
+            feat(item21): 新增第 21 项能力
+
+            feat(item22): 新增第 22 项能力
+
+            feat(item23): 新增第 23 项能力
+
+            feat(item24): 新增第 24 项能力
+
+            feat(item25): 新增第 25 项能力
+
+            feat(item26): 新增第 26 项能力
+
+            feat(item27): 新增第 27 项能力
+
+            feat(item28): 新增第 28 项能力
+
+            feat(item29): 新增第 29 项能力
+
+            feat(item30): 新增第 30 项能力
+
+            feat(item31): 新增第 31 项能力
+
+            feat(item32): 新增第 32 项能力
+
+            feat(item33): 新增第 33 项能力
+
+            feat(item34): 新增第 34 项能力
+
+            feat(item35): 新增第 35 项能力
+
+            feat(item36): 新增第 36 项能力
+
+            feat(item37): 新增第 37 项能力
+
+            feat(item38): 新增第 38 项能力
+
+            feat(item39): 新增第 39 项能力
+
+            feat(item40): 新增第 40 项能力
+
+            feat(item41): 新增第 41 项能力
+
+            feat(item42): 新增第 42 项能力
+
+            feat(item43): 新增第 43 项能力
+
+            feat(item44): 新增第 44 项能力
+
+            feat(item45): 新增第 45 项能力
+
+            feat(item46): 新增第 46 项能力
+
+            feat(item47): 新增第 47 项能力
+
+            feat(item48): 新增第 48 项能力
+
+            feat(item49): 新增第 49 项能力"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-4
+    title: 多 scope · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 多 scope（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "feat(a): A 模块能力
+
+            feat(b): B 模块能力
+
+            fix(a): A 模块修复
+
+            fix(c): C 模块修复
+
+            refactor(b): B 模块重构\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-4-8
+    title: 多 scope · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 多 scope（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "feat(a): A 模块能力
+
+            feat(b): B 模块能力
+
+            fix(a): A 模块修复
+
+            fix(c): C 模块修复
+
+            refactor(b): B 模块重构\n"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-5
+    title: 纯 style · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 纯 style（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "style: 统一代码缩进\nstyle: 格式化 import"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-5-10
+    title: 纯 style · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 纯 style（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "style: 统一代码缩进\nstyle: 格式化 import"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-6
+    title: 大小写混合 · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 大小写混合（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "FEAT: 大写类型
+
+            Fix(x): 首字母大写
+
+            feat: normal\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-6-12
+    title: 大小写混合 · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 大小写混合（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "FEAT: 大写类型
+
+            Fix(x): 首字母大写
+
+            feat: normal\n"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-7
+    title: 破坏性+功能 · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 破坏性+功能（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "feat(api)!: 移除 v1 旧接口
+
+            feat(api): 新增 v2 接口
+
+            fix(api): 修复分页参数校验\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-7-14
+    title: 破坏性+功能 · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 破坏性+功能（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "feat(api)!: 移除 v1 旧接口
+
+            feat(api): 新增 v2 接口
+
+            fix(api): 修复分页参数校验\n"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-8
+    title: 非常规消息 · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 非常规消息（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "改了点东西\n更新了一下配置\nfix something\n随便提交\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-8-16
+    title: 非常规消息 · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 非常规消息（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "改了点东西\n更新了一下配置\nfix something\n随便提交\n"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-9
+    title: 长列表修复 · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 长列表修复（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "fix(module0): 修复第 0 个历史问题
+
+            fix(module1): 修复第 1 个历史问题
+
+            fix(module2): 修复第 2 个历史问题
+
+            fix(module3): 修复第 3 个历史问题
+
+            fix(module4): 修复第 4 个历史问题
+
+            fix(module5): 修复第 5 个历史问题
+
+            fix(module6): 修复第 6 个历史问题
+
+            fix(module7): 修复第 7 个历史问题
+
+            fix(module8): 修复第 8 个历史问题
+
+            fix(module9): 修复第 9 个历史问题
+
+            fix(module10): 修复第 10 个历史问题
+
+            fix(module11): 修复第 11 个历史问题
+
+            fix(module12): 修复第 12 个历史问题
+
+            fix(module13): 修复第 13 个历史问题
+
+            fix(module14): 修复第 14 个历史问题
+
+            fix(module15): 修复第 15 个历史问题
+
+            fix(module16): 修复第 16 个历史问题
+
+            fix(module17): 修复第 17 个历史问题
+
+            fix(module18): 修复第 18 个历史问题
+
+            fix(module19): 修复第 19 个历史问题"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-9-18
+    title: 长列表修复 · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 长列表修复（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "fix(module0): 修复第 0 个历史问题
+
+            fix(module1): 修复第 1 个历史问题
+
+            fix(module2): 修复第 2 个历史问题
+
+            fix(module3): 修复第 3 个历史问题
+
+            fix(module4): 修复第 4 个历史问题
+
+            fix(module5): 修复第 5 个历史问题
+
+            fix(module6): 修复第 6 个历史问题
+
+            fix(module7): 修复第 7 个历史问题
+
+            fix(module8): 修复第 8 个历史问题
+
+            fix(module9): 修复第 9 个历史问题
+
+            fix(module10): 修复第 10 个历史问题
+
+            fix(module11): 修复第 11 个历史问题
+
+            fix(module12): 修复第 12 个历史问题
+
+            fix(module13): 修复第 13 个历史问题
+
+            fix(module14): 修复第 14 个历史问题
+
+            fix(module15): 修复第 15 个历史问题
+
+            fix(module16): 修复第 16 个历史问题
+
+            fix(module17): 修复第 17 个历史问题
+
+            fix(module18): 修复第 18 个历史问题
+
+            fix(module19): 修复第 19 个历史问题"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-10
+    title: 依赖与 CI · 起点 v1.0.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 依赖与 CI（起始版本 v1.0.0）
+      files:
+        - path: input/commits.txt
+          content: "build(deps): 升级 requests 到 2.31.0
+
+            chore(lock): 同步依赖锁文件
+
+            ci: 调整流水线超时时间\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-scale-10-20
+    title: 依赖与 CI · 起点 v0.9.0
+    tags:
+      - release
+    repeat: 2
+    input:
+      kind: text
+      goal: 不同规模/形态提交列表 × 不同起始版本
+      content: 依赖与 CI（起始版本 v0.9.0）
+      files:
+        - path: input/commits.txt
+          content: "build(deps): 升级 requests 到 2.31.0
+
+            chore(lock): 同步依赖锁文件
+
+            ci: 调整流水线超时时间\n"
+      params:
+        from: v0.9.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 1
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-1
+    title: 显式版本号
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 显式版本号
+      files:
+        - path: input/commits.txt
+          content: "feat(auth): 增加登录失败重试限制
+
+            fix(auth): 修复空指针导致的登录崩溃
+
+            feat(ui): 新增深色模式开关
+
+            fix(pay): 修复重复扣款问题
+
+            docs: 更新部署文档\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: v1.1.0
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-2
+    title: 版本不一致告警
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 版本不一致告警
+      files:
+        - path: input/commits.txt
+          content: "feat(auth): 增加登录失败重试限制
+
+            fix(auth): 修复空指针导致的登录崩溃
+
+            feat(ui): 新增深色模式开关
+
+            fix(pay): 修复重复扣款问题
+
+            docs: 更新部署文档\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: v9.9.9
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 提示"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-3
+    title: 无 feat/fix 无需升版
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 无 feat/fix 无需升版
+      files:
+        - path: input/commits.txt
+          content: "docs: 更新 README 快速开始
+
+            docs(api): 补充接口文档示例
+
+            docs: 修正错别字\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 提示"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-4
+    title: 无起始版本告警
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 无起始版本告警
+      files:
+        - path: input/commits.txt
+          content: "feat(auth): 增加登录失败重试限制
+
+            fix(auth): 修复空指针导致的登录崩溃
+
+            feat(ui): 新增深色模式开关
+
+            fix(pay): 修复重复扣款问题
+
+            docs: 更新部署文档\n"
+      params:
+        from: ""
+        to: ""
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 提示"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-5
+    title: 破坏性 → 主版本
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 破坏性 → 主版本
+      files:
+        - path: input/commits.txt
+          content: "feat(api)!: 移除 v1 旧接口
+
+            feat(api): 新增 v2 接口
+
+            fix(api): 修复分页参数校验\n"
+      params:
+        from: v2.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: 主版本（破坏性变更）
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-6
+    title: 新功能 → 次版本
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 新功能 → 次版本
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增二维码登录"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: 次版本（新功能）
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-7
+    title: 修复 → 修订版本
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 修复 → 修订版本
+      files:
+        - path: input/commits.txt
+          content: "fix: 修复崩溃\nfix(core): 修复超时"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: 修订版本（修复/性能）
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-8
+    title: 非常规 → 其他
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 非常规 → 其他
+      files:
+        - path: input/commits.txt
+          content: "改了点东西\n更新了一下配置\nfix something\n随便提交\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 其他"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-9
+    title: 大版本号起点
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 大版本号起点
+      files:
+        - path: input/commits.txt
+          content: "feat: 新增导出功能
+
+            fix: 修复导出空文件
+
+            perf: 导出提速
+
+            docs: 导出说明
+
+            test: 导出用例\n"
+      params:
+        from: v99.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 亮点"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-10
+    title: 多 scope 分组
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 多 scope 分组
+      files:
+        - path: input/commits.txt
+          content: "feat(a): A 模块能力
+
+            feat(b): B 模块能力
+
+            fix(a): A 模块修复
+
+            fix(c): C 模块修复
+
+            refactor(b): B 模块重构\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 重构"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-11
+    title: style 分组
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: style 分组
+      files:
+        - path: input/commits.txt
+          content: "style: 统一代码缩进\nstyle: 格式化 import"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 样式"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-12
+    title: 大小写类型
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 大小写类型
+      files:
+        - path: input/commits.txt
+          content: "FEAT: 大写类型
+
+            Fix(x): 首字母大写
+
+            feat: normal\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 新功能"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-13
+    title: 长列表
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 长列表
+      files:
+        - path: input/commits.txt
+          content: "fix(module0): 修复第 0 个历史问题
+
+            fix(module1): 修复第 1 个历史问题
+
+            fix(module2): 修复第 2 个历史问题
+
+            fix(module3): 修复第 3 个历史问题
+
+            fix(module4): 修复第 4 个历史问题
+
+            fix(module5): 修复第 5 个历史问题
+
+            fix(module6): 修复第 6 个历史问题
+
+            fix(module7): 修复第 7 个历史问题
+
+            fix(module8): 修复第 8 个历史问题
+
+            fix(module9): 修复第 9 个历史问题
+
+            fix(module10): 修复第 10 个历史问题
+
+            fix(module11): 修复第 11 个历史问题
+
+            fix(module12): 修复第 12 个历史问题
+
+            fix(module13): 修复第 13 个历史问题
+
+            fix(module14): 修复第 14 个历史问题
+
+            fix(module15): 修复第 15 个历史问题
+
+            fix(module16): 修复第 16 个历史问题
+
+            fix(module17): 修复第 17 个历史问题
+
+            fix(module18): 修复第 18 个历史问题
+
+            fix(module19): 修复第 19 个历史问题"
+      params:
+        from: v2.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 问题修复"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-14
+    title: 依赖构建
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 依赖构建
+      files:
+        - path: input/commits.txt
+          content: "build(deps): 升级 requests 到 2.31.0
+
+            chore(lock): 同步依赖锁文件
+
+            ci: 调整流水线超时时间\n"
+      params:
+        from: v1.0.0
+        to: HEAD
+        version: ""
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 构建"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []
+  - id: g2-param-15
+    title: 显式版本一致
+    tags:
+      - release
+    repeat: 4
+    input:
+      kind: text
+      goal: 不同版本参数组合下的发布说明与告警
+      content: 显式版本一致
+      files:
+        - path: input/commits.txt
+          content: "perf(db): 优化列表查询索引
+
+            perf(cache): 增加热点数据缓存
+
+            fix(db): 修复慢查询\n"
+      params:
+        from: v1.2.0
+        to: HEAD
+        version: v1.2.1
+    gold:
+      findings: []
+      checks:
+        - type: contains
+          text: 发布说明
+          weight: 2
+          note: 产出标准发布说明
+        - type: contains
+          text: "## 贡献者与统计"
+          weight: 1
+        - type: contains
+          text: "## 性能"
+          weight: 2
+          note: 版本参数语义确定性生效
+        - type: not_contains
+          text: Traceback
+          weight: 1
+        - type: min_length
+          value: 300
+          weight: 1
+      requiredSuggestions: []

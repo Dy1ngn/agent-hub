@@ -1,0 +1,816 @@
+id: ts-b-file-butler-g1-basic
+agentId: file-butler
+group: g1-basic
+name: 本地文件管家 · 基础功能：列目录 / 提标题 / 搜索 / 统计 / 摘要
+description: 典型文件夹与自然语言命令下的完整 function-call 链路：列目录、读文件、搜内容、写 report.md（20 条用例 / 100 次调用）
+judge:
+  enabled: false
+  rubric: review-quality
+  weight: 0.3
+cases:
+  - id: g1-list-1
+    title: 目录清单（会议纪要.md 等）
+    tags:
+      - basic
+      - list
+    repeat: 5
+    input:
+      kind: text
+      goal: 列出授权文件夹里的所有文件并生成清单文件
+      content: 列出这个文件夹里的所有文件，每个文件一行注明文件名和大小，把清单写入 report.md。
+      files:
+        - path: files/会议纪要.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+        - path: files/备忘.txt
+          content: "备忘：周五前提交报销单。\n"
+      params:
+        cmd: 列出这个文件夹里的所有文件，每个文件一行注明文件名和大小，把清单写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 会议纪要.md
+          weight: 1
+          note: 清单里出现真实文件名
+        - type: regex
+          pattern: (?i)(report|清单|列表|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-list-2
+    title: 目录清单（合同清单.md 等）
+    tags:
+      - basic
+      - list
+    repeat: 5
+    input:
+      kind: text
+      goal: 列出授权文件夹里的所有文件并生成清单文件
+      content: 把这个文件夹的文件列一份清单，注明每个文件的文件名和大小，保存为 report.md。
+      files:
+        - path: files/合同清单.md
+          content: "# 合同清单
+
+
+            - 供应商 A：服务器租赁合同
+
+            - 供应商 B：云服务合同\n"
+        - path: files/报价单.txt
+          content: "报价单：云主机每年 8 万元。\n"
+        - path: files/流程说明.md
+          content: "# 流程说明\n\n- 需求评审流程\n- 发布审批流程\n"
+      params:
+        cmd: 把这个文件夹的文件列一份清单，注明每个文件的文件名和大小，保存为 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 合同清单.md
+          weight: 1
+          note: 清单里出现真实文件名
+        - type: regex
+          pattern: (?i)(report|清单|列表|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-list-3
+    title: 目录清单（README.md 等）
+    tags:
+      - basic
+      - list
+    repeat: 5
+    input:
+      kind: text
+      goal: 列出授权文件夹里的所有文件并生成清单文件
+      content: 看看这个文件夹里有什么文件，整理成清单写入 report.md，每行列出文件名。
+      files:
+        - path: files/README.md
+          content: "# 项目说明
+
+
+            这是一个示例项目。
+
+
+            ## 安装
+
+
+            - pip install demo\n"
+        - path: files/CHANGELOG.md
+          content: "# 更新记录
+
+
+            - v1.1 修复登录问题
+
+            - v1.0 首次发布\n"
+        - path: files/TODO.txt
+          content: "TODO：补单元测试。\n"
+      params:
+        cmd: 看看这个文件夹里有什么文件，整理成清单写入 report.md，每行列出文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: README.md
+          weight: 1
+          note: 清单里出现真实文件名
+        - type: regex
+          pattern: (?i)(report|清单|列表|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-list-4
+    title: 目录清单（课程笔记.md 等）
+    tags:
+      - basic
+      - list
+    repeat: 5
+    input:
+      kind: text
+      goal: 列出授权文件夹里的所有文件并生成清单文件
+      content: 请清点这个文件夹的文件，输出一份文件清单 report.md，包含文件名和大小。
+      files:
+        - path: files/课程笔记.md
+          content: "# 课程笔记\n\n- 第一讲：统计学基础\n- 第二讲：回归分析\n"
+        - path: files/书单.txt
+          content: "书单：\n- 深度学习\n- 统计学习方法\n"
+        - path: files/计划.md
+          content: "# 学习计划\n\n- 每天两小时\n- 周末做练习\n"
+      params:
+        cmd: 请清点这个文件夹的文件，输出一份文件清单 report.md，包含文件名和大小。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+          note: 不允许 Python 崩栈
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 课程笔记.md
+          weight: 1
+          note: 清单里出现真实文件名
+        - type: regex
+          pattern: (?i)(report|清单|列表|文件)
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-toc-1
+    title: 标题汇总（项目周会纪要）
+    tags:
+      - basic
+      - read
+    repeat: 5
+    input:
+      kind: text
+      goal: 读取 md 文件提取标题并汇总
+      content: 读取所有 md 文件，提取每个文件的一级标题，汇总写入 report.md，并注明标题来自哪个文件。
+      files:
+        - path: files/会议纪要.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+        - path: files/流程说明.md
+          content: "# 流程说明\n\n- 需求评审流程\n- 发布审批流程\n"
+      params:
+        cmd: 读取所有 md 文件，提取每个文件的一级标题，汇总写入 report.md，并注明标题来自哪个文件。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 项目周会纪要
+          weight: 1
+          note: 提取到真实标题
+        - type: contains
+          text: 会议纪要.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-toc-2
+    title: 标题汇总（合同清单）
+    tags:
+      - basic
+      - read
+    repeat: 5
+    input:
+      kind: text
+      goal: 读取 md 文件提取标题并汇总
+      content: 把文件夹里所有 md 文档的标题提取出来，做成汇总表写入 report.md。
+      files:
+        - path: files/合同清单.md
+          content: "# 合同清单
+
+
+            - 供应商 A：服务器租赁合同
+
+            - 供应商 B：云服务合同\n"
+        - path: files/流程说明.md
+          content: "# 流程说明\n\n- 需求评审流程\n- 发布审批流程\n"
+        - path: files/备忘.txt
+          content: "备忘：周五前提交报销单。\n"
+      params:
+        cmd: 把文件夹里所有 md 文档的标题提取出来，做成汇总表写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 合同清单
+          weight: 1
+          note: 提取到真实标题
+        - type: contains
+          text: 合同清单.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-toc-3
+    title: 标题汇总（项目说明）
+    tags:
+      - basic
+      - read
+    repeat: 5
+    input:
+      kind: text
+      goal: 读取 md 文件提取标题并汇总
+      content: 汇总所有 markdown 文件的文档标题，写入 report.md，每个标题一行并注明来源文件。
+      files:
+        - path: files/README.md
+          content: "# 项目说明
+
+
+            这是一个示例项目。
+
+
+            ## 安装
+
+
+            - pip install demo\n"
+        - path: files/CHANGELOG.md
+          content: "# 更新记录
+
+
+            - v1.1 修复登录问题
+
+            - v1.0 首次发布\n"
+        - path: files/计划.md
+          content: "# 学习计划\n\n- 每天两小时\n- 周末做练习\n"
+      params:
+        cmd: 汇总所有 markdown 文件的文档标题，写入 report.md，每个标题一行并注明来源文件。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 项目说明
+          weight: 1
+          note: 提取到真实标题
+        - type: contains
+          text: README.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-toc-4
+    title: 标题汇总（课程笔记）
+    tags:
+      - basic
+      - read
+    repeat: 5
+    input:
+      kind: text
+      goal: 读取 md 文件提取标题并汇总
+      content: 提取每个文档的主标题并汇总输出到 report.md。
+      files:
+        - path: files/课程笔记.md
+          content: "# 课程笔记\n\n- 第一讲：统计学基础\n- 第二讲：回归分析\n"
+        - path: files/计划.md
+          content: "# 学习计划\n\n- 每天两小时\n- 周末做练习\n"
+        - path: files/书单.txt
+          content: "书单：\n- 深度学习\n- 统计学习方法\n"
+      params:
+        cmd: 提取每个文档的主标题并汇总输出到 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 课程笔记
+          weight: 1
+          note: 提取到真实标题
+        - type: contains
+          text: 课程笔记.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-search-1
+    title: 关键词搜索（合同）
+    tags:
+      - basic
+      - search
+    repeat: 5
+    input:
+      kind: text
+      goal: 按关键词搜索文件内容并生成清单
+      content: 找出所有提到『合同』的文件，把文件名和相关句子列成清单，保存为 report.md。
+      files:
+        - path: files/合同清单.md
+          content: "# 合同清单
+
+
+            - 供应商 A：服务器租赁合同
+
+            - 供应商 B：云服务合同\n"
+        - path: files/报价单.txt
+          content: "报价单：云主机每年 8 万元。\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+      params:
+        cmd: 找出所有提到『合同』的文件，把文件名和相关句子列成清单，保存为 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 合同
+          weight: 2
+          note: 搜索结果围绕关键词
+        - type: contains
+          text: 合同清单.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-search-2
+    title: 关键词搜索（流程）
+    tags:
+      - basic
+      - search
+    repeat: 5
+    input:
+      kind: text
+      goal: 按关键词搜索文件内容并生成清单
+      content: 搜索哪些文件提到『流程』，把结果整理成清单写入 report.md。
+      files:
+        - path: files/流程说明.md
+          content: "# 流程说明\n\n- 需求评审流程\n- 发布审批流程\n"
+        - path: files/会议纪要.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/备忘.txt
+          content: "备忘：周五前提交报销单。\n"
+      params:
+        cmd: 搜索哪些文件提到『流程』，把结果整理成清单写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 流程
+          weight: 2
+          note: 搜索结果围绕关键词
+        - type: contains
+          text: 流程说明.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-search-3
+    title: 关键词搜索（修复）
+    tags:
+      - basic
+      - search
+    repeat: 5
+    input:
+      kind: text
+      goal: 按关键词搜索文件内容并生成清单
+      content: 找出包含『修复』的文件与对应句子，写入 report.md。
+      files:
+        - path: files/CHANGELOG.md
+          content: "# 更新记录
+
+
+            - v1.1 修复登录问题
+
+            - v1.0 首次发布\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+        - path: files/TODO.txt
+          content: "TODO：补单元测试。\n"
+      params:
+        cmd: 找出包含『修复』的文件与对应句子，写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 修复
+          weight: 2
+          note: 搜索结果围绕关键词
+        - type: contains
+          text: CHANGELOG.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-search-4
+    title: 关键词搜索（学习）
+    tags:
+      - basic
+      - search
+    repeat: 5
+    input:
+      kind: text
+      goal: 按关键词搜索文件内容并生成清单
+      content: 查一下哪些文件提到『学习』，把匹配的文件名和句子保存到 report.md。
+      files:
+        - path: files/课程笔记.md
+          content: "# 课程笔记\n\n- 第一讲：统计学基础\n- 第二讲：回归分析\n"
+        - path: files/计划.md
+          content: "# 学习计划\n\n- 每天两小时\n- 周末做练习\n"
+        - path: files/书单.txt
+          content: "书单：\n- 深度学习\n- 统计学习方法\n"
+      params:
+        cmd: 查一下哪些文件提到『学习』，把匹配的文件名和句子保存到 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 学习
+          weight: 2
+          note: 搜索结果围绕关键词
+        - type: contains
+          text: 课程笔记.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-stats-1
+    title: 类型统计（会议纪要.md 等）
+    tags:
+      - basic
+      - stats
+    repeat: 5
+    input:
+      kind: text
+      goal: 统计文件夹里各类型文件数量
+      content: 统计这个文件夹里各类型文件的数量，并列出每种类型下的文件名，结果写入 report.md。
+      files:
+        - path: files/会议纪要.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+        - path: files/备忘.txt
+          content: "备忘：周五前提交报销单。\n"
+      params:
+        cmd: 统计这个文件夹里各类型文件的数量，并列出每种类型下的文件名，结果写入 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 会议纪要.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(统计|数量|个)
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-stats-2
+    title: 类型统计（合同清单.md 等）
+    tags:
+      - basic
+      - stats
+    repeat: 5
+    input:
+      kind: text
+      goal: 统计文件夹里各类型文件数量
+      content: 按文件扩展名统计文件数量，每类列出文件名，输出 report.md。
+      files:
+        - path: files/合同清单.md
+          content: "# 合同清单
+
+
+            - 供应商 A：服务器租赁合同
+
+            - 供应商 B：云服务合同\n"
+        - path: files/报价单.txt
+          content: "报价单：云主机每年 8 万元。\n"
+        - path: files/流程说明.md
+          content: "# 流程说明\n\n- 需求评审流程\n- 发布审批流程\n"
+      params:
+        cmd: 按文件扩展名统计文件数量，每类列出文件名，输出 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 合同清单.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(统计|数量|个)
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-stats-3
+    title: 类型统计（README.md 等）
+    tags:
+      - basic
+      - stats
+    repeat: 5
+    input:
+      kind: text
+      goal: 统计文件夹里各类型文件数量
+      content: 帮我统计一下 md 和 txt 各有多少个文件，分别列出文件名，写成 report.md。
+      files:
+        - path: files/README.md
+          content: "# 项目说明
+
+
+            这是一个示例项目。
+
+
+            ## 安装
+
+
+            - pip install demo\n"
+        - path: files/CHANGELOG.md
+          content: "# 更新记录
+
+
+            - v1.1 修复登录问题
+
+            - v1.0 首次发布\n"
+        - path: files/TODO.txt
+          content: "TODO：补单元测试。\n"
+      params:
+        cmd: 帮我统计一下 md 和 txt 各有多少个文件，分别列出文件名，写成 report.md。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: README.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(统计|数量|个)
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-stats-4
+    title: 类型统计（课程笔记.md 等）
+    tags:
+      - basic
+      - stats
+    repeat: 5
+    input:
+      kind: text
+      goal: 统计文件夹里各类型文件数量
+      content: 做一份文件类型统计 report.md：每种类型多少个、分别是哪些文件。
+      files:
+        - path: files/课程笔记.md
+          content: "# 课程笔记\n\n- 第一讲：统计学基础\n- 第二讲：回归分析\n"
+        - path: files/书单.txt
+          content: "书单：\n- 深度学习\n- 统计学习方法\n"
+        - path: files/计划.md
+          content: "# 学习计划\n\n- 每天两小时\n- 周末做练习\n"
+      params:
+        cmd: 做一份文件类型统计 report.md：每种类型多少个、分别是哪些文件。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 课程笔记.md
+          weight: 1
+        - type: regex
+          pattern: (?i)(统计|数量|个)
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-summary-1
+    title: 内容摘要（项目例会）
+    tags:
+      - basic
+      - summary
+    repeat: 5
+    input:
+      kind: text
+      goal: 读取全部文件并总结主题
+      content: 读取所有文件，总结这组资料的主题，写入 report.md，并在报告里列出每个文件的文件名。
+      files:
+        - path: files/会议纪要.md
+          content: "# 项目周会纪要\n\n- 时间：周一上午\n- 结论：下周完成联调\n"
+        - path: files/周报.md
+          content: "# 第 41 周周报\n\n- 完成接口开发\n- 修复 5 个缺陷\n"
+        - path: files/备忘.txt
+          content: "备忘：周五前提交报销单。\n"
+      params:
+        cmd: 读取所有文件，总结这组资料的主题，写入 report.md，并在报告里列出每个文件的文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 项目例会
+          weight: 2
+          note: 摘要命中资料主题
+        - type: contains
+          text: 会议纪要.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-summary-2
+    title: 内容摘要（采购与合同）
+    tags:
+      - basic
+      - summary
+    repeat: 5
+    input:
+      kind: text
+      goal: 读取全部文件并总结主题
+      content: 通读文件夹里的资料，写一份内容摘要 report.md，说明主题并列出涉及的文件名。
+      files:
+        - path: files/合同清单.md
+          content: "# 合同清单
+
+
+            - 供应商 A：服务器租赁合同
+
+            - 供应商 B：云服务合同\n"
+        - path: files/报价单.txt
+          content: "报价单：云主机每年 8 万元。\n"
+        - path: files/流程说明.md
+          content: "# 流程说明\n\n- 需求评审流程\n- 发布审批流程\n"
+      params:
+        cmd: 通读文件夹里的资料，写一份内容摘要 report.md，说明主题并列出涉及的文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 采购与合同
+          weight: 2
+          note: 摘要命中资料主题
+        - type: contains
+          text: 合同清单.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-summary-3
+    title: 内容摘要（项目文档）
+    tags:
+      - basic
+      - summary
+    repeat: 5
+    input:
+      kind: text
+      goal: 读取全部文件并总结主题
+      content: 总结这个文件夹资料讲了什么，生成 report.md，注明每个文件的文件名。
+      files:
+        - path: files/README.md
+          content: "# 项目说明
+
+
+            这是一个示例项目。
+
+
+            ## 安装
+
+
+            - pip install demo\n"
+        - path: files/CHANGELOG.md
+          content: "# 更新记录
+
+
+            - v1.1 修复登录问题
+
+            - v1.0 首次发布\n"
+        - path: files/TODO.txt
+          content: "TODO：补单元测试。\n"
+      params:
+        cmd: 总结这个文件夹资料讲了什么，生成 report.md，注明每个文件的文件名。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 项目文档
+          weight: 2
+          note: 摘要命中资料主题
+        - type: contains
+          text: README.md
+          weight: 1
+      requiredSuggestions: []
+  - id: g1-summary-4
+    title: 内容摘要（学习计划）
+    tags:
+      - basic
+      - summary
+    repeat: 5
+    input:
+      kind: text
+      goal: 读取全部文件并总结主题
+      content: 帮我总结这些文件的核心内容，写入 report.md，并附上文件名清单。
+      files:
+        - path: files/课程笔记.md
+          content: "# 课程笔记\n\n- 第一讲：统计学基础\n- 第二讲：回归分析\n"
+        - path: files/书单.txt
+          content: "书单：\n- 深度学习\n- 统计学习方法\n"
+        - path: files/计划.md
+          content: "# 学习计划\n\n- 每天两小时\n- 周末做练习\n"
+      params:
+        cmd: 帮我总结这些文件的核心内容，写入 report.md，并附上文件名清单。
+    gold:
+      findings: []
+      checks:
+        - type: not_contains
+          text: Traceback
+          weight: 2
+        - type: min_length
+          value: 30
+          weight: 2
+        - type: contains
+          text: 学习计划
+          weight: 2
+          note: 摘要命中资料主题
+        - type: contains
+          text: 课程笔记.md
+          weight: 1
+      requiredSuggestions: []
